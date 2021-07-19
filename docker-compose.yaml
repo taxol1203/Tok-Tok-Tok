@@ -52,14 +52,14 @@ services:
       image: redis
       ports:
         - "6379:6379"
-    jenkins:
-      build: ./jenkins
-      container_name: jenkins
-#      image: jenkins/jenkins:lts-jdk11
-      ports:
-        - 9090:8080
-      volumes:
-        - ./jenkins:/var/jenkinse_home
+#     jenkins:
+#       build: ./jenkins
+#       container_name: jenkins
+# #      image: jenkins/jenkins:lts-jdk11
+#       ports:
+#         - 9090:8080
+#       volumes:
+#         - ./jenkins:/var/jenkinse_home
 
 volumes:
   postgres: {}
