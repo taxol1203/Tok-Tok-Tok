@@ -1,0 +1,48 @@
+FROM node:alpine
+#RUN apk-get install python2.7
+RUN apk update && apk upgrade && apk add python make g++
+
+#RUN npm install -g @vue/cli
+#RUN npm install --global --production windows-build-tools
+#RUN npm install --global node-gyp
+
+
+#RUN npm i node-pre-gyp
+#RUN npm i sqlite3
+#RUN apk add g++ make python
+#RUN run apk --no-cache add --virtual native-deps g++ gcc libgcc libstdc++ linux-headers make python && npm install --quiet node-gyp -g && npm install --quiet && apk del native-deps
+#RUN apk --no-cache add g++ gcc libgcc libstdc++ linux-headers make python
+#RUN npm install --quiet node-gyp -g
+
+
+MAINTAINER ian.ilminmoon@gmail.com:$PATH
+WORKDIR /vue
+ENV PATH ./node_modules/.bin:
+ENV NODE_ENV production
+ADD package.json ./
+
+#ENV NODE_ENV production
+ADD . .
+
+RUN npm install -g yarn
+RUN yarn install --force
+#RUN npm install
+#CMD ["npm", "run", "serve"]
+#CMD ["yum", "install", "npm", "&&", "npm", "install", "&&", "npm", "run", "serve"]
+#RUN npm install -g --unsafe-perm node-sass
+
+#RUN npm install --save node-sass
+#RUN apk --no-cache --virtual build-dependencies add \
+#        python \
+#        make \
+#        g++ \
+#&& yarn install --production \
+#&& apk del build-dependencies
+#RUN npm install -g npm
+#RUN npm uninstall vue-cli -g
+#RUN npm install -g @vue/cli
+#RUN npm install -D sass-loader node-sass
+
+#CMD ["yarn","add","axios","&&", "yarn", "install", "--force","&&", "yarn","run", "serve"]
+#RUN npm run build
+#EXPOSE 8080
