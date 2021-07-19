@@ -43,8 +43,6 @@ public class SwaggerConfig {
 
 	    //swagger 내에서 글로벌하게 적용되어야 하는 헤더가 필요하다면 RequestParameterBuilder 하나 더 만들어서
 	    //aParameters에 추가하기.
-	    
-	    
 		final ApiInfo apiInfo=new ApiInfoBuilder()
 				.title("")
 				.description("구미 2반 4팀 서브프젝1")
