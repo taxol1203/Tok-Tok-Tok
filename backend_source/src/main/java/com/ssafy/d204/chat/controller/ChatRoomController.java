@@ -3,6 +3,7 @@ package com.ssafy.d204.chat.controller;
 import com.ssafy.d204.chat.dao.ChatRoomDao;
 import com.ssafy.d204.chat.dto.ChatRoom;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,12 +36,12 @@ public class ChatRoomController {
     public ChatRoom createRoom(@RequestParam String name) {
         return chatRoomDao.createChatRoom(name);
     }
-    // 채팅방 입장 화면
-    @GetMapping("/room/enter/{roomId}")
-    public String roomDetail(Model model, @PathVariable String roomId) {
-        model.addAttribute("roomId", roomId);
-        return "/chat/roomdetail";
-    }
+//    // 채팅방 입장 화면
+//    @GetMapping("/room/enter/{roomId}")
+//    public ResponseEntity<?> roomDetail(Model model, @PathVariable String roomId) {
+//        model.addAttribute("roomId", roomId);
+//        return new ResponseEntity<>();
+//    }
     // 특정 채팅방 조회
     @GetMapping("/room/{roomId}")
     @ResponseBody
