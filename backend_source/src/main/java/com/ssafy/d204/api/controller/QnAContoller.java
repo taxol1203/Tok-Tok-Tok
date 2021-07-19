@@ -42,9 +42,9 @@ public class QnAContoller {
 
     @ApiOperation(value = "질문 번호에 해당하는 질문의 정보를 반환한다.", response = Question.class)    
 	@GetMapping("/question/{idx}")
-	public ResponseEntity<Question> detailQuestion(@PathVariable int idx) {
+	public ResponseEntity<Question> detailQuestion(@PathVariable int pk_idx) {
 		logger.debug("detailQuestion - 호출");
-		return new ResponseEntity<Question>(questionService.detailQuestion(idx), HttpStatus.OK);
+		return new ResponseEntity<Question>(questionService.detailQuestion(pk_idx), HttpStatus.OK);
 	}
 
     @ApiOperation(value = "새로운 질문 정보를 입력한다. 그리고 DB입력 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = String.class)
@@ -70,10 +70,10 @@ public class QnAContoller {
 	}
 
     @ApiOperation(value = "질문 번호에 해당하는 질문의 정보를 삭제한다. 그리고 DB삭제 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = String.class)
-	@DeleteMapping("/question/{idx}")
-	public ResponseEntity<String> deleteQuestion(@PathVariable int idx) {
+	@DeleteMapping("/question/{pk_idx}")
+	public ResponseEntity<String> deleteQuestion(@PathVariable int pk_idx) {
 		logger.debug("deleteQuestion - 호출");
-		if (questionService.deleteQuestion(idx)) {
+		if (questionService.deleteQuestion(pk_idx)) {
 			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 		}
 		return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
