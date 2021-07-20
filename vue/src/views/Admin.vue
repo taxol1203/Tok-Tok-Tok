@@ -1,15 +1,19 @@
 <template lang="">
   <div>
     Admin
-    <NavBar />
-    <ChatArea />
-    <QnaArea />
+    <el-row>
+      <el-col :span="3">
+        <NavBar />
+      </el-col>
+      <ChatArea />
+      <QnaArea />
+    </el-row>
   </div>
 </template>
 <script>
-import NavBar from "./NavBar.vue";
-import ChatArea from "./chat/ChatArea.vue";
-import QnaArea from "./qna/QnaArea.vue";
+import NavBar from './NavBar.vue';
+import ChatArea from './chat/ChatArea.vue';
+import QnaArea from './qna/QnaArea.vue';
 
 export default {
   components: {
