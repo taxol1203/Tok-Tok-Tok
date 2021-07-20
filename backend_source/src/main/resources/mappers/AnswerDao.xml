@@ -4,13 +4,13 @@
 <mapper namespace="com.ssafy.d204.db.repository.AnswerDao"> 
 	<!-- 답변 전체 조회 -->
 	<select id="retrieveAnswer" resultType="Answer">
-		SELECT pk_idx, "content"
+		SELECT pk_idx, "content", fk_next_idx
 		FROM "SSAFY_PJT1".answer;
 	</select>
 	
 	<!-- 답변 상세 조회 -->
 	<select id="detailAnswer" resultType="Answer">
-		SELECT pk_idx, "content"
+		SELECT pk_idx, "content", fk_next_idx
 		FROM "SSAFY_PJT1".answer
 		where pk_idx = #{pk_idx};
 	</select>
