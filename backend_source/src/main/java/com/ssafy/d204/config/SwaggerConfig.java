@@ -89,7 +89,7 @@ public class SwaggerConfig {
 				.groupName("Chat")
 				.select()
 				.apis(RequestHandlerSelectors.basePackage("com.ssafy.d204.chat.controller"))
-				.paths(PathSelectors.ant("/**/chat/**")
+				.paths(PathSelectors.ant("/**/api/chat/**")
 //						.or(PathSelectors.ant("/**/chat/**"))
 						)
 				.build();

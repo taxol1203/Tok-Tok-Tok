@@ -21,6 +21,7 @@ public class SocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
+        // TODO : CORS 설정 * 안먹히는 문제
         registry.addEndpoint("/chat").setAllowedOrigins("http://localhost:8080")
                 .withSockJS();
     }
