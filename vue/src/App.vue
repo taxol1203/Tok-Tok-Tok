@@ -1,6 +1,7 @@
 <template>
   <div id="nav">
-    <router-link to="/signup">Sign Up</router-link> | <router-link to="/login">Login</router-link> |
+    <router-link to="/signup">Sign Up</router-link> |
+    <router-link to="/login">Log in</router-link> |
     <router-link to="/admin">Admin</router-link>
   </div>
   <router-view />
@@ -26,5 +27,11 @@
 
 #nav a.router-link-exact-active {
   color: #42b983;
+}
+
+#primary {
+  background-color: #258c60;
+  color: #fff;
+  border: 0;
 }
 </style>
