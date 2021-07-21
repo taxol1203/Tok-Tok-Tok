@@ -46,8 +46,10 @@ export default {};
   padding: 1px 0px 0px 0px;
   margin: 15px 0px 0px 0px;
 }
+
 .chat-detail {
   background-color: rgb(242, 255, 127);
+  font-family: "BMJUA";
 }
 
 .defualt-m-p {
