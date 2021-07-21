@@ -1,7 +1,7 @@
 <template>
   <el-row :gutter="20">
     <el-col :span="23" :offset="0">
-      <p class="user-title border-solid">(Eng) Gil Dong. Hong (한글) 홍길동</p>
+      <p class="user-title border-solid">John Smith, 존 스미스</p>
     </el-col>
   </el-row>
 </template>
@@ -11,7 +11,7 @@ export default {};
 <style scoped>
 .user-title {
   font-size: 200%;
-  font-family: "BMJUA", Times, serif;
+  font-family: 'BMJUA', Times, serif;
   text-align: left;
   color: white;
   background-color: #258c60;
