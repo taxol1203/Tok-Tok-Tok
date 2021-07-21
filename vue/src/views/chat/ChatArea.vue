@@ -15,10 +15,10 @@
   </div>
 </template>
 <script>
-import ChatList from '../../components/chat/ChatList.vue';
-import UserTitle from '../../components/chat/UserTitle.vue';
-import ChatDetail from '../../components/chat/ChatDetail.vue';
-import UserInfo from '../../components/chat/UserInfo.vue';
+import ChatList from '../../components/chat/ChatList.vue'
+import UserTitle from '../../components/chat/UserTitle.vue'
+import ChatDetail from '../../components/chat/ChatDetail.vue'
+import UserInfo from '../../components/chat/UserInfo.vue'
 
 export default {
   components: {
