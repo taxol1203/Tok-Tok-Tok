@@ -52,7 +52,7 @@ public class QnAController {
 		return new ResponseEntity<Question>(questionService.detailQuestion(pk_idx), HttpStatus.OK);
 	}
 
-    @ApiOperation(value = "새로운 질문 정보를 입력한다. 그리고 DB입력 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = String.class)
+    @ApiOperation(value = "새로운 질문 정보를 입력한다.", response = String.class)
 	@PostMapping("/question")
 	public ResponseEntity<String> writeQuestion(@RequestBody Question content) {
 		logger.debug("writeQuestion - 호출");
@@ -62,7 +62,7 @@ public class QnAController {
 		return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
 	}
 
-    @ApiOperation(value = "질문 번호에 해당하는 질문의 정보를 수정한다. 그리고 DB수정 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = String.class)
+    @ApiOperation(value = "질문 번호에 해당하는 질문의 정보를 수정한다.", response = String.class)
 	@PutMapping("/question/{idx}")
 	public ResponseEntity<String> updateQuestion(@RequestBody Question content) {
 		logger.debug("updateQuestion - 호출");
@@ -74,7 +74,7 @@ public class QnAController {
 		return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
 	}
 
-    @ApiOperation(value = "질문 번호에 해당하는 질문의 정보를 삭제한다. 그리고 DB삭제 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = String.class)
+    @ApiOperation(value = "질문 번호에 해당하는 질문의 정보를 삭제한다.  ", response = String.class)
 	@DeleteMapping("/question/{pk_idx}")
 	public ResponseEntity<String> deleteQuestion(@PathVariable int pk_idx) {
 		logger.debug("deleteQuestion - 호출");
@@ -100,7 +100,7 @@ public class QnAController {
    		return new ResponseEntity<Answer>(answerService.detailAnswer(pk_idx), HttpStatus.OK);
    	}
 
-    @ApiOperation(value = "새로운 답변 정보를 입력한다. 그리고 DB입력 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = String.class)
+    @ApiOperation(value = "새로운 답변 정보를 입력한다. 연결되는 다음 질문의 기본 값(fk_next_idx)는 2(상담종료)이다.", response = String.class)
    	@PostMapping("/answer")
    	public ResponseEntity<String> writeAnswer(@RequestBody Answer content) {
    		logger.debug("writeAnswer - 호출");
@@ -110,7 +110,7 @@ public class QnAController {
    		return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
    	}
 
-    @ApiOperation(value = "답변 번호에 해당하는 질문의 정보를 수정한다. 그리고 DB수정 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = String.class)
+    @ApiOperation(value = "답변 번호에 해당하는 질문의 정보를 수정한다.", response = String.class)
    	@PutMapping("/answer/{idx}")
    	public ResponseEntity<String> updateAnswer(@RequestBody Answer content) {
    		logger.debug("updateAnswer - 호출");
@@ -122,7 +122,7 @@ public class QnAController {
    		return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
    	}
 
-    @ApiOperation(value = "답변 번호에 해당하는 질문의 정보를 삭제한다. 그리고 DB삭제 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = String.class)
+    @ApiOperation(value = "답변 번호에 해당하는 질문의 정보를 삭제한다.", response = String.class)
    	@DeleteMapping("/answer/{pk_idx}")
    	public ResponseEntity<String> deleteAnswer(@PathVariable int pk_idx) {
    		logger.debug("deleteAnswer - 호출");
@@ -132,7 +132,7 @@ public class QnAController {
    		return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
    	}
        
-    @ApiOperation(value = "답변 번호에 해당하는 다음 질문의 번호를 수정한다. 그리고 DB수정 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = String.class)
+    @ApiOperation(value = "답변 번호에 해당하는 다음 질문의 번호를 수정한다. 다음 질문의 기본 값 중 1번은 (상담사 연결) 2번은 (상담 종료)이다.", response = String.class)
    	@PutMapping("/answer/nextIdx/{pk_idx}")
    	public ResponseEntity<String> updateNextQuestion(@RequestBody Answer fk_next_idx) {
    		if (answerService.updateNextQuestion(fk_next_idx)) {
