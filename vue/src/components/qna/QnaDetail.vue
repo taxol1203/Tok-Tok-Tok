@@ -7,7 +7,7 @@
   </div>
 </template>
 <script>
-import QnaAnswer from "../../components/qna/QnaAnswer.vue";
+import QnaAnswer from '../../components/qna/QnaAnswer.vue';
 
 export default {
   components: {
