@@ -9,6 +9,10 @@
       />
     </div>
     <h2>John Smith</h2>
+    <el-row justify="center">
+      <el-button size="medium" round>Follow</el-button>
+      <el-button size="medium" round>Connect</el-button>
+    </el-row>
     <p>
       Lorem ipsum, dolor sit amet consectetur adipisicing elit. Facilis dolor ipsum quam amet, eos
       explicabo saepe ipsam autem eligendi nulla minus magnam voluptatum facere, rem unde labore
