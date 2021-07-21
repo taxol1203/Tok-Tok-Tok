@@ -1,7 +1,7 @@
 <template lang="">
   <el-container>
     <el-header>
-      <el-row>
+      <el-row gutter="20">
         <el-col span="4">
           <el-button type="primary" icon="el-icon-edit" circle></el-button>
           <!-- edit btn: 수정 모드 -->
