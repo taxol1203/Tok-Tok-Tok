@@ -1,5 +1,4 @@
 <template lang="">
-  <div>[QnaList]</div>
   <div v-for="q in qList" :key="q.q_idx" class="text item">
     <el-card class="box-card" @click="showDetail(key)">
       {{ q.contents }}

@@ -8,10 +8,10 @@
       v-model="input"
       @keyup.enter="hiddenInput()"
     ></el-input>
-    <!-- <h1 v-if="check" style="text-align: left">{{ input }}</h1> -->
+    <!-- <h1 v-if="check" style="text-align: left">{{ input }}</h1>  :span="23" :offset="0"-->
     <el-row :gutter="20" v-if="check">
-      <el-col :span="23" :offset="0">
-        <p class="qna-title border-solid">{{ input }}, (Eng) Scenario #1 (한글) 문제 1</p>
+      <el-col>
+        <p class="qna-title border-solid">{{ input }}</p>
       </el-col>
     </el-row>
   </div>
