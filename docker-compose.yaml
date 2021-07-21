@@ -11,9 +11,11 @@ services:
         - POSTGRES_DB=sample
         - POSTGRES_USERNAME=postgres
         - POSTGRES_PASSWORD=root
+#        TZ: Asia/Seoul
       volumes:
         - "./:/docker-entrypoint-initdb.d/"
 #        - postgres:/var/lib/postgresql/data
+
 
     django:
       build: ./django
@@ -52,14 +54,19 @@ services:
       image: redis
       ports:
         - "6379:6379"
-#     jenkins:
-#       build: ./jenkins
-#       container_name: jenkins
-# #      image: jenkins/jenkins:lts-jdk11
-#       ports:
-#         - 9090:8080
-#       volumes:
-#         - ./jenkins:/var/jenkinse_home
+#      environment:
+#        TZ: Asia/Seoul
+#    jenkins:
+#      build: ./jenkins
+#      container_name: jenkins
+##      image: jenkins/jenkins:lts-jdk11
+#      ports:
+#        - 9090:8080
+#      user: root
+#      volumes:
+#        - ./jenkins:/var/jenkinse_home
+#      environment:
+#        TZ: Asia/Seoul
 
 volumes:
   postgres: {}
