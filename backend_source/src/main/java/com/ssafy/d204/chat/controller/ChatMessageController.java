@@ -3,17 +3,20 @@ package com.ssafy.d204.chat.controller;
 import com.ssafy.d204.chat.dao.ChatDao;
 import com.ssafy.d204.chat.dto.ChatMessage;
 import com.ssafy.d204.chat.dto.ChatSession;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SubscribeMapping;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -30,7 +33,6 @@ public class ChatMessageController {
         System.out.println(sessionId);
         System.out.println(chatMessage);
         // 채팅 후처리, REDIS등 적용은 여기에서
-        this.simpMessagingTemplate.convertAndSend("/send/admin", chatMessage);
 //        this.simpMessagingTemplate.convertAndSend("/send/"+sessionId, chatMessage);
         try{
             chatDao.pushMessage(chatMessage);
@@ -39,6 +41,12 @@ public class ChatMessageController {
             e.printStackTrace();
             // do something when error occured.
         }
+
+        this.simpMessagingTemplate.convertAndSend("/send/admin", chatMessage);
+//        this.simpMessagingTemplate.convertAndSend("/send/"+sessionId, chatMessage);
         return chatMessage;
+//        return null;
     }
+
+
 }

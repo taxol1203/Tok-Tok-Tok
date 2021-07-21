@@ -57,7 +57,7 @@ public class SwaggerConfig {
 				.select()
 				.apis(RequestHandlerSelectors.basePackage("com.ssafy.d204.api.controller"))
 				.paths(PathSelectors.ant("/**/api/**")
-						.or(PathSelectors.ant("/**/chat/**"))
+//						.or(PathSelectors.ant("/**/**"))
 						) 
 				.build();
 	}

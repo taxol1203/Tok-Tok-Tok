@@ -1,17 +1,19 @@
 package com.ssafy.d204.chat.controller;
 
 import com.ssafy.d204.chat.dao.ChatDao;
+import com.ssafy.d204.chat.dto.ChatMessage;
+import com.ssafy.d204.chat.dto.ChatMessageAndSession;
 import com.ssafy.d204.chat.dto.ChatSession;
+import com.ssafy.d204.chat.dto.ModifyRoomStatusReq;
 import io.swagger.annotations.ApiOperation;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import jdk.nashorn.internal.ir.RuntimeNode;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import javax.mail.Session;
+import java.util.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -52,12 +54,7 @@ public class ChatSessionController {
     public ResponseEntity<?> getMyRoom(@PathVariable int userid) {
         List<ChatSession> ret = null;
         try{
-            System.out.println("oh2");
             ret = chatDao.findMyRoom(userid);
-            for(ChatSession cs : ret){
-                System.out.println("oh");
-                System.out.println(cs);
-            }
         }catch(Exception e){
             e.printStackTrace();
             return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -75,17 +72,36 @@ public class ChatSessionController {
         try{
             ret.setFk_client_idx(session.getFk_client_idx());
 //            ret.setCreated_at();
-            ret.setStatus("OPEN");
+            ret.setStatus(ChatSession.SessionState.OPEN);
             ret.setFk_created_by_idx(session.getFk_created_by_idx());
             chatDao.createChatRoom(ret);
+            chatDao.pushMessage(new ChatMessage(0,".",ret.getFk_client_idx(),null,false,ret.getSession_id(), ChatMessage.MessageType.JOIN));
         }catch(Exception e){
             e.printStackTrace();
             return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<ChatSession>(ret, HttpStatus.OK);
     }
+    @ApiOperation(value = "방의 ID를 가지고 방의 정보를 수신한다.", response = ChatSession.class)
+    @PutMapping("/room/{sessionId}")
+    @ResponseBody
+    public ResponseEntity<?> modifyRoomStatus(@PathVariable String sessionId,@RequestBody ModifyRoomStatusReq status) {
+        int result = 0;
+        try{
+            result = chatDao.modifyChatStatus(sessionId, status.getStatus());
+        }catch(Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        if(result == 0){
+            return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<Void>(HttpStatus.OK);
+    }
 
-    // 채팅방 정보 아이디에서 받아옴
+
+
+        // 채팅방 정보 아이디에서 받아옴
     @ApiOperation(value = "방의 ID를 가지고 방의 정보를 수신한다.", response = ChatSession.class)
     @GetMapping("/room/{roomId}")
     @ResponseBody
@@ -93,7 +109,7 @@ public class ChatSessionController {
         ChatSession ret = null;
         System.out.println(roomId);
         try{
-            ret = chatDao.findRoomById(roomId);
+            ret = chatDao.findRoomBySessionId(roomId);
             if(ret == null){
                 System.out.println("no room");
             }else{
@@ -104,5 +120,43 @@ public class ChatSessionController {
             return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<ChatSession>(ret, HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "방의 ID를 가지고 방의 정보를 수신한다.", response = ChatSession.class)
+    @GetMapping("/admin/init")
+    @ResponseBody
+    public ResponseEntity<?> getAllMessagesAndSessions() {
+        HashMap<String, ChatMessageAndSession> ret = new HashMap<>();
+        try{
+            List<ChatSession> sessions = chatDao.findAllRoom();
+            if(sessions.size() == 0){
+                return new ResponseEntity<HashMap<String, ChatMessageAndSession>>(ret, HttpStatus.OK);
+            }
+            for(ChatSession session : sessions){
+                ret.put(session.getSession_id(), new ChatMessageAndSession(session,new ArrayList<ChatMessage>()));
+            }
+            sessions = null; // for gc
+            List<ChatMessage> messages = chatDao.getAllMessages();
+            for(ChatMessage message : messages){
+                ret.get(message.getFk_session_id()).getMessages().add(message);
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<HashMap<String, ChatMessageAndSession>>(ret, HttpStatus.OK);
+    }
+    @ApiOperation(value = "해당 세션ID의 이전 메세지들 가져오기", response = ChatSession.class)
+    @GetMapping("/messages/{sessionId}")
+    @ResponseBody
+    public ResponseEntity<?> getMessagesBySessionId(@PathVariable String sessionId) {
+        List<ChatMessage> ret;
+        try{
+            ret = chatDao.getMessagesBySessionId(sessionId);
+        }catch(Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<List<ChatMessage>>(ret, HttpStatus.OK);
     }
 }

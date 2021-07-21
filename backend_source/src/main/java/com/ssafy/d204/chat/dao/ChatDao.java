@@ -9,12 +9,17 @@ import java.util.*;
 
 //@Repository
 public interface ChatDao {
-    // ChatSession manage
+    // ChatSession management
     public List<ChatSession> findAllRoom();
     public List<ChatSession> findMyRoom(int id);
-    public ChatSession findRoomById(String session_id) ;
+    public ChatSession findRoomBySessionId(String session_id);
+
     public int createChatRoom(ChatSession session);
+
+    public int modifyChatStatus(String sessionId, ChatSession.SessionState status);
 
     // ChatMessage Persistent API
     public int pushMessage(ChatMessage chatMessage);
+    public List<ChatMessage> getAllMessages();
+    public List<ChatMessage> getMessagesBySessionId(String session_pk_idx);
 }

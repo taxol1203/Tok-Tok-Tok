@@ -1,7 +1,8 @@
 package com.ssafy.d204.chat.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
-
+@AllArgsConstructor
 @Data
 public class ChatMessage {
     private int pk_idx;
@@ -9,7 +10,7 @@ public class ChatMessage {
     private int fk_author_idx;
     private String created;
     private boolean deleted = false;
-    private int fk_session_idx;
+    private String fk_session_id;
     private MessageType type;
 
     public enum MessageType{

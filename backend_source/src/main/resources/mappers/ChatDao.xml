@@ -14,7 +14,7 @@
 	</select>
 	
 	<!-- session id로 방 정보 가져오기 -->
-	<select id="findRoomById" resultType="ChatSession">
+	<select id="findRoomBySessionId" resultType="ChatSession">
 		SELECT *
 		FROM "SSAFY_PJT1".chat_session
 		WHERE session_id = #{id} AND status = 'OPEN';
@@ -26,9 +26,26 @@
 		values ( #{session_id}, now(), #{fk_created_by_idx}, #{fk_client_idx},#{status});
 	</insert>
 
+	<update id="modifyChatStatus" parameterType="ModifyRoomStatusReq">
+		UPDATE "SSAFY_PJT1".chat_session
+		SET "status" = #{status}
+		WHERE session_id = #{sessionId};
+	</update>
+
 	<!-- 메세지 DB에 등록 -->
 	<insert id="pushMessage" parameterType="ChatMessage">
-		INSERT INTO "SSAFY_PJT1".chat_message ("message", "fk_author_idx", "created", "deleted", "fk_session_idx", "type")
-		values (#{message}, #{fk_author_idx} , now(), false, #{fk_session_idx}, #{type});
+		INSERT INTO "SSAFY_PJT1".chat_message ("message", "fk_author_idx", "created", "deleted", "fk_session_id", "type")
+		values (#{message}, #{fk_author_idx} , now(), false, #{fk_session_id}, #{type});
 	</insert>
+
+	<select id="getAllMessages" resultType="ChatMessage">
+		SELECT *
+		FROM "SSAFY_PJT1".chat_message;
+	</select>
+
+	<select id="getMessagesBySessionId" parameterType="String" resultType="ChatMessage">
+		SELECT *
+		FROM "SSAFY_PJT1".chat_message
+		WHERE fk_session_id = #{sessionId};
+	</select>
 </mapper>
