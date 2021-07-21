@@ -1,47 +1,34 @@
 <template>
-  <!--  -->
-
-  <div class="chat-detial-box border-solid">
+  <div class="border-solid chat-detail grid-content">
     <el-row :gutter="12">
-      <el-col :span="24" :offset="0">
-        <div class="border-solid">임시 타이틀 V1.0</div>
+      <!-- 채팅창 부분+녹색 -->
+      <el-col :span="24" :offset="0"> [Chat Detail]</el-col>
+      <!-- 상대방 -->
+      <el-col :span="20" :offset="0">
+        <div class="user-name border-solid">상담사 사진(기본 사진) | 상담사 이름</div>
+      </el-col>
+      <el-col :span="20" :offset="0">
+        <div class="message-other border-solid">Other Message</div>
+      </el-col>
+      <el-col :span="20" :offset="4">
+        <div class="message-me border-solid">My Message</div>
+      </el-col>
+      <el-col :span="20" :offset="4">
+        <div class="message-me border-solid">My Message</div>
+      </el-col>
+      <!-- 입력창 -->
+      <el-col :span="3" :offset="0">
+        <el-button type="primary" icon="el-icon-video-camera" class="icon-m-p"></el-button>
+        <!-- <i class="el-icon-video-camera defualt-m-p"></i> -->
+      </el-col>
+      <el-col :span="18" :offset="0">
+        <div class="border-solid">입력창(message manager, chat manager, chat input 등</div>
+      </el-col>
+      <el-col :span="3" :offset="0">
+        <el-button type="success" icon="el-icon-s-promotion" class="icon-m-p" plain></el-button>
+        <!-- <i class="el-icon-s-promotion defualt-m-p"></i> -->
       </el-col>
     </el-row>
-
-    <div class="border-solid chat-detail grid-content">
-      <el-row :gutter="24">
-        <!-- 채팅창 부분+녹색 -->
-        <el-col :span="24" :offset="0"> [Chat Detail]</el-col>
-        <!-- 상대방 -->
-        <el-col :span="20" :offset="0">
-          <div class="user-name border-solid">상담사 사진(기본 사진) | 상담사 이름</div>
-        </el-col>
-        <!-- <el-col :span="4" :offset="0"><div class="border-solid">공백</div></el-col> -->
-        <el-col :span="20" :offset="0">
-          <div class="message-other border-solid">Other Message</div>
-        </el-col>
-        <!-- <el-col :span="4" :offset="0"><div class="border-solid">공백</div></el-col> -->
-        <!-- 나 -->
-        <!-- <el-col :span="4" :offset="0">
-          <div class="border-solid">공백</div>
-        </el-col> -->
-        <el-col :span="20" :offset="4">
-          <div class="message-me border-solid">My Message</div>
-        </el-col>
-        <!-- 입력창 -->
-        <el-col :span="2" :offset="0">
-          <el-button type="primary" icon="el-icon-video-camera"></el-button>
-          <!-- <i class="el-icon-video-camera defualt-m-p"></i> -->
-        </el-col>
-        <el-col :span="20" :offset="0">
-          <div class="border-solid">입력창(message manager, chat manager, chat input 등</div>
-        </el-col>
-        <el-col :span="2" :offset="0">
-          <el-button type="success" icon="el-icon-s-promotion" plain></el-button>
-          <!-- <i class="el-icon-s-promotion defualt-m-p"></i> -->
-        </el-col>
-      </el-row>
-    </div>
   </div>
 </template>
 <script>
@@ -66,5 +53,9 @@ export default {};
 .defualt-m-p {
   padding: 1px;
   margin: 5px 1px 5px 1px;
+}
+.icon-m-p {
+  padding: 0px 10px 0px 10px;
+  margin: 0px 5px 0px 5px;
 }
 </style>
