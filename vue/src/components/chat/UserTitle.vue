@@ -13,6 +13,8 @@ export default {};
   font-size: 200%;
   font-family: "BMJUA", Times, serif;
   text-align: left;
+  color: white;
+  background-color: #258c60;
 }
 .border-solid {
   border: solid 1px;

@@ -48,8 +48,16 @@ export default {};
 }
 
 .chat-detail {
-  background-color: rgb(242, 255, 127);
+  color: white;
+  background-color: rgb(39, 37, 31);
   font-family: "BMJUA";
+}
+
+.message-me{
+  background-color: #258c60;
+}
+.message-other{
+  background-color: #258c60;
 }
 
 .defualt-m-p {
