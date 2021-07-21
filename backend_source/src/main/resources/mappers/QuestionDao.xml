@@ -12,7 +12,7 @@
 	<select id="detailQuestion" resultType="Question">
 		SELECT pk_idx, "content"
 		FROM "SSAFY_PJT1".question
-		where pk_idx = #{idx};
+		where pk_idx = #{pk_idx};
 	</select>
 
 	<!-- 게시글 등록 -->
@@ -25,12 +25,12 @@
 	<update id="updateQuestion" parameterType="Question">
 		update "SSAFY_PJT1".question 
 		set content = #{content}
-		where pk_idx = #{idx};
+		where pk_idx = #{pk_idx};
 	</update>
 
 	<!-- 게시글 삭제 -->
 	<delete id="deleteQuestion" parameterType="int">
 		delete from "SSAFY_PJT1".question 
-		where pk_idx = #{idx};
+		where pk_idx = #{pk_idx};
 	</delete>
 </mapper>
