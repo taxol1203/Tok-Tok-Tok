@@ -15,13 +15,14 @@ public class SocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/sub");
-        config.setApplicationDestinationPrefixes("/pub");
+        config.enableSimpleBroker("/send");
+//        config.setApplicationDestinationPrefixes("/pub");
     }
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws-stomp").setAllowedOrigins("*")
+        // TODO : CORS 설정 * 안먹히는 문제
+        registry.addEndpoint("/chat").setAllowedOrigins("http://localhost:8080")
                 .withSockJS();
     }
 }

@@ -9,8 +9,8 @@ import com.ssafy.d204.db.entity.Question;
 @Mapper
 public interface QuestionDao {
 	public List<Question> retrieveQuestion();
-	public Question detailQuestion(int idx);
+	public Question detailQuestion(int pk_idx);
 	public boolean writeQuestion(Question question);
 	public boolean updateQuestion(Question question);
-	public boolean deleteQuestion(int idx);
+	public boolean deleteQuestion(int pk_idx);
 }

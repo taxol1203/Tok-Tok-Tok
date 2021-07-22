@@ -1,17 +1,20 @@
 package com.ssafy.d204.chat.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
-
+@AllArgsConstructor
 @Data
 public class ChatMessage {
-    private MessageType type;
-    private String roomId;
-    private String sender;
+    private int pk_idx;
     private String message;
+    private int fk_author_idx;
+    private String created;
+    private boolean deleted = false;
+    private String fk_session_id;
+    private MessageType type;
 
     public enum MessageType{
-        JOIN, QUIT, MSG, VIDEO;
+        JOIN, QUIT, MSG, VID;
     }
-
 }
 
