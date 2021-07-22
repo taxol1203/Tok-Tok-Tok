@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Login from "../views/user/Login.vue";
+import ChatArea from "../views/chat/ChatArea.vue";
+import QnaArea from "../views/qna/QnaArea.vue";
 
 const routes = [
   {
@@ -37,11 +39,11 @@ const routes = [
     children: [
       {
         path: 'chat',
-        // component: () => import("../views/chat/ChatArea.vue"),
+        component: ChatArea,
       },
       {
         path: 'qna',
-        // component: () => import("../views/qna/ChatArea.vue"),
+        component: QnaArea,
       },
     ]
   },
