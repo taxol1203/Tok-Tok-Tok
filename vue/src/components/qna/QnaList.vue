@@ -1,6 +1,7 @@
 <template lang="">
   <div>
-    <el-scrollbar height="500px">
+    {{ select }}
+    <el-scrollbar height="600px">
       <!-- 시작 카드 시작 -->
       <el-card class="box-card" @click="showDetail(start.contents)">
         {{ start.contents }}
@@ -24,8 +25,10 @@
 </template>
 <script>
 export default {
+  props: ['select'],
   data() {
     return {
+      propSelect: this.select,
       qDetail: '',
       start: {
         q_idx: '1',
@@ -54,7 +57,9 @@ export default {
   methods: {
     showDetail(key) {
       this.qDetail = key;
+      this.propSelect = key;
       console.log(this.qDetail);
+      this.$emit('child', this.propSelect);
     },
     addScene() {
       let tmp = {

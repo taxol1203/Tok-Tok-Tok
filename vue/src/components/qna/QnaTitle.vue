@@ -11,7 +11,7 @@
     <!-- <h1 v-if="check" style="text-align: left">{{ input }}</h1>  :span="23" :offset="0"-->
     <el-row :gutter="20" v-if="check">
       <el-col>
-        <p class="qna-title border-solid">{{ input }}</p>
+        <p class="qna-title border-solid" @click="hiddenInput">{{ input }}</p>
       </el-col>
     </el-row>
   </div>

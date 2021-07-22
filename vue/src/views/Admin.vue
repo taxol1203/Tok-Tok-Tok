@@ -1,9 +1,9 @@
 <template lang="">
     <el-container style="height: 100%; border: 1px solid #eee" >
       <!-- NavBar 시작 -->
-      <!-- <el-aside width="200px"> -->
+      <!-- <el-aside width="200px">  -->
           <el-menu 
-            default-active="1" 
+            :default-active="mode"
             class="el-menu-vertical-demo"
             background-color="#258C60"
             text-color= "#999999"
@@ -44,6 +44,7 @@ export default {
   data() {
     return {
       isCollapse: false,
+      mode:'2'
     };
   },
   methods:{
