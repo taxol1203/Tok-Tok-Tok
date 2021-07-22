@@ -16,14 +16,16 @@
               <i class="el-icon-d-arrow-right" v-if="isCollapse===true"></i>
               <i class="el-icon-d-arrow-left"  v-if="isCollapse===false"></i>
             </el-menu-item>
+            <router-link to="/admin/chat">
             <el-menu-item index="1" @click="changeMenu('chat')">
               <i class="el-icon-menu"></i>
               <template #title>상담</template>
-            </el-menu-item>
+            </el-menu-item></router-link>
+            <router-link to="/admin/qna">
             <el-menu-item index="2" @click="changeMenu('qna')">
               <i class="el-icon-document"></i>
               <template #title>예상 시나리오 작성</template>
-            </el-menu-item>
+            </el-menu-item></router-link>
             <el-menu-item index="3">
               <i class="el-icon-setting"></i>
               <template #title>설정</template>
@@ -32,7 +34,7 @@
       <!-- </el-aside> -->
       <!-- NavBar 끝 -->
     <el-main>
-      <ChatArea v-if="type === 'chat'" />
+      <ChatArea v-if="type === 'chat'"/>
       <QnaArea v-if="type === 'qna'" />
     </el-main>
     </el-container>

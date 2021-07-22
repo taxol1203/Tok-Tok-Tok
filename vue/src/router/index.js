@@ -34,6 +34,16 @@ const routes = [
     path: "/admin",
     name: "Admin",
     component: () => import("../views/Admin.vue"),
+    children: [
+      {
+        path: 'chat',
+        // component: () => import("../views/chat/ChatArea.vue"),
+      },
+      {
+        path: 'qna',
+        // component: () => import("../views/qna/ChatArea.vue"),
+      },
+    ]
   },
 ];
 
