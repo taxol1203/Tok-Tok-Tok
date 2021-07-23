@@ -14,7 +14,7 @@ public class ChatMessage {
     private MessageType type;
 
     public enum MessageType{
-        JOIN, QUIT, MSG, VID;
+        JOIN, QUIT, MSG, VID, NEWR, DELR;
     }
 }
 
