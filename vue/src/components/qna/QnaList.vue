@@ -40,7 +40,7 @@ export default {
     },
     addScene() {
       let tmp = {
-        q_idx: this.count,
+        pk_idx: this.count,
         content: 'dummy' + this.count,
         answers: [],
       };

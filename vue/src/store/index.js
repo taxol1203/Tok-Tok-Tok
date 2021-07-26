@@ -12,7 +12,9 @@ export default createStore({
   },
   mutations: { //payload는 파라미터로 넘어오는 값
     addQna: (state, payload) => {
-      state.qnaList.push(payload)
+      let tmp = state.qnaList
+      tmp.push(payload)
+      state.qnaList = tmp
     },
     loadQna: (state, payload) => {
       state.qnaList = payload;

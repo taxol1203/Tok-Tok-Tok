@@ -1,10 +1,10 @@
 <template lang="">
   <el-container>
-    <el-aside style="width: 300px; border: 1px solid #eee">
+    <el-aside style="border: 1px solid #eee">
       <!-- <QnaList  /> -->
       <QnaList />
     </el-aside>
-    <el-main style="width: 300px; border: 1px solid #eee">
+    <el-main style="border: 1px solid #eee">
       <QnaEdit />
     </el-main>
   </el-container>

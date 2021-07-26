@@ -54,6 +54,7 @@ export default {
   },
   data() {
     return {
+      answers: [],
       show: true,
     };
   },
