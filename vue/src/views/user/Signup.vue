@@ -7,8 +7,8 @@
           <el-form
             :model="user"
             :rules="rules"
+            label-position="top"
             ref="ruleForm"
-            label-width="100px"
             class="demo-ruleForm"
           >
             <el-form-item label="사용자명" prop="username">
@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapActions } from 'vuex';
 export default {
   data() {
     var checkEmail = (rule, value, callback) => {
@@ -89,6 +89,12 @@ export default {
       }
     };
     return {
+      user: {
+        email: '',
+        passwd: '',
+        check: '',
+        username: '',
+      },
       rules: {
         username: [{ validator: validateName, trigger: 'blur' }],
         passwd: [{ validator: validatePass, trigger: 'blur' }],
@@ -96,11 +102,6 @@ export default {
         email: [{ validator: checkEmail, trigger: 'blur' }],
       },
     };
-  },
-  computed: {
-    ...mapState({
-      user: 'user',
-    }),
   },
   methods: {
     ...mapActions(['signUp']),

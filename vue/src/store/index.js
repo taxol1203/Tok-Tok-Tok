@@ -29,7 +29,7 @@ export default createStore({
       email: '',
       passwd: '',
       username: '',
-      check:'',
+      check: '',
     }
   },
   getters: { //computed
@@ -41,8 +41,15 @@ export default createStore({
     addQna: (state, payload) => {
       state.qnaList.push(payload)
     },
-    successSignUp: (state, payload) => {
-      state.user = payload;
+    successSignUp: () => {
+      alert('회원가입이 완료되었습니다.')
+      //로그인 화면으로 전환
+      this.$router.push({ name: 'Login' }).catch(() => {});
+    },
+    successLogin: (state, payload) => {
+      alert('로그인이 완료되었습니다.')
+      localStorage.setItem('jwt', payload.data.token);
+      //admin 화면으로 전환
     }
   },
   actions: {
@@ -52,13 +59,21 @@ export default createStore({
       commit('addQna', paylaod)
     },
     signUp: ({ commit }, payload) => {
-      console.log(payload)
       axios.post('http://localhost:8088/temp/api/auth/register', payload)
         .then((res) => {
           commit('successSignUp', res);
         })
         .catch(() => {
           console.log('signup error')
+        })
+    },
+    login: ({ commit }, payload) => {
+        axios.post('http://localhost:8088/temp/api/auth/login', payload)
+        .then((res) => {
+          commit('successLogin', res);
+        })
+        .catch(() => {
+          console.log('login error')
         })
     }
   },

@@ -1,31 +1,36 @@
 <template>
   <el-row justify="center">
-    <el-col :span="6">
+    <el-col :span="12">
       <div>
         <el-card shadow="always">
           <el-form
+            v-if="token === null"
             label-position="top"
             label-width="100px"
-            :model="ruleForm"
+            :model="user"
             :rules="rules"
             ref="formLabelAlign"
             status-icon
-            @submit.prevent="onSubmit('formLabelAlign', ruleForm.email, ruleForm.password)"
           >
             <el-form-item label="이메일" prop="email">
-              <el-input type="email" v-model="ruleForm.email" autocomplete="off"></el-input>
+              <el-input type="email" v-model="user.email" autocomplete="off"></el-input>
             </el-form-item>
-            <el-form-item label="비밀번호" prop="pass">
-              <el-input type="password" v-model="ruleForm.pass" autocomplete="off"></el-input>
+            <el-form-item label="비밀번호" prop="passwd">
+              <el-input type="password" v-model="user.passwd" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item>
-              <!-- @click="submitForm('formLabelAlign')" -->
               <transition name="slide-fade">
-                <el-button type="submit" id="primary">로그인</el-button>
+                <el-button type="button" id="primary" @click="onSubmit('formLabelAlign')"
+                  >로그인</el-button
+                >
               </transition>
               <el-button @click="resetForm('formLabelAlign')">다시쓰기</el-button>
             </el-form-item>
           </el-form>
+          <div v-else>
+            <h2>환영합니다.</h2>
+            <el-button @click="logout">로그아웃</el-button>
+          </div>
         </el-card>
       </div>
     </el-col>
@@ -33,9 +38,11 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 export default {
   data() {
     var checkEmail = (rule, value, callback) => {
+      console.log(value);
       if (!value) {
         return callback(new Error('Please input the email'));
       } else {
@@ -57,61 +64,47 @@ export default {
         }
       }, 1000);
     };
-    var validatePass = (rule, value, callback) => {
+    var validatePasswd = (rule, value, callback) => {
+      console.log(value);
+
       if (value === '') {
         callback(new Error('Please input the password'));
       } else {
-        if (this.ruleForm.checkPass !== '') {
-          this.$refs.ruleForm.validateField('checkPass');
+        if (value.length < 9 || value.length > 16) {
+          callback(new Error('Please check the password'));
         }
         callback();
       }
     };
     return {
+      token: localStorage.getItem('jwt'),
       msg: '',
-      ruleForm: {
-        pass: '',
+      user: {
         email: '',
+        passwd: '',
       },
       rules: {
-        pass: [{ validator: validatePass, trigger: 'blur' }],
+        passwd: [{ validator: validatePasswd, trigger: 'blur' }],
         email: [{ validator: checkEmail, trigger: 'blur' }],
       },
     };
   },
   methods: {
-    submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          alert('submit!');
-        } else {
-          console.log('error submit!!');
-          return false;
-        }
-      });
-    },
+    ...mapActions(['login']),
     resetForm(formName) {
       this.$refs[formName].resetFields();
     },
-    onSubmit(formName, email, password) {
+    onSubmit(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.$store
-            .dispatch('LOGIN', { email, password })
-            .then(() => this.redirect())
-            .catch(({ message }) => (this.msg = message));
+          this.login(this.user);
+          this.$router.go();
         }
       });
     },
-    redirect() {
-      const { search } = window.location;
-      const tokens = search.replace(/^\?/, '').split('&');
-      const { returnPath } = tokens.reduce((qs, tkn) => {
-        const pair = tkn.split('=');
-        qs[pair[0]] = decodeURIComponent(pair[1]);
-        return qs;
-      }, {});
-      this.$router.push(returnPath);
+    logout() {
+      localStorage.removeItem('jwt');
+      this.$router.go();
     },
   },
 };
