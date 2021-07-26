@@ -1,17 +1,41 @@
 <template lang="">
-  <el-row :gutter="20">
-    <el-col :span="23" :offset="0">
-      <p class="qna-title border-solid">(Eng) Scenario #1 (한글) 문제 1</p>
-    </el-col>
-  </el-row>
+  <div>
+    <!-- key 13 입력/ 버튼 : 질문 fix  -->
+    <el-input
+      v-if="!check"
+      type="text"
+      placeholder="예상 질문 제목 편집 창"
+      v-model="input"
+      @keyup.enter="hiddenInput()"
+    ></el-input>
+    <!-- <h1 v-if="check" style="text-align: left">{{ input }}</h1>  :span="23" :offset="0"-->
+    <el-row :gutter="20" v-if="check">
+      <el-col>
+        <p class="qna-title border-solid">{{ input }}</p>
+      </el-col>
+    </el-row>
+  </div>
 </template>
+
 <script>
-export default {};
+export default {
+  data() {
+    return {
+      input: '', //props로 처리해서 edit에서 가지고 있어야할듯...
+      check: false,
+    };
+  },
+  methods: {
+    hiddenInput() {
+      this.check = !this.check;
+    },
+  },
+};
 </script>
-<style>
+<style scoped>
 .qna-title {
   font-size: 200%;
-  font-family: "BMJUA", Times, serif;
+  font-family: 'BMJUA', Times, serif;
   text-align: left;
   color: white;
   background-color: rgb(0, 112, 74);
