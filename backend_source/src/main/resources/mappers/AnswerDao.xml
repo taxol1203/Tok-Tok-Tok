@@ -17,8 +17,8 @@
 
 	<!-- 답변 등록 -->
 	<insert id="writeAnswer" parameterType="Answer">
-		INSERT INTO "SSAFY_PJT1".answer ("content") 
-		values ( #{content} );
+		INSERT INTO "SSAFY_PJT1".answer ("content", "fk_next_idx")
+		values ( #{content}, #{fk_next_idx} );
 	</insert>
 	
 	<!-- 답변 수정 -->
