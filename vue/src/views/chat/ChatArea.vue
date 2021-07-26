@@ -1,7 +1,7 @@
 <template lang="">
   <div>
     <el-container>
-      <el-aside style="width: 300px; border: 1px solid #eee"><ChatList /></el-aside>
+      <el-aside style="width: 300px; border: 1px solid #eee"><ChatList :test="test" /></el-aside>
       <el-container>
         <el-header><UserTitle /></el-header>
         <el-main>
@@ -27,6 +27,12 @@ export default {
     ChatDetail,
     UserInfo,
   },
+  setup() {
+    const test = 'abcdef'
+    return {
+      test,
+    }
+  }
 };
 </script>
 <style>
