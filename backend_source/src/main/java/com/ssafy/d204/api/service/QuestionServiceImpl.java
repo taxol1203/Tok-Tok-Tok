@@ -20,8 +20,8 @@ public class QuestionServiceImpl implements QuestionService {
 	}
 
 	@Override
-	public Question detailQuestion(int idx) {
-		return questionDao.detailQuestion(idx);
+	public Question detailQuestion(int pk_idx) {
+		return questionDao.detailQuestion(pk_idx);
 	}
 
 	@Override
@@ -35,8 +35,8 @@ public class QuestionServiceImpl implements QuestionService {
 	}
 
 	@Override
-	public boolean deleteQuestion(int idx) {
-		return questionDao.deleteQuestion(idx);
+	public boolean deleteQuestion(int pk_idx) {
+		return questionDao.deleteQuestion(pk_idx);
 	}
 
 }

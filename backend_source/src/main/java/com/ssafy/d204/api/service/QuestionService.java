@@ -6,8 +6,8 @@ import com.ssafy.d204.db.entity.Question;
 
 public interface QuestionService {
 	public List<Question> retrieveQuestion();
-	public Question detailQuestion(int idx);
+	public Question detailQuestion(int pk_idx);
 	public boolean writeQuestion(Question content);
 	public boolean updateQuestion(Question content);
-	public boolean deleteQuestion(int idx);
+	public boolean deleteQuestion(int pk_idx);
 }
