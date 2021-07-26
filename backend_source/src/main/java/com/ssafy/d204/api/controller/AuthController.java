@@ -45,8 +45,9 @@ public class AuthController extends SuperController{
 			if(passwordEncoder.matches(loginInfo.getPasswd(),user.getPasswd())) {				
 				UserLoginPostRes ret = new UserLoginPostRes();
 				String token=jwtSvc.create(user);
-				
 				ret.setToken(token); // 추후 jwt 적용 예정
+				user.setPasswd("");
+				ret.setUser(user);
 				return new ResponseEntity<UserLoginPostRes>(ret, HttpStatus.OK);
 			}
 			else {
