@@ -14,7 +14,7 @@
       <el-input
         type="textarea"
         autosize
-        v-model="title"
+        v-model="select.content"
         id="question"
         v-if="!show"
         style="margin: 10px; width: 500px"
@@ -26,7 +26,7 @@
             type="textarea"
             autosize
             placeholder="예상 질문을 입력해주세요."
-            v-model="title"
+            v-model="select.content"
             id="question"
           >
           </el-input>
@@ -45,6 +45,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import QnaAnswer from '../../components/qna/QnaAnswer.vue';
 
 export default {
@@ -53,11 +54,11 @@ export default {
   },
   data() {
     return {
-      answers: [],
-      title: '',
-      textarea: '',
       show: true,
     };
+  },
+  computed: {
+    ...mapState(['select']),
   },
   methods: {
     add() {
@@ -66,8 +67,6 @@ export default {
     },
     changeShow() {
       this.show = !this.show;
-      this.title = this.title.replace('\r\n', '~');
-      console.log(this.title);
     },
   },
 };

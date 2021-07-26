@@ -5,25 +5,28 @@
       v-if="!check"
       type="text"
       placeholder="예상 질문 제목 편집 창"
-      v-model="input"
+      v-model="select.content"
       @keyup.enter="hiddenInput()"
     ></el-input>
     <!-- <h1 v-if="check" style="text-align: left">{{ input }}</h1>  :span="23" :offset="0"-->
     <el-row :gutter="20" v-if="check">
       <el-col>
-        <p class="qna-title border-solid" @click="hiddenInput">{{ input }}</p>
+        <p class="qna-title border-solid" @click="hiddenInput">{{ select.content }}</p>
       </el-col>
     </el-row>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex';
 export default {
   data() {
     return {
-      input: '', //props로 처리해서 edit에서 가지고 있어야할듯...
       check: false,
     };
+  },
+  computed: {
+    ...mapState(['select']),
   },
   methods: {
     hiddenInput() {

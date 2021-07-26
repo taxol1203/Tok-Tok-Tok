@@ -1,29 +1,9 @@
+import axios from 'axios';
 import { createStore } from "vuex";
 export default createStore({
   state: { //data
-    qnaList: [
-      {
-        q_idx: '1',
-        contents: '시작합니다.',
-        answers: [
-          {
-            q_idx: '1-1',
-            contents: '예상답변1',
-            fk_idx: '2',
-          },
-          {
-            q_idx: '1-2',
-            contents: '예상답변2',
-            fk_idx: '2',
-          },
-        ],
-      },
-      {
-        q_idx: '2',
-        contents: '종료합니다.',
-        answers: [],
-      },
-    ],
+    qnaList: [],
+    select: {},
   },
   getters: { //computed
     allQnaCount: state => { //parameter에 사용할 컴포넌트 넣기
@@ -33,16 +13,29 @@ export default createStore({
   mutations: { //payload는 파라미터로 넘어오는 값
     addQna: (state, payload) => {
       state.qnaList.push(payload)
+    },
+    loadQna: (state, payload) => {
+      state.qnaList = payload;
+    },
+    pickQna: (state, payload) => {
+      state.qnaList.forEach(item => {
+        if (item.pk_idx == payload) state.select = item
+      })
+      
     }
   },
   actions: {
     addQna: ({ commit }, paylaod) => {
-      //여기다가 로직을 넣고 생성된 데이터들을
-      //로
-      //~
-      //직
-      //mutation에다가 commit하기 위해 actions가 필요
       commit('addQna', paylaod)
+    },
+    loadQna: ({ commit }) => {
+      axios.get('http://localhost:8088/temp/api/qna/question')
+        .then(payload => {
+          commit('loadQna', payload.data)
+      })
+    },
+    pickQna: ({ commit }, payload) => {
+      commit('pickQna', payload) 
     }
   },
   modules: {}

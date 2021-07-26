@@ -32,6 +32,7 @@
   </div>
 </template>
 <script>
+import { mapState } from 'vuex';
 export default {
   data() {
     return {
@@ -61,6 +62,9 @@ export default {
       ],
       value: '',
     };
+  },
+  computed: {
+    ...mapState(['select']),
   },
   methods: {
     changeShow() {

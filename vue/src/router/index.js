@@ -44,10 +44,12 @@ const routes = [
       {
         path: 'chat',
         component: ChatArea,
+        name: "chat"
       },
       {
         path: 'qna',
         component: QnaArea,
+        name: 'qna'
       },
     ]
   },

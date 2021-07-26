@@ -1,10 +1,10 @@
 <template lang="">
   <div>
     <el-scrollbar height="600px">
-      <h1>All cards({{ count }})</h1>
-      <div v-for="q in cards" :key="q.id" class="text item">
-        <el-card class="box-card" @click="showDetail(q.q_idx)">
-          {{ q.contents }}
+      <!-- <h1>All cards({{ count }}) {{ select.pk_idx }}</h1> -->
+      <div v-for="q in cards" :key="q.pk_idx" class="text item">
+        <el-card class="box-card" @click="showDetail(q.pk_idx)">
+          {{ q.content }}
         </el-card>
       </div>
     </el-scrollbar>
@@ -16,9 +16,11 @@
 <script>
 import { mapGetters, mapState, mapActions } from 'vuex';
 export default {
+  created() {
+    this.loadQna();
+  },
   data() {
     return {
-      propSelect: this.select,
       qDetail: '',
     };
   },
@@ -28,32 +30,22 @@ export default {
     }),
     ...mapState({
       cards: 'qnaList',
+      select: 'select',
     }),
-    // ...mapGetters(['allQnaCount']),
   },
   methods: {
-    // ...mapMutations(['addQna']),
-    ...mapActions(['addQna']),
+    ...mapActions(['addQna', 'loadQna', 'pickQna']),
     showDetail(key) {
-      this.qDetail = key;
-      this.propSelect = key;
-      console.log(this.qDetail);
-      // this.$emit('child', this.propSelect);
+      this.pickQna(key);
     },
     addScene() {
       let tmp = {
         q_idx: this.count,
-        contents: 'dummy' + this.count,
+        content: 'dummy' + this.count,
         answers: [],
       };
-      // if (this.qnaList.length < 8) this.qnaList.push(tmp);   // 0. 컴포넌트 내에서 사용하는 방법
-      // if (this.count <= 10) this.addQna(tmp);                // 1. mapMutations 사용하는 방법
-      // 2. 바로 mutations에 접근하는 방법
       if (this.count <= 10) this.addQna(tmp);
       else alert('시나리오는 최대 10개 추가할 수 있습니다.');
-    },
-    setList() {
-      this.$store.dispatch('qna/setList');
     },
   },
 };
