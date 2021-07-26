@@ -6,7 +6,7 @@ export default createStore({
   state: {
     user_idx: 1,
     rooms: [],
-    selected_room: null,
+    selected_room: null, // 더블클릭한 채팅방의 세션id를 저장
   },
   mutations: {
     GET_ROOMS(state, payload) {
@@ -18,6 +18,7 @@ export default createStore({
     },
     PICK_ROOM(state, payload) {
       state.selected_room = payload
+      console.log(payload)
     }
   },
   actions: {
