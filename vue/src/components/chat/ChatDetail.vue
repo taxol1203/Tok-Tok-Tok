@@ -31,14 +31,19 @@
       <!-- 입력창 -->
       <el-col :span="3" :offset="0">
         <el-button type="primary" icon="el-icon-video-camera" class="icon-m-p"></el-button>
-        <!-- <i class="el-icon-video-camera defualt-m-p"></i> -->
       </el-col>
       <el-col :span="18" :offset="0">
-        <div class="border-solid">입력창(message manager, chat manager, chat input 등</div>
+        <div class="border-solid">
+          <input type="text" @keyup.enter="sendMessage" v-model="message" />
+        </div>
       </el-col>
       <el-col :span="3" :offset="0">
-        <el-button type="success" icon="el-icon-s-promotion" class="icon-m-p" plain></el-button>
-        <!-- <i class="el-icon-s-promotion defualt-m-p"></i> -->
+        <el-button
+          @click="sendMessage"
+          icon="el-icon-s-promotion"
+          class="icon-m-p"
+          plain
+        ></el-button>
       </el-col>
     </el-row>
   </div>
@@ -61,7 +66,7 @@ export default {
     };
   },
   created() {
-    this.sessionId = "d6142966-8ac7-42be-a774-4be4f62a3940"; // path parameter로 방 id 전송함. 만약 url에 노출되는게 별로면 props로 전달하는 걸로 변경하셔도...
+    this.sessionId = "d6142966-8ac7-42be-a774-4be4f62a3940"; // 일단 임시로 고정된 값 사용
     // this.sessionId = this.$route.params.id; // path parameter로 방 id 전송함. 만약 url에 노출되는게 별로면 props로 전달하는 걸로 변경하셔도...
     // 방 정보 가져오기
     axios.get("http://localhost:8088/temp/api/chat/room/" + this.sessionId).then((response) => {
@@ -80,8 +85,10 @@ export default {
     // this.connect(this.sessionId);
   },
   methods: {
-    sendMessage: function (e) {
-      if (e.keyCode === 13 && this.userName !== "" && this.message !== "") {
+    //버튼을 누르거나, 채팅창 엔터 누르면 method 실행
+    sendMessage: function () {
+      if (this.userName !== "" && this.message !== "") {
+        console.log("INNER EVENT!");
         // 이벤트 발생 엔터키 + 유효성 검사는 여기에서
         this.send({ message: this.message }); // 전송 실패 감지는 어떻게? 프론트단에서 고민좀 부탁 dream
       }
