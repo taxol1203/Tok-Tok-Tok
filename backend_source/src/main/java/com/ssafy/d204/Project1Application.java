@@ -13,7 +13,7 @@ import com.ssafy.d204.general.JwtInterceptor;
 
 
 @SpringBootApplication(exclude = { SecurityAutoConfiguration.class }) // please do not remove. 
-@MapperScan(basePackages = "com.ssafy.d204.db.repository")
+@MapperScan(basePackages = "com.ssafy.d204.db.repository,com.ssafy.d204.chat.dao")
 public class Project1Application implements WebMvcConfigurer {
 	@Autowired
 	private JwtInterceptor jwtInterceptor;
