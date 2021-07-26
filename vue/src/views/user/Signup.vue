@@ -15,7 +15,11 @@
               <el-input type="text" v-model="user.username" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item label="이메일" prop="email">
-              <el-input type="email" v-model="user.email" autocomplete="off"></el-input>
+              <el-input type="email" v-model="user.email" autocomplete="off">
+                <template #append>
+                  <el-button id="primary" @click="duplicate">중복확인</el-button>
+                </template>
+              </el-input>
             </el-form-item>
             <el-form-item label="비밀번호" prop="passwd">
               <el-input type="password" v-model="user.passwd" autocomplete="off"></el-input>
@@ -104,7 +108,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(['signUp']),
+    ...mapActions(['signUp', 'duplicateEmail']),
     resetForm(formName) {
       this.$refs[formName].resetFields();
     },
@@ -120,6 +124,12 @@ export default {
           this.$router.push({ name: 'Login' }).catch(() => {});
         }
       });
+    },
+    duplicate() {
+      let tmp = {
+        email: this.user.email,
+      };
+      this.duplicateEmail(tmp);
     },
   },
 };

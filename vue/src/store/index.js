@@ -47,6 +47,9 @@ export default createStore({
     successLogin: (state, payload) => {
       alert('로그인이 완료되었습니다.')
       localStorage.setItem('jwt', payload.data.token);
+    },
+    duplicateEmail: () => {
+      alert('사용 중인 이메일입니다.')
     }
   },
   actions: {
@@ -73,6 +76,15 @@ export default createStore({
         .catch((data) => {
           console.log(data)
           console.log('login error')
+        })
+    },
+    duplicateEmail: ({ commit }, payload) => {
+      axios.post('http://localhost:8088/temp/api/auth/checkemail', payload)
+        .then(() => {
+          commit('duplicateEmail')
+        })
+        .catch((e) => {
+          if(e.response.status == 404)  alert('사용 가능한 이메일입니다.')
         })
     }
   },
