@@ -38,6 +38,10 @@ const routes = [
     component: () => import("../views/Admin.vue"),
     children: [
       {
+        path: '',
+        component: ChatArea,
+      },
+      {
         path: 'chat',
         component: ChatArea,
       },

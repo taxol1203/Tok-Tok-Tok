@@ -1,22 +1,12 @@
 <template lang="">
   <div>
-    {{ select }}
     <el-scrollbar height="600px">
-      <!-- 시작 카드 시작 -->
-      <el-card class="box-card" @click="showDetail(start.contents)">
-        {{ start.contents }}
-      </el-card>
-      <!-- 시작 카드 끝 -->
-      <div v-for="q in qList" :key="q.q_idx" class="text item">
-        <el-card class="box-card" @click="showDetail(q.contents)">
+      <h1>All cards({{ count }})</h1>
+      <div v-for="q in cards" :key="q.id" class="text item">
+        <el-card class="box-card" @click="showDetail(q.q_idx)">
           {{ q.contents }}
         </el-card>
       </div>
-      <!-- 종료 카드 시작 -->
-      <el-card class="box-card" @click="showDetail(end.contents)">
-        {{ end.contents }}
-      </el-card>
-      <!-- 종료 카드 끝 -->
     </el-scrollbar>
   </div>
   <el-card class="box-card" @click="addScene()">
@@ -24,51 +14,46 @@
   </el-card>
 </template>
 <script>
+import { mapGetters, mapState, mapActions } from 'vuex';
 export default {
-  props: ['select'],
   data() {
     return {
       propSelect: this.select,
       qDetail: '',
-      start: {
-        q_idx: '1',
-        contents: '시작합니다.',
-        answers: [
-          {
-            q_idx: '1-1',
-            contents: '예상답변1',
-            fk_idx: '2',
-          },
-          {
-            q_idx: '1-2',
-            contents: '예상답변2',
-            fk_idx: '2',
-          },
-        ],
-      },
-      end: {
-        q_idx: '2',
-        contents: '종료합니다.',
-        answers: [],
-      },
-      qList: [],
     };
   },
+  computed: {
+    ...mapGetters({
+      count: 'allQnaCount', //이 컴포넌트에서는 allQnaCount를 count로 쓰겠다
+    }),
+    ...mapState({
+      cards: 'qnaList',
+    }),
+    // ...mapGetters(['allQnaCount']),
+  },
   methods: {
+    // ...mapMutations(['addQna']),
+    ...mapActions(['addQna']),
     showDetail(key) {
       this.qDetail = key;
       this.propSelect = key;
       console.log(this.qDetail);
-      this.$emit('child', this.propSelect);
+      // this.$emit('child', this.propSelect);
     },
     addScene() {
       let tmp = {
-        q_idx: '3',
-        contents: 'dummy' + this.qList.length,
+        q_idx: this.count,
+        contents: 'dummy' + this.count,
         answers: [],
       };
-      if (this.qList.length < 8) this.qList.push(tmp);
+      // if (this.qnaList.length < 8) this.qnaList.push(tmp);   // 0. 컴포넌트 내에서 사용하는 방법
+      // if (this.count <= 10) this.addQna(tmp);                // 1. mapMutations 사용하는 방법
+      // 2. 바로 mutations에 접근하는 방법
+      if (this.count <= 10) this.addQna(tmp);
       else alert('시나리오는 최대 10개 추가할 수 있습니다.');
+    },
+    setList() {
+      this.$store.dispatch('qna/setList');
     },
   },
 };

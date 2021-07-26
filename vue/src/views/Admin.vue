@@ -44,7 +44,7 @@ export default {
   data() {
     return {
       isCollapse: false,
-      mode:'2'
+      mode:'1'
     };
   },
   methods:{

@@ -1,11 +1,11 @@
 <template lang="">
   <el-container>
     <el-aside style="width: 300px; border: 1px solid #eee">
-      {{ child }}
-      <QnaList @child="update" :select="select" />
+      <!-- <QnaList @child="update" :select="select" /> -->
+      <QnaList />
     </el-aside>
     <el-main style="width: 300px; border: 1px solid #eee">
-      <QnaEdit :select="select" />
+      <QnaEdit />
     </el-main>
   </el-container>
 </template>
@@ -15,9 +15,7 @@ import QnaEdit from '../../components/qna/QnaEdit.vue';
 
 export default {
   data() {
-    return {
-      select: 'test',
-    };
+    return {};
   },
   components: {
     QnaList,
