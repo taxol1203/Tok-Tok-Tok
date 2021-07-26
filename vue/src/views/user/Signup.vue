@@ -1,28 +1,29 @@
 <template>
   <el-row justify="center">
-    <el-col :span="6">
+    <el-col :span="12">
       <div>
         <!-- status-icon -->
         <el-card shadow="always">
           <el-form
-            :model="ruleForm"
+            :model="user"
             :rules="rules"
             ref="ruleForm"
             label-width="100px"
             class="demo-ruleForm"
           >
+            <el-form-item label="사용자명" prop="username">
+              <el-input type="text" v-model="user.username" autocomplete="off"></el-input>
+            </el-form-item>
             <el-form-item label="이메일" prop="email">
-              <el-input type="email" v-model="ruleForm.email" autocomplete="off"></el-input>
+              <el-input type="email" v-model="user.email" autocomplete="off"></el-input>
             </el-form-item>
-            <el-form-item label="비밀번호" prop="pass">
-              <el-input type="password" v-model="ruleForm.pass" autocomplete="off"></el-input>
+            <el-form-item label="비밀번호" prop="passwd">
+              <el-input type="password" v-model="user.passwd" autocomplete="off"></el-input>
             </el-form-item>
-            <el-form-item label="비밀번호 확인" prop="checkPass">
-              <el-input type="password" v-model="ruleForm.checkPass" autocomplete="off"></el-input>
+            <el-form-item label="비밀번호 확인" prop="check">
+              <el-input type="password" v-model="user.check" autocomplete="off"></el-input>
             </el-form-item>
-            <el-button id="primary" @click="onSubmit('ruleForm', ruleForm.email, ruleForm.password)"
-              >회원가입</el-button
-            >
+            <el-button id="primary" @click="onSubmit('ruleForm')">회원가입</el-button>
             <el-button @click="resetForm('ruleForm')">다시쓰기</el-button>
           </el-form>
         </el-card>
@@ -32,11 +33,8 @@
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex';
 export default {
-  name: 'HelloWorld',
-  props: {
-    msg: String,
-  },
   data() {
     var checkEmail = (rule, value, callback) => {
       if (!value) {
@@ -61,64 +59,62 @@ export default {
       }, 1000);
     };
     var validatePass = (rule, value, callback) => {
+      console.log(value);
       if (value === '') {
         callback(new Error('Please input the password'));
       } else {
-        let pattern = /^(?=.[A-Za-z])(?=.\d)(?=.[$@$!%#?&])[A-Za-z\d$@$!%*#?&]{9,16}$/;
-        // if (this.ruleForm.checkPass !== '') {
-        //   this.$refs.ruleForm.validateField('checkPass');
-        // }
-        // callback();
-        if (value.test(pattern)) {
+        if (9 > value.length || 16 < value.length) {
           callback(new Error('Please check the pw rule'));
         } else {
           callback();
         }
       }
     };
-    var validatePass2 = (rule, value, callback) => {
+    var validateCheck = (rule, value, callback) => {
+      console.log('check:', value);
       if (value === '') {
         callback(new Error('Please input the password again'));
-      } else if (value !== this.ruleForm.pass) {
+      } else if (value !== this.user.passwd) {
         callback(new Error("Two inputs don't match!"));
       } else {
         callback();
       }
     };
+    var validateName = (rule, value, callback) => {
+      console.log('nickname:', value);
+      if (value === '') {
+        callback(new Error('Please input the username again'));
+      } else {
+        callback();
+      }
+    };
     return {
-      ruleForm: {
-        pass: '',
-        checkPass: '',
-        email: '',
-      },
       rules: {
-        pass: [{ validator: validatePass, trigger: 'blur' }],
-        checkPass: [{ validator: validatePass2, trigger: 'blur' }],
+        username: [{ validator: validateName, trigger: 'blur' }],
+        passwd: [{ validator: validatePass, trigger: 'blur' }],
+        check: [{ validator: validateCheck, trigger: 'blur' }],
         email: [{ validator: checkEmail, trigger: 'blur' }],
       },
     };
   },
+  computed: {
+    ...mapState({
+      user: 'user',
+    }),
+  },
   methods: {
-    submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          alert('submit!');
-        } else {
-          console.log('error submit!!');
-          return false;
-        }
-      });
-    },
+    ...mapActions(['signUp']),
     resetForm(formName) {
       this.$refs[formName].resetFields();
     },
-    onSubmit(formName, email, passwd) {
+    onSubmit(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.$store
-            .dispatch('SIGNUP', { email, passwd })
-            .then(() => this.redirect())
-            .catch(({ message }) => (this.$props.msg = message));
+          this.signUp({
+            email: this.user.email,
+            passwd: this.user.passwd,
+            username: this.user.username,
+          });
         }
       });
     },
