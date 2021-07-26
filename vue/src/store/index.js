@@ -43,13 +43,10 @@ export default createStore({
     },
     successSignUp: () => {
       alert('회원가입이 완료되었습니다.')
-      //로그인 화면으로 전환
-      this.$router.push({ name: 'Login' }).catch(() => {});
     },
     successLogin: (state, payload) => {
       alert('로그인이 완료되었습니다.')
       localStorage.setItem('jwt', payload.data.token);
-      //admin 화면으로 전환
     }
   },
   actions: {
@@ -63,7 +60,8 @@ export default createStore({
         .then((res) => {
           commit('successSignUp', res);
         })
-        .catch(() => {
+        .catch((data) => {
+          console.log(data)
           console.log('signup error')
         })
     },
@@ -72,7 +70,8 @@ export default createStore({
         .then((res) => {
           commit('successLogin', res);
         })
-        .catch(() => {
+        .catch((data) => {
+          console.log(data)
           console.log('login error')
         })
     }

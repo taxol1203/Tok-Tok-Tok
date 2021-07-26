@@ -116,6 +116,8 @@ export default {
             passwd: this.user.passwd,
             username: this.user.username,
           });
+          //로그인 화면으로 전환
+          this.$router.push({ name: 'Login' }).catch(() => {});
         }
       });
     },

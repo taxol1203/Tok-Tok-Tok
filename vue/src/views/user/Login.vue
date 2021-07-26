@@ -42,7 +42,7 @@ import { mapActions } from 'vuex';
 export default {
   data() {
     var checkEmail = (rule, value, callback) => {
-      console.log(value);
+      // console.log(value);
       if (!value) {
         return callback(new Error('Please input the email'));
       } else {
@@ -65,8 +65,7 @@ export default {
       }, 1000);
     };
     var validatePasswd = (rule, value, callback) => {
-      console.log(value);
-
+      // console.log(value);
       if (value === '') {
         callback(new Error('Please input the password'));
       } else {
