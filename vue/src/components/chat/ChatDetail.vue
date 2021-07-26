@@ -3,15 +3,27 @@
     <el-row :gutter="12">
       <!-- 채팅창 부분+녹색 -->
       <el-col :span="24" :offset="0"> [Chat Detail]</el-col>
-      <!-- 상대방 -->
+    </el-row>
+    <!-- 상대방 -->
+    <div v-for="(msg, index) in messages" :key="index">
+      <el-row :gutter="12">
+        <el-col :span="20" :offset="4" v-if="msg.fk_author_idx == '1'">
+          <div class="message-me border-solid">
+            {{ msg.message }}
+          </div>
+        </el-col>
+        <el-col :span="20" :offset="0" v-else>
+          <div class="message-other border-solid">{{ msg.message }}</div>
+        </el-col>
+      </el-row>
+    </div>
+
+    <el-row>
       <el-col :span="20" :offset="0">
         <div class="user-name border-solid">상담사 사진(기본 사진) | 상담사 이름</div>
       </el-col>
       <el-col :span="20" :offset="0">
         <div class="message-other border-solid">Other Message</div>
-      </el-col>
-      <el-col :span="20" :offset="4">
-        <div class="message-me border-solid">My Message</div>
       </el-col>
       <el-col :span="20" :offset="4">
         <div class="message-me border-solid">My Message</div>
@@ -29,9 +41,6 @@
         <!-- <i class="el-icon-s-promotion defualt-m-p"></i> -->
       </el-col>
     </el-row>
-    <ul>
-      <li v-for="(msg, index) in messages" :key="index">{{ msg.sender }} : {{ msg.message }}</li>
-    </ul>
   </div>
 </template>
 <script>
