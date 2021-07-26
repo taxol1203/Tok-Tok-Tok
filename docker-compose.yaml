@@ -49,11 +49,11 @@ services:
       build: ./vue
       ports:
         - "8080:8080"
-    redis:
-      container_name: redis
-      image: redis
-      ports:
-        - "6379:6379"
+#    redis:
+#      container_name: redis
+#      image: redis
+#      ports:
+#        - "6379:6379"
 #      environment:
 #        TZ: Asia/Seoul
 #    jenkins:
