@@ -2,60 +2,74 @@
   <div>
     <el-scrollbar height="600px">
       <h1>All cards({{ count }})</h1>
-      <div v-for="q in cards" :key="q.id" class="text item">
-        <el-card class="box-card" @click="showDetail(q.q_idx)">
-          {{ q.contents }}
+      <div v-for="q in cards" :key="q.pk_idx" class="text item">
+        <el-card class="box-card" @click="showDetail(q.pk_idx)">
+          {{ q.content }}
         </el-card>
       </div>
     </el-scrollbar>
   </div>
-  <el-card class="box-card" @click="addScene()">
+  <el-card class="box-card" @click="addScene">
     <i class="el-icon-plus"></i>
   </el-card>
 </template>
 <script>
-import { mapGetters, mapState, mapActions } from 'vuex';
+import { computed } from 'vue';
+import { useStore } from 'vuex';
 export default {
-  data() {
-    return {
-      propSelect: this.select,
-      qDetail: '',
+  setup() {
+    const store = useStore();
+    store.dispatch('moduleQna/loadQna');
+    const qDetail = '';
+    const cards = computed(() => store.state.moduleQna.qnaList);
+    const select = computed(() => store.state.moduleQna.select);
+    const count = computed(() => store.getters['moduleQna/allQnaCount']);
+    const showDetail = (key) => {
+      store.dispatch('moduleQna/pickQna', key);
     };
-  },
-  computed: {
-    ...mapGetters({
-      count: 'allQnaCount', //이 컴포넌트에서는 allQnaCount를 count로 쓰겠다
-    }),
-    ...mapState({
-      cards: 'qnaList',
-    }),
-    // ...mapGetters(['allQnaCount']),
-  },
-  methods: {
-    // ...mapMutations(['addQna']),
-    ...mapActions(['addQna']),
-    showDetail(key) {
-      this.qDetail = key;
-      this.propSelect = key;
-      console.log(this.qDetail);
-      // this.$emit('child', this.propSelect);
-    },
-    addScene() {
+    const addScene = () => {
       let tmp = {
-        q_idx: this.count,
-        contents: 'dummy' + this.count,
+        pk_idx: count.value,
+        content: 'dummy' + count.value,
         answers: [],
       };
-      // if (this.qnaList.length < 8) this.qnaList.push(tmp);   // 0. 컴포넌트 내에서 사용하는 방법
-      // if (this.count <= 10) this.addQna(tmp);                // 1. mapMutations 사용하는 방법
-      // 2. 바로 mutations에 접근하는 방법
-      if (this.count <= 10) this.addQna(tmp);
+      console.log(tmp);
+      if (count.value <= 10) store.dispatch('moduleQna/addQna', tmp);
       else alert('시나리오는 최대 10개 추가할 수 있습니다.');
-    },
-    setList() {
-      this.$store.dispatch('qna/setList');
-    },
+    };
+    return {
+      store,
+      qDetail,
+      cards,
+      select,
+      count,
+      showDetail,
+      addScene,
+    };
   },
+  // computed: {
+  //   ...mapGetters({
+  //     count: 'allQnaCount', //이 컴포넌트에서는 allQnaCount를 count로 쓰겠다
+  //   }),
+  //   ...mapState({
+  //     cards: 'qnaList',
+  //     select: 'select',
+  //   }),
+  // },
+  // methods: {
+  //   ...mapActions(['addQna', 'loadQna', 'pickQna']),
+  //   showDetail(key) {
+  //     this.pickQna(key);
+  //   },
+  //   addScene() {
+  //     let tmp = {
+  //       pk_idx: this.count,
+  //       content: 'dummy' + this.count,
+  //       answers: [],
+  //     };
+  //     if (this.count <= 10) this.addQna(tmp);
+  //     else alert('시나리오는 최대 10개 추가할 수 있습니다.');
+  //   },
+  // },
 };
 </script>
-<style lang=""></style>

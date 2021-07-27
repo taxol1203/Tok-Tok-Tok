@@ -1,8 +1,9 @@
 import { createStore } from 'vuex'
 import axios from 'axios'
-
+import { moduleQna } from '@/store/modules/moduleQna'
 
 export default createStore({
+  modules: {moduleQna},
   state: {
     user_idx: 1,
     rooms: [],

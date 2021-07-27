@@ -40,15 +40,18 @@ const routes = [
     children: [
       {
         path: '',
+        name: 'comein',
         component: ChatArea,
       },
       {
         path: 'chat',
         component: ChatArea,
+        name: "chat"
       },
       {
         path: 'qna',
         component: QnaArea,
+        name: 'qna'
       },
     ]
   },

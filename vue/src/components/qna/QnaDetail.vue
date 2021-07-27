@@ -14,7 +14,7 @@
       <el-input
         type="textarea"
         autosize
-        v-model="title"
+        v-model="select.content"
         id="question"
         v-if="!show"
         style="margin: 10px; width: 500px"
@@ -26,7 +26,7 @@
             type="textarea"
             autosize
             placeholder="예상 질문을 입력해주세요."
-            v-model="title"
+            v-model="select.content"
             id="question"
           >
           </el-input>
@@ -36,6 +36,7 @@
     </div>
     <!-- Question -->
     <div style="float: right">
+      <!-- {{ answers }} -->
       <QnaAnswer v-for="a in answers" :key="a" />
       <el-button @click="add" style="float: right; margin-top: 10px"
         ><i class="el-icon-plus"></i
@@ -45,30 +46,34 @@
 </template>
 
 <script>
-import QnaAnswer from '../../components/qna/QnaAnswer.vue';
+import { computed } from 'vue';
+import { useStore } from 'vuex';
+import QnaAnswer from '@/components/qna/QnaAnswer.vue';
 
 export default {
   components: {
     QnaAnswer,
   },
-  data() {
-    return {
-      answers: [],
-      title: '',
-      textarea: '',
-      show: true,
-    };
-  },
-  methods: {
-    add() {
-      if (this.answers.length < 5) this.answers.push('test');
+  setup() {
+    const store = useStore();
+    const select = computed(() => store.state.moduleQna.select);
+    const add = () => {
+      if (answers.length < 5) answers.push('test');
       else alert('예상 답변은 최대 5개 추가 가능합니다.');
-    },
-    changeShow() {
-      this.show = !this.show;
-      this.title = this.title.replace('\r\n', '~');
-      console.log(this.title);
-    },
+    };
+    let show = true;
+    let answers = [];
+    const changeShow = () => {
+      show = !show;
+    };
+    return {
+      answers,
+      show,
+      store,
+      select,
+      add,
+      changeShow,
+    };
   },
 };
 </script>
