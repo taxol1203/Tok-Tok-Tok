@@ -27,9 +27,9 @@ public class QuestionTest {
 	static Question q3;
 	@BeforeAll
 	static void setUp() {
-		q1 = new Question("first");
-		q2 = new Question("second");
-		q3 = new Question("third");
+		q1 = new Question("first", "first Question");
+		q2 = new Question("second", "second Question");
+		q3 = new Question("third", "third Question");
 	}
 	
 	/*
@@ -92,7 +92,7 @@ public class QuestionTest {
 			}
 		}
 		// 그 기본 키로 질문 내용 갱신
-		Question updateQ = new Question(curIdx, "update");
+		Question updateQ = new Question(curIdx, "update", "updated Content");
 		qnaController.updateQuestion(updateQ);
 		// 제대로 갱신 되었는지 확인
 		updateQ = qnaController.detailQuestion(curIdx).getBody();
