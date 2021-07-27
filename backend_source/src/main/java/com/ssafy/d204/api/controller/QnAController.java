@@ -84,6 +84,12 @@ public class QnAController {
 		return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
 	}
     
+    @ApiOperation(value = "현재 질문에 따른 다음 답변들의 정보를 전부 반환한다.", response = List.class)
+   	@GetMapping("/question/nextAnswers/{pk_idx}")
+   	public ResponseEntity<List<Answer>> getNextAnswers(@PathVariable int pk_idx) throws Exception {
+   		return new ResponseEntity<List<Answer>>(answerService.getNextAnswers(pk_idx), HttpStatus.OK);
+   	}
+    
     // ----------------------------- 여기서 부터 답변 -------------------------------
     
     @ApiOperation(value = "모든 답변의 정보를 반환한다.", response = List.class)
@@ -92,15 +98,22 @@ public class QnAController {
    		logger.debug("retrieveAnswer - 호출");
    		return new ResponseEntity<List<Answer>>(answerService.retrieveAnswer(), HttpStatus.OK);
    	}
-
+    
     @ApiOperation(value = "답변 번호에 해당하는 답변의 정보를 반환한다.", response = Answer.class)    
    	@GetMapping("/answer/{pk_idx}")
    	public ResponseEntity<Answer> detailAnswer(@PathVariable int pk_idx) {
    		logger.debug("detailAnswer - 호출");
    		return new ResponseEntity<Answer>(answerService.detailAnswer(pk_idx), HttpStatus.OK);
    	}
-
-    @ApiOperation(value = "새로운 답변 정보를 입력한다. title, content, fk_next_idx를 입력하여 전송 할 수 있다. \"fk_next_idx\": 0 를 지우고 execute를 하면 연결되는 다음 질문의 기본 값(fk_next_idx)는 2(상담종료)이다. (0으로 실행하면 오류)", response = String.class)
+    
+    @ApiOperation(value = "답변 번호에 해당하는 다음 질문의 인덱스를 반환한다.", response = Answer.class)    
+   	@GetMapping("/answer/nextQuestion/{pk_idx}")
+   	public ResponseEntity<Integer> getNextQuestion(@PathVariable int pk_idx) {
+   		logger.debug("detailAnswer - 호출");
+   		return new ResponseEntity<Integer>(answerService.getNextQuestion(pk_idx), HttpStatus.OK);
+   	}
+    
+	@ApiOperation(value = "새로운 답변 정보를 입력한다. title, content, fk_next_idx를 입력하여 전송 할 수 있다. \"fk_next_idx\": 0 를 지우고 execute를 하면 연결되는 다음 질문의 기본 값(fk_next_idx)는 2(상담종료)이다. (0으로 실행하면 오류)", response = String.class)
    	@PostMapping("/answer")
    	public ResponseEntity<String> writeAnswer(@RequestBody Answer content) {
    		logger.debug("writeAnswer - 호출");

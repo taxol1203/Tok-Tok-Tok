@@ -117,5 +117,6 @@ public class AnswerTest {
 		// 제대로 변경 되었는지 확인
 		updateQ = qnaController.detailAnswer(curIdx).getBody();
 		Assertions.assertEquals(1, updateQ.getFk_next_idx());
+		Assertions.assertEquals(1, qnaController.getNextQuestion(curIdx).getBody());
 	}
 }
