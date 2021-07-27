@@ -1,6 +1,7 @@
 <template lang="">
   <el-container>
     <el-header>
+      <h1>All cards({{ this.$store.getters.allQnaCount }})</h1>
       <el-row gutter="20">
         <el-col span="4">
           <el-button type="primary" icon="el-icon-edit" circle></el-button>

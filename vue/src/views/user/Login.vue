@@ -1,31 +1,36 @@
 <template>
   <el-row justify="center">
-    <el-col :span="6">
+    <el-col :span="12">
       <div>
         <el-card shadow="always">
           <el-form
+            v-if="token === null"
             label-position="top"
             label-width="100px"
-            :model="ruleForm"
+            :model="user"
             :rules="rules"
             ref="formLabelAlign"
             status-icon
-            @submit.prevent="onSubmit('formLabelAlign', ruleForm.email, ruleForm.password)"
           >
             <el-form-item label="이메일" prop="email">
-              <el-input type="email" v-model="ruleForm.email" autocomplete="off"></el-input>
+              <el-input type="email" v-model="user.email" autocomplete="off"></el-input>
             </el-form-item>
-            <el-form-item label="비밀번호" prop="pass">
-              <el-input type="password" v-model="ruleForm.pass" autocomplete="off"></el-input>
+            <el-form-item label="비밀번호" prop="passwd">
+              <el-input type="password" v-model="user.passwd" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item>
-              <!-- @click="submitForm('formLabelAlign')" -->
               <transition name="slide-fade">
-                <el-button type="submit" id="primary">로그인</el-button>
+                <el-button type="button" id="colorVer" @click="onSubmit('formLabelAlign')"
+                  >로그인</el-button
+                >
               </transition>
               <el-button @click="resetForm('formLabelAlign')">다시쓰기</el-button>
             </el-form-item>
           </el-form>
+          <div v-else>
+            <h2>환영합니다.</h2>
+            <el-button @click="logout">로그아웃</el-button>
+          </div>
         </el-card>
       </div>
     </el-col>
@@ -33,9 +38,35 @@
 </template>
 
 <script>
+import { reactive, ref } from 'vue';
+import axios from 'axios';
+import router from '@/router';
+
 export default {
-  data() {
-    var checkEmail = (rule, value, callback) => {
+  setup() {
+    const formLabelAlign = ref(null);
+    const onSubmit = () => {
+      let payload = {
+        email: user.email,
+        passwd: user.passwd,
+      };
+      formLabelAlign.value.validate((valid) => {
+        if (valid) {
+          axios
+            .post('http://localhost:8088/temp/api/auth/login', payload)
+            .then((res) => {
+              alert('로그인이 완료되었습니다.');
+              localStorage.setItem('jwt', res.data.token);
+              router.go(0);
+            })
+            .catch(() => {
+              console.log('login error');
+            });
+        }
+      });
+    };
+    const checkEmail = (rule, value, callback) => {
+      // console.log(value);
       if (!value) {
         return callback(new Error('Please input the email'));
       } else {
@@ -57,62 +88,44 @@ export default {
         }
       }, 1000);
     };
-    var validatePass = (rule, value, callback) => {
+    const validatePasswd = (rule, value, callback) => {
+      // console.log(value);
       if (value === '') {
         callback(new Error('Please input the password'));
       } else {
-        if (this.ruleForm.checkPass !== '') {
-          this.$refs.ruleForm.validateField('checkPass');
+        if (value.length < 9 || value.length > 16) {
+          callback(new Error('Please check the password'));
         }
         callback();
       }
     };
-    return {
-      msg: '',
-      ruleForm: {
-        pass: '',
-        email: '',
-      },
-      rules: {
-        pass: [{ validator: validatePass, trigger: 'blur' }],
-        email: [{ validator: checkEmail, trigger: 'blur' }],
-      },
+    const logout = () => {
+      localStorage.removeItem('jwt');
+      router.go(0);
     };
-  },
-  methods: {
-    submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          alert('submit!');
-        } else {
-          console.log('error submit!!');
-          return false;
-        }
-      });
-    },
-    resetForm(formName) {
-      this.$refs[formName].resetFields();
-    },
-    onSubmit(formName, email, password) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          this.$store
-            .dispatch('LOGIN', { email, password })
-            .then(() => this.redirect())
-            .catch(({ message }) => (this.msg = message));
-        }
-      });
-    },
-    redirect() {
-      const { search } = window.location;
-      const tokens = search.replace(/^\?/, '').split('&');
-      const { returnPath } = tokens.reduce((qs, tkn) => {
-        const pair = tkn.split('=');
-        qs[pair[0]] = decodeURIComponent(pair[1]);
-        return qs;
-      }, {});
-      this.$router.push(returnPath);
-    },
+
+    const user = reactive({
+      email: '',
+      passwd: '',
+    });
+    const rules = {
+      passwd: [{ validator: validatePasswd, trigger: 'blur' }],
+      email: [{ validator: checkEmail, trigger: 'blur' }],
+    };
+    const resetForm = () => {
+      formLabelAlign.value.resetFields();
+    };
+    return {
+      token: localStorage.getItem('jwt'),
+      user,
+      formLabelAlign,
+      resetForm,
+      rules,
+      onSubmit,
+      checkEmail,
+      validatePasswd,
+      logout,
+    };
   },
 };
 </script>

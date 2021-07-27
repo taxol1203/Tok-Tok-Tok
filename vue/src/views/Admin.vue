@@ -1,9 +1,9 @@
 <template lang="">
     <el-container style="height: 100%; border: 1px solid #eee" >
       <!-- NavBar 시작 -->
-      <!-- <el-aside width="200px"> -->
+      <!-- <el-aside width="200px">  -->
           <el-menu 
-            default-active="1" 
+            :default-active="mode"
             class="el-menu-vertical-demo"
             background-color="#258C60"
             text-color= "#999999"
@@ -16,14 +16,16 @@
               <i class="el-icon-d-arrow-right" v-if="isCollapse===true"></i>
               <i class="el-icon-d-arrow-left"  v-if="isCollapse===false"></i>
             </el-menu-item>
-            <el-menu-item index="1" @click="changeMenu('chat')">
+            <router-link style="text-decoration:none;" to="/admin/chat">
+            <el-menu-item index="1">
               <i class="el-icon-menu"></i>
               <template #title>상담</template>
-            </el-menu-item>
-            <el-menu-item index="2" @click="changeMenu('qna')">
+            </el-menu-item></router-link>
+            <router-link style="text-decoration:none;" to="/admin/qna">
+            <el-menu-item index="2">
               <i class="el-icon-document"></i>
               <template #title>예상 시나리오 작성</template>
-            </el-menu-item>
+            </el-menu-item></router-link>
             <el-menu-item index="3">
               <i class="el-icon-setting"></i>
               <template #title>설정</template>
@@ -32,33 +34,20 @@
       <!-- </el-aside> -->
       <!-- NavBar 끝 -->
     <el-main>
-      <ChatArea v-if="type === 'chat'" />
-      <QnaArea v-if="type === 'qna'" />
+      <router-view></router-view>
     </el-main>
     </el-container>
     
 </template>
 <script>
-// import NavBar from './NavBar.vue';
-import ChatArea from './chat/ChatArea.vue';
-import QnaArea from './qna/QnaArea.vue';
-
 export default {
-  components: {
-    // NavBar,
-    ChatArea,
-    QnaArea,
-  },
   data() {
     return {
-      type: 'chat',
       isCollapse: false,
+      mode:'1'
     };
   },
   methods:{
-    changeMenu(type){
-      this.type=type;
-    },
     handleNav(){
       this.isCollapse = !this.isCollapse;
     }
@@ -66,5 +55,5 @@ export default {
 };
 </script>
 <style scoped>
- 
+
 </style>

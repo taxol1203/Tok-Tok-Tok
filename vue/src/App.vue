@@ -6,6 +6,11 @@
   </div>
   <router-view />
 </template>
+<script>
+export default {
+  name: 'App',
+};
+</script>
 
 <style>
 #app {
@@ -29,15 +34,15 @@
   color: #42b983;
 }
 
-#primary {
+#colorVer {
   background-color: #258c60;
   color: #fff;
   border: 0;
 }
 
 @font-face {
-  font-family: "BMJUA";
-  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/BMJUA.woff") format("woff");
+  font-family: 'BMJUA';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/BMJUA.woff') format('woff');
   font-weight: normal;
   font-style: normal;
 }
