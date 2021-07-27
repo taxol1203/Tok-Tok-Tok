@@ -13,7 +13,7 @@
             :collapse="isCollapse"
           >
           <!-- ffd04b -->
-            <el-menu-item index="0" @click="handleNav()">
+            <el-menu-item index="comein" @click="handleNav()">
               <i class="el-icon-d-arrow-right" v-if="isCollapse===true"></i>
               <i class="el-icon-d-arrow-left"  v-if="isCollapse===false"></i>
             </el-menu-item>

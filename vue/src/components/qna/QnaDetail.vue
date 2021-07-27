@@ -36,6 +36,7 @@
     </div>
     <!-- Question -->
     <div style="float: right">
+      <!-- {{ answers }} -->
       <QnaAnswer v-for="a in answers" :key="a" />
       <el-button @click="add" style="float: right; margin-top: 10px"
         ><i class="el-icon-plus"></i
@@ -45,30 +46,34 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
-import QnaAnswer from '../../components/qna/QnaAnswer.vue';
+import { computed } from 'vue';
+import { useStore } from 'vuex';
+import QnaAnswer from '@/components/qna/QnaAnswer.vue';
 
 export default {
   components: {
     QnaAnswer,
   },
-  data() {
-    return {
-      answers: [],
-      show: true,
-    };
-  },
-  computed: {
-    ...mapState(['select']),
-  },
-  methods: {
-    add() {
-      if (this.answers.length < 5) this.answers.push('test');
+  setup() {
+    const store = useStore();
+    const select = computed(() => store.state.moduleQna.select);
+    const add = () => {
+      if (answers.length < 5) answers.push('test');
       else alert('예상 답변은 최대 5개 추가 가능합니다.');
-    },
-    changeShow() {
-      this.show = !this.show;
-    },
+    };
+    let show = true;
+    let answers = [];
+    const changeShow = () => {
+      show = !show;
+    };
+    return {
+      answers,
+      show,
+      store,
+      select,
+      add,
+      changeShow,
+    };
   },
 };
 </script>

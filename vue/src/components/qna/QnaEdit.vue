@@ -20,23 +20,23 @@
   </el-container>
 </template>
 <script>
-import QnaTitle from '../../components/qna/QnaTitle.vue';
-import QnaDetail from '../../components/qna/QnaDetail.vue';
-import { mapActions, mapState } from 'vuex';
+import QnaTitle from '@/components/qna/QnaTitle.vue';
+import QnaDetail from '@/components/qna/QnaDetail.vue';
+import { useStore } from 'vuex';
+import { computed } from 'vue';
 
 export default {
   components: {
     QnaTitle,
     QnaDetail,
   },
-  data() {
-    return {};
-  },
-  computed: {
-    ...mapState(['select']),
-  },
-  methods: {
-    ...mapActions(['pickQna']),
+  setup() {
+    const store = useStore();
+    const select = computed(() => store.state.moduleQna.select);
+    return {
+      store,
+      select,
+    };
   },
 };
 </script>

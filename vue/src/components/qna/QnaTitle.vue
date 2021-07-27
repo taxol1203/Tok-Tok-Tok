@@ -18,20 +18,22 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { useStore } from 'vuex';
+import { computed } from 'vue';
 export default {
-  data() {
-    return {
-      check: false,
-    };
-  },
-  computed: {
-    ...mapState(['select']),
-  },
-  methods: {
-    hiddenInput() {
+  setup() {
+    const store = useStore();
+    const select = computed(() => store.state.moduleQna.select);
+    const check = false;
+    const hiddenInput = () => {
       this.check = !this.check;
-    },
+    };
+    return {
+      store,
+      check,
+      select,
+      hiddenInput,
+    };
   },
 };
 </script>

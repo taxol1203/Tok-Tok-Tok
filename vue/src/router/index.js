@@ -39,6 +39,7 @@ const routes = [
     children: [
       {
         path: '',
+        name: 'comein',
         component: ChatArea,
       },
       {
