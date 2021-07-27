@@ -5,7 +5,7 @@
       <el-col :span="24" :offset="0"> [Chat Detail]</el-col>
     </el-row>
     <!-- 상대방 -->
-    <div v-for="(msg, index) in messages" :key="index">
+    <div v-for="(msg, index) in messages.messageArrayKey" :key="index">
       <el-row :gutter="12">
         <el-col :span="20" :offset="4" v-if="msg.fk_author_idx == '1'">
           <div class="message-me border-solid">
@@ -53,7 +53,7 @@ import axios from "axios";
 import Stomp from "webstomp-client";
 import SockJS from "sockjs-client";
 import { useStore } from "vuex";
-import { ref } from "vue";
+import { ref, reactive } from "vue";
 
 export default {
   name: "Chat",
@@ -61,7 +61,7 @@ export default {
   setup() {
     let sessionId = ref("");
     let roomName = "";
-    let messages = [];
+    let messages = reactive({ messageArrayKey: [] });
     let message = ref("");
     let session_pk = 0;
     let connected = false;
@@ -82,7 +82,7 @@ export default {
         .get("http://localhost:8088/temp/api/chat/messages/" + sessionId.value)
         .then((response) => {
           console.log(response.data, "채팅 내역 수신");
-          messages = response.data;
+          messages.messageArrayKey = response.data;
 
           connect(sessionId.value);
         });
@@ -99,7 +99,7 @@ export default {
         // 이벤트 발생 엔터키 + 유효성 검사는 여기에서
         send({ message: message }); // 전송 실패 감지는 어떻게? 프론트단에서 고민좀 부탁 dream
       }
-      message = "";
+      message.value = "";
     };
 
     const send = () => {
@@ -107,7 +107,7 @@ export default {
       if (stompClient && stompClient.connected) {
         console.log("IN??????????????");
         const msg = {
-          message: message, // 메세지 내용. type이 MSG인 경우를 제외하곤 비워두고 프론트단에서만 처리.
+          message: message.value, // 메세지 내용. type이 MSG인 경우를 제외하곤 비워두고 프론트단에서만 처리.
           fk_author_idx: 1, // 작성자의 회원 idx
           created: "", // 작성시간, 공란으로 비워서 메세지 보내기. response에는 담겨옵니다.
           deleted: false, // 삭제된 메세지 여부. default = false
@@ -132,7 +132,7 @@ export default {
           // 구독 == 채팅방 입장.
           stompClient.subscribe("/send/" + sessionId.value, (res) => {
             console.log("receive from server:", res.body);
-            messages.push(JSON.parse(res.body)); // 수신받은 메세지 표시하기
+            messages.messageArrayKey.push(JSON.parse(res.body)); // 수신받은 메세지 표시하기
             switch (res.body.type) {
               case "MSG":
                 break;
