@@ -52,77 +52,87 @@
 import axios from "axios";
 import Stomp from "webstomp-client";
 import SockJS from "sockjs-client";
+import { useStore } from "vuex";
+import { ref } from "vue";
 
 export default {
   name: "Chat",
   components: {},
-  data: function () {
-    return {
-      sessionId: "",
-      roomName: "",
-      messages: [],
-      message: "",
-      session_pk: 0,
-    };
-  },
-  created() {
-    this.sessionId = "d6142966-8ac7-42be-a774-4be4f62a3940"; // 일단 임시로 고정된 값 사용
-    // this.sessionId = this.$route.params.id; // path parameter로 방 id 전송함. 만약 url에 노출되는게 별로면 props로 전달하는 걸로 변경하셔도...
-    // 방 정보 가져오기
-    axios.get("http://localhost:8088/temp/api/chat/room/" + this.sessionId).then((response) => {
-      this.roomName = response.data.name; // 방에 대한 정보를 가져옵니다.
+  setup() {
+    let sessionId = ref("");
+    let roomName = "";
+    let messages = [];
+    let message = ref("");
+    let session_pk = 0;
+    let connected = false;
+    let stompClient = "";
+    let userName = "1"; // user id나 email받으면 그거 넣기@@@@@
+
+    const store = useStore();
+
+    sessionId.value = store.state.selected_room;
+    // console.log(sessionId.value);
+    // sessionId = this.$route.params.id; // path parameter로 방 id 전송함. 만약 url에 노출되는게 별로면 props로 전달하는 걸로 변경하셔도...
+
+    axios.get("http://localhost:8088/temp/api/chat/room/" + sessionId.value).then((response) => {
+      roomName = response.data.name; // 방에 대한 정보를 가져옵니다.
       console.log(response);
       console.log("room info");
       axios
-        .get("http://localhost:8088/temp/api/chat/messages/" + this.sessionId)
+        .get("http://localhost:8088/temp/api/chat/messages/" + sessionId.value)
         .then((response) => {
           console.log(response.data, "채팅 내역 수신");
-          this.messages = response.data;
-          this.connect(this.sessionId);
+          messages = response.data;
+
+          connect(sessionId.value);
         });
     });
+
     // 소켓 연결 시작
-    // this.connect(this.sessionId);
-  },
-  methods: {
-    //버튼을 누르거나, 채팅창 엔터 누르면 method 실행
-    sendMessage: function () {
-      if (this.userName !== "" && this.message !== "") {
-        console.log("INNER EVENT!");
+    // this.connect(sessionId.value);
+
+    const sendMessage = () => {
+      // console.log("SEND MSG");
+      // console.log(message);
+      if (userName !== "" && message.value !== "") {
+        // console.log("INNER SEND MSG");
         // 이벤트 발생 엔터키 + 유효성 검사는 여기에서
-        this.send({ message: this.message }); // 전송 실패 감지는 어떻게? 프론트단에서 고민좀 부탁 dream
+        send({ message: message }); // 전송 실패 감지는 어떻게? 프론트단에서 고민좀 부탁 dream
       }
-      this.message = "";
-    },
-    send() {
-      console.log("Send message:" + this.message);
-      if (this.stompClient && this.stompClient.connected) {
+      message = "";
+    };
+
+    const send = () => {
+      console.log("Send message:" + message.value);
+      if (stompClient && stompClient.connected) {
+        console.log("IN??????????????");
         const msg = {
-          message: this.message, // 메세지 내용. type이 MSG인 경우를 제외하곤 비워두고 프론트단에서만 처리.
+          message: message, // 메세지 내용. type이 MSG인 경우를 제외하곤 비워두고 프론트단에서만 처리.
           fk_author_idx: 1, // 작성자의 회원 idx
           created: "", // 작성시간, 공란으로 비워서 메세지 보내기. response에는 담겨옵니다.
           deleted: false, // 삭제된 메세지 여부. default = false
-          fk_session_id: this.sessionId, // 현재 채팅세션의 id.
+          fk_session_id: sessionId.value, // 현재 채팅세션의 id.
           // 주의할 점은, 방 세션 id가 아닌, 방 정보의 pk_idx를 첨부한다. created 라이프사이클 메서드 참조.
           type: "MSG", // 메세지 타입.
         };
-        this.stompClient.send("/receive/" + this.sessionId, JSON.stringify(msg), {});
+        stompClient.send("/receive/" + sessionId.value, JSON.stringify(msg), {});
       }
-    },
-    connect: function (sessionId) {
+    };
+
+    const connect = () => {
       const serverURL = "http://localhost:8088/temp/chat"; // 서버 채팅 주소
       let socket = new SockJS(serverURL);
-      this.stompClient = Stomp.over(socket);
+      stompClient = Stomp.over(socket);
       console.log(`connecting to socket=> ${serverURL}`);
-      this.stompClient.connect(
+      stompClient.connect(
         {},
         (frame) => {
-          this.connected = true;
+          connected = true;
           console.log("status : established", frame);
           // 구독 == 채팅방 입장.
-          this.stompClient.subscribe("/send/" + sessionId, (res) => {
+          stompClient.subscribe("/send/" + sessionId.value, (res) => {
             console.log("receive from server:", res.body);
-            this.messages.push(JSON.parse(res.body)); // 수신받은 메세지 표시하기
+            messages.push(JSON.parse(res.body)); // 수신받은 메세지 표시하기
             switch (res.body.type) {
               case "MSG":
                 break;
@@ -144,12 +154,26 @@ export default {
         (error) => {
           // 소켓 연결 실패
           console.log("status : failed", error);
-          this.connected = false;
+          connected = false;
         }
       );
-    },
+    };
+
+    return {
+      sessionId,
+      roomName,
+      messages,
+      message,
+      session_pk,
+      store,
+      sendMessage,
+      send,
+      connect,
+      connected,
+      stompClient,
+      userName,
+    };
   },
-  mounted() {},
 };
 </script>
 <style>
