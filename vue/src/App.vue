@@ -34,7 +34,7 @@ export default {
   color: #42b983;
 }
 
-#primary {
+#colorVer {
   background-color: #258c60;
   color: #fff;
   border: 0;

@@ -17,7 +17,7 @@
             <el-form-item label="이메일" prop="email">
               <el-input type="email" v-model="user.email" autocomplete="off">
                 <template #append>
-                  <el-button id="primary" @click="duplicate">중복확인</el-button>
+                  <el-button id="colorVer" @click="duplicate">중복확인</el-button>
                 </template>
               </el-input>
             </el-form-item>
@@ -27,8 +27,8 @@
             <el-form-item label="비밀번호 확인" prop="check">
               <el-input type="password" v-model="user.check" autocomplete="off"></el-input>
             </el-form-item>
-            <el-button id="primary" @click="onSubmit('ruleForm')">회원가입</el-button>
-            <el-button @click="resetForm('ruleForm')">다시쓰기</el-button>
+            <el-button id="colorVer" @click="onSubmit()">회원가입</el-button>
+            <el-button @click="resetForm()">다시쓰기</el-button>
           </el-form>
         </el-card>
       </div>
@@ -37,9 +37,65 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { reactive, ref } from 'vue';
+import { useStore } from 'vuex';
+import axios from 'axios';
+
 export default {
-  data() {
+  setup() {
+    const store = useStore();
+    const ruleForm = ref(null);
+    const onSubmit = () => {
+      let payload = {
+        email: user.email,
+        passwd: user.passwd,
+        username: user.username,
+      };
+      ruleForm.value.validate((valid) => {
+        if (valid) {
+          axios
+            .post('http://localhost:8088/temp/api/auth/register', payload)
+            .then(() => {
+              alert('회원가입이 완료되었습니다.');
+            })
+            .catch((data) => {
+              console.log(data);
+              console.log('signup error');
+            });
+          axios
+            .post('http://localhost:8088/temp/api/auth/login', payload)
+            .then((res) => {
+              alert('로그인이 완료되었습니다.');
+              localStorage.setItem('jwt', res.data.token);
+            })
+            .catch((data) => {
+              console.log(data);
+              console.log('login error');
+            });
+        }
+      });
+    };
+
+    const duplicate = () => {
+      let tmp = {
+        email: user.email,
+      };
+      axios
+        .post('http://localhost:8088/temp/api/auth/checkemail', tmp)
+        .then(() => {
+          alert('사용 중인 이메일입니다.');
+          user.email = '';
+        })
+        .catch((e) => {
+          if (e.response.status == 404) {
+            alert('사용 가능한 이메일입니다.');
+          }
+        });
+    };
+
+    const resetForm = () => {
+      ruleForm.value.resetFields();
+    };
     var checkEmail = (rule, value, callback) => {
       if (!value) {
         return callback(new Error('Please input the email'));
@@ -78,7 +134,7 @@ export default {
       console.log('check:', value);
       if (value === '') {
         callback(new Error('Please input the password again'));
-      } else if (value !== this.user.passwd) {
+      } else if (value !== user.passwd) {
         callback(new Error("Two inputs don't match!"));
       } else {
         callback();
@@ -92,45 +148,27 @@ export default {
         callback();
       }
     };
-    return {
-      user: {
-        email: '',
-        passwd: '',
-        check: '',
-        username: '',
-      },
-      rules: {
-        username: [{ validator: validateName, trigger: 'blur' }],
-        passwd: [{ validator: validatePass, trigger: 'blur' }],
-        check: [{ validator: validateCheck, trigger: 'blur' }],
-        email: [{ validator: checkEmail, trigger: 'blur' }],
-      },
+    const user = reactive({
+      email: '',
+      passwd: '',
+      check: '',
+      username: '',
+    });
+    const rules = {
+      username: [{ validator: validateName, trigger: 'blur' }],
+      passwd: [{ validator: validatePass, trigger: 'blur' }],
+      check: [{ validator: validateCheck, trigger: 'blur' }],
+      email: [{ validator: checkEmail, trigger: 'blur' }],
     };
-  },
-  methods: {
-    ...mapActions(['signUp', 'duplicateEmail']),
-    resetForm(formName) {
-      this.$refs[formName].resetFields();
-    },
-    onSubmit(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          this.signUp({
-            email: this.user.email,
-            passwd: this.user.passwd,
-            username: this.user.username,
-          });
-          //로그인 화면으로 전환
-          this.$router.push({ name: 'Login' }).catch(() => {});
-        }
-      });
-    },
-    duplicate() {
-      let tmp = {
-        email: this.user.email,
-      };
-      this.duplicateEmail(tmp);
-    },
+    return {
+      store,
+      ruleForm,
+      onSubmit,
+      duplicate,
+      resetForm,
+      user,
+      rules,
+    };
   },
 };
 </script>

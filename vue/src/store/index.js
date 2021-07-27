@@ -25,12 +25,6 @@ export default createStore({
         answers: [],
       },
     ],
-    user: {
-      email: '',
-      passwd: '',
-      username: '',
-      check: '',
-    }
   },
   getters: { //computed
     allQnaCount: state => { //parameter에 사용할 컴포넌트 넣기
@@ -50,6 +44,11 @@ export default createStore({
     },
     duplicateEmail: () => {
       alert('사용 중인 이메일입니다.')
+      return '';
+    },
+    usableEmail: (payload) => {
+      alert('사용 가능한 이메일입니다.')
+      return payload;
     }
   },
   actions: {
@@ -84,7 +83,9 @@ export default createStore({
           commit('duplicateEmail')
         })
         .catch((e) => {
-          if(e.response.status == 404)  alert('사용 가능한 이메일입니다.')
+          if (e.response.status == 404) {
+            commit('usableEmail', payload.email)
+          }  
         })
     }
   },

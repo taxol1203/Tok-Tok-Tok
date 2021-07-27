@@ -20,7 +20,7 @@
             </el-form-item>
             <el-form-item>
               <transition name="slide-fade">
-                <el-button type="button" id="primary" @click="onSubmit('formLabelAlign')"
+                <el-button type="button" id="colorVer" @click="onSubmit('formLabelAlign')"
                   >로그인</el-button
                 >
               </transition>
@@ -38,10 +38,34 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { reactive, ref } from 'vue';
+import axios from 'axios';
+import router from '@/router';
+
 export default {
-  data() {
-    var checkEmail = (rule, value, callback) => {
+  setup() {
+    const formLabelAlign = ref(null);
+    const onSubmit = () => {
+      let payload = {
+        email: user.email,
+        passwd: user.passwd,
+      };
+      formLabelAlign.value.validate((valid) => {
+        if (valid) {
+          axios
+            .post('http://localhost:8088/temp/api/auth/login', payload)
+            .then((res) => {
+              alert('로그인이 완료되었습니다.');
+              localStorage.setItem('jwt', res.data.token);
+              router.go(0);
+            })
+            .catch(() => {
+              console.log('login error');
+            });
+        }
+      });
+    };
+    const checkEmail = (rule, value, callback) => {
       // console.log(value);
       if (!value) {
         return callback(new Error('Please input the email'));
@@ -64,7 +88,7 @@ export default {
         }
       }, 1000);
     };
-    var validatePasswd = (rule, value, callback) => {
+    const validatePasswd = (rule, value, callback) => {
       // console.log(value);
       if (value === '') {
         callback(new Error('Please input the password'));
@@ -75,36 +99,33 @@ export default {
         callback();
       }
     };
+    const logout = () => {
+      localStorage.removeItem('jwt');
+      router.go(0);
+    };
+
+    const user = reactive({
+      email: '',
+      passwd: '',
+    });
+    const rules = {
+      passwd: [{ validator: validatePasswd, trigger: 'blur' }],
+      email: [{ validator: checkEmail, trigger: 'blur' }],
+    };
+    const resetForm = () => {
+      formLabelAlign.value.resetFields();
+    };
     return {
       token: localStorage.getItem('jwt'),
-      msg: '',
-      user: {
-        email: '',
-        passwd: '',
-      },
-      rules: {
-        passwd: [{ validator: validatePasswd, trigger: 'blur' }],
-        email: [{ validator: checkEmail, trigger: 'blur' }],
-      },
+      user,
+      formLabelAlign,
+      resetForm,
+      rules,
+      onSubmit,
+      checkEmail,
+      validatePasswd,
+      logout,
     };
-  },
-  methods: {
-    ...mapActions(['login']),
-    resetForm(formName) {
-      this.$refs[formName].resetFields();
-    },
-    onSubmit(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          this.login(this.user);
-          this.$router.go();
-        }
-      });
-    },
-    logout() {
-      localStorage.removeItem('jwt');
-      this.$router.go();
-    },
   },
 };
 </script>
