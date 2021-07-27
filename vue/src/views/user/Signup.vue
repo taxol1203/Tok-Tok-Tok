@@ -40,6 +40,7 @@
 import { reactive, ref } from 'vue';
 import { useStore } from 'vuex';
 import axios from 'axios';
+import router from 'vue-router';
 
 export default {
   setup() {
@@ -57,6 +58,7 @@ export default {
             .post('http://localhost:8088/temp/api/auth/register', payload)
             .then(() => {
               alert('회원가입이 완료되었습니다.');
+              router.push({ name: 'Login' });
             })
             .catch((data) => {
               console.log(data);
