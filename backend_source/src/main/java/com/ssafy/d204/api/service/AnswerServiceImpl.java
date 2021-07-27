@@ -49,4 +49,9 @@ public class AnswerServiceImpl implements AnswerService {
 		return answerDao.getNextQuestion(pk_idx);
 	}
 
+	@Override
+	public List<Answer> getNextAnswers(int pk_idx) {
+		return answerDao.getNextAnswers(pk_idx);
+	}
+
 }

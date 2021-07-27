@@ -84,6 +84,12 @@ public class QnAController {
 		return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
 	}
     
+    @ApiOperation(value = "현재 질문에 따른 다음 답변들의 정보를 전부 반환한다.", response = List.class)
+   	@GetMapping("/question/nextAnswers/{pk_idx}")
+   	public ResponseEntity<List<Answer>> getNextAnswers(@PathVariable int pk_idx) throws Exception {
+   		return new ResponseEntity<List<Answer>>(answerService.getNextAnswers(pk_idx), HttpStatus.OK);
+   	}
+    
     // ----------------------------- 여기서 부터 답변 -------------------------------
     
     @ApiOperation(value = "모든 답변의 정보를 반환한다.", response = List.class)
