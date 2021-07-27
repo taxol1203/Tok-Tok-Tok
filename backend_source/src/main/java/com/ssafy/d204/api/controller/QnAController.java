@@ -90,6 +90,15 @@ public class QnAController {
    		return new ResponseEntity<List<Answer>>(answerService.getNextAnswers(pk_idx), HttpStatus.OK);
    	}
     
+    @ApiOperation(value = "현재 질문에 다음 답변을 추가한다. pk_idx에 연결할 답변, fk_previous_idx에 현재 질문의 인덱스를 넣는다.", response = String.class)
+	@PutMapping("/question/nextAnswer/{idx}")
+	public ResponseEntity<String> updateNextAnswer(@RequestBody Answer content) {
+		if (questionService.updateNextAnswer(content)) {
+			return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+		}
+		return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
+	}
+    
     // ----------------------------- 여기서 부터 답변 -------------------------------
     
     @ApiOperation(value = "모든 답변의 정보를 반환한다.", response = List.class)

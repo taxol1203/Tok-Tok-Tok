@@ -33,4 +33,11 @@
 		delete from "SSAFY_PJT1".question 
 		where pk_idx = #{pk_idx};
 	</delete>
+	
+	<!-- 질문 수정 -->
+	<update id="updateNextAnswer" parameterType="Answer">
+		update "SSAFY_PJT1".answer 
+		set fk_previous_idx = #{fk_previous_idx}
+		where pk_idx = #{pk_idx};
+	</update>
 </mapper>

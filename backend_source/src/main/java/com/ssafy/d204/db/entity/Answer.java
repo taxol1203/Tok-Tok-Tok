@@ -12,7 +12,7 @@ public class Answer {
 	int pk_idx;
 	String content;
 	int fk_next_idx = 2;
-	int fk_previous_idx;
+	int fk_previous_idx = 2;
 
 	public Answer(String content) {
 		this.content = content;
