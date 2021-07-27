@@ -1,93 +1,55 @@
-import axios from 'axios';
-import { createStore } from "vuex";
+import { createStore } from 'vuex'
+import axios from 'axios'
+
+
 export default createStore({
-  state: { //data
-    qnaList: [
-      {
-        q_idx: '1',
-        contents: '시작합니다.',
-        answers: [
-          {
-            q_idx: '1-1',
-            contents: '예상답변1',
-            fk_idx: '2',
-          },
-          {
-            q_idx: '1-2',
-            contents: '예상답변2',
-            fk_idx: '2',
-          },
-        ],
-      },
-      {
-        q_idx: '2',
-        contents: '종료합니다.',
-        answers: [],
-      },
-    ],
+  state: {
+    user_idx: 1,
+    rooms: [],
+    selected_room: null, // 더블클릭한 채팅방의 세션id를 저장
   },
-  getters: { //computed
-    allQnaCount: state => { //parameter에 사용할 컴포넌트 넣기
-      return state.qnaList.length + 1
-    }
-  },
-  mutations: { //payload는 파라미터로 넘어오는 값
-    addQna: (state, payload) => {
-      state.qnaList.push(payload)
+  mutations: {
+    GET_ROOMS(state, payload) {
+      state.rooms = payload
+      // console.log(payload)
     },
-    successSignUp: () => {
-      alert('회원가입이 완료되었습니다.')
+    ADD_ROOMS(state, payload) {
+      state.rooms.push(payload)
     },
-    successLogin: (state, payload) => {
-      alert('로그인이 완료되었습니다.')
-      localStorage.setItem('jwt', payload.data.token);
-    },
-    duplicateEmail: () => {
-      alert('사용 중인 이메일입니다.')
-      return '';
-    },
-    usableEmail: (payload) => {
-      alert('사용 가능한 이메일입니다.')
-      return payload;
+    PICK_ROOM(state, payload) {
+      state.selected_room = payload
+      console.log(payload)
     }
   },
   actions: {
-    addQna: ({ commit }, paylaod) => {
-      //여기다가 로직을 넣고 생성된 데이터들을
-      //mutation에다가 commit하기 위해 actions가 필요
-      commit('addQna', paylaod)
+    async getChatRooms({ commit, state }) {
+      try {
+        const res = await axios.get(`http://localhost:8088/temp/api/chat/rooms/user/${state.user_idx}`)
+        console.log(res.data)
+        commit('GET_ROOMS', res.data)
+      } catch (error) {
+        console.log(error)
+      }
     },
-    signUp: ({ commit }, payload) => {
-      axios.post('http://localhost:8088/temp/api/auth/register', payload)
-        .then((res) => {
-          commit('successSignUp', res);
+    async createChatRooms({ commit }) {
+      try {
+        const res = await axios.post('http://localhost:8088/temp/api/chat/room', {
+          unread: 0,
+          fk_created_by_idx: 1, // 상담 신청하는 고객의 userid
+          fk_client_idx: 1, // 위 필드와 동일값 넣어주면 됨.
         })
-        .catch((data) => {
-          console.log(data)
-          console.log('signup error')
-        })
+        console.log(res.data)
+        commit('ADD_ROOMS', res.data)
+      } catch (error) {
+        console.log(error)
+        alert('채팅방 개설 실패')
+      }
     },
-    login: ({ commit }, payload) => {
-        axios.post('http://localhost:8088/temp/api/auth/login', payload)
-        .then((res) => {
-          commit('successLogin', res);
-        })
-        .catch((data) => {
-          console.log(data)
-          console.log('login error')
-        })
-    },
-    duplicateEmail: ({ commit }, payload) => {
-      axios.post('http://localhost:8088/temp/api/auth/checkemail', payload)
-        .then(() => {
-          commit('duplicateEmail')
-        })
-        .catch((e) => {
-          if (e.response.status == 404) {
-            commit('usableEmail', payload.email)
-          }  
-        })
+    pickRoom({ commit }, key) {
+      commit('PICK_ROOM', key)
     }
   },
-  modules: {}
-});
+  getters: {
+
+  }
+})
