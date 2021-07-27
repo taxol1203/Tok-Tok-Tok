@@ -44,4 +44,9 @@ public class AnswerServiceImpl implements AnswerService {
 		return answerDao.updateNextQuestion(fk_next_idx);
 	}
 
+	@Override
+	public int getNextQuestion(int pk_idx) {
+		return answerDao.getNextQuestion(pk_idx);
+	}
+
 }

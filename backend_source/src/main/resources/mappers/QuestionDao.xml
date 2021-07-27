@@ -4,27 +4,27 @@
 <mapper namespace="com.ssafy.d204.db.repository.QuestionDao"> 
 	<!-- 게시글 전체 조회 -->
 	<select id="retrieveQuestion" resultType="Question">
-		SELECT pk_idx, "content"
+		SELECT pk_idx, "content", "title"
 		FROM "SSAFY_PJT1".question;
 	</select>
 	
 	<!-- 게시글 상세 조회 -->
 	<select id="detailQuestion" resultType="Question">
-		SELECT pk_idx, "content"
+		SELECT pk_idx, "content", "title"
 		FROM "SSAFY_PJT1".question
 		where pk_idx = #{pk_idx};
 	</select>
 
 	<!-- 게시글 등록 -->
 	<insert id="writeQuestion" parameterType="Question">
-		INSERT INTO "SSAFY_PJT1".question ("content") 
-		values ( #{content} );
+		INSERT INTO "SSAFY_PJT1".question ("content", "title") 
+		values ( #{content}, #{title} );
 	</insert>
 	
-	<!-- 게시글 수정 -->
+	<!-- 질문 수정 -->
 	<update id="updateQuestion" parameterType="Question">
 		update "SSAFY_PJT1".question 
-		set content = #{content}
+		set content = #{content}, title = #{title}
 		where pk_idx = #{pk_idx};
 	</update>
 

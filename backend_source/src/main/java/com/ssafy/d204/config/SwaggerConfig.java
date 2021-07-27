@@ -27,7 +27,6 @@ public class SwaggerConfig {
 
 	List<RequestParameter> aParameters = new ArrayList<>();
 
-
 	public SwaggerConfig(){
 		tokenBuilder
 				.name("auth-token")

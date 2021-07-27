@@ -14,4 +14,5 @@ public interface AnswerDao {
 	public boolean updateAnswer(Answer answer);
 	public boolean deleteAnswer(int pk_idx);
 	public boolean updateNextQuestion(Answer fk_next_idx);
+	public int getNextQuestion(int pk_idx);
 }

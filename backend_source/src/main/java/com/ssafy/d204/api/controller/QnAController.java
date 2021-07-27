@@ -92,14 +92,21 @@ public class QnAController {
    		logger.debug("retrieveAnswer - 호출");
    		return new ResponseEntity<List<Answer>>(answerService.retrieveAnswer(), HttpStatus.OK);
    	}
-
-    @ApiOperation(value = "답변 번호에 해당하는 질문의 정보를 반환한다.", response = Answer.class)    
+    
+    @ApiOperation(value = "답변 번호에 해당하는 답변의 정보를 반환한다.", response = Answer.class)    
    	@GetMapping("/answer/{pk_idx}")
    	public ResponseEntity<Answer> detailAnswer(@PathVariable int pk_idx) {
    		logger.debug("detailAnswer - 호출");
    		return new ResponseEntity<Answer>(answerService.detailAnswer(pk_idx), HttpStatus.OK);
    	}
-
+    
+    @ApiOperation(value = "답변 번호에 해당하는 다음 질문의 인덱스를 반환한다.", response = Answer.class)    
+   	@GetMapping("/answer/nextQuestion/{pk_idx}")
+   	public ResponseEntity<Integer> getNextQuestion(@PathVariable int pk_idx) {
+   		logger.debug("detailAnswer - 호출");
+   		return new ResponseEntity<Integer>(answerService.getNextQuestion(pk_idx), HttpStatus.OK);
+   	}
+    
     @ApiOperation(value = "새로운 답변 정보를 입력한다. 그리고 DB입력 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = String.class)
    	@PostMapping("/answer")
    	public ResponseEntity<String> writeAnswer(@RequestBody Answer content) {
