@@ -40,12 +40,14 @@
 import { reactive, ref } from 'vue';
 import { useStore } from 'vuex';
 import axios from 'axios';
-import router from 'vue-router';
+import { useRouter } from 'vue-router';
 
 export default {
   setup() {
     const store = useStore();
     const ruleForm = ref(null);
+    const router = useRouter();
+
     const onSubmit = () => {
       let payload = {
         email: user.email,
@@ -60,19 +62,8 @@ export default {
               alert('회원가입이 완료되었습니다.');
               router.push({ name: 'Login' });
             })
-            .catch((data) => {
-              console.log(data);
+            .catch(() => {
               console.log('signup error');
-            });
-          axios
-            .post('http://localhost:8088/temp/api/auth/login', payload)
-            .then((res) => {
-              alert('로그인이 완료되었습니다.');
-              localStorage.setItem('jwt', res.data.token);
-            })
-            .catch((data) => {
-              console.log(data);
-              console.log('login error');
             });
         }
       });
