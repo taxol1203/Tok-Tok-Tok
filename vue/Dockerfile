@@ -16,6 +16,7 @@ COPY nginx/app.conf /etc/nginx/conf.d/
 COPY --from=frontend ./homepage/dist /usr/share/nginx/html/homepage
 
 EXPOSE 80
+EXPOSE 443
 CMD ["nginx", "-g", "daemon off;"]
 
 #RUN echo '--- run yarn install'
