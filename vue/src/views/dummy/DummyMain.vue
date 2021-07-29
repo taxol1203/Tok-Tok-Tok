@@ -1,38 +1,21 @@
 <template>
   <div id="DummyMain">
     <div class="fab-container">
-      <div class="fab fab-icon-holder">
-        <i class="fas fa-question"></i>
-      </div>
-      <ul class="fab-options">
-        <li>
-          <span class="fab-label">Documentation</span>
-          <div class="fab-icon-holder">
-            <i class="fas fa-file-alt"></i>
-          </div>
-        </li>
-        <li></li>
-      </ul>
-    </div>
-    <div class="fab-container">
-      <div id="chat-box">
-        {{ isHidden }}
-        <el-button
-          class="big-btn"
-          type="primary"
-          icon="el-icon-edit"
-          @click="changeCondition"
-          v-if="!isHidden"
-          circle
-        ></el-button>
-        <el-button
-          class="big-btn"
-          type="success"
-          icon="el-icon-check"
-          @click="changeCondition"
-          v-else
-          circle
-        ></el-button>
+      <div>
+        <transition class="same-pos" name="fade" mode="out-in">
+          <el-button
+            class="big-btn"
+            type="primary"
+            icon="el-icon-plus"
+            @click="changeCondition"
+            v-if="!isHidden"
+            circle
+          ></el-button>
+        </transition>
+        <transition class="same-pos" name="fade" mode="out-in">
+          <div id="chat-box" @click="changeCondition" v-if="isHidden"></div>
+          <!-- <p v-if="isHidden">hello</p> -->
+        </transition>
       </div>
     </div>
   </div>
@@ -54,12 +37,6 @@ export default {
       changeCondition,
     };
   },
-
-  // data() {
-  //   return {
-  //     isHidden: false,
-  //   };
-  // },
 };
 </script>
 <style scoped>
@@ -84,78 +61,42 @@ export default {
   cursor: pointer;
 }
 
-.fab-icon-holder {
-  width: 50px;
-  height: 50px;
-  border-radius: 100%;
-  background: #016fb9;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
-}
-
-.fab-icon-holder:hover {
-  opacity: 0.8;
-}
-
-.fab-icon-holder i {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  font-size: 25px;
-  color: #ffffff;
-}
-
-.fab {
-  width: 60px;
-  height: 60px;
-  background: #d23f31;
-}
-
-.fab-options {
-  list-style-type: none;
-  margin: 0;
-  position: absolute;
-  bottom: 70px;
-  right: 0;
-  opacity: 0;
-  transition: all 0.3s ease;
-  transform: scale(0);
-  transform-origin: 85% bottom;
-}
-
-.fab:hover + .fab-options,
-.fab-options:hover {
-  opacity: 1;
-  transform: scale(1);
-}
-
-.fab-options li {
-  display: flex;
-  justify-content: flex-end;
-  padding: 5px;
-}
-
-.fab-label {
-  padding: 2px 5px;
-  align-self: center;
-  user-select: none;
-  white-space: nowrap;
-  border-radius: 3px;
-  font-size: 16px;
-  background: #666666;
-  color: #ffffff;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
-  margin-right: 10px;
-}
-
 #chat-box {
-  width: 100px;
-  height: 100px;
-  /* background-color: black; */
+  width: 200px;
+  height: 400px;
+  background-color: black;
 }
 
 .big-btn {
   width: 100px;
   height: 100px;
+}
+
+/* 생성 부분 */
+.fade-enter-from {
+  opacity: 0;
+}
+.fade-enter-to {
+  opacity: 1;
+}
+.fade-enter-active {
+  transition: all 0.3s ease-out;
+}
+/* 소멸 부분 */
+.fade-leave-from {
+  opacity: 1;
+}
+.fade-leave-to {
+  opacity: 0;
+}
+.fade-leave-active {
+  transition: all 0.7s ease-out;
+}
+
+/* 위치 고정을 시키지 않으면 렌더링하면서 (생명&소멸) 서로 다른 공간에 보여짐 */
+.same-pos {
+  position: fixed;
+  bottom: 100px;
+  right: 100px;
 }
 </style>
