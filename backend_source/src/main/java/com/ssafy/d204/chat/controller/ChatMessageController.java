@@ -23,7 +23,7 @@ import java.util.List;
 @CrossOrigin("http://localhost:8080")
 @RequestMapping("/chat")
 public class ChatMessageController {
-//    @Autowired
+    @Autowired
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final ChatDao chatDao;
 

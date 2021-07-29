@@ -1,5 +1,8 @@
+# aws
+*.pem
 # vue
 node_modules/
+#yarn.lock
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
