@@ -10,8 +10,8 @@ RUN yarn run build
 
 FROM nginx
 RUN rm /etc/nginx/conf.d/default.conf
-COPY ./nginx/fullchain.pem /usr/share/nginx/fullchain.pem
-COPY ./nginx/privkey.pem /usr/share/nginx/privkey.pem
+#COPY ./nginx/fullchain.pem /usr/share/nginx/fullchain.pem
+#COPY ./nginx/privkey.pem /usr/share/nginx/privkey.pem
 COPY ./nginx/homepage.conf /etc/nginx/conf.d/homepage.conf
 
 
