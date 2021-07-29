@@ -15,7 +15,7 @@ COPY nginx/privkey.pem /usr/share/nginx/
 COPY nginx/app.conf /etc/nginx/conf.d/
 COPY --from=frontend ./homepage/dist /usr/share/nginx/html/homepage
 
-#EXPOSE 80
+EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
 
 #RUN echo '--- run yarn install'

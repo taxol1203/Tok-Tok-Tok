@@ -47,8 +47,6 @@ services:
       build: ./vue
       ports:
         - "80:80"
-#      expose:
-#        - "80"
       networks:
         - net
       restart: always
