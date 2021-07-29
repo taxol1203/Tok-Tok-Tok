@@ -50,7 +50,7 @@ services:
       networks:
         - net
       volumes:
-        - ./nginx/ : /usr/share/nginx/
+        - ./nginx:/usr/share/nginx/
 #    nginx:
 #      build: vue/nginx
 #      container_name: nginx
