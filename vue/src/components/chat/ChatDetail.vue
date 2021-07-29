@@ -31,13 +31,17 @@
           <el-button type="primary" icon="el-icon-video-camera" class="icon-m-p"></el-button>
         </el-col>
         <el-col :span="20">
-          <el-input
-            type="text"
-            @keyup.enter="sendMessage"
-            v-model="message"
-            placeholder="내용을 입력해주세요."
-            id="inputBox"
-          />
+          <div>
+            <!-- <input type="text" @keyup.enter="sendMessage" v-model="message" /> -->
+            <el-input
+              type="text"
+              @keyup.enter="sendMessage"
+              v-model="message"
+              placeholder="Please input"
+              clearable
+            >
+            </el-input>
+          </div>
         </el-col>
         <el-col :span="2">
           <el-button
