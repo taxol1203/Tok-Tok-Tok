@@ -51,8 +51,8 @@ services:
         - net
       restart: always
       user: root
-      volumes:
-        - ./nginx/:/usr/share/nginx/
+#      volumes:
+#        - ./nginx/:/usr/share/nginx/
 #    nginx:
 #      build: vue/nginx
 #      container_name: nginx
