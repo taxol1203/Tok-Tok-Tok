@@ -85,7 +85,7 @@ services:
 volumes:
   postgres: {}
   redis: {}
-  jenkins: {}
+  frontend: {}
 
 networks:
   net:
