@@ -1,10 +1,12 @@
-<template lang="">
+<template height="80px">
   <!-- 여기는 채팅방 리스트 카드 한칸한칸
   들어갈 내용은 왼쪽 프로필이미지, 상대방 이름(아이디), 마지막 대화내용, 안읽은 메시지수? -->
   <i class="el-icon-user-solid"></i>
-  {{ room.session_id }}
+  <span>{{ id }}</span>
   <br />
-  <sub>{{ room.created_at }}</sub>
+  <br />
+  <br />
+  <sub>{{ time }}</sub>
 </template>
 <script>
 // import { computed } from '@vue/runtime-core'
@@ -14,6 +16,12 @@ export default {
       type: Object,
       required: true,
     },
+  },
+  setup(props) {
+    return {
+      id: props.room.session_id.split('-')[0],
+      time: props.room.created_at.slice(0, 19),
+    };
   },
   //   setup(props) {
   //     const sessionSlice = computed(() => {
@@ -33,5 +41,6 @@ export default {
 sub {
   float: right;
   bottom: 0px;
+  color: gray;
 }
 </style>
