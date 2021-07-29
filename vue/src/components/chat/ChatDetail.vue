@@ -192,7 +192,7 @@ export default {
 }
 
 .message-me {
-  background-color: #258c60;
+  background-color: #006f3e;
 }
 .message-other {
   background-color: #258c60;

@@ -38,9 +38,9 @@
 </template>
 
 <script>
-import { reactive, ref } from 'vue';
-import axios from 'axios';
-import router from '@/router';
+import { reactive, ref } from "vue";
+import axios from "axios";
+import router from "@/router";
 
 export default {
   setup() {
@@ -53,14 +53,14 @@ export default {
       formLabelAlign.value.validate((valid) => {
         if (valid) {
           axios
-            .post('http://localhost:8088/temp/api/auth/login', payload)
+            .post("http://localhost:8088/temp/api/auth/login", payload)
             .then((res) => {
-              alert('로그인이 완료되었습니다.');
-              localStorage.setItem('jwt', res.data.token);
+              alert("로그인이 완료되었습니다.");
+              localStorage.setItem("jwt", res.data.token);
               router.go(0);
             })
             .catch(() => {
-              console.log('login error');
+              console.log("login error");
             });
         }
       });
@@ -68,12 +68,12 @@ export default {
     const checkEmail = (rule, value, callback) => {
       // console.log(value);
       if (!value) {
-        return callback(new Error('Please input the email'));
+        return callback(new Error("Please input the email"));
       } else {
         let pattern =
           /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
         if (value.match(pattern) == null) {
-          callback(new Error('Please input email'));
+          callback(new Error("Please input email"));
         } else {
           callback();
         }
@@ -82,7 +82,7 @@ export default {
         let pattern =
           /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
         if (pattern.test(value) == null) {
-          callback(new Error('Please input email'));
+          callback(new Error("Please input email"));
         } else {
           callback();
         }
@@ -90,33 +90,33 @@ export default {
     };
     const validatePasswd = (rule, value, callback) => {
       // console.log(value);
-      if (value === '') {
-        callback(new Error('Please input the password'));
+      if (value === "") {
+        callback(new Error("Please input the password"));
       } else {
         if (value.length < 9 || value.length > 16) {
-          callback(new Error('Please check the password'));
+          callback(new Error("Please check the password"));
         }
         callback();
       }
     };
     const logout = () => {
-      localStorage.removeItem('jwt');
+      localStorage.removeItem("jwt");
       router.go(0);
     };
 
     const user = reactive({
-      email: '',
-      passwd: '',
+      email: "",
+      passwd: "",
     });
     const rules = {
-      passwd: [{ validator: validatePasswd, trigger: 'blur' }],
-      email: [{ validator: checkEmail, trigger: 'blur' }],
+      passwd: [{ validator: validatePasswd, trigger: "blur" }],
+      email: [{ validator: checkEmail, trigger: "blur" }],
     };
     const resetForm = () => {
       formLabelAlign.value.resetFields();
     };
     return {
-      token: localStorage.getItem('jwt'),
+      token: localStorage.getItem("jwt"),
       user,
       formLabelAlign,
       resetForm,
