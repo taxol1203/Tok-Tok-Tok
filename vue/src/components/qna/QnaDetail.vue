@@ -16,11 +16,11 @@
         autosize
         v-model="select.content"
         id="question"
-        v-if="!show"
+        v-if="!show.value"
         style="margin: 10px; width: 500px"
         @click="changeShow"
       ></el-input>
-      <el-row v-if="show" align="middle" gutter="10">
+      <el-row v-if="show.value" align="middle" gutter="10">
         <el-col :span="20">
           <el-input
             type="textarea"
@@ -46,9 +46,9 @@
 </template>
 
 <script>
-import { computed } from "vue";
-import { useStore } from "vuex";
-import QnaAnswer from "@/components/qna/QnaAnswer.vue";
+import { computed } from 'vue';
+import { useStore } from 'vuex';
+import QnaAnswer from '@/components/qna/QnaAnswer.vue';
 
 export default {
   components: {
@@ -58,12 +58,12 @@ export default {
     const store = useStore();
     const select = computed(() => store.state.moduleQna.select);
     const add = () => {
-      if (answers.length < 5) answers.push("test");
-      else alert("예상 답변은 최대 5개 추가 가능합니다.");
+      if (answers.length < 5) answers.push('test');
+      else alert('예상 답변은 최대 5개 추가 가능합니다.');
     };
     let show = true;
     let answers = [];
-    const changeShow = () => {
+    let changeShow = () => {
       show = !show;
     };
     return {

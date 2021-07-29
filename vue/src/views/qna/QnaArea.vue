@@ -1,10 +1,10 @@
 <template lang="">
   <el-container>
-    <el-aside style="border: 1px solid #eee">
+    <el-aside>
       <!-- <QnaList  /> -->
       <QnaList />
     </el-aside>
-    <el-main style="border: 1px solid #eee">
+    <el-main>
       <QnaEdit />
     </el-main>
   </el-container>
@@ -21,4 +21,8 @@ export default {
 };
 </script>
 
-<style lang=""></style>
+<style>
+.el-aside {
+  overflow: hidden;
+}
+</style>

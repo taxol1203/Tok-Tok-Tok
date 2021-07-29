@@ -10,7 +10,7 @@
             </div>
           </el-col>
           <el-col v-else>
-            <div class="message-other border-solid">{{ msg.message }}</div>
+            <div class="message-other">{{ msg.message }}</div>
           </el-col>
         </el-row>
       </div>
