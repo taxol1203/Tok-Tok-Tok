@@ -1,9 +1,21 @@
-FROM node:14.17.3
-WORKDIR /app
+FROM node:14.17.3 as frontend
+WORKDIR /homepage
 
 COPY package.json .
 COPY yarn.lock .
-COPY . .
-RUN echo '--- run yarn install'
+
 RUN yarn install
-CMD ["yarn", "run", "serve"]
+COPY . .
+RUN yarn run build
+
+FROM nginx
+RUN rm /etc/nginx/conf.d/default.conf
+COPY ./nginx/homepage.conf /etc/nginx/conf.d/homepage.conf
+
+COPY --from=frontend ./homepage/dist /usr/share/nginx/html/homepage
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
+
+#RUN echo '--- run yarn install'
+#RUN yarn install
+#CMD ["yarn", "run", "serve"]
