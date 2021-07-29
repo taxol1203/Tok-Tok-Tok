@@ -2,11 +2,10 @@
     <el-container style="border: 1px solid #eee" >
       <!-- NavBar 시작 -->
       <!-- <el-aside width="200px">  -->
-        
           <el-menu 
             :default-active="$route.name"
             class="el-menu-vertical-demo"
-            background-color="#258C60"
+            background-color="#006f3e"
             text-color= "#999999"
             active-text-color="#fff" 
             style="height: 700px; text-align:left"
