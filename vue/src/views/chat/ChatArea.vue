@@ -7,7 +7,7 @@
         <!-- <el-main> -->
         <!-- <el-container> -->
         <transition name="chat-change" mode="out-in">
-          <el-main v-if="store.state.selected_room"><ChatDetail /></el-main>
+          <div v-if="store.state.selected_room"><ChatDetail /></div>
         </transition>
         <transition name="chat-change" mode="out-in">
           <el-aside v-if="store.state.selected_room"><UserInfo /></el-aside>
@@ -49,6 +49,7 @@ export default {
 } */
 .el-main {
   padding: 0;
+  margin: 0;
 }
 /* 생성 부분 */
 .chat-change-enter-from {
