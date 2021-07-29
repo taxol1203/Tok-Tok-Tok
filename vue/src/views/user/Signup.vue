@@ -27,7 +27,7 @@
             <el-form-item label="비밀번호 확인" prop="check">
               <el-input type="password" v-model="user.check" autocomplete="off"></el-input>
             </el-form-item>
-            <el-button id="colorVer" @click="onSubmit()">회원가입</el-button>
+            <el-button class="colorVer" @click="onSubmit()">회원가입</el-button>
             <el-button @click="resetForm()">다시쓰기</el-button>
           </el-form>
         </el-card>

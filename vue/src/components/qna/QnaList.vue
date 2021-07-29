@@ -59,6 +59,7 @@ export default {
 #container {
   position: relative;
   height: 750px;
+  background: #f7f4f0;
 }
 .el-scroll {
   overflow: visible;
