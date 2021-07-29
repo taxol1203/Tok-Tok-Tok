@@ -10,7 +10,7 @@ RUN yarn run build
 
 FROM nginx
 RUN rm /etc/nginx/conf.d/default.conf
-COPY ./nginx/homepage.conf /etc/nginx/conf.d/default.conf
+COPY nginx/default.conf /etc/nginx/conf.d/default.conf
 
 COPY --from=frontend ./homepage/dist /usr/share/nginx/html/homepage
 COPY ./nginx/fullchain.pem /usr/share/nginx/fullchain.pem
