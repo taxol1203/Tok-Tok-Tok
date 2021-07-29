@@ -4,15 +4,13 @@
     <router-link to="/login">Log in</router-link> | <router-link to="/admin">Admin</router-link> |
     <router-link to="/dummy">Dummy Page</router-link>
   </div>
-  <div id="top-padding">
-    <transition name="page-change" mode="out-in">
-      <router-view />
-    </transition>
-  </div>
+  <transition name="page-change" mode="out-in">
+    <router-view />
+  </transition>
 </template>
 <script>
 export default {
-  name: 'App',
+  name: "App",
 };
 </script>
 
@@ -53,8 +51,8 @@ export default {
 }
 
 @font-face {
-  font-family: 'BMJUA';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/BMJUA.woff') format('woff');
+  font-family: "BMJUA";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/BMJUA.woff") format("woff");
   font-weight: normal;
   font-style: normal;
 }
@@ -78,9 +76,5 @@ export default {
 }
 .page-change-leave-active {
   transition: all 4s ease-out;
-}
-
-#top-padding {
-  padding-top: 5%;
 }
 </style>
