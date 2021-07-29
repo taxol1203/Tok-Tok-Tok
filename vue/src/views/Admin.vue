@@ -1,14 +1,13 @@
 <template lang="">
-    <el-container style="border: 1px solid #eee" >
+    <el-container>
       <!-- NavBar 시작 -->
-      <!-- <el-aside width="200px">  -->
           <el-menu 
             :default-active="$route.name"
             class="el-menu-vertical-demo"
             background-color="#006f3e"
             text-color= "#999999"
             active-text-color="#fff" 
-            style="height: 700px; text-align:left"
+            style="height: 750px; text-align:left"
             :collapse="isCollapse"
           >
           <!-- ffd04b -->
@@ -16,12 +15,12 @@
               <i class="el-icon-d-arrow-right" v-if="isCollapse===true"></i>
               <i class="el-icon-d-arrow-left"  v-if="isCollapse===false"></i>
             </el-menu-item>
-            <router-link style="text-decoration:none;" to="/admin/chat">
+            <router-link to="/admin/chat">
             <el-menu-item index="chat">
               <i class="el-icon-menu"></i>
               <template #title>상담</template>
             </el-menu-item></router-link>
-            <router-link style="text-decoration:none;" to="/admin/qna">
+            <router-link  to="/admin/qna">
             <el-menu-item index="qna">
               <i class="el-icon-document"></i>
               <template #title>예상 시나리오 작성</template>
@@ -31,7 +30,6 @@
               <template #title>설정</template>
             </el-menu-item>
           </el-menu>
-      <!-- </el-aside> -->
       <!-- NavBar 끝 -->
     <el-main>
       <router-view></router-view>

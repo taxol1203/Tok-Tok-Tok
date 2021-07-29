@@ -25,8 +25,8 @@
   </div>
 </template>
 <script>
-import ChatDetail from "../../../src/components/chat/ChatDetail.vue";
-import { ref } from "vue";
+import ChatDetail from '../../../src/components/chat/ChatDetail.vue';
+import { ref } from 'vue';
 
 /* eslint-disable */
 export default {
@@ -53,7 +53,7 @@ export default {
   position: fixed;
   width: 100%;
   height: 100%;
-  background-image: url("../../assets/Microsoft.png");
+  background-image: url('../../assets/Microsoft.png');
 }
 
 .floating-btn {

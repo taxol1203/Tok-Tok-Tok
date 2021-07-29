@@ -10,7 +10,7 @@
 </template>
 <script>
 export default {
-  name: "App",
+  name: 'App',
 };
 </script>
 
@@ -18,6 +18,10 @@ export default {
 /* 전체 프로젝트 폰트 변경(상속, cascading) */
 * {
   font-family: BMJUA;
+  text-decoration: none;
+}
+.el-main {
+  overflow: hidden;
 }
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -47,8 +51,8 @@ export default {
 }
 
 @font-face {
-  font-family: "BMJUA";
-  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/BMJUA.woff") format("woff");
+  font-family: 'BMJUA';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/BMJUA.woff') format('woff');
   font-weight: normal;
   font-style: normal;
 }
