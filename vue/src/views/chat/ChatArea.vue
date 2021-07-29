@@ -58,7 +58,7 @@ export default {
   opacity: 1;
 }
 .chat-change-enter-active {
-  transition: all 0.7s ease-out;
+  transition: all 0.5s ease-out;
 }
 /* 소멸 부분 */
 .chat-change-leave-from {
@@ -68,6 +68,6 @@ export default {
   opacity: 0;
 }
 .chat-change-leave-active {
-  transition: all 1s ease-out;
+  transition: all 0.7s ease-out;
 }
 </style>

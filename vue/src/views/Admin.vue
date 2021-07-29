@@ -63,7 +63,7 @@ export default {
   opacity: 1;
 }
 .list-change-enter-active {
-  transition: all 1s ease-out;
+  transition: all 0.5s ease-out;
 }
 /* 소멸 부분 */
 .list-change-leave-from {
@@ -73,6 +73,6 @@ export default {
   opacity: 0;
 }
 .list-change-leave-active {
-  transition: all 4s ease-out;
+  transition: all 0.7s ease-out;
 }
 </style>
