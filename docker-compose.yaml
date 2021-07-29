@@ -54,7 +54,7 @@ services:
       restart: always
       user: root
       depends_on:
-        - django
+        - spring
 #      volumes:
 #        - ./nginx/:/usr/share/nginx/
 #    nginx:
