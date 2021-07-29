@@ -12,8 +12,8 @@
   </div>
 </template>
 <script>
-import ChatItem from './ChatItem.vue';
-import { useStore } from 'vuex';
+import ChatItem from "./ChatItem.vue";
+import { useStore } from "vuex";
 // import { computed } from 'vue'
 
 export default {
@@ -22,13 +22,17 @@ export default {
   },
   setup() {
     const store = useStore();
-    store.dispatch('getChatRooms');
+    store.dispatch("getChatRooms");
     const newChat = () => {
-      store.dispatch('createChatRooms');
+      store.dispatch("createChatRooms");
     };
     // 더블클릭한 채팅방의 세션id를 state에 저장
     const pickRoom = (key) => {
-      store.dispatch('pickRoom', key);
+      if (store.state.selected_room != null) {
+        store.dispatch("pickRoom", null);
+      } else {
+        store.dispatch("pickRoom", key);
+      }
     };
     return {
       newChat,

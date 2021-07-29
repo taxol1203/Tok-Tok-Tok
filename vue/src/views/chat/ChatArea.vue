@@ -8,7 +8,7 @@
         <el-main>
           <el-container>
             <el-main v-if="store.state.selected_room"><ChatDetail /></el-main>
-            <el-aside><UserInfo /></el-aside>
+            <el-aside v-if="store.state.selected_room"><UserInfo /></el-aside>
           </el-container>
         </el-main>
       </el-container>
