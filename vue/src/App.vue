@@ -15,6 +15,10 @@ export default {
 </script>
 
 <style>
+/* 전체 프로젝트 폰트 변경(상속, cascading) */
+* {
+  font-family: BMJUA;
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

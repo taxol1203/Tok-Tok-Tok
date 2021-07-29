@@ -188,6 +188,7 @@ export default {
   color: white;
   background-color: rgb(39, 37, 31);
   font-family: "BMJUA";
+  box-sizing: border-box;
 }
 
 .message-me {

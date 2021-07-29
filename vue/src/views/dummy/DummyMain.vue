@@ -13,7 +13,11 @@
           ></el-button>
         </transition>
         <transition class="same-pos" name="fade" mode="out-in">
-          <div id="chat-box" @click="changeCondition" v-if="isHidden"></div>
+          <div id="chat-box" @click="changeCondition" v-if="isHidden">
+            <div class="full-box">
+              <ChatDetail />
+            </div>
+          </div>
           <!-- <p v-if="isHidden">hello</p> -->
         </transition>
       </div>
@@ -21,10 +25,15 @@
   </div>
 </template>
 <script>
+import ChatDetail from "../../../src/components/chat/ChatDetail.vue";
 import { ref } from "vue";
 
 /* eslint-disable */
 export default {
+  components: {
+    ChatDetail,
+  },
+
   setup() {
     let isHidden = ref(false);
 
@@ -62,8 +71,8 @@ export default {
 }
 
 #chat-box {
-  width: 200px;
-  height: 400px;
+  width: 20%;
+  height: 50%;
   background-color: black;
 }
 
@@ -98,5 +107,9 @@ export default {
   position: fixed;
   bottom: 100px;
   right: 100px;
+}
+
+.full-box {
+  box-sizing: border-box;
 }
 </style>
