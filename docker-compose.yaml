@@ -53,6 +53,8 @@ services:
         - net
       restart: always
       user: root
+      depends_on:
+        - django
 #      volumes:
 #        - ./nginx/:/usr/share/nginx/
 #    nginx:
