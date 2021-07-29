@@ -19,11 +19,11 @@
   </div>
 </template>
 <script>
-import ChatList from "../../components/chat/ChatList.vue";
+import ChatList from '../../components/chat/ChatList.vue';
 // import UserTitle from '../../components/chat/UserTitle.vue';
-import ChatDetail from "../../components/chat/ChatDetail.vue";
-import UserInfo from "../../components/chat/UserInfo.vue";
-import { useStore } from "vuex";
+import ChatDetail from '../../components/chat/ChatDetail.vue';
+import UserInfo from '../../components/chat/UserInfo.vue';
+import { useStore } from 'vuex';
 
 export default {
   components: {
@@ -33,7 +33,7 @@ export default {
     UserInfo,
   },
   setup() {
-    const test = "abcdef";
+    const test = 'abcdef';
     const store = useStore();
 
     return {
@@ -58,7 +58,7 @@ export default {
   opacity: 1;
 }
 .chat-change-enter-active {
-  transition: all 0.5s ease-out;
+  transition: all 0.2s ease-out;
 }
 /* 소멸 부분 */
 .chat-change-leave-from {
@@ -68,6 +68,6 @@ export default {
   opacity: 0;
 }
 .chat-change-leave-active {
-  transition: all 0.7s ease-out;
+  transition: all 0.2s ease-out;
 }
 </style>
