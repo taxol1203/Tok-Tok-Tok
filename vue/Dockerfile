@@ -1,4 +1,5 @@
 FROM node:14.17.3 as frontend
+RUN mkdir -p /homepage
 WORKDIR /homepage
 
 COPY package.json .
