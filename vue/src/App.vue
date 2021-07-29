@@ -1,18 +1,24 @@
 <template>
   <div id="nav">
     <router-link to="/signup">Sign Up</router-link> |
-    <router-link to="/login">Log in</router-link> |
-    <router-link to="/admin">Admin</router-link>
+    <router-link to="/login">Log in</router-link> | <router-link to="/admin">Admin</router-link> |
+    <router-link to="/dummy">Dummy Page</router-link>
   </div>
-  <router-view />
+  <transition name="page-change" mode="">
+    <router-view />
+  </transition>
 </template>
 <script>
 export default {
-  name: 'App',
+  name: "App",
 };
 </script>
 
 <style>
+/* 전체 프로젝트 폰트 변경(상속, cascading) */
+* {
+  font-family: BMJUA;
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -41,9 +47,30 @@ export default {
 }
 
 @font-face {
-  font-family: 'BMJUA';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/BMJUA.woff') format('woff');
+  font-family: "BMJUA";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/BMJUA.woff") format("woff");
   font-weight: normal;
   font-style: normal;
+}
+
+/* 생성 부분 */
+.page-change-enter-from {
+  opacity: 0;
+}
+.page-change-enter-to {
+  opacity: 1;
+}
+.page-change-enter-active {
+  transition: all 0.3s ease-out;
+}
+/* 소멸 부분 */
+.page-change-leave-from {
+  opacity: 1;
+}
+.page-change-leave-to {
+  opacity: 0;
+}
+.page-change-leave-active {
+  transition: all 0.7s ease-out;
 }
 </style>

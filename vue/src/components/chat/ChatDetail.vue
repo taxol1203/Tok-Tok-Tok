@@ -71,7 +71,6 @@ export default {
     const store = useStore();
 
     sessionId.value = store.state.selected_room;
-    // console.log(sessionId.value);
     // sessionId = this.$route.params.id; // path parameter로 방 id 전송함. 만약 url에 노출되는게 별로면 props로 전달하는 걸로 변경하셔도...
 
     axios.get("http://localhost:8088/temp/api/chat/room/" + sessionId.value).then((response) => {
@@ -92,10 +91,7 @@ export default {
     // this.connect(sessionId.value);
 
     const sendMessage = () => {
-      // console.log("SEND MSG");
-      // console.log(message);
       if (userName !== "" && message.value !== "") {
-        // console.log("INNER SEND MSG");
         // 이벤트 발생 엔터키 + 유효성 검사는 여기에서
         send({ message: message }); // 전송 실패 감지는 어떻게? 프론트단에서 고민좀 부탁 dream
       }
@@ -105,7 +101,6 @@ export default {
     const send = () => {
       console.log("Send message:" + message.value);
       if (stompClient && stompClient.connected) {
-        console.log("IN??????????????");
         const msg = {
           message: message.value, // 메세지 내용. type이 MSG인 경우를 제외하곤 비워두고 프론트단에서만 처리.
           fk_author_idx: 1, // 작성자의 회원 idx
@@ -193,10 +188,11 @@ export default {
   color: white;
   background-color: rgb(39, 37, 31);
   font-family: "BMJUA";
+  box-sizing: border-box;
 }
 
 .message-me {
-  background-color: #258c60;
+  background-color: #006f3e;
 }
 .message-other {
   background-color: #258c60;
