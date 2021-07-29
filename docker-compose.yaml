@@ -49,6 +49,8 @@ services:
         - 80:80
       networks:
         - net
+      restart: always
+      user: root
       volumes:
         - ./nginx:/usr/share/nginx/
 #    nginx:
