@@ -1,7 +1,7 @@
 <template>
-  <div style="position: relative; height: 750px; padding: 10px">
+  <div style="position: relative; width: 650px; height: 750px; padding: 10px">
     <!-- 상대방 -->
-    <el-scrollbar id="topMessages">
+    <el-scrollbar ref="scrollbar" id="topMessages">
       <div v-for="(msg, index) in messages.messageArrayKey" :key="index">
         <el-row>
           <el-col v-if="msg.fk_author_idx == '1'">
@@ -28,7 +28,7 @@
       </el-col> -->
         <!-- 입력창 -->
         <el-col :span="2">
-          <el-button type="primary" icon="el-icon-video-camera" class="icon-m-p"></el-button>
+          <el-button icon="el-icon-video-camera" class="icon-m-p colorVer"></el-button>
         </el-col>
         <el-col :span="20">
           <div>
@@ -47,8 +47,7 @@
           <el-button
             @click="sendMessage"
             icon="el-icon-s-promotion"
-            class="icon-m-p"
-            plain
+            class="icon-m-p colorVer"
           ></el-button>
         </el-col>
       </el-row>
@@ -74,8 +73,8 @@ export default {
     let connected = false;
     let stompClient = '';
     let userName = '1'; // user id나 email받으면 그거 넣기@@@@@
-
     const store = useStore();
+    // scrollbar.value.setScrollTop(700);
 
     sessionId.value = store.state.selected_room;
     // sessionId = this.$route.params.id; // path parameter로 방 id 전송함. 만약 url에 노출되는게 별로면 props로 전달하는 걸로 변경하셔도...
@@ -217,6 +216,10 @@ export default {
   background-color: transparent;
   border: 0px solid #eee;
 }
+.colorVer :hover {
+  background-color: black;
+}
+
 /*
 .border-solid {
   border: solid 1px;

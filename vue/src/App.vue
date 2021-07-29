@@ -41,10 +41,10 @@ export default {
 }
 
 #nav a.router-link-exact-active {
-  color: #42b983;
+  color: #006f3e;
 }
 /* 258c60  */
-#colorVer {
+.colorVer {
   background-color: #006f3e;
   color: #fff;
   border: 0;
@@ -65,7 +65,7 @@ export default {
   opacity: 1;
 }
 .page-change-enter-active {
-  transition: all 1s ease-out;
+  transition: all 0.5s ease-out;
 }
 /* 소멸 부분 */
 .page-change-leave-from {
@@ -75,6 +75,6 @@ export default {
   opacity: 0;
 }
 .page-change-leave-active {
-  transition: all 4s ease-out;
+  transition: all 1s ease-out;
 }
 </style>
