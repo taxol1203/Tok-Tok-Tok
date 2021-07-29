@@ -4,9 +4,11 @@
     <router-link to="/login">Log in</router-link> | <router-link to="/admin">Admin</router-link> |
     <router-link to="/dummy">Dummy Page</router-link>
   </div>
-  <transition name="page-change" mode="">
-    <router-view />
-  </transition>
+  <div id="top-padding">
+    <transition name="page-change" mode="out-in">
+      <router-view />
+    </transition>
+  </div>
 </template>
 <script>
 export default {
@@ -61,7 +63,7 @@ export default {
   opacity: 1;
 }
 .page-change-enter-active {
-  transition: all 0.3s ease-out;
+  transition: all 1s ease-out;
 }
 /* 소멸 부분 */
 .page-change-leave-from {
@@ -71,6 +73,10 @@ export default {
   opacity: 0;
 }
 .page-change-leave-active {
-  transition: all 0.7s ease-out;
+  transition: all 4s ease-out;
+}
+
+#top-padding {
+  padding-top: 5%;
 }
 </style>
