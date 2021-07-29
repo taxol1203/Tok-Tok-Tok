@@ -46,9 +46,9 @@
 </template>
 
 <script>
-import { computed } from 'vue';
-import { useStore } from 'vuex';
-import QnaAnswer from '@/components/qna/QnaAnswer.vue';
+import { computed } from "vue";
+import { useStore } from "vuex";
+import QnaAnswer from "@/components/qna/QnaAnswer.vue";
 
 export default {
   components: {
@@ -58,8 +58,8 @@ export default {
     const store = useStore();
     const select = computed(() => store.state.moduleQna.select);
     const add = () => {
-      if (answers.length < 5) answers.push('test');
-      else alert('예상 답변은 최대 5개 추가 가능합니다.');
+      if (answers.length < 5) answers.push("test");
+      else alert("예상 답변은 최대 5개 추가 가능합니다.");
     };
     let show = true;
     let answers = [];
@@ -81,7 +81,5 @@ export default {
 #question {
   background-color: transparent;
   border: 0px solid;
-  font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei',
-    '微软雅黑', Arial, sans-serif;
 }
 </style>
