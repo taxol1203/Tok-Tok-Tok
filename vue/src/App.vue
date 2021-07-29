@@ -10,7 +10,7 @@
 </template>
 <script>
 export default {
-  name: "App",
+  name: 'App',
 };
 </script>
 
@@ -41,18 +41,18 @@ export default {
 }
 
 #nav a.router-link-exact-active {
-  color: #42b983;
+  color: #006f3e;
 }
 /* 258c60  */
-#colorVer {
+.colorVer {
   background-color: #006f3e;
   color: #fff;
   border: 0;
 }
 
 @font-face {
-  font-family: "BMJUA";
-  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/BMJUA.woff") format("woff");
+  font-family: 'BMJUA';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/BMJUA.woff') format('woff');
   font-weight: normal;
   font-style: normal;
 }
