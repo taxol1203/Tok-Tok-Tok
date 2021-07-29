@@ -47,7 +47,7 @@ services:
       build: ./vue
       ports:
         - 8080:8080
-      espose:
+      expose:
         - "8080"
       networks:
         - net
