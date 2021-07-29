@@ -1,28 +1,29 @@
 <template>
-  <div id="DummyMain">
-    <div class="fab-container">
-      <div>
-        <transition class="same-pos" name="fade" mode="out-in">
-          <el-button
-            class="big-btn"
-            type="primary"
-            icon="el-icon-plus"
-            @click="changeCondition"
-            v-if="!isHidden"
-            circle
-          ></el-button>
-        </transition>
-        <transition class="same-pos" name="fade" mode="out-in">
-          <div id="chat-box" @click="changeCondition" v-if="isHidden">
-            <div class="full-box">
-              <ChatDetail />
+  <el-row :gutter="20">
+    <div id="DummyMain">
+      <div class="fab-container">
+        <div>
+          <transition class="same-pos" name="fade" mode="out-in">
+            <el-button
+              class="big-btn"
+              type="primary"
+              icon="el-icon-plus"
+              @click="changeCondition"
+              v-if="!isHidden"
+              circle
+            ></el-button>
+          </transition>
+          <transition class="same-pos" name="fade" mode="out-in">
+            <div id="chat-box" @click="changeCondition" v-if="isHidden">
+              <div class="full-box">
+                <ChatDetail />
+              </div>
             </div>
-          </div>
-          <!-- <p v-if="isHidden">hello</p> -->
-        </transition>
+          </transition>
+        </div>
       </div>
     </div>
-  </div>
+  </el-row>
 </template>
 <script>
 import ChatDetail from '../../../src/components/chat/ChatDetail.vue';
@@ -54,12 +55,8 @@ export default {
   width: 100%;
   height: 100%;
   background-image: url('../../assets/Microsoft.png');
-}
-
-.floating-btn {
-  position: fixed;
-  bottom: 500px;
-  right: 500px;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 .fab-container {
