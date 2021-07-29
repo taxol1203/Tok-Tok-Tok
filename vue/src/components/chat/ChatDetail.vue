@@ -27,15 +27,19 @@
         <div class="message-me border-solid">My Message</div>
       </el-col> -->
         <!-- 입력창 -->
-        <el-col :span="3">
+        <el-col :span="2">
           <el-button type="primary" icon="el-icon-video-camera" class="icon-m-p"></el-button>
         </el-col>
-        <el-col :span="18">
-          <div>
-            <input type="text" @keyup.enter="sendMessage" v-model="message" />
-          </div>
+        <el-col :span="20">
+          <el-input
+            type="text"
+            @keyup.enter="sendMessage"
+            v-model="message"
+            placeholder="내용을 입력해주세요."
+            id="inputBox"
+          />
         </el-col>
-        <el-col :span="3">
+        <el-col :span="2">
           <el-button
             @click="sendMessage"
             icon="el-icon-s-promotion"
@@ -172,14 +176,11 @@ export default {
 </script>
 <style>
 #bottomInput {
-  position: absolute;
-  display: block;
   bottom: 0px;
   width: 100%;
 }
 #topMessages {
   display: block;
-  /* position: absolute; */
   top: 0px;
   height: 700px;
   width: 100%;
@@ -194,6 +195,23 @@ export default {
   float: right;
   padding: 10px;
   margin: 5px 10px 5px 5px;
+  max-width: 300px;
+}
+.message-other {
+  border: 1px solid #27251f;
+  border-radius: 10px 10px 10px 0px;
+  color: #fff;
+  background: #27251f;
+  float: left;
+  padding: 10px;
+  margin: 5px 10px 5px 5px;
+  max-width: 300px;
+}
+#inputBox {
+  width: 90%;
+  height: 100%;
+  background-color: transparent;
+  border: 0px solid #eee;
 }
 /*
 .border-solid {
@@ -220,7 +238,7 @@ export default {
 }
 .message-other {
   background-color: #258c60;
-} 
+}
 
 .defualt-m-p {
   padding: 1px;
