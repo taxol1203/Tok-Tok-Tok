@@ -32,7 +32,9 @@
           </el-menu>
       <!-- NavBar 끝 -->
     <el-main>
-      <router-view></router-view>
+      <transition name="list-change" mode="out-in">
+        <router-view />
+      </transition>
     </el-main>
     </el-container>
     
@@ -53,5 +55,24 @@ export default {
 };
 </script>
 <style scoped>
-
+/* 생성 부분 */
+.list-change-enter-from {
+  opacity: 0;
+}
+.list-change-enter-to {
+  opacity: 1;
+}
+.list-change-enter-active {
+  transition: all 0.5s ease-out;
+}
+/* 소멸 부분 */
+.list-change-leave-from {
+  opacity: 1;
+}
+.list-change-leave-to {
+  opacity: 0;
+}
+.list-change-leave-active {
+  transition: all 0.7s ease-out;
+}
 </style>

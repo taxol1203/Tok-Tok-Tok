@@ -216,6 +216,9 @@ export default {
   background-color: transparent;
   border: 0px solid #eee;
 }
+.colorVer :hover {
+  background-color: black;
+}
 
 /*
 .border-solid {

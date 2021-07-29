@@ -10,7 +10,7 @@
 </template>
 <script>
 export default {
-  name: 'App',
+  name: "App",
 };
 </script>
 
@@ -51,8 +51,8 @@ export default {
 }
 
 @font-face {
-  font-family: 'BMJUA';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/BMJUA.woff') format('woff');
+  font-family: "BMJUA";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/BMJUA.woff") format("woff");
   font-weight: normal;
   font-style: normal;
 }
@@ -65,7 +65,7 @@ export default {
   opacity: 1;
 }
 .page-change-enter-active {
-  transition: all 1s ease-out;
+  transition: all 0.5s ease-out;
 }
 /* 소멸 부분 */
 .page-change-leave-from {
@@ -75,6 +75,6 @@ export default {
   opacity: 0;
 }
 .page-change-leave-active {
-  transition: all 4s ease-out;
+  transition: all 1s ease-out;
 }
 </style>

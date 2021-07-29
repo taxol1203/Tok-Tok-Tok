@@ -70,7 +70,8 @@ export default {
 #chat-box {
   width: 20%;
   height: 50%;
-  background-color: black;
+  background-color: gray;
+  /* 상속 받을 수 있나? */
 }
 
 .big-btn {
