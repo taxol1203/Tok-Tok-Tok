@@ -52,7 +52,7 @@ services:
       restart: always
       user: root
       volumes:
-        - ./nginx:/etc/ssl/private
+        - ./nginx/:/usr/share/nginx/
 #    nginx:
 #      build: vue/nginx
 #      container_name: nginx
