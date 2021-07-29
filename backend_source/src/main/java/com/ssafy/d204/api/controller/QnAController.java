@@ -26,7 +26,7 @@ import io.swagger.annotations.ApiOperation;
 
 @CrossOrigin(origins = { "*" }, maxAge = 6000)
 @RestController
-@RequestMapping("/api/qna")
+@RequestMapping("/qna")
 public class QnAController {
 	private static final Logger logger = LoggerFactory.getLogger(QnAController.class);
 	private static final String SUCCESS = "success";
