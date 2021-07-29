@@ -32,6 +32,7 @@ services:
         - "8000:8000"
     spring:
       build: ./spring
+      container_name: spring
       depends_on:
         - postgres
       ports:
