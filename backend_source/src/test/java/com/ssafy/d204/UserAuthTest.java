@@ -6,7 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.ssafy.d204.api.controller.AuthController;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserAuthTest {
 	@Autowired
 	AuthController ac;
