@@ -53,7 +53,7 @@ export default {
       formLabelAlign.value.validate((valid) => {
         if (valid) {
           axios
-            .post('http://localhost:8088/temp/api/auth/login', payload)
+            .post('http://i5d204.p.ssafy.io/api/auth/login', payload)
             .then((res) => {
               alert('로그인이 완료되었습니다.');
               localStorage.setItem('jwt', res.data.token);

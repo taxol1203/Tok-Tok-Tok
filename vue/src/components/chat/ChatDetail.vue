@@ -79,12 +79,12 @@ export default {
     sessionId.value = store.state.selected_room;
     // sessionId = this.$route.params.id; // path parameter로 방 id 전송함. 만약 url에 노출되는게 별로면 props로 전달하는 걸로 변경하셔도...
 
-    axios.get('http://localhost:8088/temp/api/chat/room/' + sessionId.value).then((response) => {
+    axios.get('http://i5d204.p.ssafy.io/api/chat/room/' + sessionId.value).then((response) => {
       roomName = response.data.name; // 방에 대한 정보를 가져옵니다.
       console.log(response);
       console.log('room info');
       axios
-        .get('http://localhost:8088/temp/api/chat/messages/' + sessionId.value)
+        .get('http://i5d204.p.ssafy.io/api/chat/messages/' + sessionId.value)
         .then((response) => {
           console.log(response.data, '채팅 내역 수신');
           messages.messageArrayKey = response.data;
@@ -121,7 +121,7 @@ export default {
     };
 
     const connect = () => {
-      const serverURL = 'http://localhost:8088/temp/chat'; // 서버 채팅 주소
+      const serverURL = 'http://i5d204.p.ssafy.io:8088/chat'; // 서버 채팅 주소
       let socket = new SockJS(serverURL);
       stompClient = Stomp.over(socket);
       console.log(`connecting to socket=> ${serverURL}`);
