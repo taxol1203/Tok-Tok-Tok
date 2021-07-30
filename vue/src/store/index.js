@@ -25,7 +25,7 @@ export default createStore({
   actions: {
     async getChatRooms({ commit, state }) {
       try {
-        const res = await axios.get(`http://i5d204.p.ssafy.io/api/chat/rooms/user/${state.user_idx}`)
+        const res = await axios.get(`https://i5d204.p.ssafy.io/api/chat/rooms/user/${state.user_idx}`)
         console.log(res.data)
         commit('GET_ROOMS', res.data)
       } catch (error) {
@@ -34,7 +34,7 @@ export default createStore({
     },
     async createChatRooms({ commit }) {
       try {
-        const res = await axios.post('http://i5d204.p.ssafy.io/api/chat/room', {
+        const res = await axios.post('https://i5d204.p.ssafy.io/api/chat/room', {
           unread: 0,
           fk_created_by_idx: 1, // 상담 신청하는 고객의 userid
           fk_client_idx: 1, // 위 필드와 동일값 넣어주면 됨.
