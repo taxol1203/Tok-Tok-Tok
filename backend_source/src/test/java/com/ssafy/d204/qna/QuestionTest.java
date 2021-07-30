@@ -97,6 +97,5 @@ public class QuestionTest {
 		// 제대로 갱신 되었는지 확인
 		updateQ = qnaController.detailQuestion(curIdx).getBody();
 		Assertions.assertEquals("update", updateQ.getContent());
-		
 	}
 }
