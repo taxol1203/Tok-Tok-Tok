@@ -22,7 +22,7 @@
     <i class="el-icon-menu"></i>
     <template #title>Navigator Two</template>
   </el-menu-item>
-  <el-menu-item index="3" disabled>
+  <el-menu-item index="3" >
     <i class="el-icon-document"></i>
     <template #title>Navigator Three</template>
   </el-menu-item>
@@ -33,6 +33,10 @@
 </el-menu>
 </template>
 <script>
-export default {};
+export default {
+  props:{
+    show: Boolean,
+  }
+};
 </script>
 <style lang=""></style>

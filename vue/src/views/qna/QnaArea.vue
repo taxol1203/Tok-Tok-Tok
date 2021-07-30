@@ -1,13 +1,17 @@
 <template lang="">
-  <div>
-    [QnaArea]
-    <QnaList />
-    <QnaEdit />
-  </div>
+  <el-container>
+    <el-aside>
+      <!-- <QnaList  /> -->
+      <QnaList />
+    </el-aside>
+    <el-main>
+      <QnaEdit />
+    </el-main>
+  </el-container>
 </template>
 <script>
-import QnaList from "../../components/qna/QnaList.vue";
-import QnaEdit from "../../components/qna/QnaEdit.vue";
+import QnaList from '../../components/qna/QnaList.vue';
+import QnaEdit from '../../components/qna/QnaEdit.vue';
 
 export default {
   components: {
@@ -17,4 +21,8 @@ export default {
 };
 </script>
 
-<style lang=""></style>
+<style>
+.el-aside {
+  overflow: hidden;
+}
+</style>
