@@ -20,7 +20,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@CrossOrigin("http://localhost:8080")
+@CrossOrigin("*")
 @RequestMapping("/chat")
 public class ChatMessageController {
     @Autowired
