@@ -57,7 +57,7 @@ export default {
       ruleForm.value.validate((valid) => {
         if (valid) {
           axios
-            .post('http://localhost:8088/temp/api/auth/register', payload)
+            .post('http://i5d204.p.ssafy.io/api/auth/register', payload)
             .then(() => {
               alert('회원가입이 완료되었습니다.');
               router.push({ name: 'Login' });
@@ -74,7 +74,7 @@ export default {
         email: user.email,
       };
       axios
-        .post('http://localhost:8088/temp/api/auth/checkemail', tmp)
+        .post('http://i5d204.p.ssafy.io/api/auth/checkemail', tmp)
         .then(() => {
           alert('사용 중인 이메일입니다.');
           user.email = '';

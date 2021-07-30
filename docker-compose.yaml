@@ -7,19 +7,22 @@ services:
       image: "postgres:13.3"
       ports:
         - 5432:5432
+      networks:
+        - net
       environment:
         - POSTGRES_DB=sample
         - POSTGRES_USERNAME=postgres
         - POSTGRES_PASSWORD=root
 #        TZ: Asia/Seoul
       volumes:
-#        - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+#        - ./init.init:/docker-entrypoint-initdb.d/init.init
         - postgres:/var/lib/postgresql/data
-
-
+        - "./postgres/init/:/docker-entrypoint-initdb.d/"
     django:
       build: ./django
       container_name: django
+      networks:
+        - net
       volumes:
         - ./django:/usr/src/app
     #   environment:
@@ -34,6 +37,9 @@ services:
         - "8000:8000"
     spring:
       build: ./spring
+      container_name: spring
+      networks:
+        - net
       depends_on:
         - postgres
       ports:
@@ -44,11 +50,30 @@ services:
         - SPRING_DATASOURCE_PASSWORD=root
 #      links:
 #        - postgres:postgres
-    vue:
-      container_name: vue
+    frontend:
+      container_name: frontend
       build: ./vue
       ports:
-        - "8080:8080"
+        - "80:80"
+        - "443:443"
+      networks:
+        - net
+      restart: always
+      user: root
+      depends_on:
+        - spring
+#      volumes:
+#        - ./nginx/:/usr/share/nginx/
+#    nginx:
+#      build: vue/nginx
+#      container_name: nginx
+#      ports:
+#        - 80:80
+#      restart: always
+#      networks:
+#        - net
+#      volumes:
+#        - ./nginx/:/usr/share/nginx/html/static
 #    redis:
 #      container_name: redis
 #      image: redis
@@ -71,4 +96,7 @@ services:
 volumes:
   postgres: {}
   redis: {}
-  jenkins: {}
+  frontend: {}
+
+networks:
+  net:
