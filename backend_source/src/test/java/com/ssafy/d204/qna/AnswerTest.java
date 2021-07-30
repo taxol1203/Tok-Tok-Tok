@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import com.ssafy.d204.api.controller.QnAController;
 import com.ssafy.d204.db.entity.Answer;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 public class AnswerTest {
 	@Autowired
