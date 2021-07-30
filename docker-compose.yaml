@@ -17,7 +17,7 @@ services:
       volumes:
 #        - ./init.sql:/docker-entrypoint-initdb.d/init.sql
         - postgres:/var/lib/postgresql/data
-        - "./postgres/:/docker-entrypoint-initdb.d/"
+        - "./postgres/init.sql:/docker-entrypoint-initdb.d/"
     django:
       build: ./django
       container_name: django
