@@ -1,46 +1,89 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Login from "../views/user/Login.vue";
+import Signup from "../views/user/Signup.vue";
+import ChatArea from "../views/chat/ChatArea.vue";
+import QnaArea from "../views/qna/QnaArea.vue";
+import Dummy from "../views/dummy/DummyMain.vue";
 
 const routes = [
   {
     path: "/",
-    name: "Login",
     component: Login,
+    meta: {
+      authRequired: true,
+    },
   },
   {
     path: "/signup",
     name: "Signup",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ "../views/user/Signup.vue"),
+    component: Signup,
+    meta: {
+      authRequired: true,
+    },
   },
   {
     path: "/login",
     name: "Login",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ "../views/user/Login.vue"),
+    component: Login,
+    meta: {
+      authRequired: true,
+    },
   },
   {
     path: "/secret",
     name: "Secret",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ "../views/Secret.vue"),
   },
   {
     path: "/admin",
     name: "Admin",
     component: () => import("../views/Admin.vue"),
+    children: [
+      {
+        path: "",
+        name: "comein",
+        component: ChatArea,
+      },
+      {
+        path: "chat",
+        component: ChatArea,
+        name: "chat",
+      },
+      {
+        path: "qna",
+        component: QnaArea,
+        name: "qna",
+      },
+    ],
+  },
+  {
+    path: "/dummy",
+    name: "Dummy",
+    component: Dummy,
+    meta: {
+      authRequired: false,
+    },
   },
 ];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
+});
+
+router.beforeEach(async (to, from, next) => {
+  if (
+    to.matched.some((routeInfo) => {
+      return routeInfo.meta.authRequired;
+    })
+  ) {
+    return next();
+  }
+  if (localStorage.getItem("jwt") === null) {
+    alert("로그인해주세요");
+    return next({ name: "Login" });
+  }
+  return next();
 });
 
 export default router;

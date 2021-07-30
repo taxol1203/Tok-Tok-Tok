@@ -79,19 +79,19 @@ CREATE TABLE "SSAFY_PJT1".service_case
     PRIMARY KEY (pk_idx)
 );
 
-CREATE TABLE "SSAFY_PJT1".question
-(
-    pk_idx serial NOT NULL,
-    content character varying,
-    PRIMARY KEY (pk_idx)
+CREATE TABLE "SSAFY_PJT1".question (
+	pk_idx serial NOT NULL,
+	"content" varchar NULL,
+	title varchar NULL,
+	CONSTRAINT question_pkey PRIMARY KEY (pk_idx)
 );
 
-CREATE TABLE "SSAFY_PJT1".answer
-(
-    pk_idx serial NOT NULL,
-    content character varying NOT NULL,
-    fk_next_idx integer default 2,
-    PRIMARY KEY (pk_idx)
+CREATE TABLE "SSAFY_PJT1".answer (
+	pk_idx serial NOT NULL,
+	"content" varchar NOT NULL,
+	fk_next_idx int4 NULL DEFAULT 2,
+	fk_previous_idx int4 NULL,
+	CONSTRAINT answer_pkey PRIMARY KEY (pk_idx)
 );
 
 ALTER TABLE "SSAFY_PJT1".permission
@@ -166,10 +166,8 @@ ALTER TABLE "SSAFY_PJT1".service_case
     NOT VALID;
 
 
-ALTER TABLE "SSAFY_PJT1".answer
-    ADD FOREIGN KEY (fk_next_idx)
-        REFERENCES "SSAFY_PJT1".question (pk_idx) ON DELETE SET NULL
-    NOT VALID;
+ALTER TABLE "SSAFY_PJT1".answer ADD CONSTRAINT answer_fk_next_idx_fkey FOREIGN KEY (fk_next_idx) REFERENCES "SSAFY_PJT1".question(pk_idx) ON DELETE SET NULL;
+ALTER TABLE "SSAFY_PJT1".answer ADD CONSTRAINT answer_fk_previous_idx_fkey FOREIGN KEY (fk_previous_idx) REFERENCES "SSAFY_PJT1".question(pk_idx) ON DELETE SET NULL;
 
 insert into "SSAFY_PJT1".question (content)
 values ('상담사 연결');
