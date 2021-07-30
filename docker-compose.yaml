@@ -15,9 +15,9 @@ services:
         - POSTGRES_PASSWORD=root
 #        TZ: Asia/Seoul
       volumes:
-#        - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+#        - ./init.init:/docker-entrypoint-initdb.d/init.init
         - postgres:/var/lib/postgresql/data
-        - "./postgres/init.sql:/docker-entrypoint-initdb.d/"
+        - "./postgres/init/:/docker-entrypoint-initdb.d/"
     django:
       build: ./django
       container_name: django
