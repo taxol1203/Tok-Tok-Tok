@@ -8,7 +8,7 @@
             id="ans"
             placeholder="내용을 입력해주세요."
             v-if="show"
-            v-model="input.value"
+            v-model="input"
             @keyup.enter="changeShow()"
             clearable
           >
@@ -18,9 +18,9 @@
       </el-col>
       <el-col span="12">
         <!-- 다음 시나리오 select -->
-        <el-select v-model="value" placeholder="Select">
+        <el-select>
           <el-option
-            v-for="item in options"
+            v-for="item in select"
             :key="item.pk_idx"
             :label="item.content"
             :value="item.pk_idx"
@@ -37,13 +37,12 @@ import { computed, ref } from 'vue';
 export default {
   setup() {
     const store = useStore();
-    const select = computed(() => store.state.moduleQna.select);
     let show = ref(true);
     const changeShow = () => {
       show.value = !show.value;
     };
     let input = ref('');
-    const options = computed(() => store.state.moduleQna.qnaList);
+    const select = computed(() => store.state.moduleQna.qnaList);
     const value = '';
     return {
       store,
@@ -51,7 +50,6 @@ export default {
       show,
       changeShow,
       input,
-      options,
       value,
     };
   },

@@ -4,6 +4,7 @@ export const moduleQna = {
   state: { //data
     qnaList: [],
     select: {},
+    old_answer: [],
   },
   getters: { //computed
     allQnaCount: state => { //parameter에 사용할 컴포넌트 넣기
@@ -21,10 +22,15 @@ export const moduleQna = {
     },
     pickQna: (state, payload) => {
       state.qnaList.forEach(item => {
-        if (item.pk_idx == payload) state.select = item
+        if (item.pk_idx == payload) {
+          state.select = item
+          console.log(state.select)
+        } 
       })
-      
-    }
+    },
+    loadAnswer: (state, payload) => {
+      state.old_answer = payload.data;
+    },
   },
   actions: {
     addQna: ({ commit }, paylaod) => {
@@ -38,7 +44,13 @@ export const moduleQna = {
     },
     pickQna: ({ commit }, payload) => {
       commit('pickQna', payload) 
-    }
+    },
+    loadAnswer: ({ commit }, idx) => {
+      axios.get(`https://i5d204.p.ssafy.io/api/qna/question/nextAnswers/${idx}`)
+        .then(payload => {
+        commit('loadAnswer', payload)
+      })
+    },
   },
   modules: {}
 }
