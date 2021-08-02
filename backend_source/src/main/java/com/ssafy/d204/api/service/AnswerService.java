@@ -11,4 +11,6 @@ public interface AnswerService {
 	public boolean updateAnswer(Answer content);
 	public boolean deleteAnswer(int pk_idx);
 	public boolean updateNextQuestion(Answer fk_next_idx);
+	public int getNextQuestion(int pk_idx);
+	public List<Answer> getNextAnswers(int pk_idx);
 }

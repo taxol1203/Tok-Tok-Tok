@@ -1,21 +1,26 @@
 package com.ssafy.d204.db.entity;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class Question {
 	
 	int pk_idx;
 	String content;
+	String title;
 	
-	public Question(String string) {
+	public Question(String string, String title) {
 		content = string;
+		this.title = title;
 	}
 
-	public Question(int pk_idx, String content) {
+	public Question(int pk_idx, String content, String title) {
 		super();
 		this.pk_idx = pk_idx;
 		this.content = content;
+		this.title = title;
 	}
 	
 	/*
