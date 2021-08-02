@@ -2,7 +2,7 @@
   <div style="position: relative; width: 650px; height: 750px; padding: 10px">
     <!-- 상대방 -->
     <el-scrollbar ref="scrollbar" id="topMessages">
-      <div v-for="(msg, index) in messages.messageArrayKey" :key="index">
+      <div v-for="(msg, index) in messages.messageArrayKey.messages" :key="index">
         <el-row>
           <el-col v-if="msg.fk_author_idx == '1'">
             <div class="message-me">
@@ -17,15 +17,6 @@
     </el-scrollbar>
     <div>
       <el-row id="bottomInput">
-        <!-- <el-col :span="20" :offset="0">width: 600px; height: 750px; 
-        <div class="user-name border-solid">상담사 사진(기본 사진) | 상담사 이름</div>
-      </el-col>
-      <el-col :span="20" :offset="0">
-        <div class="message-other border-solid">Other Message</div>
-      </el-col>
-      <el-col :span="20" :offset="4">
-        <div class="message-me border-solid">My Message</div>
-      </el-col> -->
         <!-- 입력창 -->
         <el-col :span="2">
           <el-button icon="el-icon-video-camera" class="icon-m-p colorVer"></el-button>
@@ -55,7 +46,7 @@
   </div>
 </template>
 <script>
-import axios from 'axios';
+// import axios from "axios";
 import Stomp from 'webstomp-client';
 import SockJS from 'sockjs-client';
 import { useStore } from 'vuex';
@@ -76,22 +67,29 @@ export default {
     const store = useStore();
     // scrollbar.value.setScrollTop(700);
 
+    // path parameter로 방 id 전송함. 만약 url에 노출되는게 별로면 props로 전달하는 걸로 변경하셔도...
     sessionId.value = store.state.selected_room;
-    // sessionId = this.$route.params.id; // path parameter로 방 id 전송함. 만약 url에 노출되는게 별로면 props로 전달하는 걸로 변경하셔도...
 
-    axios.get('https://i5d204.p.ssafy.io/api/chat/room/' + sessionId.value).then((response) => {
-      roomName = response.data.name; // 방에 대한 정보를 가져옵니다.
-      console.log(response);
-      console.log('room info');
-      axios
-        .get('https://i5d204.p.ssafy.io/api/chat/messages/' + sessionId.value)
-        .then((response) => {
-          console.log(response.data, '채팅 내역 수신');
-          messages.messageArrayKey = response.data;
+    messages.messageArrayKey = store.state.session_key[`${sessionId.value}`];
+    console.log('@@@@@@@@@@@@');
+    console.log(messages.messageArrayKey);
+    console.log('@@@@@@@@@@@@');
+    console.log(messages.messageArrayKey.messages[1]);
+    console.log('@@@@@@@@@@@@');
 
-          connect(sessionId.value);
-        });
-    });
+    // axios.get("http://localhost:8088/temp/api/chat/room/" + sessionId.value).then((response) => {
+    //   roomName = response.data.name; // 방에 대한 정보를 가져옵니다.
+    //   console.log(response);
+    //   console.log("room info");
+    //   axios
+    //     .get("http://localhost:8088/temp/api/chat/messages/" + sessionId.value)
+    //     .then((response) => {
+    //       console.log(response.data, "채팅 내역 수신");
+    //       messages.messageArrayKey = response.data;
+
+    //       connect(sessionId.value);
+    //     });
+    // });
 
     // 소켓 연결 시작
     // this.connect(sessionId.value);
@@ -122,6 +120,7 @@ export default {
 
     const connect = () => {
       const serverURL = 'https://i5d204.p.ssafy.io:8088/chat'; // 서버 채팅 주소
+      // const serverURL = "http://localhost:8088/temp/chat"; // 서버 채팅 주소
       let socket = new SockJS(serverURL);
       stompClient = Stomp.over(socket);
       console.log(`connecting to socket=> ${serverURL}`);
@@ -219,40 +218,4 @@ export default {
 .colorVer :hover {
   background-color: black;
 }
-
-/*
-.border-solid {
-  border: solid 1px;
-  border-radius: 4px;
-  box-shadow: 0 2px 24px 0 rgba(0, 0, 0, 0.1);
-  padding: 1px;
-  margin: 5px 1px 5px 1px;
-}
-.user-name {
-  padding: 1px 0px 0px 0px;
-  margin: 15px 0px 0px 0px;
-}
-
-.chat-detail {
-  color: white;
-  background-color: rgb(39, 37, 31);
-  font-family: 'BMJUA';
-  box-sizing: border-box;
-}
-
- .message-me {
-  background-color: #006f3e;
-}
-.message-other {
-  background-color: #258c60;
-}
-
-.defualt-m-p {
-  padding: 1px;
-  margin: 5px 1px 5px 1px;
-}
-.icon-m-p {
-  padding: 0px 10px 0px 10px;
-  margin: 0px 5px 0px 5px;
-}*/
 </style>
