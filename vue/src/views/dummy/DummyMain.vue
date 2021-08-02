@@ -28,7 +28,7 @@
 <script>
 import ChatDetail from "../../../src/components/chat/ChatDetail.vue";
 import { ref } from "vue";
-
+// minsu commit test
 /* eslint-disable */
 export default {
   components: {
