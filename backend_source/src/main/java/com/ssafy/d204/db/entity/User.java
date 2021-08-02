@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 public class User {
-	long memberId;
+	long pk_idx;
 	String email;
 	String passwd;
 	String username;
