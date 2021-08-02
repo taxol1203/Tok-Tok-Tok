@@ -24,7 +24,6 @@ export const moduleQna = {
       state.qnaList.forEach(item => {
         if (item.pk_idx == payload) {
           state.select = item
-          console.log(state.select)
         } 
       })
     },
