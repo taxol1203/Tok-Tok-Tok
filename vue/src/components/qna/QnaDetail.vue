@@ -26,16 +26,8 @@
     </div>
     <!-- Question -->
     <div style="float: right">
-      <<<<<<< HEAD
       <!-- {{ answers }} -->
-      <QnaAnswer v-for="oa in old_answer" :key="oa" />
-      <QnaAnswer v-for="a in answers.answer" :key="a" />
-      <el-button @click="add" class="colorVer" style="float: right; margin-top: 10px"
-        ><i class="el-icon-plus"></i
-      ></el-button>
-      =======
       <QnaAnswer />
-      >>>>>>> 771b9035118d959b6871109efdbd48b1771ec80c
     </div>
   </div>
 </template>
