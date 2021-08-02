@@ -37,6 +37,7 @@
     <!-- Question -->
     <div style="float: right">
       <!-- {{ answers }} -->
+      <QnaAnswer v-for="oa in old_answer" :key="oa" />
       <QnaAnswer v-for="a in answers.answer" :key="a" />
       <el-button @click="add" class="colorVer" style="float: right; margin-top: 10px"
         ><i class="el-icon-plus"></i
@@ -57,6 +58,7 @@ export default {
   setup() {
     const store = useStore();
     const select = computed(() => store.state.moduleQna.select);
+    const old_answer = computed(() => store.state.moduleQna.old_answer);
     const add = () => {
       if (answers.value.answer.length < 5) answers.value.answer.push('test');
       else alert('예상 답변은 최대 5개 추가 가능합니다.');
@@ -69,6 +71,7 @@ export default {
       show.value = !show.value;
     };
     return {
+      old_answer,
       answers,
       show,
       store,

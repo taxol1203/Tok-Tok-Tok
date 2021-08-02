@@ -6,7 +6,7 @@
         <el-col span="4">
           <el-button type="primary" icon="el-icon-edit" circle></el-button>
           <!-- edit btn: 수정 모드 -->
-          <el-button type="success" icon="el-icon-check" circle></el-button>
+          <el-button type="success" icon="el-icon-check" circle @click="savaQnaData"></el-button>
           <!-- check btn: 저장 모드(서버로 현재 qList 전송) -->
           <el-button type="danger" icon="el-icon-delete" circle></el-button>
           <!-- delete btn: 삭제 모드(서버로 현재 시나리오 삭제 요청 (시작+종료 제외)) -->
@@ -33,6 +33,7 @@ export default {
   setup() {
     const store = useStore();
     const select = computed(() => store.state.moduleQna.select);
+
     return {
       store,
       select,

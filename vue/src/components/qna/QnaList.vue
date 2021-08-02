@@ -25,6 +25,7 @@ export default {
     const count = computed(() => store.getters['moduleQna/allQnaCount']);
     const showDetail = (key) => {
       store.dispatch('moduleQna/pickQna', key);
+      store.dispatch('moduleQna/loadAnswer', key);
     };
     const addScene = () => {
       let tmp = {
