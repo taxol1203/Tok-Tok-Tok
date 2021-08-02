@@ -24,7 +24,7 @@ public class SecurityJavaConfig extends WebSecurityConfigurerAdapter {
 //                .and()
                 /* 중략 */
 //                .anyRequest().authenticated().and()
-                .cors().and()
+                .cors().disable()
                 .csrf().disable()
                 .formLogin().disable()
                 .headers().frameOptions().disable();
@@ -34,10 +34,10 @@ public class SecurityJavaConfig extends WebSecurityConfigurerAdapter {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         // - (3)
-        configuration.addAllowedOriginPattern("*");
+        configuration.addAllowedOrigin("https://localhost:8080,h");
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");
-        configuration.setAllowCredentials(true);
+//        configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
