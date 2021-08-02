@@ -1,5 +1,5 @@
 <template lang="">
-  <div v-for="(oa, index) in old_answer" :key="oa.pk_idx">
+  <div v-for="(oa, index) in new_answer" :key="oa.pk_idx">
     <el-row align="middle">
       <el-col :span="12">
         <div style="border: 1px solid #eee; border-radius: 10px 10px 0px 10px; width: 200px">
@@ -18,11 +18,15 @@
       </el-col>
       <el-col :span="12">
         <!-- 다음 시나리오 select -->
-        <el-select v-model="selectValue[index - 1]" placeholder="next scene">
+        <el-select
+          v-model="selectValue[index]"
+          placeholder="next scene"
+          @change="setNextIdx(index)"
+        >
           <el-option
             v-for="item in qnaList"
             :key="item.pk_idx"
-            :label="item.content"
+            :label="item.title"
             :value="item.pk_idx"
           >
           </el-option>
@@ -40,9 +44,9 @@ import { computed, ref } from 'vue';
 export default {
   setup() {
     const store = useStore();
-    const select = computed(() => store.state.moduleQna.select);
     const qnaList = computed(() => store.state.moduleQna.qnaList);
-    const old_answer = computed(() => store.state.moduleQna.old_answer);
+    const new_answer = computed(() => store.state.moduleQna.new_answer);
+    const selectedKey = computed(() => store.getters['moduleQna/getKey']);
     const selectValue = ref({
       value: [],
     });
@@ -51,17 +55,22 @@ export default {
       show.value = !show.value;
     };
     const add = () => {
-      store.commit('moduleQna/addAnswer');
+      store.commit('moduleQna/addNewAnswer', selectedKey.value);
+    };
+    const setNextIdx = (index) => {
+      new_answer.value[index].fk_next_idx = selectValue.value[index];
+      console.log(new_answer.value[index]);
     };
     return {
       store,
-      select,
       qnaList,
-      show,
-      old_answer,
+      new_answer,
+      selectedKey,
       selectValue,
+      show,
       changeShow,
       add,
+      setNextIdx,
     };
   },
 };
