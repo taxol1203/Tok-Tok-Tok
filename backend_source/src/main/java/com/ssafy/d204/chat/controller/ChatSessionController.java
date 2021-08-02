@@ -17,7 +17,7 @@ import java.util.*;
 
 @RequiredArgsConstructor
 @RestController
-@CrossOrigin("http://localhost:8080")
+@CrossOrigin("*")
 @RequestMapping("/api/chat")
 public class ChatSessionController {
 //    @Autowired
