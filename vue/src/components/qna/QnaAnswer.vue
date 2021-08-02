@@ -1,5 +1,5 @@
 <template lang="">
-  <div style="padding-top: 10px">
+  <div v-for="oa in old_answer" :key="oa.pk_idx">
     <el-row gutter="20" align="middle">
       <el-col span="12">
         <div style="border: 1px solid #eee; border-radius: 10px 10px 0px 10px; width: 200px">
@@ -8,7 +8,7 @@
             id="ans"
             placeholder="내용을 입력해주세요."
             v-if="show"
-            v-model="input.value"
+            v-model="oa.content"
             @keyup.enter="changeShow()"
             clearable
           >
@@ -18,9 +18,9 @@
       </el-col>
       <el-col span="12">
         <!-- 다음 시나리오 select -->
-        <el-select v-model="value" placeholder="Select">
+        <el-select v-model="value" placeholder="next scene">
           <el-option
-            v-for="item in options"
+            v-for="item in editableOptions"
             :key="item.pk_idx"
             :label="item.content"
             :value="item.pk_idx"
@@ -30,6 +30,9 @@
       </el-col>
     </el-row>
   </div>
+  <el-button @click="add" class="colorVer" style="float: right; margin-top: 10px"
+    ><i class="el-icon-plus"></i
+  ></el-button>
 </template>
 <script>
 import { useStore } from 'vuex';
@@ -37,22 +40,20 @@ import { computed, ref } from 'vue';
 export default {
   setup() {
     const store = useStore();
-    const select = computed(() => store.state.moduleQna.select);
+    const select = computed(() => store.state.moduleQna.qnaList);
+    // const key = select.value.pk_idx;
+    const old_answer = computed(() => store.state.moduleQna.loadAnswer);
     let show = ref(true);
     const changeShow = () => {
       show.value = !show.value;
     };
-    let input = ref('');
-    const options = computed(() => store.state.moduleQna.qnaList);
-    const value = '';
     return {
       store,
       select,
+      // key,
       show,
+      old_answer,
       changeShow,
-      input,
-      options,
-      value,
     };
   },
 };

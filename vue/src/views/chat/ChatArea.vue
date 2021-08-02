@@ -35,7 +35,7 @@ export default {
   setup() {
     const store = useStore();
 
-    axios.get("http://localhost:8088/temp/api/chat/admin/init").then((response) => {
+    axios.get("https://i5d204.p.ssafy.io/api/api/chat/admin/init").then((response) => {
       store.state.session_key = response.data;
 
       // console.log("@@@@@@@@@@@@@@@@@@@@@@@@");

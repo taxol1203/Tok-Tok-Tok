@@ -21,7 +21,7 @@ import com.ssafy.d204.general.UserFieldValidator;
 import io.swagger.annotations.ApiOperation;
 @RestController
 @CrossOrigin("*")
-@RequestMapping("/api/auth")
+@RequestMapping("/auth")
 public class AuthController extends SuperController{
 	UserService uSvc;
 	JwtService jwtSvc;
@@ -45,8 +45,9 @@ public class AuthController extends SuperController{
 			if(passwordEncoder.matches(loginInfo.getPasswd(),user.getPasswd())) {				
 				UserLoginPostRes ret = new UserLoginPostRes();
 				String token=jwtSvc.create(user);
-				
 				ret.setToken(token); // 추후 jwt 적용 예정
+				user.setPasswd("");
+				ret.setUser(user);
 				return new ResponseEntity<UserLoginPostRes>(ret, HttpStatus.OK);
 			}
 			else {

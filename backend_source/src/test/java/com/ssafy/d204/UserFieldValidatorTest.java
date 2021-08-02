@@ -6,7 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.ssafy.d204.general.UserFieldValidator;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserFieldValidatorTest {
 	
 	@Test

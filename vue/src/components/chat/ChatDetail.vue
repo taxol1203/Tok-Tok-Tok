@@ -119,7 +119,8 @@ export default {
     };
 
     const connect = () => {
-      const serverURL = 'https://i5d204.p.ssafy.io:8088/chat'; // 서버 채팅 주소
+      const serverURL = 'https://i5d204.p.ssafy.io:8088/api/chat'; // 서버 채팅 주소
+      // const serverURL = "http://localhost:8088/temp/chat"; // 서버 채팅 주소
       let socket = new SockJS(serverURL);
       stompClient = Stomp.over(socket);
       console.log(`connecting to socket=> ${serverURL}`);

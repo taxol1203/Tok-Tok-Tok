@@ -14,7 +14,7 @@ import io.swagger.annotations.ApiOperation;
 
 @RestController
 @CrossOrigin("*")
-@RequestMapping("/api/jwt")
+@RequestMapping("/jwt")
 public class JwtTestController extends SuperController{
 	@Autowired
 	UserService uSvc;
