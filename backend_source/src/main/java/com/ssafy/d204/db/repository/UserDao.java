@@ -8,4 +8,5 @@ public interface UserDao {
 	User getUser(String id);
 	int registUser(UserRegisterPostReq info);
 	User checkEmail(DuplicateCheckEmailPostReq email);
+	User getUserByIdx(int pk_idx);
 }

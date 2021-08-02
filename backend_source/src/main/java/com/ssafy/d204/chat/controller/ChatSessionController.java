@@ -1,18 +1,16 @@
 package com.ssafy.d204.chat.controller;
 
+import com.ssafy.d204.chat.dto.AssignRoomRequest;
 import com.ssafy.d204.chat.dao.ChatDao;
 import com.ssafy.d204.chat.dto.ChatMessage;
 import com.ssafy.d204.chat.dto.ChatMessageAndSession;
 import com.ssafy.d204.chat.dto.ChatSession;
-import com.ssafy.d204.chat.dto.ModifyRoomStatusReq;
 import io.swagger.annotations.ApiOperation;
-import jdk.nashorn.internal.ir.RuntimeNode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.mail.Session;
 import java.util.*;
 
 @RequiredArgsConstructor
@@ -48,7 +46,7 @@ public class ChatSessionController {
         return new ResponseEntity<List<ChatSession>>(ret, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "본인에게 권한이 있는 방만 검색한다.", response = ChatSession.class)
+    @ApiOperation(value = "(유저측)본인에게 권한이 있는 방만 검색한다.", response = ChatSession.class)
     @GetMapping("/rooms/user/{userid}")
     @ResponseBody
     public ResponseEntity<?> getMyRoom(@PathVariable int userid) {
@@ -63,7 +61,7 @@ public class ChatSessionController {
     }
 
     // 채팅방 생성
-    @ApiOperation(value = "입력한 방의 이름으로 채팅방을 개설한다.(중복가능)", response = ChatSession.class)
+    @ApiOperation(value = "채팅방을 개설한다.", response = ChatSession.class)
     @PostMapping("/room")
     @ResponseBody
     public ResponseEntity<?> createRoom(@RequestBody ChatSession session) {
@@ -75,26 +73,48 @@ public class ChatSessionController {
             ret.setStatus(ChatSession.SessionState.OPEN);
             ret.setFk_created_by_idx(session.getFk_created_by_idx());
             chatDao.createChatRoom(ret);
-            chatDao.pushMessage(new ChatMessage(0,".",ret.getFk_client_idx(),null,false,ret.getSession_id(), ChatMessage.MessageType.JOIN));
+//            chatDao.pushMessage(new ChatMessage(0,".",ret.getFk_client_idx(),null,false,ret.getSession_id(), ChatMessage.MessageType.JOIN));
         }catch(Exception e){
             e.printStackTrace();
             return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<ChatSession>(ret, HttpStatus.OK);
     }
-    @ApiOperation(value = "방의 ID를 가지고 방의 정보를 수신한다.", response = ChatSession.class)
+    @ApiOperation(value = "상담사가 해당 상담을 담당하겠다고 선언한다.", response = ChatSession.class)
     @PutMapping("/room/{sessionId}")
     @ResponseBody
-    public ResponseEntity<?> modifyRoomStatus(@PathVariable String sessionId,@RequestBody ModifyRoomStatusReq status) {
+    public ResponseEntity<?> assignRoom(@PathVariable String sessionId, @RequestBody AssignRoomRequest request) {
         int result = 0;
+        request.setSessionId(sessionId);
         try{
-            result = chatDao.modifyChatStatus(sessionId, status.getStatus());
+            result = chatDao.assignRoomToMe(request);
         }catch(Exception e){
             e.printStackTrace();
             return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         if(result == 0){
-            return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+        }
+        return new ResponseEntity<Void>(HttpStatus.OK);
+    }
+    @ApiOperation(value = "해당 방의 상담을 종료한다.", response = ChatSession.class)
+    @DeleteMapping("/room/{sessionId}")
+    @ResponseBody
+    public ResponseEntity<?> closeRoom(@PathVariable String sessionId, @RequestBody int admin_pk_idx) {
+        int result = 0;
+        try{
+            ChatSession session = chatDao.findRoomBySessionId(sessionId);
+            if(session == null){
+                return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+            }
+            if(session.getFk_host_idx() != 0 &&
+                    session.getFk_host_idx()!= admin_pk_idx){
+                return new ResponseEntity<Void>(HttpStatus.FORBIDDEN);
+            }
+            result = chatDao.quitChatRoom(sessionId);
+        }catch(Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
@@ -122,13 +142,37 @@ public class ChatSessionController {
         return new ResponseEntity<ChatSession>(ret, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "방의 ID를 가지고 방의 정보를 수신한다.", response = ChatSession.class)
+    @ApiOperation(value = "모든 채팅방과 모든 메세지를 가져온다.", response = ChatSession.class)
     @GetMapping("/admin/init")
     @ResponseBody
     public ResponseEntity<?> getAllMessagesAndSessions() {
         HashMap<String, ChatMessageAndSession> ret = new HashMap<>();
         try{
             List<ChatSession> sessions = chatDao.findAllRoom();
+            if(sessions.size() == 0){
+                return new ResponseEntity<HashMap<String, ChatMessageAndSession>>(ret, HttpStatus.OK);
+            }
+            for(ChatSession session : sessions){
+                ret.put(session.getSession_id(), new ChatMessageAndSession(session,new ArrayList<ChatMessage>()));
+            }
+            sessions = null; // for gc
+            List<ChatMessage> messages = chatDao.getAllMessages();
+            for(ChatMessage message : messages){
+                ret.get(message.getFk_session_id()).getMessages().add(message);
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<HashMap<String, ChatMessageAndSession>>(ret, HttpStatus.OK);
+    }
+    @ApiOperation(value = "해당 상담사에게 배정된 방과 아직 전담 상담사가 없는 방과 메세지를 가져온다.", response = ChatSession.class)
+    @GetMapping("/admin/init/{fk_host_idx}")
+    @ResponseBody
+    public ResponseEntity<?> getAllMessagesAndSessionsByHostIdx(@PathVariable int fk_host_idx) {
+        HashMap<String, ChatMessageAndSession> ret = new HashMap<>();
+        try{
+            List<ChatSession> sessions = chatDao.findAllRoomByFkHostIdx(fk_host_idx);
             if(sessions.size() == 0){
                 return new ResponseEntity<HashMap<String, ChatMessageAndSession>>(ret, HttpStatus.OK);
             }
@@ -159,4 +203,5 @@ public class ChatSessionController {
         }
         return new ResponseEntity<List<ChatMessage>>(ret, HttpStatus.OK);
     }
+
 }

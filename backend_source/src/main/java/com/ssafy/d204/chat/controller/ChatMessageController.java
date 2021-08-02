@@ -47,6 +47,4 @@ public class ChatMessageController {
         return chatMessage;
 //        return null;
     }
-
-
 }

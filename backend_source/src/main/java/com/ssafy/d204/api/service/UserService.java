@@ -8,4 +8,5 @@ public interface UserService {
 	User getUserById(String id);
 	int registUser(UserRegisterPostReq info);
 	User checkEmail(DuplicateCheckEmailPostReq email);
+	public User getUserByIdx(int pk_idx);
 }
