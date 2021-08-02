@@ -14,9 +14,14 @@
             ></el-button>
           </transition>
           <transition class="same-pos" name="fade" mode="out-in">
-            <div id="chat-box" @click="changeCondition" v-if="isHidden">
+            <div id="chat-box" v-if="isHidden">
               <div class="full-box">
-                <ChatDetail />
+                <!-- <ChatDetail /> -->
+                <p>현재 chat detail 문제 or back 문제로 주석처리해둠</p>
+                <el-button>채팅방개설요청</el-button>
+                <el-button @click="changeCondition" type="primary" icon="el-icon-close"
+                  >닫기</el-button
+                >
               </div>
             </div>
           </transition>
@@ -28,7 +33,6 @@
 <script>
 import ChatDetail from "../../../src/components/chat/ChatDetail.vue";
 import { ref } from "vue";
-
 /* eslint-disable */
 export default {
   components: {

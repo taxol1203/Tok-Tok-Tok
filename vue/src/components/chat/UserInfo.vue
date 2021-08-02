@@ -41,7 +41,7 @@ export default {
   data() {
     return {
       url: '@/assets/profile.jpg',
-    }
+    };
   },
 };
 </script>

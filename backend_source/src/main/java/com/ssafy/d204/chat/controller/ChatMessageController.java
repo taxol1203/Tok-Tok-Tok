@@ -20,10 +20,10 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@CrossOrigin("http://localhost:8080")
+@CrossOrigin("*")
 @RequestMapping("/chat")
 public class ChatMessageController {
-//    @Autowired
+    @Autowired
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final ChatDao chatDao;
 

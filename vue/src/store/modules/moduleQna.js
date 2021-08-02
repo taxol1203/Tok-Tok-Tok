@@ -4,13 +4,17 @@ export const moduleQna = {
   state: { //data
     qnaList: [],
     select: {},
-    pick_idx: '',
     old_answer: [],
-    new_answer: [],
   },
   getters: { //computed
     allQnaCount: state => { //parameter에 사용할 컴포넌트 넣기
       return state.qnaList.length+1
+    },
+    setKey: state => {
+      return state.select.pk_idx
+    },
+    setTitle: state => {
+      return state.select.title
     }
   },
   mutations: { //payload는 파라미터로 넘어오는 값
@@ -28,19 +32,28 @@ export const moduleQna = {
     pickQna: (state, payload) => {
       state.pick_idx = payload
       state.qnaList.forEach(item => {
-        if (item.pk_idx == payload) state.select = item
+        if (item.pk_idx == payload) {
+          state.select = item
+        } 
       })
     },
-    // callOldAnswer: (state, payload) => {
-    //   payload.forEach(item => {
-    //     // var keyValue = item.pk_idx;
-    //     // state.old_answer.push({keyValue: item})
-    //   })
-    // },
-    // saveAnswer: (state, idx, payload) => {
-    //   state.old_answer.idx = payload
-    // },
-    
+    loadAnswer: (state, payload) => {
+      state.old_answer = payload.data;
+    },
+    addAnswer: (state) => {
+      let tmp = state.old_answer
+      tmp.push({
+        pk_idx: tmp.length,
+        content: '',
+        fk_next_idx: 2,
+        fk_previous_idx: state.select.pk_idx
+      })
+      state.old_answer = tmp
+    },
+    editContent: (state, payload) => {
+      state.select.title = payload.title
+      state.select.content = payload.content
+    }
   },
   actions: {
     addQna: ({ commit }, payload) => {
@@ -55,7 +68,7 @@ export const moduleQna = {
       axios.get('https://i5d204.p.ssafy.io/api/qna/question')
         .then(payload => {
           commit('loadQna', payload.data)
-      })
+        })
     },
     loadAnswer: ({ commit }, idx) => {
       axios.get('https://i5d204.p.ssafy.io/api/qna/question/nextAnswers/'+idx)
@@ -64,32 +77,25 @@ export const moduleQna = {
       })
     },
     pickQna: ({ commit }, payload) => {
-      commit('pickQna', payload) 
+      commit('pickQna', payload)
     },
-    callOldAnswer: ({ commit }, idx) => {
-      axios.get('https://i5d204.p.ssafy.io/api/qna/question/nextAnswers/',{
-        params: idx
-      })
-      .then(payload => {
-        commit('callOldAnswer', payload.data)
-      })
+    loadAnswer: ({ commit }, idx) => {
+      axios.get(`https://i5d204.p.ssafy.io/api/qna/question/nextAnswers/${idx}`)
+        .then(payload => {
+          commit('loadAnswer', payload)
+        })
     },
-    saveAnswer: ({ commit }, idx, payload) => {
-      axios.put('https://i5d204.p.ssafy.io/api/qna/answer/', {
-        params: idx,
-        data: payload,
-      })
-      .then(() => {
-        commit('saveAnswer', idx, payload)
-      })
-    },
-    saveQuestion: ({ commit }, idx, payload) => {
-      axios.put('https://i5d204.p.ssafy.io/api/qna/question/', {
-        params: idx,
-        data: payload,
+    editContent: ({ commit }, payload) => {
+      console.log(payload)
+      axios.put(`https://i5d204.p.ssafy.io/api/qna/question/${payload.pk_idx}`, {
+        data: {
+          content: payload.content,
+          pk_idx: payload.pk_idx,
+          title: payload.title,
+        }
       })
         .then(() => {
-        commit('saveQuestion', idx, payload)
+        commit('editContent', payload)
       })
     }
   },
