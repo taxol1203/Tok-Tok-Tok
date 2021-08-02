@@ -39,7 +39,7 @@ export default {
       store.state.session_key = response.data;
 
       // console.log("@@@@@@@@@@@@@@@@@@@@@@@@");
-      // console.log(store.state.session_key);
+      console.log(store.state.session_key);
       // console.log("@@@@@@@@@@@@@@@@@@@@@@@@");
       // console.log(store.state.session_key["d6142966-8ac7-42be-a774-4be4f62a3940"].messages[1]);
     });
