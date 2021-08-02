@@ -1,17 +1,16 @@
 <template lang="">
-  <div>
-    <el-scrollbar height="600px">
-      <h1>All cards({{ count }})</h1>
+  <div id="container">
+    <el-scrollbar id="qcards">
       <div v-for="q in cards" :key="q.pk_idx" class="text item">
         <el-card class="box-card" @click="showDetail(q.pk_idx)">
           {{ q.content }}
         </el-card>
       </div>
     </el-scrollbar>
+    <el-card class="box-card" @click="addScene" id="addButton">
+      <i class="el-icon-plus"></i>
+    </el-card>
   </div>
-  <el-card class="box-card" @click="addScene">
-    <i class="el-icon-plus"></i>
-  </el-card>
 </template>
 <script>
 import { computed } from 'vue';
@@ -34,8 +33,9 @@ export default {
         answers: [],
       };
       console.log(tmp);
-      if (count.value <= 10) store.dispatch('moduleQna/addQna', tmp);
-      else alert('시나리오는 최대 10개 추가할 수 있습니다.');
+      // if (count.value <= 10)
+      store.dispatch('moduleQna/addQna', tmp);
+      // else alert('시나리오는 최대 10개 추가할 수 있습니다.');
     };
     return {
       store,
@@ -47,29 +47,25 @@ export default {
       addScene,
     };
   },
-  // computed: {
-  //   ...mapGetters({
-  //     count: 'allQnaCount', //이 컴포넌트에서는 allQnaCount를 count로 쓰겠다
-  //   }),
-  //   ...mapState({
-  //     cards: 'qnaList',
-  //     select: 'select',
-  //   }),
-  // },
-  // methods: {
-  //   ...mapActions(['addQna', 'loadQna', 'pickQna']),
-  //   showDetail(key) {
-  //     this.pickQna(key);
-  //   },
-  //   addScene() {
-  //     let tmp = {
-  //       pk_idx: this.count,
-  //       content: 'dummy' + this.count,
-  //       answers: [],
-  //     };
-  //     if (this.count <= 10) this.addQna(tmp);
-  //     else alert('시나리오는 최대 10개 추가할 수 있습니다.');
-  //   },
-  // },
 };
 </script>
+<style scoped>
+#qcards {
+  display: block;
+  top: 0px;
+  height: 700px;
+  width: 100%;
+}
+#container {
+  position: relative;
+  height: 750px;
+  background: #f7f4f0;
+}
+.el-scroll {
+  overflow: visible;
+}
+#addButton {
+  bottom: 0px;
+  width: 100%;
+}
+</style>

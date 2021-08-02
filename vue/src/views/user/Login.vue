@@ -20,7 +20,7 @@
             </el-form-item>
             <el-form-item>
               <transition name="slide-fade">
-                <el-button type="button" id="colorVer" @click="onSubmit('formLabelAlign')"
+                <el-button type="button" class="colorVer" @click="onSubmit('formLabelAlign')"
                   >로그인</el-button
                 >
               </transition>
@@ -53,7 +53,7 @@ export default {
       formLabelAlign.value.validate((valid) => {
         if (valid) {
           axios
-            .post('http://localhost:8088/temp/api/auth/login', payload)
+            .post('https://i5d204.p.ssafy.io/api/auth/login', payload)
             .then((res) => {
               alert('로그인이 완료되었습니다.');
               localStorage.setItem('jwt', res.data.token);

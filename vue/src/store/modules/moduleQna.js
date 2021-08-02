@@ -31,7 +31,7 @@ export const moduleQna = {
       commit('addQna', paylaod)
     },
     loadQna: ({ commit }) => {
-      axios.get('http://localhost:8088/temp/api/qna/question')
+      axios.get('https://i5d204.p.ssafy.io/api/qna/question')
         .then(payload => {
           commit('loadQna', payload.data)
       })

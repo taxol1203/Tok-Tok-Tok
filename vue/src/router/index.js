@@ -3,30 +3,31 @@ import Login from "../views/user/Login.vue";
 import Signup from "../views/user/Signup.vue";
 import ChatArea from "../views/chat/ChatArea.vue";
 import QnaArea from "../views/qna/QnaArea.vue";
+import Dummy from "../views/dummy/DummyMain.vue";
 
 const routes = [
   {
     path: "/",
     component: Login,
     meta: {
-      authRequired: true
-    }
+      authRequired: true,
+    },
   },
   {
     path: "/signup",
     name: "Signup",
     component: Signup,
     meta: {
-      authRequired: true
-    }
+      authRequired: true,
+    },
   },
   {
     path: "/login",
     name: "Login",
     component: Login,
     meta: {
-      authRequired: true
-    }
+      authRequired: true,
+    },
   },
   {
     path: "/secret",
@@ -39,21 +40,29 @@ const routes = [
     component: () => import("../views/Admin.vue"),
     children: [
       {
-        path: '',
-        name: 'comein',
+        path: "",
+        name: "comein",
         component: ChatArea,
       },
       {
-        path: 'chat',
+        path: "chat",
         component: ChatArea,
-        name: "chat"
+        name: "chat",
       },
       {
-        path: 'qna',
+        path: "qna",
         component: QnaArea,
-        name: 'qna'
+        name: "qna",
       },
-    ]
+    ],
+  },
+  {
+    path: "/dummy",
+    name: "Dummy",
+    component: Dummy,
+    meta: {
+      authRequired: false,
+    },
   },
 ];
 
@@ -63,14 +72,18 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-  if (to.matched.some((routeInfo) => { return routeInfo.meta.authRequired}) ) {
+  if (
+    to.matched.some((routeInfo) => {
+      return routeInfo.meta.authRequired;
+    })
+  ) {
     return next();
   }
-  if (localStorage.getItem('jwt') === null) {
-    alert('로그인해주세요');
-    return next({name: 'Login'})
+  if (localStorage.getItem("jwt") === null) {
+    alert("로그인해주세요");
+    return next({ name: "Login" });
   }
   return next();
-})
+});
 
 export default router;

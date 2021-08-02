@@ -37,8 +37,8 @@
     <!-- Question -->
     <div style="float: right">
       <!-- {{ answers }} -->
-      <QnaAnswer v-for="a in answers" :key="a" />
-      <el-button @click="add" style="float: right; margin-top: 10px"
+      <QnaAnswer v-for="a in answers.answer" :key="a" />
+      <el-button @click="add" class="colorVer" style="float: right; margin-top: 10px"
         ><i class="el-icon-plus"></i
       ></el-button>
     </div>
@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { useStore } from 'vuex';
 import QnaAnswer from '@/components/qna/QnaAnswer.vue';
 
@@ -58,13 +58,15 @@ export default {
     const store = useStore();
     const select = computed(() => store.state.moduleQna.select);
     const add = () => {
-      if (answers.length < 5) answers.push('test');
+      if (answers.value.answer.length < 5) answers.value.answer.push('test');
       else alert('예상 답변은 최대 5개 추가 가능합니다.');
     };
-    let show = true;
-    let answers = [];
-    const changeShow = () => {
-      show = !show;
+    let show = ref(true);
+    let answers = ref({
+      answer: [],
+    });
+    let changeShow = () => {
+      show.value = !show.value;
     };
     return {
       answers,
@@ -81,7 +83,5 @@ export default {
 #question {
   background-color: transparent;
   border: 0px solid;
-  font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei',
-    '微软雅黑', Arial, sans-serif;
 }
 </style>

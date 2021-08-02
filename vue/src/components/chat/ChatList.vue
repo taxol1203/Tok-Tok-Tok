@@ -1,14 +1,18 @@
 <template lang="">
-  <div>
-    [ChatList]
-    <el-button type="primary" @click="newChat">생성</el-button>
-    <el-scrollbar height="400px">
+  <div id="container" height="750px">
+    <el-scrollbar height="700px;">
       <div v-for="room in store.state.rooms" :key="room.session_id">
         <el-card @dblclick="pickRoom(room.session_id)" class="list-item box-card">
           <ChatItem :room="room" />
         </el-card>
       </div>
     </el-scrollbar>
+    <el-button
+      type="primary"
+      style="background-color: #f7f4f0; color: #111; border: 0px; height: 50px"
+      @click="newChat"
+      >채팅 임시 생성</el-button
+    >
   </div>
 </template>
 <script>
@@ -28,7 +32,11 @@ export default {
     };
     // 더블클릭한 채팅방의 세션id를 state에 저장
     const pickRoom = (key) => {
-      store.dispatch('pickRoom', key);
+      if (store.state.selected_room != null) {
+        store.dispatch('pickRoom', null);
+      } else {
+        store.dispatch('pickRoom', key);
+      }
     };
     return {
       newChat,
@@ -41,6 +49,10 @@ export default {
 <style>
 .list-item {
   height: 100px;
-  background-color: whitesmoke;
+  background-color: #f7f4f0;
+  border: 1px solid #eee;
+}
+#container {
+  background: #f7f4f0;
 }
 </style>
