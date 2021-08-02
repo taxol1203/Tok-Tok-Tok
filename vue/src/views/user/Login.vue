@@ -1,17 +1,46 @@
 <template>
-  <div class="login">
-    <!-- <form action="secret" @submit="onSubmit"> -->
-      <h1>로그인페이지</h1>
-      email: <input type="text" v-model="uid" /><br />
-      password: <input type="password" v-model="password" /><br />
-      <button type="submit" @click="onSubmit">Sign Up</button>
-      
-    <!-- </form> -->
-  </div>
+  <el-row justify="center">
+    <el-col :span="12">
+      <div>
+        <el-card shadow="always">
+          <el-form
+            v-if="token === null"
+            label-position="top"
+            label-width="100px"
+            :model="user"
+            :rules="rules"
+            ref="formLabelAlign"
+            status-icon
+          >
+            <el-form-item label="이메일" prop="email">
+              <el-input type="email" v-model="user.email" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="비밀번호" prop="passwd">
+              <el-input type="password" v-model="user.passwd" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item>
+              <transition name="slide-fade">
+                <el-button type="button" class="colorVer" @click="onSubmit('formLabelAlign')"
+                  >로그인</el-button
+                >
+              </transition>
+              <el-button @click="resetForm('formLabelAlign')">다시쓰기</el-button>
+            </el-form-item>
+          </el-form>
+          <div v-else>
+            <h2>환영합니다.</h2>
+            <el-button @click="logout">로그아웃</el-button>
+          </div>
+        </el-card>
+      </div>
+    </el-col>
+  </el-row>
 </template>
 
 <script>
-import axios from "axios";
+import { reactive, ref } from 'vue';
+import axios from 'axios';
+import router from '@/router';
 
 export default {
   setup() {

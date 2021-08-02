@@ -1,33 +1,23 @@
 <template lang="">
   <div style="border: 1px solid #eee; height: 500px">
-    <div
-      id="question"
-      style="
-        border: 1px solid #eee;
-        border-radius: 10px 10px 10px 0px;
-        text-align: left;
-        padding: 10px;
-        margin: 20px;
-        width: 500px;
-      "
-    >
-      <el-input
+    <div id="questionBox">
+      <!-- <el-input
+        v-if="!show"
         type="textarea"
         autosize
         v-model="select.content"
         id="question"
-        v-if="!show"
         style="margin: 10px; width: 500px"
         @click="changeShow"
-      ></el-input>
+      ></el-input> -->
       <el-row v-if="show" align="middle" gutter="10">
         <el-col :span="20">
           <el-input
             type="textarea"
             autosize
-            placeholder="예상 질문을 입력해주세요."
-            v-model="select.content"
+            v-model="input"
             id="question"
+            placeholder="예상 질문을 입력해주세요."
           >
           </el-input>
         </el-col>
@@ -36,11 +26,7 @@
     </div>
     <!-- Question -->
     <div style="float: right">
-      <!-- {{ answers }} -->
-      <QnaAnswer v-for="a in answers.answer" :key="a" />
-      <el-button @click="add" class="colorVer" style="float: right; margin-top: 10px"
-        ><i class="el-icon-plus"></i
-      ></el-button>
+      <QnaAnswer />
     </div>
   </div>
 </template>
@@ -56,24 +42,17 @@ export default {
   },
   setup() {
     const store = useStore();
-    const select = computed(() => store.state.moduleQna.select);
-    const add = () => {
-      if (answers.value.answer.length < 5) answers.value.answer.push('test');
-      else alert('예상 답변은 최대 5개 추가 가능합니다.');
-    };
+    const select = computed(() => store.state.moduleQna.qnaList);
     let show = ref(true);
-    let answers = ref({
-      answer: [],
-    });
+    let input = ref('');
     let changeShow = () => {
       show.value = !show.value;
     };
     return {
-      answers,
-      show,
       store,
       select,
-      add,
+      show,
+      input,
       changeShow,
     };
   },
@@ -83,5 +62,13 @@ export default {
 #question {
   background-color: transparent;
   border: 0px solid;
+}
+#questionBox {
+  border: 1px solid #eee;
+  border-radius: 10px 10px 10px 0px;
+  text-align: left;
+  padding: 10px;
+  margin: 20px;
+  width: 500px;
 }
 </style>
