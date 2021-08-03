@@ -19,7 +19,7 @@
       <el-row id="bottomInput">
         <!-- 입력창 -->
         <el-col :span="2">
-          <el-button icon="el-icon-video-camera" class="icon-m-p colorVer"></el-button>
+          <el-button icon="el-icon-video-camera" class="icon-m-p green-color-btn"></el-button>
         </el-col>
         <el-col :span="20">
           <div>
@@ -37,7 +37,7 @@
           <el-button
             @click="sendMessage"
             icon="el-icon-s-promotion"
-            class="icon-m-p colorVer"
+            class="icon-m-p green-color-btn"
           ></el-button>
         </el-col>
       </el-row>
@@ -197,7 +197,5 @@ export default {
   background-color: transparent;
   border: 0px solid #eee;
 }
-.colorVer :hover {
-  background-color: black;
-}
+/* hover로 버튼 색 변하게 하기: 추가기능 */
 </style>
