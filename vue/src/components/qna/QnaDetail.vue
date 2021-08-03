@@ -1,7 +1,7 @@
 <template lang="">
   <div style="border: 1px solid #eee; height: 500px">
     <div id="questionBox">
-      <el-input
+      <!-- <el-input
         v-if="!show"
         type="textarea"
         autosize
@@ -9,7 +9,7 @@
         id="question"
         style="margin: 10px; width: 500px"
         @click="changeShow"
-      ></el-input>
+      ></el-input> -->
       <el-row v-if="show" align="middle">
         <el-col :span="20">
           <el-input
@@ -26,7 +26,9 @@
     </div>
     <!-- Question -->
     <div style="float: right">
-      <QnaAnswer />
+      <!-- {{ answers }} -->
+      <OldAnswer />
+      <NewAnswer />
     </div>
   </div>
 </template>
@@ -34,34 +36,30 @@
 <script>
 import { computed, ref } from 'vue';
 import { useStore } from 'vuex';
-import QnaAnswer from '@/components/qna/QnaAnswer.vue';
+import OldAnswer from '@/components/qna/OldAnswer.vue';
+import NewAnswer from '@/components/qna/NewAnswer.vue';
 
 export default {
   components: {
-    QnaAnswer,
+    OldAnswer,
+    NewAnswer,
   },
   setup() {
     const store = useStore();
-    const select = computed(() => store.state.moduleQna.qnaList);
-    let show = ref(select.content);
+    // const select = computed(() => store.state.moduleQna.qnaList);
+    const select = computed(() => store.state.moduleQna.select);
+    let show = ref(true);
     let changeShow = () => {
       show.value = !show.value;
     };
-    const key = computed(() => store.getters['moduleQna/setKey']);
-    const title = computed(() => store.getters['moduleQna/setTitle']);
-
     const sendContent = () => {
-      store.dispatch('moduleQna/editContent', {
-        content: input.value,
-        pk_idx: key.value,
-        title: title.value,
-      });
+      store.dispatch('moduleQna/editContent', select.value);
+      show.value = !show.value;
     };
     return {
       store,
       select,
       show,
-      key,
       changeShow,
       sendContent,
     };
@@ -70,8 +68,9 @@ export default {
 </script>
 <style>
 #question {
-  background-color: transparent;
-  border: 0px solid;
+  /* background-color: transparent; */
+  border: 0;
+  resize: none;
 }
 #questionBox {
   border: 1px solid #eee;
