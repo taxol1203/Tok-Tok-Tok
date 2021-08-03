@@ -82,7 +82,7 @@ export default {
         {},
         (frame) => {
           connected = true;
-          console.log("I WANT TO CONNECT SERVER@@@@@@@@@@@@@@@@@@");
+          console.log("I WANT TO CONNECT SERVER");
           console.log("status : established", frame);
           // 구독 == 채팅방 입장.
           stompClient.subscribe("/send/" + sessionId.value, (res) => {
