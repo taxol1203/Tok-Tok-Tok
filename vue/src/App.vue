@@ -52,10 +52,6 @@ export default {
   border: 0;
 }
 
-el-button {
-  background-color: #006f3e;
-}
-
 /* .inner {
   position: absolute;
   top: 50%;
