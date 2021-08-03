@@ -13,20 +13,14 @@
             status-icon
           >
             <el-form-item label="이메일" prop="email">
-              <el-input
-                type="email"
-                v-model="user.email"
-                autocomplete="off"
-                value="user11@naver.com"
-              ></el-input>
+              <el-input type="email" v-model="user.email" autocomplete="off"
+                >user11@naver.com</el-input
+              >
             </el-form-item>
             <el-form-item label="비밀번호" prop="passwd">
-              <el-input
-                type="password"
-                v-model="user.passwd"
-                autocomplete="off"
-                value="asdf555!@#"
-              ></el-input>
+              <el-input type="password" v-model="user.passwd" autocomplete="off"
+                >asdf555!@#</el-input
+              >
             </el-form-item>
             <el-form-item>
               <transition name="slide-fade">
@@ -65,22 +59,7 @@ export default {
       };
       formLabelAlign.value.validate((valid) => {
         if (valid) {
-          axios
-            .post('https://i5d204.p.ssafy.io/api/auth/login', payload)
-            .then((res) => {
-              localStorage.setItem('jwt', res.data.token);
-              store.commit('save_userinfo', res.data.user);
-              ElMessage({
-                showClose: true,
-                message: '로그인이 완료되었습니다.',
-                type: 'success',
-              });
-              // router.go('Admin');
-            })
-            .catch((res) => {
-              console.log(res);
-              console.log('login error');
-            });
+          store.dispatch('auth/login', payload);
         }
       });
     };

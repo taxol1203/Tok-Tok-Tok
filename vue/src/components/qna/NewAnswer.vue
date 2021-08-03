@@ -50,7 +50,7 @@
   </div>
   <el-button
     @click="add"
-    class="colorVer"
+    class="green-color-btn"
     style="float: right; margin-top: 10px; margin-right: 10px"
     ><i class="el-icon-plus"></i
   ></el-button>

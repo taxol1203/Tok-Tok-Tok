@@ -49,9 +49,6 @@
       <!-- {{ oa.fk_next_idx }} el-icon-delete-->
     </el-row>
   </div>
-  <el-button @click="add" class="green-color-btn" style="float: right; margin-top: 10px"
-    ><i class="el-icon-plus"></i
-  ></el-button>
 </template>
 <script>
 import { useStore } from 'vuex';

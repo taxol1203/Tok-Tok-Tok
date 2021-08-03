@@ -37,17 +37,13 @@
 </template>
 
 <script>
-import { reactive, ref } from "vue";
-import { useStore } from "vuex";
-import axios from "axios";
-import { useRouter } from "vue-router";
+import { reactive, ref } from 'vue';
+import { useStore } from 'vuex';
 
 export default {
   setup() {
     const store = useStore();
     const ruleForm = ref(null);
-    const router = useRouter();
-
     const onSubmit = () => {
       let payload = {
         email: user.email,
@@ -56,15 +52,7 @@ export default {
       };
       ruleForm.value.validate((valid) => {
         if (valid) {
-          axios
-            .post("https://i5d204.p.ssafy.io/api/auth/register", payload)
-            .then(() => {
-              alert("회원가입이 완료되었습니다.");
-              router.push({ name: "Login" });
-            })
-            .catch(() => {
-              console.log("signup error");
-            });
+          store.dispatch('auth/signup', payload);
         }
       });
     };
@@ -73,30 +61,21 @@ export default {
       let tmp = {
         email: user.email,
       };
-      axios
-        .post("https://i5d204.p.ssafy.io/api/auth/checkemail", tmp)
-        .then(() => {
-          alert("사용 중인 이메일입니다.");
-          user.email = "";
-        })
-        .catch((e) => {
-          if (e.response.status == 404) {
-            alert("사용 가능한 이메일입니다.");
-          }
-        });
+      store.dispatch('auth/duplicateEmail', tmp);
     };
 
     const resetForm = () => {
       ruleForm.value.resetFields();
     };
+
     var checkEmail = (rule, value, callback) => {
       if (!value) {
-        return callback(new Error("Please input the email"));
+        return callback(new Error('Please input the email'));
       } else {
         let pattern =
           /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
         if (value.match(pattern) == null) {
-          callback(new Error("Please input email"));
+          callback(new Error('Please input email'));
         } else {
           callback();
         }
@@ -105,7 +84,7 @@ export default {
         let pattern =
           /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
         if (pattern.test(value) == null) {
-          callback(new Error("Please input email"));
+          callback(new Error('Please input email'));
         } else {
           callback();
         }
@@ -113,20 +92,20 @@ export default {
     };
     var validatePass = (rule, value, callback) => {
       console.log(value);
-      if (value === "") {
-        callback(new Error("Please input the password"));
+      if (value === '') {
+        callback(new Error('Please input the password'));
       } else {
         if (9 > value.length || 16 < value.length) {
-          callback(new Error("Please check the pw rule"));
+          callback(new Error('Please check the pw rule'));
         } else {
           callback();
         }
       }
     };
     var validateCheck = (rule, value, callback) => {
-      console.log("check:", value);
-      if (value === "") {
-        callback(new Error("Please input the password again"));
+      console.log('check:', value);
+      if (value === '') {
+        callback(new Error('Please input the password again'));
       } else if (value !== user.passwd) {
         callback(new Error("Two inputs don't match!"));
       } else {
@@ -134,24 +113,24 @@ export default {
       }
     };
     var validateName = (rule, value, callback) => {
-      console.log("nickname:", value);
-      if (value === "") {
-        callback(new Error("Please input the username again"));
+      console.log('nickname:', value);
+      if (value === '') {
+        callback(new Error('Please input the username again'));
       } else {
         callback();
       }
     };
     const user = reactive({
-      email: "",
-      passwd: "",
-      check: "",
-      username: "",
+      email: '',
+      passwd: '',
+      check: '',
+      username: '',
     });
     const rules = {
-      username: [{ validator: validateName, trigger: "blur" }],
-      passwd: [{ validator: validatePass, trigger: "blur" }],
-      check: [{ validator: validateCheck, trigger: "blur" }],
-      email: [{ validator: checkEmail, trigger: "blur" }],
+      username: [{ validator: validateName, trigger: 'blur' }],
+      passwd: [{ validator: validatePass, trigger: 'blur' }],
+      check: [{ validator: validateCheck, trigger: 'blur' }],
+      email: [{ validator: checkEmail, trigger: 'blur' }],
     };
     return {
       store,
