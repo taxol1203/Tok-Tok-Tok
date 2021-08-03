@@ -13,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.hamcrest.*;
 
 import java.util.List;
 
@@ -32,10 +33,10 @@ public class ChatSessionControllerTest {
 		createSessionRequest.setFk_created_by_idx(1);
 		createSessionRequest.setFk_client_idx(1);
 
-		ChatSession newSession =
-				(ChatSession) csc.createRoom(createSessionRequest).getBody();
-
-
+		List<ChatSession> newSessions =
+				(List<ChatSession>) csc.createRoom(createSessionRequest).getBody();
+//		MatcherAssert(sessionsBefore.size(), isGreater);
+		Assertions.assertTrue(sessionsBefore.size() > newSessions.size());
 
 
 
