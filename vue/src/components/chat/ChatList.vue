@@ -2,7 +2,7 @@
   <div id="container" height="750px">
     <el-scrollbar height="700px;">
       <div v-for="room in store.state.rooms" :key="room.session_id">
-        <el-card @dblclick="pickRoom(room.session_id)" class="list-item box-card">
+        <el-card @click="pickRoom(room.session_id)" class="list-item box-card">
           <ChatItem :room="room" />
         </el-card>
       </div>
@@ -16,8 +16,8 @@
   </div>
 </template>
 <script>
-import ChatItem from './ChatItem.vue';
-import { useStore } from 'vuex';
+import ChatItem from "./ChatItem.vue";
+import { useStore } from "vuex";
 // import { computed } from 'vue'
 
 export default {
@@ -26,16 +26,17 @@ export default {
   },
   setup() {
     const store = useStore();
-    store.dispatch('getChatRooms');
+    store.dispatch("getChatRooms");
     const newChat = () => {
-      store.dispatch('createChatRooms');
+      store.dispatch("createChatRooms");
     };
-    // 더블클릭한 채팅방의 세션id를 state에 저장
+    // 클릭한 채팅방의 세션id를 state에 저장
+    // 클릭 한번에 새 창이 열리는 것은 좀 더 알아봐야함.
     const pickRoom = (key) => {
       if (store.state.selected_room != null) {
-        store.dispatch('pickRoom', null);
+        store.dispatch("pickRoom", null);
       } else {
-        store.dispatch('pickRoom', key);
+        store.dispatch("pickRoom", key);
       }
     };
     return {

@@ -1,7 +1,7 @@
 <template lang="">
   <div style="border: 1px solid #eee; height: 500px">
     <div id="questionBox">
-      <!-- <el-input
+      <el-input
         v-if="!show"
         type="textarea"
         autosize
@@ -9,19 +9,19 @@
         id="question"
         style="margin: 10px; width: 500px"
         @click="changeShow"
-      ></el-input> -->
-      <el-row v-if="show" align="middle" gutter="10">
+      ></el-input>
+      <el-row v-if="show" align="middle">
         <el-col :span="20">
           <el-input
             type="textarea"
             autosize
-            v-model="input"
+            v-model="select.content"
             id="question"
             placeholder="예상 질문을 입력해주세요."
           >
           </el-input>
         </el-col>
-        <el-col :span="4"><el-button @click="changeShow()">등록</el-button></el-col>
+        <el-col :span="4"><el-button @click="sendContent()">등록</el-button></el-col>
       </el-row>
     </div>
     <!-- Question -->
@@ -43,17 +43,27 @@ export default {
   setup() {
     const store = useStore();
     const select = computed(() => store.state.moduleQna.qnaList);
-    let show = ref(true);
-    let input = ref('');
+    let show = ref(select.content);
     let changeShow = () => {
       show.value = !show.value;
+    };
+    const key = computed(() => store.getters['moduleQna/setKey']);
+    const title = computed(() => store.getters['moduleQna/setTitle']);
+
+    const sendContent = () => {
+      store.dispatch('moduleQna/editContent', {
+        content: input.value,
+        pk_idx: key.value,
+        title: title.value,
+      });
     };
     return {
       store,
       select,
       show,
-      input,
+      key,
       changeShow,
+      sendContent,
     };
   },
 };

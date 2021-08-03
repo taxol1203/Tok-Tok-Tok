@@ -19,7 +19,7 @@
       <el-row id="bottomInput">
         <!-- 입력창 -->
         <el-col :span="2">
-          <el-button icon="el-icon-video-camera" class="icon-m-p colorVer"></el-button>
+          <el-button icon="el-icon-video-camera" class="icon-m-p green-color-btn"></el-button>
         </el-col>
         <el-col :span="20">
           <div>
@@ -37,7 +37,7 @@
           <el-button
             @click="sendMessage"
             icon="el-icon-s-promotion"
-            class="icon-m-p colorVer"
+            class="icon-m-p green-color-btn"
           ></el-button>
         </el-col>
       </el-row>
@@ -66,7 +66,7 @@ export default {
     const store = useStore();
     // scrollbar.value.setScrollTop(700);
 
-    // path parameter로 방 id 전송함. 만약 url에 노출되는게 별로면 props로 전달하는 걸로 변경하셔도...
+    // store에 저장된 selected_room
     sessionId.value = store.state.selected_room;
 
     messages.messageArrayKey = store.state.session_key[`${sessionId.value}`];
@@ -87,7 +87,7 @@ export default {
           // 구독 == 채팅방 입장.
           stompClient.subscribe("/send/" + sessionId.value, (res) => {
             console.log("receive from server:", res.body);
-            messages.messageArrayKey.push(JSON.parse(res.body)); // 수신받은 메세지 표시하기
+            messages.messageArrayKey.messages.push(JSON.parse(res.body)); // 수신받은 메세지 표시하기
             switch (res.body.type) {
               case "MSG":
                 break;
@@ -197,7 +197,5 @@ export default {
   background-color: transparent;
   border: 0px solid #eee;
 }
-.colorVer :hover {
-  background-color: black;
-}
+/* hover로 버튼 색 변하게 하기: 추가기능 */
 </style>
