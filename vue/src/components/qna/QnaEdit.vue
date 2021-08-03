@@ -51,11 +51,6 @@ export default {
     const savaAnsData = () => {
       store.dispatch('moduleQna/updateAnswer');
       if (new_answer.value.length > 0) store.dispatch('moduleQna/addAnswer');
-      ElMessage({
-        showClose: true,
-        message: '시나리오가 수정되었습니다.',
-        type: 'success',
-      });
     };
     const removeQna = () => {
       store.dispatch('moduleQna/removeQna', selectKey.value);

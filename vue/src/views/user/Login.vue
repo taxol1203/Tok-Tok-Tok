@@ -13,10 +13,20 @@
             status-icon
           >
             <el-form-item label="이메일" prop="email">
-              <el-input type="email" v-model="user.email" autocomplete="off"></el-input>
+              <el-input
+                type="email"
+                v-model="user.email"
+                autocomplete="off"
+                value="user11@naver.com"
+              ></el-input>
             </el-form-item>
             <el-form-item label="비밀번호" prop="passwd">
-              <el-input type="password" v-model="user.passwd" autocomplete="off"></el-input>
+              <el-input
+                type="password"
+                v-model="user.passwd"
+                autocomplete="off"
+                value="asdf555!@#"
+              ></el-input>
             </el-form-item>
             <el-form-item>
               <transition name="slide-fade">
@@ -38,12 +48,15 @@
 </template>
 
 <script>
+import { ElMessage } from 'element-plus';
 import { reactive, ref } from 'vue';
+import { useStore } from 'vuex';
 import axios from 'axios';
 import router from '@/router';
 
 export default {
   setup() {
+    const store = useStore();
     const formLabelAlign = ref(null);
     const onSubmit = () => {
       let payload = {
@@ -55,11 +68,17 @@ export default {
           axios
             .post('https://i5d204.p.ssafy.io/api/auth/login', payload)
             .then((res) => {
-              alert('로그인이 완료되었습니다.');
               localStorage.setItem('jwt', res.data.token);
-              router.go(0);
+              store.commit('save_userinfo', res.data.user);
+              ElMessage({
+                showClose: true,
+                message: '로그인이 완료되었습니다.',
+                type: 'success',
+              });
+              // router.go('Admin');
             })
-            .catch(() => {
+            .catch((res) => {
+              console.log(res);
               console.log('login error');
             });
         }
@@ -116,6 +135,7 @@ export default {
       formLabelAlign.value.resetFields();
     };
     return {
+      store,
       token: localStorage.getItem('jwt'),
       user,
       formLabelAlign,

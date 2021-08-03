@@ -48,7 +48,6 @@ export const moduleQna = {
     },
     //새 답변 추가하기
     addNewAnswer: (state, idx) => {
-      console.log(idx)
       state.new_answer.push({
         content: '',
         fk_next_idx: 0,
@@ -71,11 +70,12 @@ export const moduleQna = {
         if(item.pk_idx == payload.pk_idx) item = payload
       })
       state.select = payload
+      ElMessage({
+        showClose: true,
+        message: '시나리오가 수정되었습니다.',
+        type: 'success',
+      });
     },
-    //기존 답변 수정하기(체크 버튼으로)
-    // updateAnswer: (state) => {
-    //   console.log(state.old_answer)
-    // },
     //선택한 시나리오 삭제하기(연결, 종료는 삭제되지 않음)
     removeQna: (state, payload) => {
       let i = 0;
@@ -87,7 +87,6 @@ export const moduleQna = {
     },
     resetNewAns: (state) => {
       state.new_answer = [];
-      console.log(state.new_answer)
     },
     removeOldAns: (state, index) => {
       state.old_answer.splice(index, 1);
@@ -125,45 +124,64 @@ export const moduleQna = {
         })
     },
     editContent: ({ commit }, payload) => {
-      console.log(payload)
       axios.put(`https://i5d204.p.ssafy.io/api/qna/question/${payload.pk_idx}`, payload)
         .then(() => {
         commit('editContent', payload)
       })
     },
     updateAnswer: ({ state }) => {
+      var flag = true;
       state.old_answer.forEach(item => {
         axios.put(`https://i5d204.p.ssafy.io/api/qna/answer/${item.pk_idx}`, item)
-          .then((res) => {
-            console.log(res)
-            ElMessage({
-              showClose: true,
-              message: '시나리오가 수정되었습니다.',
-              type: 'success',
-            });
+          .then(() => {
           })
+          .catch( () => {
+            flag = false;
+        })
       })
+      if (flag) {
+        ElMessage({
+          showClose: true,
+          message: '시나리오의 답변이 수정되었습니다.',
+          type: 'success',
+        });
+      } else {
+        ElMessage({
+          showClose: true,
+          message: '수정 중 문제가 생겼습니다. 다시 시도해주세요.',
+          type: 'fail',
+        });
+      }
     },
     removeQna: ({ commit }, idx) => {
-      console.log(idx)
       axios.delete(`https://i5d204.p.ssafy.io/api/qna/question/${idx}`)
         .then(() => {
           commit('removeQna', idx)
         })
     },
     addAnswer: ({ commit, state }) => {
-      console.log(state.new_answer)
       state.new_answer.forEach(item => {
         let tmp = {
           content: item.content,
           fk_next_idx: item.fk_next_idx,
           fk_previous_idx: item.fk_previous_idx
         }
-        console.log(tmp)
         axios.post(`https://i5d204.p.ssafy.io/api/qna/answer`, tmp)
           .then(() => {
           commit('addAnswer')
         })
+      })
+    },
+    removeOldAns: ({ state, commit }, idx) => {
+      var key = state.old_answer[idx].pk_idx;
+      axios.delete(`https://i5d204.p.ssafy.io/api/qna/answer/${key}`)
+        .then(() => {
+          commit('removeOldAns', idx);
+          ElMessage({
+            showClose: true,
+            message: '삭제가 완료되었습니다.',
+            type: 'success',
+          });
       })
     }
   },

@@ -70,7 +70,7 @@ export default {
       console.log(old_answer.value[index]);
     };
     const removeAnswer = (idx) => {
-      store.commit('moduleQna/removeOldAns', idx);
+      store.dispatch('moduleQna/removeOldAns', idx);
     };
     return {
       store,
