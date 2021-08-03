@@ -12,7 +12,7 @@
 </template>
 <script>
 export default {
-  name: 'App',
+  name: "App",
 };
 </script>
 
@@ -46,11 +46,16 @@ export default {
   color: #006f3e;
 }
 /* 258c60  */
-.colorVer {
+.green-color-btn {
   background-color: #006f3e;
   color: #fff;
   border: 0;
 }
+
+el-button {
+  background-color: #006f3e;
+}
+
 /* .inner {
   position: absolute;
   top: 50%;
@@ -58,8 +63,8 @@ export default {
   transform: translate(-50%, -50%);
 } */
 @font-face {
-  font-family: 'BMJUA';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/BMJUA.woff') format('woff');
+  font-family: "BMJUA";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/BMJUA.woff") format("woff");
   font-weight: normal;
   font-style: normal;
 }
