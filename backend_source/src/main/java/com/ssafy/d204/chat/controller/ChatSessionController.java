@@ -70,7 +70,7 @@ public class ChatSessionController {
         try{
             ret.setFk_client_idx(session.getFk_client_idx());
 //            ret.setCreated_at();
-            ret.setStatus(ChatSession.SessionState.OPEN);
+            ret.setStatus("OPEN");
             ret.setFk_created_by_idx(session.getFk_created_by_idx());
             chatDao.createChatRoom(ret);
 //            chatDao.pushMessage(new ChatMessage(0,".",ret.getFk_client_idx(),null,false,ret.getSession_id(), ChatMessage.MessageType.JOIN));
