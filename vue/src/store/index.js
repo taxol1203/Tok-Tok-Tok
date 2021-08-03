@@ -6,6 +6,7 @@ export default createStore({
   modules: { moduleQna },
   state: {
     user_idx: 1,
+    user_info: {},
     rooms: [],
     selected_room: null, // 더블클릭한 채팅방의 세션id를 저장
     session_key: {},
@@ -24,7 +25,11 @@ export default createStore({
     PICK_ROOM(state, payload) {
       state.selected_room = payload
       console.log(payload)
+      console.log(state.user_info)
     },
+    save_userinfo(state, payload) {
+      state.user_info = payload;
+    }
   },
   actions: {
     async getChatRooms({ commit, state }) {
@@ -57,7 +62,7 @@ export default createStore({
     },
     pickRoom({ commit }, key) {
       commit("PICK_ROOM", key)
-    },
+    }
   },
   getters: {},
 })
