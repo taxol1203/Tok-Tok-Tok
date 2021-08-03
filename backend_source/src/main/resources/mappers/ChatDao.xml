@@ -27,8 +27,8 @@
 
 	<!-- 세션 등록 -->
 	<insert id="createChatRoom" parameterType="ChatSession">
-		INSERT INTO "SSAFY_PJT1".chat_session ("session_id","created_at","fk_created_by_idx","fk_client_idx","status")
-		values ( #{session_id}, now(), #{fk_created_by_idx}, #{fk_client_idx},#{status});
+		INSERT INTO "SSAFY_PJT1".chat_session ("session_id","created_at","fk_created_by_idx","fk_client_idx","status","qna_history")
+		values ( #{session_id}, now(), #{fk_created_by_idx}, #{fk_client_idx},#{status}, #{qna_history});
 	</insert>
 
 	<update id="assignRoomToMe" parameterType="AssignRoomRequest">

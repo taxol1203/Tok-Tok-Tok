@@ -13,6 +13,8 @@ public class ChatSession {
     private int fk_client_idx;
     private int fk_host_idx;
     private int fk_permission_idx;
+    private String qna_history;
+    
     SessionState status;
     int unread;
     public enum SessionState{

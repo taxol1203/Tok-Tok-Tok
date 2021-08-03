@@ -21,7 +21,7 @@ import java.util.List;
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
-	//3.0.0 https://localhost:8088/api/swagger-ui/index.html
+	//3.0.0 http://localhost:8088/api/swagger-ui/index.html
 
 	RequestParameterBuilder tokenBuilder = new RequestParameterBuilder();
 
