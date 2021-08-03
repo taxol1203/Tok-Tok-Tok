@@ -7,6 +7,11 @@
 		FROM "SSAFY_PJT1".account
 		WHERE email = #{email}
 	</select>
+	<select id="getUserByIdx" resultType="User">
+		SELECT *
+		FROM "SSAFY_PJT1".account
+		WHERE pk_idx = #{id}
+	</select>
 	<insert id="registUser">
 		INSERT INTO "SSAFY_PJT1".account ("email", "passwd", "username")
 		VALUES (#{email}, #{passwd}, #{username})
