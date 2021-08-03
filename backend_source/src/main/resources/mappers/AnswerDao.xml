@@ -24,7 +24,7 @@
 	<!-- 답변 수정 -->
 	<update id="updateAnswer" parameterType="Answer">
 		update "SSAFY_PJT1".answer 
-		set content = #{content}
+		set content = #{content}, fk_next_idx = #{fk_next_idx}
 		where pk_idx = #{pk_idx};
 	</update>
 
