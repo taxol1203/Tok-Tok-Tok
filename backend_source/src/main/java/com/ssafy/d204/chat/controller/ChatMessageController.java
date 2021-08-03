@@ -23,7 +23,8 @@ import java.util.List;
 @CrossOrigin({
         "https://localhost:8080",
         "https://i5d204.p.ssafy.io",
-        "https://59.151.220.195:5501"
+        "https://59.151.220.195:5501",
+        "http://localhost:8080",
 })
 @RequestMapping("/chat")
 public class ChatMessageController {
