@@ -7,6 +7,11 @@
 		SELECT *
 		FROM "SSAFY_PJT1".chat_session;
 	</select>
+	<select id="findAllRoomByFkHostIdx" resultType="ChatSession">
+		SELECT *
+		FROM "SSAFY_PJT1".chat_session
+		WHERE fk_host_idx = #{fk_host_idx} OR status = 'OPEN';
+	</select>
 	<select id="findMyRoom" resultType="ChatSession">
 		SELECT *
 		FROM "SSAFY_PJT1".chat_session
@@ -26,11 +31,16 @@
 		values ( #{session_id}, now(), #{fk_created_by_idx}, #{fk_client_idx},#{status});
 	</insert>
 
-	<update id="modifyChatStatus" parameterType="ModifyRoomStatusReq">
+	<update id="assignRoomToMe" parameterType="AssignRoomRequest">
 		UPDATE "SSAFY_PJT1".chat_session
-		SET "status" = #{status}
-		WHERE session_id = #{sessionId};
+		SET fk_host_idx = #{admin_pk_idx}, status = 'LIVE'
+		WHERE session_id = #{sessionId} AND status = 'OPEN';
 	</update>
+	<delete id="quitChatRoom" parameterType="int">
+		UPDATE "SSAFY_PJT1".chat_session
+		SET "status" = 'END'
+		WHERE "session_id" = #{sessionId};
+	</delete>
 
 	<!-- 메세지 DB에 등록 -->
 	<insert id="pushMessage" parameterType="ChatMessage">
@@ -46,6 +56,6 @@
 	<select id="getMessagesBySessionId" parameterType="String" resultType="ChatMessage">
 		SELECT *
 		FROM "SSAFY_PJT1".chat_message
-		WHERE fk_session_id = #{sessionId};
+		WHERE "fk_session_id" = #{sessionId};
 	</select>
 </mapper>
