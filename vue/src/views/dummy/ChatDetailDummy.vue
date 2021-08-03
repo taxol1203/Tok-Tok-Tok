@@ -87,7 +87,7 @@ export default {
           // 구독 == 채팅방 입장.
           stompClient.subscribe("/send/" + sessionId.value, (res) => {
             console.log("receive from server:", res.body);
-            messages.messageArrayKey.messages.push(JSON.parse(res.body)); // 수신받은 메세지 표시하기
+            messages.messageArrayKey.push(JSON.parse(res.body)); // 수신받은 메세지 표시하기
             switch (res.body.type) {
               case "MSG":
                 break;
