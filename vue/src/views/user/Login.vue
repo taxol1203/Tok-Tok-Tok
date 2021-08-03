@@ -3,6 +3,10 @@
     <el-col :span="12">
       <div>
         <el-card shadow="always">
+          <p>user11@naver.com</p>
+          <p>asdf555!@#</p>
+          <p>minsu2@naver.com</p>
+          <p>minsu2navercom!</p>
           <el-form
             v-if="token === null"
             label-position="top"
