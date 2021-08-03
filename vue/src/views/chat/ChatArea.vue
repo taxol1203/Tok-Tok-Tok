@@ -38,9 +38,9 @@ export default {
     axios.get("https://i5d204.p.ssafy.io/api/api/chat/admin/init").then((response) => {
       store.state.session_key = response.data;
 
-      // console.log("@@@@@@@@@@@@@@@@@@@@@@@@");
-      console.log(store.state.session_key);
-      // console.log("@@@@@@@@@@@@@@@@@@@@@@@@");
+      // console.log("##ChatArea@@@@@@@@@@@@@@@@@@@@@@@@");
+      console.log("CHAT AREA"+store.state.session_key);
+      // console.log("##ChatArea@@@@@@@@@@@@@@@@@@@@@@@@");
       // console.log(store.state.session_key["d6142966-8ac7-42be-a774-4be4f62a3940"].messages[1]);
     });
 

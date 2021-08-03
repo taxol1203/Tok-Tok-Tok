@@ -17,8 +17,10 @@
             <div id="chat-box" v-if="isHidden">
               <div class="full-box">
                 <!-- <ChatDetail /> -->
-                <p>현재 chat detail 문제 or back 문제로 주석처리해둠</p>
-                <el-button>채팅방개설요청</el-button>
+                <p>현재 chat socket 연결 문제로 주석처리해둠</p>
+                <el-button @click="createChatRoom" class="green-color-btn"
+                  >채팅방개설요청</el-button
+                >
                 <el-button @click="changeCondition" type="primary" icon="el-icon-close"
                   >닫기</el-button
                 >
@@ -44,11 +46,16 @@ export default {
 
     let changeCondition = () => {
       isHidden.value = !isHidden.value;
-      console.log(isHidden.value);
+    };
+    let createChatRoom = () => {
+      console.log("USER: CREATE CHAT ROOM");
+      console.log("현재 실제 생성되는 코드는 주석처리 해둠");
+      // store.dispatch("createChatRooms");
     };
     return {
       isHidden,
       changeCondition,
+      createChatRoom,
     };
   },
 };
@@ -79,8 +86,11 @@ export default {
 }
 
 .big-btn {
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
+  /* icon 사이즈 키우는 법 */
+  font-size: 2rem;
+  background-color: #006f3e;
 }
 
 /* 생성 부분 */
@@ -101,7 +111,7 @@ export default {
   opacity: 0;
 }
 .fade-leave-active {
-  transition: all 0.7s ease-out;
+  transition: all 0.5s ease-out;
 }
 
 /* 위치 고정을 시키지 않으면 렌더링하면서 (생명&소멸) 서로 다른 공간에 보여짐 */

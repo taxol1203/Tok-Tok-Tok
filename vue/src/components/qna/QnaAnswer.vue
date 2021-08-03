@@ -30,13 +30,13 @@
       </el-col>
     </el-row>
   </div>
-  <el-button @click="add" class="colorVer" style="float: right; margin-top: 10px"
+  <el-button @click="add" class="green-color-btn" style="float: right; margin-top: 10px"
     ><i class="el-icon-plus"></i
   ></el-button>
 </template>
 <script>
-import { useStore } from 'vuex';
-import { computed, ref } from 'vue';
+import { useStore } from "vuex";
+import { computed, ref } from "vue";
 export default {
   setup() {
     const store = useStore();

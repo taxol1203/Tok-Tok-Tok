@@ -9,6 +9,9 @@ export default createStore({
     rooms: [],
     selected_room: null, // 더블클릭한 채팅방의 세션id를 저장
     session_key: {},
+    //qnahistory를 아마 넣을 예정
+    //user-info는: create room을 할 때
+    //   fk_created_by_idx를 가지고(앞으로 만들어질) API를 활용해서 user- info를 store 저장해둔다.
   },
   mutations: {
     GET_ROOMS(state, payload) {
