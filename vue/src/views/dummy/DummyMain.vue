@@ -16,12 +16,13 @@
           <transition class="same-pos" name="fade" mode="out-in">
             <div id="chat-box" v-if="isHidden">
               <div class="full-box">
-                <!-- <ChatDetail /> -->
+                <ChatDetail />
+                <!-- <ChatDetailDummy /> -->
                 <p>현재 chat socket 연결 문제로 주석처리해둠</p>
                 <el-button @click="createChatRoom" class="green-color-btn"
                   >채팅방개설요청</el-button
                 >
-                <el-button @click="changeCondition" type="primary" icon="el-icon-close"
+                <el-button @click="changeCondition" type="danger" icon="el-icon-close"
                   >닫기</el-button
                 >
               </div>
@@ -33,12 +34,14 @@
   </el-row>
 </template>
 <script>
+import ChatDetailDummy from "./ChatDetailDummy.vue";
 import ChatDetail from "../../../src/components/chat/ChatDetail.vue";
 import { ref } from "vue";
 /* eslint-disable */
 export default {
   components: {
     ChatDetail,
+    ChatDetailDummy,
   },
 
   setup() {
@@ -79,8 +82,9 @@ export default {
 }
 
 #chat-box {
-  width: 20%;
-  height: 50%;
+  width: 650px;
+  height: 750px;
+  padding: 10px;
   background-color: gray;
   /* 상속 받을 수 있나? */
 }
