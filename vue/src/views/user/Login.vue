@@ -13,18 +13,31 @@
             status-icon
           >
             <el-form-item label="이메일" prop="email">
-              <el-input type="email" v-model="user.email" autocomplete="off"></el-input>
+              <el-input
+                type="email"
+                v-model="user.email"
+                autocomplete="off"
+              ></el-input>
             </el-form-item>
             <el-form-item label="비밀번호" prop="passwd">
-              <el-input type="password" v-model="user.passwd" autocomplete="off"></el-input>
+              <el-input
+                type="password"
+                v-model="user.passwd"
+                autocomplete="off"
+              ></el-input>
             </el-form-item>
             <el-form-item>
               <transition name="slide-fade">
-                <el-button type="button" class="colorVer" @click="onSubmit('formLabelAlign')"
+                <el-button
+                  type="button"
+                  class="colorVer"
+                  @click="onSubmit('formLabelAlign')"
                   >로그인</el-button
                 >
               </transition>
-              <el-button @click="resetForm('formLabelAlign')">다시쓰기</el-button>
+              <el-button @click="resetForm('formLabelAlign')"
+                >다시쓰기</el-button
+              >
             </el-form-item>
           </el-form>
           <div v-else>

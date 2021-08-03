@@ -2,7 +2,10 @@
   <div style="position: relative; width: 650px; height: 750px; padding: 10px">
     <!-- 상대방 -->
     <el-scrollbar ref="scrollbar" id="topMessages">
-      <div v-for="(msg, index) in messages.messageArrayKey.messages" :key="index">
+      <div
+        v-for="(msg, index) in messages.messageArrayKey.messages"
+        :key="index"
+      >
         <el-row>
           <el-col v-if="msg.fk_author_idx == '1'">
             <div class="message-me">
@@ -19,7 +22,10 @@
       <el-row id="bottomInput">
         <!-- 입력창 -->
         <el-col :span="2">
-          <el-button icon="el-icon-video-camera" class="icon-m-p colorVer"></el-button>
+          <el-button
+            icon="el-icon-video-camera"
+            class="icon-m-p colorVer"
+          ></el-button>
         </el-col>
         <el-col :span="20">
           <div>
@@ -69,13 +75,10 @@ export default {
 
     // path parameter로 방 id 전송함. 만약 url에 노출되는게 별로면 props로 전달하는 걸로 변경하셔도...
     sessionId.value = store.state.selected_room;
-
     messages.messageArrayKey = store.state.session_key[`${sessionId.value}`];
-    console.log('@@@@@@@@@@@@');
     console.log(messages.messageArrayKey);
-    console.log('@@@@@@@@@@@@');
     console.log(messages.messageArrayKey.messages[1]);
-    console.log('@@@@@@@@@@@@');
+
 
     // axios.get("http://localhost:8088/temp/api/chat/room/" + sessionId.value).then((response) => {
     //   roomName = response.data.name; // 방에 대한 정보를 가져옵니다.
@@ -92,7 +95,7 @@ export default {
     // });
 
     // 소켓 연결 시작
-    // this.connect(sessionId.value);
+
 
     const sendMessage = () => {
       if (userName !== '' && message.value !== '') {
@@ -119,7 +122,7 @@ export default {
     };
 
     const connect = () => {
-      const serverURL = 'https://i5d204.p.ssafy.io:8088/api/chat'; // 서버 채팅 주소
+      const serverURL = 'https://i5d204.p.ssafy.io/api/chat'; // 서버 채팅 주소
       // const serverURL = "http://localhost:8088/temp/chat"; // 서버 채팅 주소
       let socket = new SockJS(serverURL);
       stompClient = Stomp.over(socket);
@@ -132,7 +135,7 @@ export default {
           // 구독 == 채팅방 입장.
           stompClient.subscribe('/send/' + sessionId.value, (res) => {
             console.log('receive from server:', res.body);
-            messages.messageArrayKey.push(JSON.parse(res.body)); // 수신받은 메세지 표시하기
+            messages.messageArrayKey.messages.push(JSON.parse(res.body)); // 수신받은 메세지 표시하기
             switch (res.body.type) {
               case 'MSG':
                 break;
@@ -158,6 +161,7 @@ export default {
         }
       );
     };
+    connect(sessionId.value);
 
     return {
       sessionId,
