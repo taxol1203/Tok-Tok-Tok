@@ -9,6 +9,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.reactive.TransactionSynchronizationManager;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -25,7 +26,6 @@ public class ChatSessionController {
 //        super();
 //        this.chatDao = chatDao;
 //    }
-
     // 모든 채팅방 목록 보기
     @ApiOperation(value = "현재 개설중인 모든 방의 목록을 가져온다.", response = ChatSession.class)
     @GetMapping("/rooms/all")
@@ -116,6 +116,9 @@ public class ChatSessionController {
             e.printStackTrace();
             return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+        if(result == 0){
+            new ResponseEntity<Void>(HttpStatus.ALREADY_REPORTED);
+        }
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
@@ -182,7 +185,12 @@ public class ChatSessionController {
             sessions = null; // for gc
             List<ChatMessage> messages = chatDao.getAllMessages();
             for(ChatMessage message : messages){
-                ret.get(message.getFk_session_id()).getMessages().add(message);
+                if(!ret.containsKey(message.getFk_session_id())){
+                    continue;
+                }
+                ret.get(message.getFk_session_id())
+                        .getMessages()
+                        .add(message);
             }
         }catch(Exception e){
             e.printStackTrace();

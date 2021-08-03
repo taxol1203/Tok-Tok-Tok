@@ -10,7 +10,7 @@
 	<select id="findAllRoomByFkHostIdx" resultType="ChatSession">
 		SELECT *
 		FROM "SSAFY_PJT1".chat_session
-		WHERE fk_host_idx  IN (#{fk_host_idx},0);
+		WHERE fk_host_idx = #{fk_host_idx} OR status = 'OPEN';
 	</select>
 	<select id="findMyRoom" resultType="ChatSession">
 		SELECT *
@@ -33,13 +33,13 @@
 
 	<update id="assignRoomToMe" parameterType="AssignRoomRequest">
 		UPDATE "SSAFY_PJT1".chat_session
-		SET "fk_host_idx" = #{admin_pk_idx}, "status" = 'LIVE';
+		SET fk_host_idx = #{admin_pk_idx}, status = 'LIVE'
 		WHERE session_id = #{sessionId} AND status = 'OPEN';
 	</update>
 	<delete id="quitChatRoom" parameterType="int">
 		UPDATE "SSAFY_PJT1".chat_session
 		SET "status" = 'END'
-		WHERE session_id = #{sessionId};
+		WHERE "session_id" = #{sessionId};
 	</delete>
 
 	<!-- 메세지 DB에 등록 -->
@@ -56,6 +56,6 @@
 	<select id="getMessagesBySessionId" parameterType="String" resultType="ChatMessage">
 		SELECT *
 		FROM "SSAFY_PJT1".chat_message
-		WHERE fk_session_id = #{sessionId};
+		WHERE "fk_session_id" = #{sessionId};
 	</select>
 </mapper>
