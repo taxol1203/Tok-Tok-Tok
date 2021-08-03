@@ -68,8 +68,9 @@ export default {
 </script>
 <style>
 #question {
-  background-color: transparent;
-  border: 0px solid;
+  /* background-color: transparent; */
+  border: 0;
+  resize: none;
 }
 #questionBox {
   border: 1px solid #eee;

@@ -3,18 +3,25 @@
     <el-header>
       <!-- <h1>All cards({{ this.$store.getters.allQnaCount }})</h1> -->
       <el-row>
+        <el-col :span="20"><QnaTitle /></el-col>
         <el-col :span="4">
           <!-- <el-button type="primary" icon="el-icon-edit" circle></el-button> -->
-          <el-button type="success" icon="el-icon-check" circle @click="savaAnsData"></el-button>
+          <el-button
+            type="success"
+            icon="el-icon-check"
+            circle
+            @click="savaAnsData"
+            style="border: 0px solid; background-color: transparent; color: #000"
+          ></el-button>
           <el-button
             type="danger"
             icon="el-icon-delete"
             circle
             v-if="selectKey > 2"
             @click="removeQna"
+            style="border: 0px solid; background-color: transparent; color: #000"
           ></el-button>
         </el-col>
-        <el-col :span="20"><QnaTitle /></el-col>
       </el-row>
     </el-header>
     <el-main>

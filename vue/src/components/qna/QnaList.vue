@@ -26,6 +26,7 @@ export default {
     const showDetail = (key) => {
       store.dispatch('moduleQna/pickQna', key);
       store.dispatch('moduleQna/loadAnswer', key);
+      store.commit('moduleQna/resetNewAns');
     };
     const addScene = () => {
       let tmp = {

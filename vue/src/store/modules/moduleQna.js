@@ -84,6 +84,16 @@ export const moduleQna = {
       }
       state.qnaList.splice(i, 1);
       state.select = {}
+    },
+    resetNewAns: (state) => {
+      state.new_answer = [];
+      console.log(state.new_answer)
+    },
+    removeOldAns: (state, index) => {
+      state.old_answer.splice(index, 1);
+    },
+    removeNewAns: (state, index) => {
+      state.new_answer.splice(index, 1);
     }
   },
   actions: {
