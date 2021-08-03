@@ -20,7 +20,11 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@CrossOrigin("*")
+@CrossOrigin({
+        "https://localhost:8080",
+        "https://i5d204.p.ssafy.io",
+        "https://59.151.220.195:5501"
+})
 @RequestMapping("/chat")
 public class ChatMessageController {
     @Autowired
