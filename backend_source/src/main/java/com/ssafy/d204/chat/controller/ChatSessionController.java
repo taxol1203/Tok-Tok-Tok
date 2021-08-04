@@ -209,6 +209,9 @@ public class ChatSessionController {
             e.printStackTrace();
             return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+        if(ret.size() == 0){
+            return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+        }
         return new ResponseEntity<List<ChatMessage>>(ret, HttpStatus.OK);
     }
 

@@ -3,6 +3,7 @@ package com.ssafy.d204;
 import com.mysql.cj.Session;
 import com.ssafy.d204.api.controller.QnAController;
 import com.ssafy.d204.chat.controller.ChatSessionController;
+import com.ssafy.d204.chat.dto.AssignRoomRequest;
 import com.ssafy.d204.chat.dto.ChatSession;
 import com.ssafy.d204.db.entity.Answer;
 import org.junit.jupiter.api.Assertions;
@@ -33,10 +34,40 @@ public class ChatSessionControllerTest {
 		createSessionRequest.setFk_created_by_idx(1);
 		createSessionRequest.setFk_client_idx(1);
 
-		List<ChatSession> newSessions =
-				(List<ChatSession>) csc.createRoom(createSessionRequest).getBody();
+		ChatSession newSession =
+				(ChatSession) csc.createRoom(createSessionRequest).getBody();
 //		MatcherAssert(sessionsBefore.size(), isGreater);
-		Assertions.assertTrue(sessionsBefore.size() > newSessions.size());
+		ResponseEntity<?> roomResponse2 = csc.getAllRoom();
+		Assertions.assertEquals(200,roomResponse2.getStatusCodeValue());
+		List<ChatSession> sessionsAfter =
+				(List<ChatSession>) roomResponse2.getBody();
+
+		Assertions.assertTrue(sessionsBefore.size() < sessionsAfter.size());
+
+		AssignRoomRequest asr = new AssignRoomRequest();
+		asr.setAdmin_pk_idx(2);
+		csc.assignRoom(newSession.getSession_id(), asr);
+
+
+		// 상담사가 직접 방을 닫도록 해야한다.
+		// 만약 상담사가 아닌 사람이 종료요청을 하면 forbidden 먹는지 여부 테스트
+		ResponseEntity<?> closeWithoutAuthorityResponse
+				= csc.closeRoom(newSession.getSession_id(), 1);
+		System.out.println(closeWithoutAuthorityResponse.getStatusCodeValue()+ " " + HttpStatus.FORBIDDEN.value());
+		Assertions.assertTrue(
+				closeWithoutAuthorityResponse.getStatusCodeValue()
+						== HttpStatus.FORBIDDEN.value());
+		ResponseEntity<?> closeWithAuthorityResponse
+				= csc.closeRoom(newSession.getSession_id(), 2);
+		Assertions.assertTrue(
+				closeWithAuthorityResponse.getStatusCodeValue()
+						== HttpStatus.OK.value());
+
+		ResponseEntity<?> noSuchRoomExists =
+				csc.getMessagesBySessionId("I'm not the valid id! hahaha");
+		Assertions.assertTrue(
+				noSuchRoomExists.getStatusCodeValue()
+				== HttpStatus.NO_CONTENT.value());
 
 
 
