@@ -2,10 +2,7 @@
   <div style="position: relative; width: 650px; height: 750px; padding: 10px">
     <!-- 상대방 -->
     <el-scrollbar ref="scrollbar" id="topMessages">
-      <div
-        v-for="(msg, index) in messages.messageArrayKey.messages"
-        :key="index"
-      >
+      <div v-for="(msg, index) in messages.messageArrayKey.messages" :key="index">
         <el-row>
           <el-col v-if="msg.fk_author_idx == userName">
             <div class="message-me">
@@ -22,10 +19,7 @@
       <el-row id="bottomInput">
         <!-- 입력창 -->
         <el-col :span="2">
-          <el-button
-            icon="el-icon-video-camera"
-            class="icon-m-p green-color-btn"
-          ></el-button>
+          <el-button icon="el-icon-video-camera" class="icon-m-p green-color-btn"></el-button>
         </el-col>
         <el-col :span="20">
           <div>
@@ -52,36 +46,35 @@
 </template>
 <script>
 // import axios from "axios";
-import Stomp from "webstomp-client";
-import SockJS from "sockjs-client";
-import { useStore } from "vuex";
-import { ref, reactive } from "vue";
+import Stomp from 'webstomp-client';
+import SockJS from 'sockjs-client';
+import { useStore } from 'vuex';
+import { ref, reactive, computed } from 'vue';
 
 export default {
-  name: "Chat",
+  name: 'Chat',
   components: {},
   setup() {
-    let sessionId = ref("");
-    let roomName = "";
+    let sessionId = ref('');
+    let roomName = '';
     let messages = reactive({ messageArrayKey: [] });
-    let message = ref("");
+    let message = ref('');
     let session_pk = 0;
     let connected = false;
-    let stompClient = "";
+    let stompClient = '';
     const store = useStore();
-    let userName = ref(store.state.user_info.pk_idx); // pk_idx를 저장하는 곳
-    // scrollbar.value.setScrollTop(700);
-
+    const userName = computed(() => store.state.auth.user.pk_idx);
+    const scrollbar = ref('');
+    scrollbar.setScrollTop = 650;
     // store에 저장된 selected_room
     sessionId.value = store.state.selected_room;
-
 
     messages.messageArrayKey = store.state.session_key[`${sessionId.value}`];
     // console.log("CHAT DETAIL 0번메시지: " + `${messages.messageArrayKey.messages[0].message}`);
 
     const connect = () => {
       // const serverURL = "/api/chat"; // 서버 채팅 주소
-      const serverURL = "https://i5d204.p.ssafy.io/api/chat"; // 서버 채팅 주소
+      const serverURL = 'https://i5d204.p.ssafy.io/api/chat'; // 서버 채팅 주소
       let socket = new SockJS(serverURL);
       stompClient = Stomp.over(socket);
       console.log(`connecting to socket=> ${serverURL}`);
@@ -89,21 +82,21 @@ export default {
         {},
         (frame) => {
           connected = true;
-          console.log("CONNECT SUCCESS ++ status : established", frame);
+          console.log('CONNECT SUCCESS ++ status : established', frame);
           // 구독 == 채팅방 입장.
-          stompClient.subscribe("/send/" + sessionId.value, (res) => {
-            console.log("receive from server:", res.body);
+          stompClient.subscribe('/send/' + sessionId.value, (res) => {
+            console.log('receive from server:', res.body);
             messages.messageArrayKey.messages.push(JSON.parse(res.body)); // 수신받은 메세지 표시하기
             switch (res.body.type) {
-              case "MSG":
+              case 'MSG':
                 break;
-              case "JOIN":
+              case 'JOIN':
                 // 방을 생성할 때 백엔드단에서 처리하므로 신경 x
                 break;
-              case "QUIT":
+              case 'QUIT':
                 // 만약 둘 중 하나가 나가면 더 이상 채팅을 못치는 프론트구현
                 break;
-              case "VID":
+              case 'VID':
                 // vid 시작시 -> 화상채팅 시작하기 버튼만 딸랑 띄우기
                 break;
               default:
@@ -114,7 +107,7 @@ export default {
         },
         (error) => {
           // 소켓 연결 실패
-          console.log("status : failed, STOMP CLIENT 연결 실패", error);
+          console.log('status : failed, STOMP CLIENT 연결 실패', error);
           connected = false;
         }
       );
@@ -122,31 +115,33 @@ export default {
     connect(sessionId.value);
 
     const sendMessage = () => {
-      if (userName !== "" && message.value !== "") {
+      if (userName.value !== '' && message.value !== '') {
         // 이벤트 발생 엔터키 + 유효성 검사는 여기에서
         send({ message: message }); // 전송 실패 감지는 어떻게? 프론트단에서 고민좀 부탁 dream
       }
-      message.value = "";
+      message.value = '';
     };
 
     const send = () => {
-      console.log("Send message:" + message.value);
+      console.log('Send message:' + message.value);
       if (stompClient && stompClient.connected) {
-        console.log("IN SOCKET");
+        console.log('IN SOCKET');
         const msg = {
           message: message.value, // 메세지 내용. type이 MSG인 경우를 제외하곤 비워두고 프론트단에서만 처리.
           fk_author_idx: userName.value, // 작성자의 회원 idx
-          created: "", // 작성시간, 공란으로 비워서 메세지 보내기. response에는 담겨옵니다.
+          created: '', // 작성시간, 공란으로 비워서 메세지 보내기. response에는 담겨옵니다.
           deleted: false, // 삭제된 메세지 여부. default = false
           fk_session_id: sessionId.value, // 현재 채팅세션의 id.
           // 주의할 점은, 방 세션 id가 아닌, 방 정보의 pk_idx를 첨부한다. created 라이프사이클 메서드 참조.
-          type: "MSG", // 메세지 타입.
+          type: 'MSG', // 메세지 타입.
         };
-        stompClient.send("/receive/" + sessionId.value, JSON.stringify(msg), {});
+        stompClient.send('/receive/' + sessionId.value, JSON.stringify(msg), {});
       }
     };
 
     return {
+      scrollbar,
+      store,
       sessionId,
       roomName,
       messages,

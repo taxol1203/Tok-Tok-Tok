@@ -1,7 +1,7 @@
 <template lang="">
-  <div style="border: 1px solid #eee; height: 500px">
+  <div style="height: 100%">
     <div id="questionBox">
-      <!-- <el-input
+      <!-- <el-inputborder: 1px solid #eee; 
         v-if="!show"
         type="textarea"
         autosize
@@ -16,7 +16,7 @@
             type="textarea"
             autosize
             v-model="select.content"
-            id="question"
+            id="inputBox"
             placeholder="예상 질문을 입력해주세요."
           >
           </el-input>
@@ -25,7 +25,7 @@
       </el-row>
     </div>
     <!-- Question -->
-    <div style="float: right">
+    <div style="float: right; width: 100%">
       <!-- {{ answers }} -->
       <OldAnswer />
       <NewAnswer />
@@ -67,7 +67,7 @@ export default {
 };
 </script>
 <style>
-#question {
+#inputBox {
   /* background-color: transparent; */
   border: 0;
   resize: none;
