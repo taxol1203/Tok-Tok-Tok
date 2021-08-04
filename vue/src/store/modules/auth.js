@@ -5,6 +5,7 @@ import { ElMessage } from 'element-plus';
 export const auth = {
   namespaced: true,
   state: {
+    token:'',
     user: {},
   },
   mutations: {
@@ -13,10 +14,10 @@ export const auth = {
     }
   },
   actions: {
-    login: ({commit}, payload) => {
+    login: ({state, commit}, payload) => {
       axios.post('api/auth/login', payload)
-            .then((res) => {
-              localStorage.setItem('jwt', res.data.token);
+        .then((res) => {
+              state.token = res.data.token
               commit('login', res.data.user);
               ElMessage({
                 showClose: true,
