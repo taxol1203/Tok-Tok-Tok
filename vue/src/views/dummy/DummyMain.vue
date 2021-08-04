@@ -16,11 +16,12 @@
           <transition class="same-pos" name="fade" mode="out-in">
             <div id="chat-box" v-if="isHidden">
               <div class="full-box">
-                <ChatDetail />
+                <!-- <ChatDetail /> -->
                 <!-- <ChatDetailDummy /> -->
                 <p>현재 chat socket 연결 문제로 주석처리해둠</p>
                 <el-button @click="createChatRoom" class="green-color-btn"
-                  >채팅방개설요청</el-button
+                  >채팅방개설요청/상담사상담신청 등 이거 나중에 말풍선같은 걸로 qna 밑에
+                  위치하도록</el-button
                 >
                 <el-button @click="changeCondition" type="danger" icon="el-icon-close"
                   >닫기</el-button
@@ -34,6 +35,7 @@
   </el-row>
 </template>
 <script>
+import { useStore } from "vuex";
 import ChatDetailDummy from "./ChatDetailDummy.vue";
 import ChatDetail from "../../../src/components/chat/ChatDetail.vue";
 import { ref } from "vue";
@@ -46,6 +48,7 @@ export default {
 
   setup() {
     let isHidden = ref(false);
+    const store = useStore();
 
     let changeCondition = () => {
       isHidden.value = !isHidden.value;

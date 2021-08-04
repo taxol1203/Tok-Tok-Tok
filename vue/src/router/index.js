@@ -71,19 +71,19 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach(async (to, from, next) => {
-  if (
-    to.matched.some((routeInfo) => {
-      return routeInfo.meta.authRequired;
-    })
-  ) {
-    return next();
-  }
-  if (localStorage.getItem("jwt") === null) {
-    alert("로그인해주세요");
-    return next({ name: "Login" });
-  }
-  return next();
-});
+// router.beforeEach(async (to, from, next) => {
+//   if (
+//     to.matched.some((routeInfo) => {
+//       return routeInfo.meta.authRequired;
+//     })
+//   ) {
+//     return next();
+//   }
+//   if (localStorage.getItem("jwt") === null) {
+//     alert("로그인해주세요");
+//     return next({ name: "Login" });
+//   }
+//   return next();
+// });
 
 export default router;
