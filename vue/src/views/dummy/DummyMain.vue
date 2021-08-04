@@ -67,7 +67,7 @@ export default {
     let createChatRoom = () => {
       console.log("USER: CREATE CHAT ROOM");
       console.log("현재 실제 생성되는 코드는 주석처리 해둠");
-      // store.dispatch("createChatRooms");
+      store.dispatch("createChatRooms");
     };
     return {
       isHidden,
