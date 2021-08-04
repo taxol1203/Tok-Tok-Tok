@@ -32,7 +32,9 @@
                   >로그인</el-button
                 >
               </transition>
-              <el-button @click="resetForm('formLabelAlign')">다시쓰기</el-button>
+              <el-button @click="resetForm('formLabelAlign')"
+                >다시쓰기</el-button
+              >
             </el-form-item>
           </el-form>
           <div v-else>

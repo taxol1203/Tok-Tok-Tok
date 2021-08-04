@@ -1,9 +1,15 @@
-import { createStore } from "vuex";
-import axios from "axios";
-import { moduleQna } from "@/store/modules/moduleQna";
-import { auth } from "@/store/modules/auth";
+import { createStore } from "vuex"
+import axios from "@/axios"
+import createPersistedState from 'vuex-persistedstate';
+import { moduleQna } from "@/store/modules/moduleQna"
+import { auth } from "@/store/modules/auth"
 
 export default createStore({
+  plugins: [
+    createPersistedState({
+      paths: ["auth"]
+    })
+  ],
   modules: { moduleQna, auth },
   state: {
     user_idx: 1,
@@ -35,11 +41,9 @@ export default createStore({
   actions: {
     async getChatRooms({ commit, state }) {
       try {
-        const res = await axios.get(
-          `https://i5d204.p.ssafy.io/api/api/chat/rooms/user/${state.user_idx}`
-        );
-        console.log(res.data);
-        commit("GET_ROOMS", res.data);
+        const res = await axios.get(`api/api/chat/rooms/user/${state.user_idx}`)
+        console.log(res.data)
+        commit('GET_ROOMS', res.data)
 
         // const res = await axios.get(
         //   `http://localhost:8088/temp/api/chat/rooms/user/${state.user_idx}`
@@ -55,10 +59,14 @@ export default createStore({
         //   fk_created_by_idx: 1, // 상담 신청하는 고객의 userid state.user_info
         //   fk_client_idx: 1, // 위 필드와 동일값 넣어주면 됨.
         // });
-        console.log(res.data);
-        console.log("CREATE ROOM할 때" + state.user_info);
-        console.log("CREATE ROOM할 때" + state.user_info);
-        // commit("ADD_ROOMS", res.data);
+        const res = await axios.post('api/api/chat/room', {
+        // const res = await axios.post("http://localhost:8088/temp/api/chat/room", {
+          unread: 0,
+          fk_created_by_idx: 1, // 상담 신청하는 고객의 userid
+          fk_client_idx: 1, // 위 필드와 동일값 넣어주면 됨.
+        })
+        console.log(res.data)
+        commit("ADD_ROOMS", res.data)
       } catch (error) {
         console.log(error);
         alert("채팅방 개설 실패");

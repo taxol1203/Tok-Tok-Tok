@@ -2,7 +2,10 @@
   <div style="position: relative; width: 650px; height: 750px; padding: 10px">
     <!-- 상대방 -->
     <el-scrollbar ref="scrollbar" id="topMessages">
-      <div v-for="(msg, index) in messages.messageArrayKey.messages" :key="index">
+      <div
+        v-for="(msg, index) in messages.messageArrayKey.messages"
+        :key="index"
+      >
         <el-row>
           <el-col v-if="msg.fk_author_idx == userName">
             <div class="message-me">
@@ -19,7 +22,10 @@
       <el-row id="bottomInput">
         <!-- 입력창 -->
         <el-col :span="2">
-          <el-button icon="el-icon-video-camera" class="icon-m-p green-color-btn"></el-button>
+          <el-button
+            icon="el-icon-video-camera"
+            class="icon-m-p green-color-btn"
+          ></el-button>
         </el-col>
         <el-col :span="20">
           <div>

@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from '@/axios';
 import { ElMessage } from 'element-plus';
 
 
@@ -14,7 +14,7 @@ export const auth = {
   },
   actions: {
     login: ({commit}, payload) => {
-      axios.post('https://i5d204.p.ssafy.io/api/auth/login', payload)
+      axios.post('api/auth/login', payload)
             .then((res) => {
               localStorage.setItem('jwt', res.data.token);
               commit('login', res.data.user);
@@ -36,7 +36,7 @@ export const auth = {
     },
     signup: ({ }, payload) => {
       axios
-            .post("https://i5d204.p.ssafy.io/api/auth/register", payload)
+            .post("api/auth/register", payload)
             .then(() => {
               ElMessage({
                 showClose: true,
@@ -56,7 +56,7 @@ export const auth = {
     duplicateEmail: ({ }, payload) => {
       console.log(payload)
       axios
-        .post('https://i5d204.p.ssafy.io/api/auth/checkemail', payload)
+        .post('api/auth/checkemail', payload)
         .then(() => {
           ElMessage({
             showClose: true,
