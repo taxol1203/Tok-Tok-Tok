@@ -65,7 +65,7 @@ export default {
       formLabelAlign.value.validate((valid) => {
         if (valid) {
           store.dispatch('auth/login', payload);
-          // router.go(0);
+          router.go(0);
         }
       });
     };
@@ -104,7 +104,7 @@ export default {
       }
     };
     const logout = () => {
-      localStorage.removeItem('jwt');
+      localStorage.removeItem('vuex');
       router.go(0);
     };
 
@@ -121,7 +121,7 @@ export default {
     };
     return {
       store,
-      token: localStorage.getItem('vuex').token,
+      token: localStorage.getItem('vuex'),
       user,
       formLabelAlign,
       resetForm,
