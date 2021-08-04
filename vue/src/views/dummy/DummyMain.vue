@@ -15,18 +15,29 @@
           </transition>
           <transition class="same-pos" name="fade" mode="out-in">
             <div id="chat-box" v-if="isHidden">
-              <div class="full-box">
-                <!-- <ChatDetail /> -->
-                <!-- <ChatDetailDummy /> -->
-                <p>현재 chat socket 연결 문제로 주석처리해둠</p>
-                <el-button @click="createChatRoom" class="green-color-btn"
-                  >채팅방개설요청/상담사상담신청 등 이거 나중에 말풍선같은 걸로 qna 밑에
-                  위치하도록</el-button
-                >
-                <el-button @click="changeCondition" type="danger" icon="el-icon-close"
-                  >닫기</el-button
-                >
-              </div>
+              <el-card :body-style="{ padding: '0px' }">
+                <div id="card-head" class="card-header">
+                  <el-button @click="changeCondition" type="danger" icon="el-icon-close"
+                    >닫기</el-button
+                  >
+                  <!-- <p>한 줄</p> -->
+                </div>
+                <div style="padding: 14px">
+                  <div class="full-box">
+                    <div>QnA List</div>
+                    <el-button @click="createChatRoom" class="green-color-btn"
+                      >채팅방개설요청/상담사상담신청 등</el-button
+                    >
+                    <p>채팅방개설버튼은 나중에 말풍선같은 걸로 qna 밑에 위치하도록</p>
+                    <!-- <ChatDetail /> -->
+                    <!-- <ChatDetailDummy /> -->
+                    <div>
+                      Chat List
+                      <p>현재 chat socket 연결 문제로 주석처리해둠</p>
+                    </div>
+                  </div>
+                </div>
+              </el-card>
             </div>
           </transition>
         </div>
@@ -85,11 +96,16 @@ export default {
 }
 
 #chat-box {
-  width: 650px;
-  height: 750px;
+  width: 50%;
+  height: 50%;
+  /* width: 650px;
+  height: 750px; */
   padding: 10px;
   background-color: gray;
   /* 상속 받을 수 있나? */
+  border-radius: 4px;
+  /* box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1); */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
 }
 
 .big-btn {
@@ -130,5 +146,27 @@ export default {
 
 .full-box {
   box-sizing: border-box;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #006f3e;
+  /* background: linear-gradient(103deg, #258c60 0%, #006f3e 50%, #9ec8ac) */
+  /* background: linear-gradient(103deg, rgb(74, 38, 255) 0%, rgb(74, 38, 255) 50%, rgb(125, 38, 255)) */
+  /* 100% center; */
+}
+
+.text {
+  font-size: 14px;
+}
+
+.item {
+  margin-bottom: 18px;
+}
+
+.box-card {
+  /* width: 480px; */
 }
 </style>
