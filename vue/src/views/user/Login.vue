@@ -35,9 +35,7 @@
                   >로그인</el-button
                 >
               </transition>
-              <el-button @click="resetForm('formLabelAlign')"
-                >다시쓰기</el-button
-              >
+              <el-button @click="resetForm('formLabelAlign')">다시쓰기</el-button>
             </el-form-item>
           </el-form>
           <div v-else>
@@ -67,6 +65,7 @@ export default {
       formLabelAlign.value.validate((valid) => {
         if (valid) {
           store.dispatch('auth/login', payload);
+          // router.go(0);
         }
       });
     };
@@ -122,7 +121,7 @@ export default {
     };
     return {
       store,
-      token: localStorage.getItem('jwt'),
+      token: localStorage.getItem('vuex').token,
       user,
       formLabelAlign,
       resetForm,
