@@ -12,7 +12,7 @@ export default createStore({
   ],
   modules: { moduleQna, auth },
   state: {
-    user_idx: 1,
+    user_idx: 1, //state.user_info.~~
     //user-info는: create room을 할 때
     //   fk_created_by_idx를 가지고(앞으로 만들어질) API를 활용해서 user- info를 store 저장해둔다.
     user_info: {},
