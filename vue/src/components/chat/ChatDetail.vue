@@ -2,10 +2,7 @@
   <div style="position: relative; width: 650px; height: 750px; padding: 10px">
     <!-- 상대방 -->
     <el-scrollbar ref="scrollbar" id="topMessages">
-      <div
-        v-for="(msg, index) in messages.messageArrayKey.messages"
-        :key="index"
-      >
+      <div v-for="(msg, index) in messages.messageArrayKey.messages" :key="index">
         <el-row>
           <el-col v-if="msg.fk_author_idx == userName">
             <div class="message-me">
@@ -22,10 +19,7 @@
       <el-row id="bottomInput">
         <!-- 입력창 -->
         <el-col :span="2">
-          <el-button
-            icon="el-icon-video-camera"
-            class="icon-m-p green-color-btn"
-          ></el-button>
+          <el-button icon="el-icon-video-camera" class="icon-m-p green-color-btn"></el-button>
         </el-col>
         <el-col :span="20">
           <div>
@@ -75,13 +69,12 @@ export default {
     // store에 저장된 selected_room
     sessionId.value = store.state.selected_room;
 
-
     messages.messageArrayKey = store.state.session_key[`${sessionId.value}`];
     // console.log("CHAT DETAIL 0번메시지: " + `${messages.messageArrayKey.messages[0].message}`);
 
     const connect = () => {
-      // const serverURL = "/api/chat"; // 서버 채팅 주소
-      const serverURL = "https://i5d204.p.ssafy.io/api/chat"; // 서버 채팅 주소
+      // const serverURL = "https://i5d204.p.ssafy.io/api/chat"; // 서버 채팅 주소
+      const serverURL = "https://59.151.220.195:8089/api/chat"; // (임시) 서버 채팅 주소
       let socket = new SockJS(serverURL);
       stompClient = Stomp.over(socket);
       console.log(`connecting to socket=> ${serverURL}`);
