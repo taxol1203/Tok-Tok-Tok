@@ -14,9 +14,7 @@ import org.apache.ibatis.type.MappedJdbcTypes;
 import org.apache.ibatis.type.MappedTypes;
 
 @MappedTypes(java.util.ArrayList.class)
-
 @MappedJdbcTypes(JdbcType.ARRAY)
-
 public class CustomTypeHandler extends BaseTypeHandler<List<String>> {
 
     @Override
