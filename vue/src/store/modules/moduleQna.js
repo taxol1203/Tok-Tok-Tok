@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from '@/axios';
 import { ElMessage } from 'element-plus';
 export const moduleQna = {
   namespaced : true,
@@ -97,19 +97,19 @@ export const moduleQna = {
   },
   actions: {
     addQna: ({ commit }, payload) => {
-      axios.post('https://i5d204.p.ssafy.io/api/qna/question', payload)
+      axios.post('api/qna/question', payload)
       .then(() => {
         commit('addQna', payload)
       })
     },
     loadQna: ({ commit }) => {
-      axios.get('https://i5d204.p.ssafy.io/api/qna/question')
+      axios.get('api/qna/question')
         .then(payload => {
           commit('loadQna', payload.data)
         })
     },
     loadAnswer: ({ commit }, idx) => {
-      axios.get('https://i5d204.p.ssafy.io/api/qna/question/nextAnswers/'+idx)
+      axios.get('api/qna/question/nextAnswers/'+idx)
         .then(payload => {
         commit('loadAnswer', payload.data)
       })
@@ -118,13 +118,13 @@ export const moduleQna = {
       commit('pickQna', payload)
     },
     loadAnswer: ({ commit }, idx) => {
-      axios.get(`https://i5d204.p.ssafy.io/api/qna/question/nextAnswers/${idx}`)
+      axios.get(`api/qna/question/nextAnswers/${idx}`)
         .then(payload => {
           commit('loadAnswer', payload)
         })
     },
     editContent: ({ commit }, payload) => {
-      axios.put(`https://i5d204.p.ssafy.io/api/qna/question/${payload.pk_idx}`, payload)
+      axios.put(`api/qna/question/${payload.pk_idx}`, payload)
         .then(() => {
         commit('editContent', payload)
       })
@@ -132,7 +132,7 @@ export const moduleQna = {
     updateAnswer: ({ state }) => {
       var flag = true;
       state.old_answer.forEach(item => {
-        axios.put(`https://i5d204.p.ssafy.io/api/qna/answer/${item.pk_idx}`, item)
+        axios.put(`api/qna/answer/${item.pk_idx}`, item)
           .then(() => {
           })
           .catch( () => {
@@ -154,7 +154,7 @@ export const moduleQna = {
       }
     },
     removeQna: ({ commit }, idx) => {
-      axios.delete(`https://i5d204.p.ssafy.io/api/qna/question/${idx}`)
+      axios.delete(`api/qna/question/${idx}`)
         .then(() => {
           commit('removeQna', idx)
         })
@@ -166,7 +166,7 @@ export const moduleQna = {
           fk_next_idx: item.fk_next_idx,
           fk_previous_idx: item.fk_previous_idx
         }
-        axios.post(`https://i5d204.p.ssafy.io/api/qna/answer`, tmp)
+        axios.post(`api/qna/answer`, tmp)
           .then(() => {
           commit('addAnswer')
         })
@@ -174,7 +174,7 @@ export const moduleQna = {
     },
     removeOldAns: ({ state, commit }, idx) => {
       var key = state.old_answer[idx].pk_idx;
-      axios.delete(`https://i5d204.p.ssafy.io/api/qna/answer/${key}`)
+      axios.delete(`api/qna/answer/${key}`)
         .then(() => {
           commit('removeOldAns', idx);
           ElMessage({

@@ -1,5 +1,5 @@
 import { createStore } from "vuex"
-import axios from "axios"
+import axios from "@/axios"
 import createPersistedState from 'vuex-persistedstate';
 import { moduleQna } from "@/store/modules/moduleQna"
 import { auth } from "@/store/modules/auth"
@@ -41,7 +41,7 @@ export default createStore({
   actions: {
     async getChatRooms({ commit, state }) {
       try {
-        const res = await axios.get(`https://i5d204.p.ssafy.io/api/api/chat/rooms/user/${state.user_idx}`)
+        const res = await axios.get(`api/api/chat/rooms/user/${state.user_idx}`)
         console.log(res.data)
         commit('GET_ROOMS', res.data)
 
@@ -54,7 +54,7 @@ export default createStore({
     },
     async createChatRooms({ commit }) {
       try {
-        const res = await axios.post('https://i5d204.p.ssafy.io/api/api/chat/room', {
+        const res = await axios.post('api/api/chat/room', {
         // const res = await axios.post("http://localhost:8088/temp/api/chat/room", {
           unread: 0,
           fk_created_by_idx: 1, // 상담 신청하는 고객의 userid
