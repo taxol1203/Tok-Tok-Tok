@@ -3,6 +3,10 @@
     <el-col :span="12">
       <div>
         <el-card shadow="always">
+          <p>user11@naver.com</p>
+          <p>asdf555!@#</p>
+          <p>minsu2@naver.com</p>
+          <p>minsu2navercom!</p>
           <el-form
             v-if="token === null"
             label-position="top"
@@ -13,14 +17,18 @@
             status-icon
           >
             <el-form-item label="이메일" prop="email">
-              <el-input type="email" v-model="user.email" autocomplete="off"></el-input>
+              <el-input type="email" v-model="user.email" autocomplete="off"
+                >user11@naver.com</el-input
+              >
             </el-form-item>
             <el-form-item label="비밀번호" prop="passwd">
-              <el-input type="password" v-model="user.passwd" autocomplete="off"></el-input>
+              <el-input type="password" v-model="user.passwd" autocomplete="off"
+                >asdf555!@#</el-input
+              >
             </el-form-item>
             <el-form-item>
               <transition name="slide-fade">
-                <el-button type="button" class="colorVer" @click="onSubmit('formLabelAlign')"
+                <el-button type="button" class="green-color-btn" @click="onSubmit('formLabelAlign')"
                   >로그인</el-button
                 >
               </transition>
@@ -38,12 +46,15 @@
 </template>
 
 <script>
+import { ElMessage } from 'element-plus';
 import { reactive, ref } from 'vue';
+import { useStore } from 'vuex';
 import axios from 'axios';
 import router from '@/router';
 
 export default {
   setup() {
+    const store = useStore();
     const formLabelAlign = ref(null);
     const onSubmit = () => {
       let payload = {
@@ -52,16 +63,7 @@ export default {
       };
       formLabelAlign.value.validate((valid) => {
         if (valid) {
-          axios
-            .post('https://i5d204.p.ssafy.io/api/auth/login', payload)
-            .then((res) => {
-              alert('로그인이 완료되었습니다.');
-              localStorage.setItem('jwt', res.data.token);
-              router.go(0);
-            })
-            .catch(() => {
-              console.log('login error');
-            });
+          store.dispatch('auth/login', payload);
         }
       });
     };
@@ -116,6 +118,7 @@ export default {
       formLabelAlign.value.resetFields();
     };
     return {
+      store,
       token: localStorage.getItem('jwt'),
       user,
       formLabelAlign,

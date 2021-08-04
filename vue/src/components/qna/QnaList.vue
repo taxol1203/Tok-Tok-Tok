@@ -3,7 +3,7 @@
     <el-scrollbar id="qcards">
       <div v-for="q in cards" :key="q.pk_idx" class="text item">
         <el-card class="box-card" @click="showDetail(q.pk_idx)">
-          {{ q.content }}
+          {{ q.title }}
         </el-card>
       </div>
     </el-scrollbar>
@@ -26,11 +26,12 @@ export default {
     const showDetail = (key) => {
       store.dispatch('moduleQna/pickQna', key);
       store.dispatch('moduleQna/loadAnswer', key);
+      store.commit('moduleQna/resetNewAns');
     };
     const addScene = () => {
       let tmp = {
         pk_idx: count.value,
-        content: 'dummy' + count.value,
+        content: '',
         answers: [],
       };
       console.log(tmp);

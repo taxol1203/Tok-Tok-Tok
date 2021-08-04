@@ -4,7 +4,7 @@
     <el-scrollbar ref="scrollbar" id="topMessages">
       <div v-for="(msg, index) in messages.messageArrayKey.messages" :key="index">
         <el-row>
-          <el-col v-if="msg.fk_author_idx == userName">
+          <el-col v-if="msg.fk_author_idx == '1'">
             <div class="message-me">
               {{ msg.message }}
             </div>
@@ -62,16 +62,15 @@ export default {
     let session_pk = 0;
     let connected = false;
     let stompClient = "";
+    let userName = "1"; // user id나 email받으면 그거 넣기@@@@@
     const store = useStore();
-    let userName = ref(store.state.user_info.pk_idx); // pk_idx를 저장하는 곳
     // scrollbar.value.setScrollTop(700);
 
     // store에 저장된 selected_room
     sessionId.value = store.state.selected_room;
 
-
     messages.messageArrayKey = store.state.session_key[`${sessionId.value}`];
-    // console.log("CHAT DETAIL 0번메시지: " + `${messages.messageArrayKey.messages[0].message}`);
+    console.log("CHAT DETAIL 0번메시지: " + `${messages.messageArrayKey.messages[0].message}`);
 
     const connect = () => {
       // const serverURL = "/api/chat"; // 서버 채팅 주소
@@ -83,11 +82,12 @@ export default {
         {},
         (frame) => {
           connected = true;
-          console.log("CONNECT SUCCESS ++ status : established", frame);
+          console.log("I WANT TO CONNECT SERVER");
+          console.log("status : established", frame);
           // 구독 == 채팅방 입장.
           stompClient.subscribe("/send/" + sessionId.value, (res) => {
             console.log("receive from server:", res.body);
-            messages.messageArrayKey.messages.push(JSON.parse(res.body)); // 수신받은 메세지 표시하기
+            messages.messageArrayKey.push(JSON.parse(res.body)); // 수신받은 메세지 표시하기
             switch (res.body.type) {
               case "MSG":
                 break;
@@ -113,6 +113,7 @@ export default {
         }
       );
     };
+    // connect(`${sessionId.value}`);
     connect(sessionId.value);
 
     const sendMessage = () => {
@@ -129,7 +130,7 @@ export default {
         console.log("IN SOCKET");
         const msg = {
           message: message.value, // 메세지 내용. type이 MSG인 경우를 제외하곤 비워두고 프론트단에서만 처리.
-          fk_author_idx: userName.value, // 작성자의 회원 idx
+          fk_author_idx: 1, // 작성자의 회원 idx
           created: "", // 작성시간, 공란으로 비워서 메세지 보내기. response에는 담겨옵니다.
           deleted: false, // 삭제된 메세지 여부. default = false
           fk_session_id: sessionId.value, // 현재 채팅세션의 id.

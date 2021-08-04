@@ -10,23 +10,25 @@
         style="margin: 10px; width: 500px"
         @click="changeShow"
       ></el-input> -->
-      <el-row v-if="show" align="middle" gutter="10">
+      <el-row v-if="show" align="middle">
         <el-col :span="20">
           <el-input
             type="textarea"
             autosize
-            v-model="input"
+            v-model="select.content"
             id="question"
             placeholder="예상 질문을 입력해주세요."
           >
           </el-input>
         </el-col>
-        <el-col :span="4"><el-button @click="changeShow()">등록</el-button></el-col>
+        <el-col :span="4"><el-button @click="sendContent()">등록</el-button></el-col>
       </el-row>
     </div>
     <!-- Question -->
     <div style="float: right">
-      <QnaAnswer />
+      <!-- {{ answers }} -->
+      <OldAnswer />
+      <NewAnswer />
     </div>
   </div>
 </template>
@@ -34,34 +36,41 @@
 <script>
 import { computed, ref } from 'vue';
 import { useStore } from 'vuex';
-import QnaAnswer from '@/components/qna/QnaAnswer.vue';
+import OldAnswer from '@/components/qna/OldAnswer.vue';
+import NewAnswer from '@/components/qna/NewAnswer.vue';
 
 export default {
   components: {
-    QnaAnswer,
+    OldAnswer,
+    NewAnswer,
   },
   setup() {
     const store = useStore();
-    const select = computed(() => store.state.moduleQna.qnaList);
+    // const select = computed(() => store.state.moduleQna.qnaList);
+    const select = computed(() => store.state.moduleQna.select);
     let show = ref(true);
-    let input = ref('');
     let changeShow = () => {
+      show.value = !show.value;
+    };
+    const sendContent = () => {
+      store.dispatch('moduleQna/editContent', select.value);
       show.value = !show.value;
     };
     return {
       store,
       select,
       show,
-      input,
       changeShow,
+      sendContent,
     };
   },
 };
 </script>
 <style>
 #question {
-  background-color: transparent;
-  border: 0px solid;
+  /* background-color: transparent; */
+  border: 0;
+  resize: none;
 }
 #questionBox {
   border: 1px solid #eee;
