@@ -1,14 +1,14 @@
-import { createStore } from "vuex"
-import axios from "@/axios"
-import createPersistedState from 'vuex-persistedstate';
-import { moduleQna } from "@/store/modules/moduleQna"
-import { auth } from "@/store/modules/auth"
+import { createStore } from "vuex";
+import axios from "@/axios";
+import createPersistedState from "vuex-persistedstate";
+import { moduleQna } from "@/store/modules/moduleQna";
+import { auth } from "@/store/modules/auth";
 
 export default createStore({
   plugins: [
     createPersistedState({
-      paths: ["auth"]
-    })
+      paths: ["auth"],
+    }),
   ],
   modules: { moduleQna, auth },
   state: {
@@ -32,7 +32,7 @@ export default createStore({
     PICK_ROOM(state, payload) {
       state.selected_room = payload;
       console.log(payload);
-      console.log(state.user_info);
+      console.log("STATE USER INFO:" + state.user_info);
     },
     save_userinfo(state, payload) {
       state.user_info = payload;
@@ -41,35 +41,28 @@ export default createStore({
   actions: {
     async getChatRooms({ commit, state }) {
       try {
-        const res = await axios.get(`api/api/chat/rooms/user/${state.user_idx}`)
-        console.log(res.data)
-        commit('GET_ROOMS', res.data)
-
-        // const res = await axios.get(
-        //   `http://localhost:8088/temp/api/chat/rooms/user/${state.user_idx}`
-        // );
+        const res = await axios.get(`api/api/chat/rooms/user/${state.user_idx}`);
+        console.log(res.data);
+        commit("GET_ROOMS", res.data);
       } catch (error) {
         console.log(error);
       }
     },
-    async createChatRooms({ commit }) {
+    async createChatRooms({ commit, state }) {
       try {
-        // const res = await axios.post("https://i5d204.p.ssafy.io/api/api/chat/room", {
+        // const res = await axios.post('api/api/chat/room', {
         //   unread: 0,
-        //   fk_created_by_idx: 1, // 상담 신청하는 고객의 userid state.user_info
+        //   fk_created_by_idx: 1, // 상담 신청하는 고객의 userid
         //   fk_client_idx: 1, // 위 필드와 동일값 넣어주면 됨.
-        // });
-        const res = await axios.post('api/api/chat/room', {
-        // const res = await axios.post("http://localhost:8088/temp/api/chat/room", {
-          unread: 0,
-          fk_created_by_idx: 1, // 상담 신청하는 고객의 userid
-          fk_client_idx: 1, // 위 필드와 동일값 넣어주면 됨.
-        })
-        console.log(res.data)
-        commit("ADD_ROOMS", res.data)
+        // })
+        console.log("방 생성 state.user_info : " + state.user_info.pk_idx);
+        console.log(res.data);
+        commit("ADD_ROOMS", res.data);
       } catch (error) {
         console.log(error);
         alert("채팅방 개설 실패");
+        console.log("STATE: " + state);
+        console.log("방 생성 state.user_info :" + state.user_info.pk_idx);
       }
     },
     pickRoom({ commit }, key) {
