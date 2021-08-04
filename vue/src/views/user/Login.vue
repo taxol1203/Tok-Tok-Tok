@@ -28,13 +28,14 @@
             </el-form-item>
             <el-form-item>
               <transition name="slide-fade">
-                <el-button type="button" class="green-color-btn" @click="onSubmit('formLabelAlign')"
+                <el-button
+                  type="button"
+                  class="green-color-btn"
+                  @click="onSubmit('formLabelAlign')"
                   >로그인</el-button
                 >
               </transition>
-              <el-button @click="resetForm('formLabelAlign')"
-                >다시쓰기</el-button
-              >
+              <el-button @click="resetForm('formLabelAlign')">다시쓰기</el-button>
             </el-form-item>
           </el-form>
           <div v-else>
@@ -48,10 +49,8 @@
 </template>
 
 <script>
-import { ElMessage } from 'element-plus';
 import { reactive, ref } from 'vue';
 import { useStore } from 'vuex';
-import axios from 'axios';
 import router from '@/router';
 
 export default {
@@ -66,6 +65,7 @@ export default {
       formLabelAlign.value.validate((valid) => {
         if (valid) {
           store.dispatch('auth/login', payload);
+          router.go(0);
         }
       });
     };
@@ -104,7 +104,7 @@ export default {
       }
     };
     const logout = () => {
-      localStorage.removeItem('jwt');
+      localStorage.removeItem('vuex');
       router.go(0);
     };
 
@@ -121,7 +121,7 @@ export default {
     };
     return {
       store,
-      token: localStorage.getItem('jwt'),
+      token: localStorage.getItem('vuex'),
       user,
       formLabelAlign,
       resetForm,

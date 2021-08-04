@@ -87,7 +87,7 @@ export default {
   },
 };
 </script>
-<style>
+<style scoped>
 /* input 상자 테두리 없애기 */
 .ans {
   border: 0;

@@ -94,7 +94,7 @@ export default {
   },
 };
 </script>
-<style>
+<style scoped>
 .new-answer-box {
   border: 0;
   width: 90%;
