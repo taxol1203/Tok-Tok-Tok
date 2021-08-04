@@ -28,7 +28,10 @@
             </el-form-item>
             <el-form-item>
               <transition name="slide-fade">
-                <el-button type="button" class="green-color-btn" @click="onSubmit('formLabelAlign')"
+                <el-button
+                  type="button"
+                  class="green-color-btn"
+                  @click="onSubmit('formLabelAlign')"
                   >로그인</el-button
                 >
               </transition>
@@ -48,10 +51,8 @@
 </template>
 
 <script>
-import { ElMessage } from 'element-plus';
 import { reactive, ref } from 'vue';
 import { useStore } from 'vuex';
-import axios from 'axios';
 import router from '@/router';
 
 export default {
