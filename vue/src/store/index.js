@@ -1,9 +1,15 @@
 import { createStore } from "vuex"
 import axios from "axios"
+import createPersistedState from 'vuex-persistedstate';
 import { moduleQna } from "@/store/modules/moduleQna"
 import { auth } from "@/store/modules/auth"
 
 export default createStore({
+  plugins: [
+    createPersistedState({
+      paths: ["auth"]
+    })
+  ],
   modules: { moduleQna, auth },
   state: {
     user_idx: 1,
@@ -13,7 +19,7 @@ export default createStore({
     session_key: {},
     //qnahistory를 아마 넣을 예정
     //user-info는: create room을 할 때
-    //   fk_created_by_idx를 가지고(앞으로 만들어질) API를 활용해서 user- info를 store 저장해둔다.
+    //   fk_created_by_idx를 가지고(앞으로 만들어질) API를 활용해서 user- info를 store 저장해둔다.(auth에 저장했습니다.)
   },
   mutations: {
     GET_ROOMS(state, payload) {
