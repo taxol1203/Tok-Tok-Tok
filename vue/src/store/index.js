@@ -12,7 +12,7 @@ export default createStore({
   ],
   modules: { moduleQna, auth },
   state: {
-    user_idx: 1, //state.user_info.~~
+    user_idx: "", //state.user_info.~~
     //user-info는: create room을 할 때
     //   fk_created_by_idx를 가지고(앞으로 만들어질) API를 활용해서 user- info를 store 저장해둔다.
     user_info: {},
@@ -48,21 +48,25 @@ export default createStore({
         console.log(error);
       }
     },
-    async createChatRooms({ commit, state }) {
+    async createChatRooms({ commit }, pk_idx) {
+      const temp = {
+        unread: 0,
+        fk_created_by_idx: pk_idx, // 상담 신청하는 고객의 userid
+        fk_client_idx: pk_idx, // 위 필드와 동일값 넣어주면 됨.
+      };
+      console.log("TEMP:" + temp);
+      console.log("TEMP1:" + temp.unread);
+      console.log("state.user_idx(const로 저장한 것): " + state.user_idx);
       try {
-        // const res = await axios.post('api/api/chat/room', {
-        //   unread: 0,
-        //   fk_created_by_idx: 1, // 상담 신청하는 고객의 userid
-        //   fk_client_idx: 1, // 위 필드와 동일값 넣어주면 됨.
-        // })
-        console.log("방 생성 state.user_info : " + state.user_info.pk_idx);
+        const res = await axios.post("api/api/chat/room", temp);
+        console.log("방 생성됨@@");
         console.log(res.data);
         commit("ADD_ROOMS", res.data);
       } catch (error) {
         console.log(error);
         alert("채팅방 개설 실패");
-        console.log("STATE: " + state);
-        console.log("방 생성 state.user_info :" + state.user_info.pk_idx);
+        // console.log("STATE: " + state);
+        // console.log("방 생성 state.user_info :" + pk_idx);
       }
     },
     pickRoom({ commit }, key) {
