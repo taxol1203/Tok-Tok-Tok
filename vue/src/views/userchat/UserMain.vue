@@ -51,11 +51,11 @@
   </el-row>
 </template>
 <script>
-import axios from "@/axios";
-import { useStore } from "vuex";
-import UserChatDetail from "./UserChatDetail.vue";
-import ChatDetail from "../../components/chat/ChatDetail.vue";
-import { computed, ref } from "vue";
+import axios from '@/axios';
+import { useStore } from 'vuex';
+import UserChatDetail from './UserChatDetail.vue';
+import ChatDetail from '../../components/chat/ChatDetail.vue';
+import { computed, ref } from 'vue';
 /* eslint-disable */
 export default {
   components: {
@@ -70,27 +70,16 @@ export default {
     const user_pk_idx = computed(() => store.state.auth.user.pk_idx);
     const sessionId = computed(() => store.state.user_selected_room);
 
-    console.log("USER PK IDX:" + user_pk_idx.value);
-
     let changeCondition = () => {
       isHidden.value = !isHidden.value;
     };
     let changeisChatExist = () => {
       isChatExist.value = !isChatExist.value;
-      console.log("########");
-      console.log(isChatExist);
-      console.log(isChatExist.value);
-      console.log("########");
     };
-
+    // 유저의 채팅방 개설요청
     let createChatRoom = () => {
-      store.dispatch("createChatRooms", user_pk_idx.value);
-
+      store.dispatch('createChatRooms', user_pk_idx.value);
       isChatExist.value = true;
-      console.log("세션 아이디(방번호)호출하기");
-      console.log(sessionId.value);
-      console.log(store.state.user_selected_room);
-      console.log("^^^^^^^^^^^^^^^");
     };
     return {
       store,
@@ -110,7 +99,7 @@ export default {
   position: fixed;
   width: 100%;
   height: 100%;
-  background-image: url("../../assets/Microsoft.png");
+  background-image: url('../../assets/Microsoft.png');
   background-repeat: no-repeat;
   background-position: center;
 }

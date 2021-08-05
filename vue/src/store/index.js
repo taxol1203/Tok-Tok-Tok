@@ -16,8 +16,6 @@ export default createStore({
     rooms: [],
     selected_room: null, // 클릭한 채팅방의 세션id를 저장
     session_key: {},
-    user_selected_room: "",
-    user_message: {},
     //qnahistory를 아마 넣을 예정
   },
   mutations: {
@@ -30,16 +28,20 @@ export default createStore({
     PICK_ROOM(state, payload) {
       state.selected_room = payload;
     },
+    USER_MSG_PUSH(state, payload) {
+      state.session_key.messages.push(payload);
+    },
     MESSAGE_PUSH(state, payload) {
       state.session_key[`${state.selected_room}`].messages.push(payload);
     },
     SAVE_USER_CHAT_ROOM_ID(state, payload) {
-      state.user_selected_room = payload;
-      console.log("IN SAVE ^^ SELECTED_ROOM: " + state.user_selected_room);
+      state.selected_room = payload;
     },
     SESSION_INIT(state, payload) {
-      payload.message = [];
+      console.log(payload);
+      payload.messages = [];
       state.session_key = payload;
+      console.log(state.session_key);
     },
   },
   actions: {
@@ -62,6 +64,7 @@ export default createStore({
         });
         console.log(res.data);
         commit("ADD_ROOMS", res.data);
+        commit("SESSION_INIT", res.data);
         commit("SAVE_USER_CHAT_ROOM_ID", res.data.session_id);
         //
       } catch (error) {
@@ -83,7 +86,8 @@ export default createStore({
     },
     get_user_messages: (state) => {
       // return state.session_key[`${state.selected_room}`].messages;
-      return state.session_key[`${state.selected_room}`].messages;
+      console.log(state.session_key)
+      return state.session_key.messages;
     },
   },
 });
