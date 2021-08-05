@@ -2,49 +2,43 @@
   <div id="container" height="750px">
     <el-row class="list-menu">
       <el-col
-        @click="listMenuSelect('chatting')"
+        @click="listMenuSelect('LIVE')"
         class="list-menu-item"
-        :class="{ activeMenu: selectedChattingRooms }"
+        :class="{ activeMenu: status['LIVE'] }"
         :span="8"
         >진행중</el-col
       >
       <el-col
         @click="listMenuSelect('OPEN')"
         class="list-menu-item"
-        :class="{ activeMenu: selectedWatingRooms }"
+        :class="{ activeMenu: status['OPEN'] }"
         :span="8"
         >대기중</el-col
       >
       <el-col
         @click="listMenuSelect('END')"
         class="list-menu-item"
-        :class="{ activeMenu: selectedClosedRooms }"
+        :class="{ activeMenu: status['END'] }"
         :span="8"
         >종료</el-col
       >
     </el-row>
-    <div v-show="selectedChattingRooms">
+    <div>
       <el-scrollbar height="700px">
-        <div v-for="room in store.state.rooms" :key="room.session_id">
+        <div v-for="room in listStatus" :key="room.session_id">
+          {{ room.status }}
           <el-card @click="pickRoom(room.session_id)" class="list-item box-card">
             <ChatItem :room="room" />
           </el-card>
         </div>
       </el-scrollbar>
     </div>
-    <div v-show="selectedWatingRooms">
-      <el-scrollbar height="700px"> 대기중 채팅 </el-scrollbar>
-    </div>
-    <div v-show="selectedClosedRooms">
-      <el-scrollbar height="700px"> 종료된 채팅 </el-scrollbar>
-    </div>
   </div>
 </template>
 <script>
 import ChatItem from './ChatItem.vue';
 import { useStore } from 'vuex';
-import { ref } from 'vue';
-// import { computed } from 'vue'
+import { computed, reactive } from 'vue';
 
 export default {
   components: {
@@ -52,48 +46,39 @@ export default {
   },
   setup() {
     const store = useStore();
-    const selectedChattingRooms = ref(true);
-    const selectedWatingRooms = ref(false);
-    const selectedClosedRooms = ref(false);
-    // const activeRoom = reactive({});
+    const listStatus = computed(() => store.getters.get_room_list);
+    const status = reactive({
+      "LIVE": true,
+      "OPEN": false,
+      "END": false
+    });
+
     const listMenuSelect = (key) => {
-      if (key === 'chatting' && selectedChattingRooms.value == false) {
-        selectedChattingRooms.value = true;
-        selectedWatingRooms.value = false;
-        selectedClosedRooms.value = false;
-      } else if (key === 'waiting' && selectedWatingRooms.value == false) {
-        selectedChattingRooms.value = false;
-        selectedWatingRooms.value = true;
-        selectedClosedRooms.value = false;
-        store.state.selected_room = null;
-      } else if (key === 'closed' && selectedClosedRooms.value == false) {
-        selectedChattingRooms.value = false;
-        selectedWatingRooms.value = false;
-        selectedClosedRooms.value = true;
-        store.state.selected_room = null;
+      store.commit("STATUS_CHAGE", key);
+      for (let s in status) {
+        if (s == store.state.list_status) {
+          status[s] = true;
+        } else {
+          status[s] = false;
+        }
       }
-      console.log(key);
-      console.log(selectedClosedRooms.value);
+      // if (status[`${store.state.list_status}`])
     };
     store.dispatch('getChatRooms');
     const newChat = () => {
       store.dispatch('createChatRooms');
     };
     // 클릭한 채팅방의 세션id를 state에 저장
-    // 클릭 한번에 새 창이 열리는 것은 좀 더 알아봐야함.
     const pickRoom = (key) => {
       store.dispatch('pickRoom', key);
-      console.log(store.getters.get_messages);
     };
     return {
       newChat,
       store,
       pickRoom,
-      selectedWatingRooms,
-      selectedChattingRooms,
+      listStatus,
       listMenuSelect,
-      selectedClosedRooms,
-      // activeRoom,
+      status,
     };
   },
 };
