@@ -35,10 +35,10 @@
   </el-row>
 </template>
 <script>
-import { useStore } from "vuex";
-import ChatDetailDummy from "./ChatDetailDummy.vue";
-import ChatDetail from "../../../src/components/chat/ChatDetail.vue";
-import { ref } from "vue";
+import { useStore } from 'vuex';
+import ChatDetailDummy from './ChatDetailDummy.vue';
+import ChatDetail from '../../../src/components/chat/ChatDetail.vue';
+import { ref } from 'vue';
 /* eslint-disable */
 export default {
   components: {
@@ -54,8 +54,8 @@ export default {
       isHidden.value = !isHidden.value;
     };
     let createChatRoom = () => {
-      console.log("USER: CREATE CHAT ROOM");
-      console.log("현재 실제 생성되는 코드는 주석처리 해둠");
+      console.log('USER: CREATE CHAT ROOM');
+      console.log('현재 실제 생성되는 코드는 주석처리 해둠');
       // store.dispatch("createChatRooms");
     };
     return {
@@ -71,7 +71,7 @@ export default {
   position: fixed;
   width: 100%;
   height: 100%;
-  background-image: url("../../assets/Microsoft.png");
+  background-image: url('../../assets/Microsoft.png');
   background-repeat: no-repeat;
   background-position: center;
 }
