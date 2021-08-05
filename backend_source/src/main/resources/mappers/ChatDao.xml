@@ -22,7 +22,7 @@
 	<select id="findRoomBySessionId" resultType="ChatSession">
 		SELECT *
 		FROM "SSAFY_PJT1".chat_session
-		WHERE session_id = #{id} AND status = 'OPEN';
+		WHERE session_id = #{sessionId};
 	</select>
 
 	<!-- 세션 등록 -->

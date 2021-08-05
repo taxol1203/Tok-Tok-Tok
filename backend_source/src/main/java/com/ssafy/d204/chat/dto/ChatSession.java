@@ -7,7 +7,6 @@ import java.util.UUID;
 
 @Data
 public class ChatSession {
-    private String pk_idx;
     private String session_id;
     private String created_at; // long으로 바꿀 수 있는지 생각해보기
     private int fk_created_by_idx;
