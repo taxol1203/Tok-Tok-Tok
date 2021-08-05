@@ -1,8 +1,8 @@
 <template>
-  <div style="position: relative; width: 50%; height: 50%; padding: 10px">
+  <div style="position: relative; width: 30%; height: 40%; padding: 10px">
     <!-- 상대방 -->
     <el-scrollbar ref="scrollbar" id="topMessages">
-      <div v-for="(msg, index) in messages" :key="index">
+      <!-- <div v-for="(msg, index) in messages" :key="index">
         <el-row>
           <el-col v-if="msg.fk_author_idx == userName">
             <div class="message-me">
@@ -13,7 +13,8 @@
             <div class="message-other">{{ msg.message }}</div>
           </el-col>
         </el-row>
-      </div>
+      </div> -->
+      <p>@@@@@@@@@@@@@@@@@@@@@@@</p>
     </el-scrollbar>
     <div>
       <el-row id="bottomInput">
@@ -56,8 +57,8 @@ export default {
   components: {},
   setup() {
     const store = useStore();
-    const sessionId = computed(() => store.state.selected_room);
-    const messages = computed(() => store.getters.get_messages);
+    const sessionId = computed(() => store.state.user_selected_room); //user가 생성한 방 id
+    // const messages = computed(() => store.getters.get_user_messages);
     const userName = computed(() => store.state.auth.user.pk_idx);
     const message = ref("");
     let connected = false;
@@ -72,7 +73,7 @@ export default {
         {},
         (frame) => {
           connected = true;
-          console.log("CONNECT SUCCESS ++ status : established", frame);
+          console.log("CONNECT SUCCESS + status : established", frame);
           // 구독 == 채팅방 입장.
           stompClient.subscribe("/send/" + sessionId.value, (res) => {
             console.log("receive from server:", res.body);
@@ -136,7 +137,7 @@ export default {
     return {
       store,
       sessionId,
-      messages,
+      // messages,
       message,
       sendMessage,
       send,

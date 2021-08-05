@@ -20,7 +20,6 @@
                   <el-button @click="changeCondition" type="danger" icon="el-icon-close"
                     >닫기</el-button
                   >
-                  <!-- <p>한 줄</p> -->
                 </div>
                 <div style="padding: 14px">
                   <div class="full-box">
@@ -29,11 +28,17 @@
                       >채팅방개설요청/상담사상담신청 등</el-button
                     >
                     <p>채팅방개설버튼은 나중에 말풍선같은 걸로 qna 밑에 위치하도록</p>
-                    <!-- <ChatDetail /> -->
-                    <UserChatDetail />
-                    <div>
-                      Chat List
-                      <p>현재 chat socket 연결 문제로 주석처리해둠</p>
+                    <div v-if="isChatExist">
+                      <UserChatDetail />
+                    </div>
+                    <el-button type="primary" @click="changeisChatExist" circle></el-button>
+                    <div v-if="isChatExist">
+                      <p>isChatExist</p>
+                      <p>{{ isChatExist.value }}</p>
+                    </div>
+                    <div v-if="!isChatExist">
+                      <p>!isChatExist</p>
+                      <p>{{ !isChatExist.value }}</p>
                     </div>
                   </div>
                 </div>
@@ -46,6 +51,7 @@
   </el-row>
 </template>
 <script>
+import axios from "@/axios";
 import { useStore } from "vuex";
 import UserChatDetail from "./UserChatDetail.vue";
 import ChatDetail from "../../components/chat/ChatDetail.vue";
@@ -58,24 +64,41 @@ export default {
   },
 
   setup() {
+    let isChatExist = ref(false);
     let isHidden = ref(false);
     const store = useStore();
     const user_pk_idx = computed(() => store.state.auth.user.pk_idx);
+    const sessionId = computed(() => store.state.user_selected_room);
 
     console.log("USER PK IDX:" + user_pk_idx.value);
 
     let changeCondition = () => {
       isHidden.value = !isHidden.value;
     };
+    let changeisChatExist = () => {
+      isChatExist.value = !isChatExist.value;
+      console.log("########");
+      console.log(isChatExist);
+      console.log(isChatExist.value);
+      console.log("########");
+    };
+
     let createChatRoom = () => {
-      console.log("USER: CREATE CHAT ROOM");
-      console.log("현재 실제 생성되는 코드는 주석처리 해둠");
       store.dispatch("createChatRooms", user_pk_idx.value);
+
+      isChatExist.value = true;
+      console.log("세션 아이디(방번호)호출하기");
+      console.log(sessionId.value);
+      console.log(store.state.user_selected_room);
+      console.log("^^^^^^^^^^^^^^^");
     };
     return {
       store,
+      sessionId,
       user_pk_idx,
+      isChatExist,
       isHidden,
+      changeisChatExist,
       changeCondition,
       createChatRoom,
     };
