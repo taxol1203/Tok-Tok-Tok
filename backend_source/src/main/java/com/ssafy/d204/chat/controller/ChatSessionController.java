@@ -63,14 +63,19 @@ public class ChatSessionController {
     @ResponseBody
     public ResponseEntity<?> createRoom(@RequestBody ChatSessionCreateReq req) {
 //        System.out.println(session);
-        ChatSession ret = ChatSession.create();
+        ChatSession temp = ChatSession.create();
+        temp.setFk_client_idx(req.getFk_client_idx());
+        temp.setFk_created_by_idx(req.getFk_created_by_idx());
+        temp.setQna_history(req.getQna_history());
+        ChatSession ret = null;
         try{
-            ret.setFk_client_idx(req.getFk_client_idx());
+            temp.setFk_client_idx(temp.getFk_client_idx());
 //            ret.setCreated_at();
-            ret.setStatus("OPEN");
-            ret.setFk_created_by_idx(req.getFk_created_by_idx());
-            ret.setQna_history(req.getQna_history());
-            chatDao.createChatRoom(ret);
+            temp.setStatus("OPEN");
+            temp.setFk_created_by_idx(temp.getFk_created_by_idx());
+            temp.setQna_history(temp.getQna_history());
+            chatDao.createChatRoom(temp);
+            ret = chatDao.findRoomBySessionId(temp.getSession_id());
 //            chatDao.pushMessage(new ChatMessage(0,".",ret.getFk_client_idx(),null,false,ret.getSession_id(), ChatMessage.MessageType.JOIN));
         }catch(Exception e){
             e.printStackTrace();
