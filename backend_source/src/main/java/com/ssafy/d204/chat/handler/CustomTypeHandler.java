@@ -13,6 +13,7 @@ import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.MappedJdbcTypes;
 import org.apache.ibatis.type.MappedTypes;
 
+// mybatis - postSql에서 string 배열을 넣을 때 사용하는 핸들러 : 사용 안할 시 삭제
 @MappedTypes(java.util.ArrayList.class)
 @MappedJdbcTypes(JdbcType.ARRAY)
 public class CustomTypeHandler extends BaseTypeHandler<List<String>> {

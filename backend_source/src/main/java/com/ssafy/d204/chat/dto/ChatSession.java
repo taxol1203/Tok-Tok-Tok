@@ -14,7 +14,7 @@ public class ChatSession {
     private int fk_client_idx;
     private int fk_host_idx;
     private int fk_permission_idx;
-    private List<String> qna_history;
+    private String qna_history;
     String status;
     int unread;
 //    SessionState status;
