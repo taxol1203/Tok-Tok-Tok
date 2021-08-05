@@ -4,49 +4,54 @@
     :key="oa.pk_idx"
     style="padding-right: 10px; padding-top: 5px"
   >
-    <el-row align="middle">
-      <el-col :span="11">
-        <div style="border: 1px solid #eee; border-radius: 10px 10px 0px 10px; float: right">
-          <p v-if="!show" style="margin: 10px" @click="changeShow" v-bind="input.value"></p>
+    <div style="width: 70%; display: inline-block">
+      <div class="answerBox">
+        <div>
+          <!-- @keyup.enter="changeShow()"<p v-if="!show" style="margin: 10px" @click="changeShow" v-bind="input.value"></p> -->
           <el-input
-            class="new-answer-box"
+            class="ans"
+            type="textarea"
             placeholder="내용을 입력해주세요."
             v-if="show"
             v-model="oa.content"
-            @keyup.enter="changeShow()"
             clearable
+            autosize
           >
           </el-input>
           <!-- 예상답변 -->
         </div>
-      </el-col>
-      <el-col :span="11">
-        <!-- 다음 시나리오 select -->
-        <el-select
-          v-model="selectValue[index]"
-          placeholder="next scene"
-          @change="setNextIdx(index)"
-          style="border: 1px solid #dcdfe6; border-radius: 5px 5px 5px 5px"
-        >
-          <el-option
-            v-for="item in qnaList"
-            :key="item.pk_idx"
-            :label="item.title"
-            :value="item.pk_idx"
+      </div>
+    </div>
+    <div style="float: right">
+      <el-row>
+        <el-col :span="20">
+          <!-- 다음 시나리오 select style="border: 1px solid #dcdfe6; border-radius: 5px 5px 5px 5px"-->
+          <el-select
+            v-model="selectValue[index]"
+            placeholder="next scene"
+            @change="setNextIdx(index)"
           >
-          </el-option>
-        </el-select>
-      </el-col>
-      <el-col :span="2">
-        <el-button
-          type="danger"
-          icon="el-icon-delete"
-          circle
-          style="border: 0px solid; background-color: transparent; color: #000"
-          @click="removeAnswer(index)"
-        ></el-button>
-      </el-col>
-    </el-row>
+            <el-option
+              v-for="item in qnaList"
+              :key="item.pk_idx"
+              :label="item.title"
+              :value="item.pk_idx"
+            >
+            </el-option>
+          </el-select>
+        </el-col>
+        <el-col :span="2">
+          <el-button
+            type="danger"
+            icon="el-icon-delete"
+            circle
+            style="border: 0px solid; background-color: transparent; color: #000"
+            @click="removeAnswer(index)"
+          ></el-button>
+        </el-col>
+        <!-- {{ oa.fk_next_idx }} el-icon-delete-->
+      </el-row>
+    </div>
   </div>
   <el-button
     @click="add"
@@ -95,11 +100,17 @@ export default {
 };
 </script>
 <style scoped>
-.new-answer-box {
+.ans >>> .el-textarea__inner {
   border: 0;
-  width: 90%;
-}
-.el-input__inner {
+  resize: none;
   border: none;
+}
+
+.answerBox {
+  border: 1px solid #eee;
+  border-radius: 10px 10px 0px 10px;
+  text-align: right;
+  padding: 10px;
+  float: right;
 }
 </style>
