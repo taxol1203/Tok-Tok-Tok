@@ -46,10 +46,10 @@
   </el-row>
 </template>
 <script>
-import { useStore } from "vuex";
-import UserChatDetail from "./UserChatDetail.vue";
-import ChatDetail from "../../components/chat/ChatDetail.vue";
-import { computed, ref } from "vue";
+import { useStore } from 'vuex';
+import UserChatDetail from './UserChatDetail.vue';
+import ChatDetail from '../../components/chat/ChatDetail.vue';
+import { computed, ref } from 'vue';
 /* eslint-disable */
 export default {
   components: {
@@ -62,7 +62,7 @@ export default {
     const store = useStore();
     const user_pk_idx = computed(() => store.state.auth.user.pk_idx);
 
-    console.log("USER PK IDX:" + user_pk_idx.value);
+    console.log('USER PK IDX:' + user_pk_idx.value);
 
     let changeCondition = () => {
       isHidden.value = !isHidden.value;
