@@ -4,8 +4,8 @@
   "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
 
-  <typeHandlers>
-    <typeHandler handler="com.ssafy.d204.chat.handler.CustomTypeHandler" javaType="java.util.ArrayList"/>
-  </typeHandlers>
+<!--  <typeHandlers>-->
+<!--    <typeHandler handler="com.ssafy.d204.chat.handler.CustomTypeHandler" javaType="java.util.ArrayList"/>-->
+<!--  </typeHandlers>-->
 
 </configuration>
