@@ -2,9 +2,9 @@
   <div style="position: relative; width: 50%; height: 50%; padding: 10px">
     <!-- 상대방 -->
     <el-scrollbar ref="scrollbar" id="topMessages">
-      <div v-for="(msg, index) in messages.messageArrayKey.messages" :key="index">
+      <div v-for="(msg, index) in messages" :key="index">
         <el-row>
-          <el-col v-if="msg.fk_author_idx == '1'">
+          <el-col v-if="msg.fk_author_idx == userName">
             <div class="message-me">
               {{ msg.message }}
             </div>
@@ -49,33 +49,22 @@
 import Stomp from "webstomp-client";
 import SockJS from "sockjs-client";
 import { useStore } from "vuex";
-import { ref, reactive } from "vue";
+import { ref, computed } from "vue";
 
 export default {
   name: "Chat",
   components: {},
   setup() {
-    let sessionId = ref("");
-    let roomName = "";
-    let messages = reactive({ messageArrayKey: [] });
-    let message = ref("");
-    let session_pk = 0;
+    const store = useStore();
+    const sessionId = computed(() => store.state.selected_room);
+    const messages = computed(() => store.getters.get_messages);
+    const userName = computed(() => store.state.auth.user.pk_idx);
+    const message = ref("");
     let connected = false;
     let stompClient = "";
-    let userName = "1"; // user id나 email받으면 그거 넣기@@@@@
-    const store = useStore();
-    // scrollbar.value.setScrollTop(700);
-
-    // store에 저장된 selected_room
-    sessionId.value = store.state.selected_room;
-
-    messages.messageArrayKey = store.state.session_key[`${sessionId.value}`];
-    console.log("CHAT DETAIL 0번메시지: " + `${messages.messageArrayKey.messages[0].message}`);
 
     const connect = () => {
-      // const serverURL = "/api/chat"; // 서버 채팅 주소
       const serverURL = "https://i5d204.p.ssafy.io/api/chat"; // 서버 채팅 주소
-      // const serverURL = "https://59.151.220.195:8089/api/chat"; // (임시) 서버 채팅 주소
       let socket = new SockJS(serverURL);
       stompClient = Stomp.over(socket);
       console.log(`connecting to socket=> ${serverURL}`);
@@ -83,12 +72,11 @@ export default {
         {},
         (frame) => {
           connected = true;
-          console.log("I WANT TO CONNECT SERVER");
-          console.log("status : established", frame);
+          console.log("CONNECT SUCCESS ++ status : established", frame);
           // 구독 == 채팅방 입장.
           stompClient.subscribe("/send/" + sessionId.value, (res) => {
             console.log("receive from server:", res.body);
-            messages.messageArrayKey.push(JSON.parse(res.body)); // 수신받은 메세지 표시하기
+            store.commit("MESSAGE_PUSH", JSON.parse(res.body)); // 수신받은 메세지 표시하기
             switch (res.body.type) {
               case "MSG":
                 break;
@@ -114,11 +102,10 @@ export default {
         }
       );
     };
-    // connect(`${sessionId.value}`);
     connect(sessionId.value);
 
     const sendMessage = () => {
-      if (userName !== "" && message.value !== "") {
+      if (userName.value !== "" && message.value !== "") {
         // 이벤트 발생 엔터키 + 유효성 검사는 여기에서
         send({ message: message }); // 전송 실패 감지는 어떻게? 프론트단에서 고민좀 부탁 dream
       }
@@ -127,11 +114,15 @@ export default {
 
     const send = () => {
       console.log("Send message:" + message.value);
-      if (stompClient && stompClient.connected) {
+      if (userName.value <= 0) {
+        console.log("0이하면 안됨) fk_author_idx: " + userName.value);
+      }
+      //DB에 없는 유저 idx(0같은 것)가 들어가면 안된다.
+      if (stompClient && stompClient.connected && userName.value > 0) {
         console.log("IN SOCKET");
         const msg = {
           message: message.value, // 메세지 내용. type이 MSG인 경우를 제외하곤 비워두고 프론트단에서만 처리.
-          fk_author_idx: 1, // 작성자의 회원 idx
+          fk_author_idx: userName.value, // 작성자의 회원 idx
           created: "", // 작성시간, 공란으로 비워서 메세지 보내기. response에는 담겨옵니다.
           deleted: false, // 삭제된 메세지 여부. default = false
           fk_session_id: sessionId.value, // 현재 채팅세션의 id.
@@ -143,12 +134,10 @@ export default {
     };
 
     return {
+      store,
       sessionId,
-      roomName,
       messages,
       message,
-      session_pk,
-      store,
       sendMessage,
       send,
       connect,

@@ -30,7 +30,7 @@
                     >
                     <p>채팅방개설버튼은 나중에 말풍선같은 걸로 qna 밑에 위치하도록</p>
                     <!-- <ChatDetail /> -->
-                    <!-- <UserChatDetail /> -->
+                    <UserChatDetail />
                     <div>
                       Chat List
                       <p>현재 chat socket 연결 문제로 주석처리해둠</p>

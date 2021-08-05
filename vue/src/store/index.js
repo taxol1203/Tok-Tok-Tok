@@ -21,14 +21,12 @@ export default createStore({
   mutations: {
     GET_ROOMS(state, payload) {
       state.rooms = payload;
-      // console.log(payload)
     },
     ADD_ROOMS(state, payload) {
       state.rooms.push(payload);
     },
     PICK_ROOM(state, payload) {
       state.selected_room = payload;
-      // console.log(payload);
     },
     MESSAGE_PUSH(state, payload) {
       state.session_key[`${state.selected_room}`].messages.push(payload);
@@ -46,13 +44,7 @@ export default createStore({
     },
     async createChatRooms({ commit, state }) {
       try {
-        // const res = await axios.post("https://i5d204.p.ssafy.io/api/api/chat/room", {
-        //   unread: 0,
-        //   fk_created_by_idx: 1, // 상담 신청하는 고객의 userid state.user_info
-        //   fk_client_idx: 1, // 위 필드와 동일값 넣어주면 됨.
-        // });
         const res = await axios.post("api/api/chat/room", {
-          // const res = await axios.post("http://localhost:8088/temp/api/chat/room", {
           unread: 0,
           fk_created_by_idx: state.auth.user.pk_idx, // 상담 신청하는 고객의 userid
           fk_client_idx: state.auth.user.pk_idx, // 위 필드와 동일값 넣어주면 됨.
@@ -62,8 +54,6 @@ export default createStore({
       } catch (error) {
         console.log(error);
         alert("채팅방 개설 실패");
-        // console.log("STATE: " + state);
-        // console.log("방 생성 state.user_info :" + pk_idx);
       }
     },
     pickRoom({ commit }, key) {
