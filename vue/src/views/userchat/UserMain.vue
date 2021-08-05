@@ -30,6 +30,7 @@
                     >
                     <p>채팅방개설버튼은 나중에 말풍선같은 걸로 qna 밑에 위치하도록</p>
                     <!-- <ChatDetail /> -->
+                    <UserQna />
                     <UserChatDetail />
                     <div>
                       Chat List
@@ -47,14 +48,14 @@
 </template>
 <script>
 import { useStore } from 'vuex';
-import UserChatDetail from './UserChatDetail.vue';
+import UserQna from './UserQna.vue';
 import ChatDetail from '../../components/chat/ChatDetail.vue';
 import { computed, ref } from 'vue';
 /* eslint-disable */
 export default {
   components: {
+    UserQna,
     ChatDetail,
-    UserChatDetail,
   },
 
   setup() {

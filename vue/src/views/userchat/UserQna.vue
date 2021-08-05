@@ -3,6 +3,9 @@
     <!-- 상대방 -->
     <el-scrollbar ref="scrollbar" id="topMessages">
       <div class="message-me">
+        {{ current }}
+      </div>
+      <div class="message-me">
         {{ cur }}
       </div>
       <!-- <div class="message-other" v-for="(ans, index) in current.answers" :key="index">
