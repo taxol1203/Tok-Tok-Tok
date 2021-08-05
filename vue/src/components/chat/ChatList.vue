@@ -27,7 +27,7 @@
       <el-scrollbar height="700px">
         <div v-for="room in listStatus" :key="room.session_id">
           {{ room.status }}
-          <el-card @click="pickRoom(room.session_id)" class="list-item box-card">
+          <el-card @click="pickRoom(room.session_id)" class="list-item box-card" :class="{selected: room.session_id == selectedSession}">
             <ChatItem :room="room" />
           </el-card>
         </div>
@@ -38,7 +38,7 @@
 <script>
 import ChatItem from './ChatItem.vue';
 import { useStore } from 'vuex';
-import { computed, reactive } from 'vue';
+import { computed, reactive, ref } from 'vue';
 
 export default {
   components: {
@@ -52,6 +52,7 @@ export default {
       "OPEN": false,
       "END": false
     });
+    const selectedSession = ref("");
 
     const listMenuSelect = (key) => {
       store.commit("STATUS_CHAGE", key);
@@ -71,6 +72,8 @@ export default {
     // 클릭한 채팅방의 세션id를 state에 저장
     const pickRoom = (key) => {
       store.dispatch('pickRoom', key);
+      selectedSession.value = key;
+
     };
     return {
       newChat,
@@ -79,6 +82,7 @@ export default {
       listStatus,
       listMenuSelect,
       status,
+      selectedSession,
     };
   },
 };
@@ -90,6 +94,9 @@ export default {
   border: 1px solid #eee;
 }
 .list-item:hover {
+  filter: brightness(105%);
+}
+.selected {
   filter: brightness(105%);
 }
 #container {
