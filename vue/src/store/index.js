@@ -9,6 +9,9 @@ export default createStore({
     rooms: [],
     selected_room: null, // 더블클릭한 채팅방의 세션id를 저장
     session_key: {},
+    //qnahistory를 아마 넣을 예정
+    //user-info는: create room을 할 때
+    //   fk_created_by_idx를 가지고(앞으로 만들어질) API를 활용해서 user- info를 store 저장해둔다.
   },
   mutations: {
     GET_ROOMS(state, payload) {
@@ -26,7 +29,7 @@ export default createStore({
   actions: {
     async getChatRooms({ commit, state }) {
       try {
-        const res = await axios.get(`https://i5d204.p.ssafy.io/api/chat/rooms/user/${state.user_idx}`)
+        const res = await axios.get(`https://i5d204.p.ssafy.io/api/api/chat/rooms/user/${state.user_idx}`)
         console.log(res.data)
         commit('GET_ROOMS', res.data)
 
@@ -39,7 +42,7 @@ export default createStore({
     },
     async createChatRooms({ commit }) {
       try {
-        const res = await axios.post('https://i5d204.p.ssafy.io/api/chat/room', {
+        const res = await axios.post('https://i5d204.p.ssafy.io/api/api/chat/room', {
         // const res = await axios.post("http://localhost:8088/temp/api/chat/room", {
           unread: 0,
           fk_created_by_idx: 1, // 상담 신청하는 고객의 userid

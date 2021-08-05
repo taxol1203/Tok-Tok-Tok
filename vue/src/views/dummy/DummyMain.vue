@@ -14,9 +14,17 @@
             ></el-button>
           </transition>
           <transition class="same-pos" name="fade" mode="out-in">
-            <div id="chat-box" @click="changeCondition" v-if="isHidden">
+            <div id="chat-box" v-if="isHidden">
               <div class="full-box">
                 <ChatDetail />
+                <!-- <ChatDetailDummy /> -->
+                <p>현재 chat socket 연결 문제로 주석처리해둠</p>
+                <el-button @click="createChatRoom" class="green-color-btn"
+                  >채팅방개설요청</el-button
+                >
+                <el-button @click="changeCondition" type="danger" icon="el-icon-close"
+                  >닫기</el-button
+                >
               </div>
             </div>
           </transition>
@@ -26,13 +34,14 @@
   </el-row>
 </template>
 <script>
+import ChatDetailDummy from "./ChatDetailDummy.vue";
 import ChatDetail from "../../../src/components/chat/ChatDetail.vue";
 import { ref } from "vue";
-// minsu commit test
 /* eslint-disable */
 export default {
   components: {
     ChatDetail,
+    ChatDetailDummy,
   },
 
   setup() {
@@ -40,11 +49,16 @@ export default {
 
     let changeCondition = () => {
       isHidden.value = !isHidden.value;
-      console.log(isHidden.value);
+    };
+    let createChatRoom = () => {
+      console.log("USER: CREATE CHAT ROOM");
+      console.log("현재 실제 생성되는 코드는 주석처리 해둠");
+      // store.dispatch("createChatRooms");
     };
     return {
       isHidden,
       changeCondition,
+      createChatRoom,
     };
   },
 };
@@ -68,15 +82,19 @@ export default {
 }
 
 #chat-box {
-  width: 20%;
-  height: 50%;
+  width: 650px;
+  height: 750px;
+  padding: 10px;
   background-color: gray;
   /* 상속 받을 수 있나? */
 }
 
 .big-btn {
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
+  /* icon 사이즈 키우는 법 */
+  font-size: 2rem;
+  background-color: #006f3e;
 }
 
 /* 생성 부분 */
@@ -97,7 +115,7 @@ export default {
   opacity: 0;
 }
 .fade-leave-active {
-  transition: all 0.7s ease-out;
+  transition: all 0.5s ease-out;
 }
 
 /* 위치 고정을 시키지 않으면 렌더링하면서 (생명&소멸) 서로 다른 공간에 보여짐 */

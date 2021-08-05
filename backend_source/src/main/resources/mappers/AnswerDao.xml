@@ -4,27 +4,27 @@
 <mapper namespace="com.ssafy.d204.db.repository.AnswerDao"> 
 	<!-- 답변 전체 조회 -->
 	<select id="retrieveAnswer" resultType="Answer">
-		SELECT pk_idx, "content", fk_next_idx
+		SELECT pk_idx, "content", fk_next_idx, fk_previous_idx
 		FROM "SSAFY_PJT1".answer;
 	</select>
 	
 	<!-- 답변 상세 조회 -->
 	<select id="detailAnswer" resultType="Answer">
-		SELECT pk_idx, "content", fk_next_idx
+		SELECT pk_idx, "content", fk_next_idx, fk_previous_idx
 		FROM "SSAFY_PJT1".answer
 		where pk_idx = #{pk_idx};
 	</select>
 
 	<!-- 답변 등록 -->
 	<insert id="writeAnswer" parameterType="Answer">
-		INSERT INTO "SSAFY_PJT1".answer ("content") 
-		values ( #{content} );
+		INSERT INTO "SSAFY_PJT1".answer ("content", "fk_next_idx", "fk_previous_idx") 
+		values ( #{content}, #{fk_next_idx}, #{fk_previous_idx} );
 	</insert>
 	
 	<!-- 답변 수정 -->
 	<update id="updateAnswer" parameterType="Answer">
 		update "SSAFY_PJT1".answer 
-		set content = #{content}
+		set content = #{content}, fk_next_idx = #{fk_next_idx}
 		where pk_idx = #{pk_idx};
 	</update>
 
@@ -40,4 +40,19 @@
 		set fk_next_idx = #{fk_next_idx}
 		where pk_idx = #{pk_idx};
 	</update>
+	
+	<!-- 다음 질문 조회 -->
+	<select id="getNextQuestion" resultType="Integer">
+		SELECT fk_next_idx
+		FROM "SSAFY_PJT1".answer
+		where pk_idx = #{pk_idx};
+	</select>
+	
+	<!-- 현재 질문 pk_idx에 다음 답변 전체 조회 -->
+	<select id="getNextAnswers" resultType="Answer">
+		SELECT *
+		FROM "SSAFY_PJT1".answer
+		where fk_previous_idx = #{pk_idx};
+	</select>
+	
 </mapper>

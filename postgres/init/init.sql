@@ -2,6 +2,8 @@
 -- Please log an issue at https://redmine.postgresql.org/projects/pgadmin4/issues/new if you find any bugs, including reproduction steps.
 BEGIN;
 
+DROP SCHEMA IF EXISTS "SSAFY_PJT1"  CASCADE ;
+
 CREATE SCHEMA IF NOT EXISTS "SSAFY_PJT1";
 
 CREATE TABLE "SSAFY_PJT1".account
@@ -52,6 +54,7 @@ CREATE TABLE "SSAFY_PJT1".chat_session
     fk_permission_idx integer,
     status character varying(4),
     unread integer,
+    qna_history varying(1000) NULL,
     PRIMARY KEY (session_id)
 );
 
@@ -170,9 +173,12 @@ ALTER TABLE "SSAFY_PJT1".answer ADD CONSTRAINT answer_fk_next_idx_fkey FOREIGN K
 ALTER TABLE "SSAFY_PJT1".answer ADD CONSTRAINT answer_fk_previous_idx_fkey FOREIGN KEY (fk_previous_idx) REFERENCES "SSAFY_PJT1".question(pk_idx) ON DELETE SET NULL;
 
 insert into "SSAFY_PJT1".question (content)
-values ('상담사 연결');
+values ('상담 시작');
 
 insert into "SSAFY_PJT1".question (content)
 values ('상담 종료');
 
+INSERT INTO "SSAFY_PJT1".account (email, passwd, username)
+values ('daebalprime@gmail.com', '1a2a3a4a5a!!', 'daebalprime'),
+('user11@naver.com', 'asdf555!@#', 'frontadmin');
 END;

@@ -20,10 +20,15 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@CrossOrigin("http://localhost:8080")
+@CrossOrigin({
+        "https://localhost:8080",
+        "https://i5d204.p.ssafy.io",
+        "https://59.151.220.195:5501",
+        "http://localhost:8080",
+})
 @RequestMapping("/chat")
 public class ChatMessageController {
-//    @Autowired
+    @Autowired
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final ChatDao chatDao;
 
@@ -47,6 +52,4 @@ public class ChatMessageController {
         return chatMessage;
 //        return null;
     }
-
-
 }

@@ -3,11 +3,7 @@ package com.ssafy.d204.api.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.ssafy.d204.api.request.DuplicateCheckEmailPostReq;
 import com.ssafy.d204.api.request.UserLoginPostReq;
@@ -21,7 +17,7 @@ import com.ssafy.d204.general.UserFieldValidator;
 import io.swagger.annotations.ApiOperation;
 @RestController
 @CrossOrigin("*")
-@RequestMapping("/api/auth")
+@RequestMapping("/auth")
 public class AuthController extends SuperController{
 	UserService uSvc;
 	JwtService jwtSvc;
@@ -31,6 +27,20 @@ public class AuthController extends SuperController{
 		this.uSvc = uSvc;
 		this.jwtSvc = jwtSvc;
 		this.passwordEncoder = passwordEncoder;
+	}
+
+	@GetMapping(value="/user/{pk_idx}")
+	@ApiOperation(value="pk_idx로 유저 정보 가져오기")
+	public ResponseEntity<?> getUserByIdx(@PathVariable int pk_idx) throws Exception{
+		try {
+			User user = uSvc.getUserByIdx(pk_idx);
+			if(user == null) {
+				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+			}
+			return new ResponseEntity<User>(user, HttpStatus.OK);
+		}catch(Exception e) {
+			return exceptionHandling(e);
+		}
 	}
 	
 	
@@ -45,8 +55,9 @@ public class AuthController extends SuperController{
 			if(passwordEncoder.matches(loginInfo.getPasswd(),user.getPasswd())) {				
 				UserLoginPostRes ret = new UserLoginPostRes();
 				String token=jwtSvc.create(user);
-				
 				ret.setToken(token); // 추후 jwt 적용 예정
+				user.setPasswd("");
+				ret.setUser(user);
 				return new ResponseEntity<UserLoginPostRes>(ret, HttpStatus.OK);
 			}
 			else {

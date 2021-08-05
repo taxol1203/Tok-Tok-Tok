@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import com.ssafy.d204.api.controller.QnAController;
 import com.ssafy.d204.db.entity.Answer;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 public class AnswerTest {
 	@Autowired
@@ -117,5 +117,6 @@ public class AnswerTest {
 		// 제대로 변경 되었는지 확인
 		updateQ = qnaController.detailAnswer(curIdx).getBody();
 		Assertions.assertEquals(1, updateQ.getFk_next_idx());
+		Assertions.assertEquals(1, qnaController.getNextQuestion(curIdx).getBody());
 	}
 }

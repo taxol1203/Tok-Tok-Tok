@@ -2,6 +2,7 @@ package com.ssafy.d204.chat.dto;
 
 import lombok.Data;
 
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -13,13 +14,15 @@ public class ChatSession {
     private int fk_client_idx;
     private int fk_host_idx;
     private int fk_permission_idx;
-    SessionState status;
+    private List<String> qna_history;
+    String status;
     int unread;
-    public enum SessionState{
-        OPEN, // 막 상담이 열린 상태
-        END,  // 상담 종료
-        LIVE // 상담이 진행중임. 전담 상담사 배정된 상태
-    }
+//    SessionState status;
+//    public enum SessionState{
+//        OPEN, // 막 상담이 열린 상태
+//        END,  // 상담 종료
+//        LIVE // 상담이 진행중임. 전담 상담사 배정된 상태
+//    }
     public static ChatSession create() {
         ChatSession chatSession = new ChatSession();
         chatSession.session_id = UUID.randomUUID().toString();

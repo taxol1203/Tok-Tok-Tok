@@ -4,5 +4,5 @@ import lombok.Data;
 
 @Data
 public class ModifyRoomStatusReq {
-    ChatSession.SessionState status;
+    String status;
 }
