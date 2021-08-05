@@ -2,7 +2,7 @@
   <div style="position: relative; width: 650px; height: 750px; padding: 10px">
     <!-- 상대방 -->
     <el-scrollbar ref="scrollbar" id="topMessages">
-      <div v-for="(msg, index) in messages.messageArrayKey.messages" :key="index">
+      <div v-for="(msg, index) in messages" :key="index">
         <el-row>
           <el-col v-if="msg.fk_author_idx == userName">
             <div class="message-me">
@@ -19,7 +19,10 @@
       <el-row id="bottomInput">
         <!-- 입력창 -->
         <el-col :span="2">
-          <el-button icon="el-icon-video-camera" class="icon-m-p green-color-btn"></el-button>
+          <el-button
+            icon="el-icon-video-camera"
+            class="icon-m-p green-color-btn"
+          ></el-button>
         </el-col>
         <el-col :span="20">
           <div>
@@ -46,35 +49,25 @@
 </template>
 <script>
 // import axios from "axios";
-import Stomp from 'webstomp-client';
-import SockJS from 'sockjs-client';
-import { useStore } from 'vuex';
-import { ref, reactive, computed } from 'vue';
+import Stomp from "webstomp-client";
+import SockJS from "sockjs-client";
+import { useStore } from "vuex";
+import { ref, computed } from "vue";
 
 export default {
   name: 'Chat',
   components: {},
   setup() {
-    let sessionId = ref('');
-    let roomName = '';
-    let messages = reactive({ messageArrayKey: [] });
-    let message = ref('');
-    let session_pk = 0;
-    let connected = false;
-    let stompClient = '';
     const store = useStore();
-    const userName = computed(() => store.state.auth.user.pk_idx);
-    const scrollbar = ref('');
-    scrollbar.setScrollTop = 650;
-    // store에 저장된 selected_room
-    sessionId.value = store.state.selected_room;
-
-    messages.messageArrayKey = store.state.session_key[`${sessionId.value}`];
-    // console.log("CHAT DETAIL 0번메시지: " + `${messages.messageArrayKey.messages[0].message}`);
+    const sessionId = computed(() => store.state.selected_room);
+    const messages = computed(() => store.getters.get_messages);
+    const message = ref("");
+    let connected = false;
+    let stompClient = "";
+    let userName = ref(store.state.user_info.pk_idx); // pk_idx를 저장하는 곳
 
     const connect = () => {
-      // const serverURL = "/api/chat"; // 서버 채팅 주소
-      const serverURL = 'https://i5d204.p.ssafy.io/api/chat'; // 서버 채팅 주소
+      const serverURL = "https://i5d204.p.ssafy.io/api/chat"; // 서버 채팅 주소
       let socket = new SockJS(serverURL);
       stompClient = Stomp.over(socket);
       console.log(`connecting to socket=> ${serverURL}`);
@@ -84,9 +77,9 @@ export default {
           connected = true;
           console.log('CONNECT SUCCESS ++ status : established', frame);
           // 구독 == 채팅방 입장.
-          stompClient.subscribe('/send/' + sessionId.value, (res) => {
-            console.log('receive from server:', res.body);
-            messages.messageArrayKey.messages.push(JSON.parse(res.body)); // 수신받은 메세지 표시하기
+          stompClient.subscribe("/send/" + sessionId.value, (res) => {
+            console.log("receive from server:", res.body);
+            store.commit("MESSAGE_PUSH", JSON.parse(res.body)); // 수신받은 메세지 표시하기
             switch (res.body.type) {
               case 'MSG':
                 break;
@@ -115,7 +108,7 @@ export default {
     connect(sessionId.value);
 
     const sendMessage = () => {
-      if (userName.value !== '' && message.value !== '') {
+      if (userName.value !== "" && message.value !== "") {
         // 이벤트 발생 엔터키 + 유효성 검사는 여기에서
         send({ message: message }); // 전송 실패 감지는 어떻게? 프론트단에서 고민좀 부탁 dream
       }
@@ -140,14 +133,10 @@ export default {
     };
 
     return {
-      scrollbar,
       store,
       sessionId,
-      roomName,
       messages,
       message,
-      session_pk,
-      store,
       sendMessage,
       send,
       connect,
