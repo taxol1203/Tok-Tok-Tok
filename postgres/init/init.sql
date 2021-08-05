@@ -54,7 +54,7 @@ CREATE TABLE "SSAFY_PJT1".chat_session
     fk_permission_idx integer,
     status character varying(4),
     unread integer,
-    qna_history varying(1000) NULL,
+    qna_history character varying(1000) NULL,
     PRIMARY KEY (session_id)
 );
 
