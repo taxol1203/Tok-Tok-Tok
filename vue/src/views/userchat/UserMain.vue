@@ -1,6 +1,6 @@
 <template>
   <el-row :gutter="20">
-    <div id="DummyMain">
+    <div id="UserMain">
       <div class="fab-container">
         <div>
           <transition class="same-pos" name="fade" mode="out-in">
@@ -30,7 +30,7 @@
                     >
                     <p>채팅방개설버튼은 나중에 말풍선같은 걸로 qna 밑에 위치하도록</p>
                     <!-- <ChatDetail /> -->
-                    <!-- <ChatDetailDummy /> -->
+                    <!-- <UserChatDetail /> -->
                     <div>
                       Chat List
                       <p>현재 chat socket 연결 문제로 주석처리해둠</p>
@@ -47,19 +47,22 @@
 </template>
 <script>
 import { useStore } from "vuex";
-import ChatDetailDummy from "./ChatDetailDummy.vue";
-import ChatDetail from "../../../src/components/chat/ChatDetail.vue";
-import { ref } from "vue";
+import UserChatDetail from "./UserChatDetail.vue";
+import ChatDetail from "../../components/chat/ChatDetail.vue";
+import { computed, ref } from "vue";
 /* eslint-disable */
 export default {
   components: {
     ChatDetail,
-    ChatDetailDummy,
+    UserChatDetail,
   },
 
   setup() {
     let isHidden = ref(false);
     const store = useStore();
+    const user_pk_idx = computed(() => store.state.auth.user.pk_idx);
+
+    console.log("USER PK IDX:" + user_pk_idx.value);
 
     let changeCondition = () => {
       isHidden.value = !isHidden.value;
@@ -67,9 +70,11 @@ export default {
     let createChatRoom = () => {
       console.log("USER: CREATE CHAT ROOM");
       console.log("현재 실제 생성되는 코드는 주석처리 해둠");
-      store.dispatch("createChatRooms");
+      store.dispatch("createChatRooms", user_pk_idx.value);
     };
     return {
+      store,
+      user_pk_idx,
       isHidden,
       changeCondition,
       createChatRoom,
@@ -78,7 +83,7 @@ export default {
 };
 </script>
 <style scoped>
-#DummyMain {
+#UserMain {
   position: fixed;
   width: 100%;
   height: 100%;

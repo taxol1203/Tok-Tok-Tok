@@ -3,7 +3,7 @@ import Login from "../views/user/Login.vue";
 import Signup from "../views/user/Signup.vue";
 import ChatArea from "../views/chat/ChatArea.vue";
 import QnaArea from "../views/qna/QnaArea.vue";
-import Dummy from "../views/dummy/DummyMain.vue";
+import UserChat from "../views/userchat/UserMain.vue";
 
 const routes = [
   {
@@ -57,9 +57,9 @@ const routes = [
     ],
   },
   {
-    path: "/dummy",
-    name: "Dummy",
-    component: Dummy,
+    path: "/userchat",
+    name: "UserChat",
+    component: UserChat,
     meta: {
       authRequired: false,
     },
@@ -71,6 +71,7 @@ const router = createRouter({
   routes,
 });
 
+// 로그인 권한 부분. 잠시 꺼둠
 // router.beforeEach(async (to, from, next) => {
 //   if (
 //     to.matched.some((routeInfo) => {
