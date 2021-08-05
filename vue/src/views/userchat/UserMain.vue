@@ -68,9 +68,9 @@ export default {
       isHidden.value = !isHidden.value;
     };
     let createChatRoom = () => {
-      console.log("USER: CREATE CHAT ROOM");
-      console.log("현재 실제 생성되는 코드는 주석처리 해둠");
-      store.dispatch("createChatRooms", user_pk_idx.value);
+      console.log('USER: CREATE CHAT ROOM');
+      console.log('현재 실제 생성되는 코드는 주석처리 해둠');
+      // store.dispatch("createChatRooms");
     };
     return {
       store,
@@ -87,7 +87,7 @@ export default {
   position: fixed;
   width: 100%;
   height: 100%;
-  background-image: url("../../assets/Microsoft.png");
+  background-image: url('../../assets/Microsoft.png');
   background-repeat: no-repeat;
   background-position: center;
 }
