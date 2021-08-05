@@ -1,8 +1,8 @@
-import { createStore } from "vuex"
-import axios from "@/axios"
+import { createStore } from "vuex";
+import axios from "@/axios";
 import createPersistedState from 'vuex-persistedstate';
-import { moduleQna } from "@/store/modules/moduleQna"
-import { auth } from "@/store/modules/auth"
+import { moduleQna } from "@/store/modules/moduleQna";
+import { auth } from "@/store/modules/auth";
 
 export default createStore({
   plugins: [
@@ -37,17 +37,19 @@ export default createStore({
     save_userinfo(state, payload) {
       state.user_info = payload;
     },
+    MESSAGE_PUSH(state, payload) {
+      state.session_key[`${state.selected_room}`].messages.push(payload);
+      console.log('########');
+      console.log(payload);
+      console.log(state.session_key[`${state.selected_room}`].messages);
+    }
   },
   actions: {
     async getChatRooms({ commit, state }) {
       try {
-        const res = await axios.get(`api/api/chat/rooms/user/${state.user_idx}`)
-        console.log(res.data)
-        commit('GET_ROOMS', res.data)
-
-        // const res = await axios.get(
-        //   `http://localhost:8088/temp/api/chat/rooms/user/${state.user_idx}`
-        // );
+        const res = await axios.get(`api/api/chat/rooms/user/${state.user_idx}`);
+        console.log(res.data);
+        commit('GET_ROOMS', res.data);
       } catch (error) {
         console.log(error);
       }
@@ -60,13 +62,13 @@ export default createStore({
         //   fk_client_idx: 1, // 위 필드와 동일값 넣어주면 됨.
         // });
         const res = await axios.post('api/api/chat/room', {
-        // const res = await axios.post("http://localhost:8088/temp/api/chat/room", {
+          // const res = await axios.post("http://localhost:8088/temp/api/chat/room", {
           unread: 0,
           fk_created_by_idx: 1, // 상담 신청하는 고객의 userid
           fk_client_idx: 1, // 위 필드와 동일값 넣어주면 됨.
-        })
-        console.log(res.data)
-        commit("ADD_ROOMS", res.data)
+        });
+        console.log(res.data);
+        commit("ADD_ROOMS", res.data);
       } catch (error) {
         console.log(error);
         alert("채팅방 개설 실패");
@@ -76,6 +78,10 @@ export default createStore({
       commit("PICK_ROOM", key);
     },
   },
-  getters: {},
+  getters: {
+    get_messages: (state) => {
+      return state.session_key[`${state.selected_room}`].messages;
+    }
+  },
 });
 //test

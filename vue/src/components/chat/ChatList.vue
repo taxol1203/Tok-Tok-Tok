@@ -68,13 +68,8 @@ export default {
     // 클릭한 채팅방의 세션id를 state에 저장
     // 클릭 한번에 새 창이 열리는 것은 좀 더 알아봐야함.
     const pickRoom = (key) => {
-      if (store.state.selected_room) {
-        store.dispatch('pickRoom', null);
-      } else {
-        store.dispatch('pickRoom', key);
-        // activeRoom[`${store.state.selected_room}`] = true;
-        // console.log(activeRoom);
-      }
+      store.dispatch('pickRoom', key);
+      console.log(store.getters.get_messages);
     };
     return {
       newChat,
