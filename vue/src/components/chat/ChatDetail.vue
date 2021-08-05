@@ -19,10 +19,7 @@
       <el-row id="bottomInput">
         <!-- 입력창 -->
         <el-col :span="2">
-          <el-button
-            icon="el-icon-video-camera"
-            class="icon-m-p green-color-btn"
-          ></el-button>
+          <el-button icon="el-icon-video-camera" class="icon-m-p green-color-btn"></el-button>
         </el-col>
         <el-col :span="20">
           <div>
@@ -49,10 +46,10 @@
 </template>
 <script>
 // import axios from "axios";
-import Stomp from "webstomp-client";
-import SockJS from "sockjs-client";
-import { useStore } from "vuex";
-import { ref, computed } from "vue";
+import Stomp from 'webstomp-client';
+import SockJS from 'sockjs-client';
+import { useStore } from 'vuex';
+import { ref, computed } from 'vue';
 
 export default {
   name: 'Chat',
@@ -61,13 +58,13 @@ export default {
     const store = useStore();
     const sessionId = computed(() => store.state.selected_room);
     const messages = computed(() => store.getters.get_messages);
-    const message = ref("");
+    const userName = computed(() => store.state.auth.user.pk_idx);
+    const message = ref('');
     let connected = false;
-    let stompClient = "";
-    let userName = ref(store.state.user_info.pk_idx); // pk_idx를 저장하는 곳
+    let stompClient = '';
 
     const connect = () => {
-      const serverURL = "https://i5d204.p.ssafy.io/api/chat"; // 서버 채팅 주소
+      const serverURL = 'https://i5d204.p.ssafy.io/api/chat'; // 서버 채팅 주소
       let socket = new SockJS(serverURL);
       stompClient = Stomp.over(socket);
       console.log(`connecting to socket=> ${serverURL}`);
@@ -77,9 +74,9 @@ export default {
           connected = true;
           console.log('CONNECT SUCCESS ++ status : established', frame);
           // 구독 == 채팅방 입장.
-          stompClient.subscribe("/send/" + sessionId.value, (res) => {
-            console.log("receive from server:", res.body);
-            store.commit("MESSAGE_PUSH", JSON.parse(res.body)); // 수신받은 메세지 표시하기
+          stompClient.subscribe('/send/' + sessionId.value, (res) => {
+            console.log('receive from server:', res.body);
+            store.commit('MESSAGE_PUSH', JSON.parse(res.body)); // 수신받은 메세지 표시하기
             switch (res.body.type) {
               case 'MSG':
                 break;
@@ -108,7 +105,7 @@ export default {
     connect(sessionId.value);
 
     const sendMessage = () => {
-      if (userName.value !== "" && message.value !== "") {
+      if (userName.value !== '' && message.value !== '') {
         // 이벤트 발생 엔터키 + 유효성 검사는 여기에서
         send({ message: message }); // 전송 실패 감지는 어떻게? 프론트단에서 고민좀 부탁 dream
       }

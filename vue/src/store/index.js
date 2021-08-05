@@ -12,12 +12,9 @@ export default createStore({
   ],
   modules: { moduleQna, auth },
   state: {
-    user_idx: 1,
-    //user-info는: create room을 할 때
-    //   fk_created_by_idx를 가지고(앞으로 만들어질) API를 활용해서 user- info를 store 저장해둔다.
-    user_info: {},
+    //user-info: state.auth.user로 사용하면 됨
     rooms: [],
-    selected_room: null, // 더블클릭한 채팅방의 세션id를 저장
+    selected_room: null, // 클릭한 채팅방의 세션id를 저장
     session_key: {},
     //qnahistory를 아마 넣을 예정
   },
@@ -31,30 +28,23 @@ export default createStore({
     },
     PICK_ROOM(state, payload) {
       state.selected_room = payload;
-      console.log(payload);
-      console.log(state.user_info);
-    },
-    save_userinfo(state, payload) {
-      state.user_info = payload;
+      // console.log(payload);
     },
     MESSAGE_PUSH(state, payload) {
       state.session_key[`${state.selected_room}`].messages.push(payload);
-      console.log('########');
-      console.log(payload);
-      console.log(state.session_key[`${state.selected_room}`].messages);
     }
   },
   actions: {
     async getChatRooms({ commit, state }) {
       try {
-        const res = await axios.get(`api/api/chat/rooms/user/${state.user_idx}`);
+        const res = await axios.get(`api/api/chat/rooms/user/${state.auth.user.pk_idx}`);
         console.log(res.data);
         commit('GET_ROOMS', res.data);
       } catch (error) {
         console.log(error);
       }
     },
-    async createChatRooms({ commit }) {
+    async createChatRooms({ commit, state }) {
       try {
         // const res = await axios.post("https://i5d204.p.ssafy.io/api/api/chat/room", {
         //   unread: 0,
@@ -64,8 +54,8 @@ export default createStore({
         const res = await axios.post('api/api/chat/room', {
           // const res = await axios.post("http://localhost:8088/temp/api/chat/room", {
           unread: 0,
-          fk_created_by_idx: 1, // 상담 신청하는 고객의 userid
-          fk_client_idx: 1, // 위 필드와 동일값 넣어주면 됨.
+          fk_created_by_idx: state.auth.user.pk_idx, // 상담 신청하는 고객의 userid
+          fk_client_idx: state.auth.user.pk_idx, // 위 필드와 동일값 넣어주면 됨.
         });
         console.log(res.data);
         commit("ADD_ROOMS", res.data);
@@ -84,4 +74,3 @@ export default createStore({
     }
   },
 });
-//test
