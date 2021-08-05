@@ -15,9 +15,8 @@ services:
         - POSTGRES_PASSWORD=root
 #        TZ: Asia/Seoul
       volumes:
-#        - ./init.init:/docker-entrypoint-initdb.d/init.init
         - postgres:/var/lib/postgresql/data
-        - "./postgres/init/:/docker-entrypoint-initdb.d/"
+        - ./postgres/init/:/docker-entrypoint-initdb.d/
     django:
       build: ./django
       container_name: django
@@ -64,16 +63,7 @@ services:
         - spring
 #      volumes:
 #        - ./nginx/:/usr/share/nginx/
-#    nginx:
-#      build: vue/nginx
-#      container_name: nginx
-#      ports:
-#        - 80:80
-#      restart: always
-#      networks:
-#        - net
-#      volumes:
-#        - ./nginx/:/usr/share/nginx/html/static
+
 #    redis:
 #      container_name: redis
 #      image: redis
@@ -95,8 +85,9 @@ services:
 
 volumes:
   postgres: {}
-  redis: {}
   frontend: {}
+#  redis: {}
+
 
 networks:
   net:
