@@ -11,12 +11,12 @@ public interface ChatDao {
     // ChatSession management
     public List<ChatSession> findAllRoom();
     public List<ChatSession> findAllRoomByFkHostIdx(int fk_host_idx);
-    public List<ChatSession> findMyRoom(int id);
+    public List<ChatSession> findMyRoom(int sessionId);
     public ChatSession findRoomBySessionId(String session_id);
 
     public int createChatRoom(ChatSession session);
 
-    public int assignRoomToMe(AssignRoomRequest request);
+    public int assignRoomToMe(String sessionId, int admin_pk_idx);
     public int quitChatRoom(String sessionId);
 
     // ChatMessage Persistent API

@@ -8,6 +8,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AssignRoomRequest {
-    String sessionId;
     int admin_pk_idx;
 }

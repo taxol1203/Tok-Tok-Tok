@@ -86,11 +86,10 @@ public class ChatSessionController {
     @ApiOperation(value = "상담사가 해당 상담을 담당하겠다고 선언한다.", response = ChatSession.class)
     @PutMapping("/room/{sessionId}")
     @ResponseBody
-    public ResponseEntity<?> assignRoom(@PathVariable String sessionId, @RequestBody AssignRoomRequest request) {
+    public ResponseEntity<?> assignRoom(@PathVariable String sessionId, @RequestBody AssignRoomRequest req) {
         int result = 0;
-        request.setSessionId(sessionId);
         try{
-            result = chatDao.assignRoomToMe(request);
+            result = chatDao.assignRoomToMe(sessionId, req.getAdmin_pk_idx());
         }catch(Exception e){
             e.printStackTrace();
             return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -103,7 +102,7 @@ public class ChatSessionController {
     @ApiOperation(value = "해당 방의 상담을 종료한다.", response = ChatSession.class)
     @DeleteMapping("/room/{sessionId}")
     @ResponseBody
-    public ResponseEntity<?> closeRoom(@PathVariable String sessionId, @RequestBody int admin_pk_idx) {
+    public ResponseEntity<?> closeRoom(@PathVariable String sessionId, @RequestBody AssignRoomRequest req) {
         int result = 0;
         try{
             ChatSession session = chatDao.findRoomBySessionId(sessionId);
@@ -111,7 +110,7 @@ public class ChatSessionController {
                 return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
             }
             if(session.getFk_host_idx() != 0 &&
-                    session.getFk_host_idx()!= admin_pk_idx){
+                    session.getFk_host_idx()!= req.getAdmin_pk_idx()){
                 return new ResponseEntity<Void>(HttpStatus.FORBIDDEN);
             }
             result = chatDao.quitChatRoom(sessionId);
