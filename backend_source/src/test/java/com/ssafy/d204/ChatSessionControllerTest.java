@@ -5,6 +5,7 @@ import com.ssafy.d204.api.controller.QnAController;
 import com.ssafy.d204.chat.controller.ChatSessionController;
 import com.ssafy.d204.chat.dto.AssignRoomRequest;
 import com.ssafy.d204.chat.dto.ChatSession;
+import com.ssafy.d204.chat.dto.ChatSessionCreateReq;
 import com.ssafy.d204.db.entity.Answer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -35,7 +36,7 @@ public class ChatSessionControllerTest {
 		createSessionRequest.setFk_client_idx(1);
 
 		ChatSession newSession =
-				(ChatSession) csc.createRoom(createSessionRequest).getBody();
+				(ChatSession) csc.createRoom(new ChatSessionCreateReq(1,1, "/")).getBody();
 //		MatcherAssert(sessionsBefore.size(), isGreater);
 		ResponseEntity<?> roomResponse2 = csc.getAllRoom();
 		Assertions.assertEquals(200,roomResponse2.getStatusCodeValue());

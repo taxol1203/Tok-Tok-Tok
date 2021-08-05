@@ -1,10 +1,7 @@
 package com.ssafy.d204.chat.controller;
 
-import com.ssafy.d204.chat.dto.AssignRoomRequest;
+import com.ssafy.d204.chat.dto.*;
 import com.ssafy.d204.chat.dao.ChatDao;
-import com.ssafy.d204.chat.dto.ChatMessage;
-import com.ssafy.d204.chat.dto.ChatMessageAndSession;
-import com.ssafy.d204.chat.dto.ChatSession;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -64,14 +61,15 @@ public class ChatSessionController {
     @ApiOperation(value = "채팅방을 개설한다.", response = ChatSession.class)
     @PostMapping("/room")
     @ResponseBody
-    public ResponseEntity<?> createRoom(@RequestBody ChatSession session) {
-        System.out.println(session);
+    public ResponseEntity<?> createRoom(@RequestBody ChatSessionCreateReq req) {
+//        System.out.println(session);
         ChatSession ret = ChatSession.create();
         try{
-            ret.setFk_client_idx(session.getFk_client_idx());
+            ret.setFk_client_idx(req.getFk_client_idx());
 //            ret.setCreated_at();
             ret.setStatus("OPEN");
-            ret.setFk_created_by_idx(session.getFk_created_by_idx());
+            ret.setFk_created_by_idx(req.getFk_created_by_idx());
+            ret.setQna_history(req.getQna_history());
             chatDao.createChatRoom(ret);
 //            chatDao.pushMessage(new ChatMessage(0,".",ret.getFk_client_idx(),null,false,ret.getSession_id(), ChatMessage.MessageType.JOIN));
         }catch(Exception e){
@@ -126,13 +124,13 @@ public class ChatSessionController {
 
         // 채팅방 정보 아이디에서 받아옴
     @ApiOperation(value = "방의 ID를 가지고 방의 정보를 수신한다.", response = ChatSession.class)
-    @GetMapping("/room/{roomId}")
+    @GetMapping("/room/{sessionId}")
     @ResponseBody
-    public ResponseEntity<?> getRoomInfo(@PathVariable String roomId) {
+    public ResponseEntity<?> getRoomInfo(@PathVariable String sessionId) {
         ChatSession ret = null;
-        System.out.println(roomId);
+        System.out.println(sessionId);
         try{
-            ret = chatDao.findRoomBySessionId(roomId);
+            ret = chatDao.findRoomBySessionId(sessionId);
             if(ret == null){
                 System.out.println("no room");
             }else{
