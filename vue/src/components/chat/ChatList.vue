@@ -1,9 +1,27 @@
 <template lang="">
   <div id="container" height="750px">
     <el-row class="list-menu">
-      <el-col @click="listMenuSelect('chatting')" class="list-menu-item" :class="{activeMenu: selectedChattingRooms}" :span="8">진행중</el-col>
-      <el-col @click="listMenuSelect('waiting')" class="list-menu-item" :class="{activeMenu: selectedWatingRooms}" :span="8">대기중</el-col>
-      <el-col @click="listMenuSelect('closed')" class="list-menu-item" :class="{activeMenu: selectedClosedRooms}" :span="8">종료</el-col>
+      <el-col
+        @click="listMenuSelect('chatting')"
+        class="list-menu-item"
+        :class="{ activeMenu: selectedChattingRooms }"
+        :span="8"
+        >진행중</el-col
+      >
+      <el-col
+        @click="listMenuSelect('OPEN')"
+        class="list-menu-item"
+        :class="{ activeMenu: selectedWatingRooms }"
+        :span="8"
+        >대기중</el-col
+      >
+      <el-col
+        @click="listMenuSelect('END')"
+        class="list-menu-item"
+        :class="{ activeMenu: selectedClosedRooms }"
+        :span="8"
+        >종료</el-col
+      >
     </el-row>
     <div v-show="selectedChattingRooms">
       <el-scrollbar height="700px">
@@ -15,14 +33,10 @@
       </el-scrollbar>
     </div>
     <div v-show="selectedWatingRooms">
-      <el-scrollbar height="700px">
-        대기중 채팅
-      </el-scrollbar>
+      <el-scrollbar height="700px"> 대기중 채팅 </el-scrollbar>
     </div>
     <div v-show="selectedClosedRooms">
-      <el-scrollbar height="700px">
-        종료된 채팅
-      </el-scrollbar>
+      <el-scrollbar height="700px"> 종료된 채팅 </el-scrollbar>
     </div>
   </div>
 </template>
@@ -43,16 +57,16 @@ export default {
     const selectedClosedRooms = ref(false);
     // const activeRoom = reactive({});
     const listMenuSelect = (key) => {
-      if (key === "chatting" && selectedChattingRooms.value == false) {
+      if (key === 'chatting' && selectedChattingRooms.value == false) {
         selectedChattingRooms.value = true;
         selectedWatingRooms.value = false;
         selectedClosedRooms.value = false;
-      } else if (key === "waiting" && selectedWatingRooms.value == false) {
+      } else if (key === 'waiting' && selectedWatingRooms.value == false) {
         selectedChattingRooms.value = false;
         selectedWatingRooms.value = true;
         selectedClosedRooms.value = false;
         store.state.selected_room = null;
-      } else if (key === "closed" && selectedClosedRooms.value == false) {
+      } else if (key === 'closed' && selectedClosedRooms.value == false) {
         selectedChattingRooms.value = false;
         selectedWatingRooms.value = false;
         selectedClosedRooms.value = true;
@@ -63,18 +77,13 @@ export default {
     };
     store.dispatch('getChatRooms');
     const newChat = () => {
-      store.dispatch("createChatRooms");
+      store.dispatch('createChatRooms');
     };
     // 클릭한 채팅방의 세션id를 state에 저장
     // 클릭 한번에 새 창이 열리는 것은 좀 더 알아봐야함.
     const pickRoom = (key) => {
-      if (store.state.selected_room) {
-        store.dispatch('pickRoom', null);
-      } else {
-        store.dispatch('pickRoom', key);
-        // activeRoom[`${store.state.selected_room}`] = true;
-        // console.log(activeRoom);
-      }
+      store.dispatch('pickRoom', key);
+      console.log(store.getters.get_messages);
     };
     return {
       newChat,

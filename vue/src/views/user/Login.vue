@@ -28,10 +28,7 @@
             </el-form-item>
             <el-form-item>
               <transition name="slide-fade">
-                <el-button
-                  type="button"
-                  class="green-color-btn"
-                  @click="onSubmit('formLabelAlign')"
+                <el-button type="button" class="green-color-btn" @click="onSubmit('formLabelAlign')"
                   >로그인</el-button
                 >
               </transition>

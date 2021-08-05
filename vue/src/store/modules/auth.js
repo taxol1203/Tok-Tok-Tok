@@ -18,7 +18,7 @@ export const auth = {
       axios.post('api/auth/login', payload)
         .then((res) => {
               state.token = res.data.token
-              commit('login', res.data.user);
+          commit('login', res.data.user);
               ElMessage({
                 showClose: true,
                 message: '로그인이 완료되었습니다.',
