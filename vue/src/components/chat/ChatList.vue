@@ -4,21 +4,21 @@
       <el-col
         @click="listMenuSelect('LIVE')"
         class="list-menu-item"
-        :class="{ activeMenu: status['LIVE'] }"
+        :class="{ activeMenu: status == 'LIVE' }"
         :span="8"
         >진행중</el-col
       >
       <el-col
         @click="listMenuSelect('OPEN')"
         class="list-menu-item"
-        :class="{ activeMenu: status['OPEN'] }"
+        :class="{ activeMenu: status == 'OPEN' }"
         :span="8"
         >대기중</el-col
       >
       <el-col
         @click="listMenuSelect('END')"
         class="list-menu-item"
-        :class="{ activeMenu: status['END'] }"
+        :class="{ activeMenu: status == 'END' }"
         :span="8"
         >종료</el-col
       >
@@ -42,7 +42,7 @@
 <script>
 import ChatItem from './ChatItem.vue';
 import { useStore } from 'vuex';
-import { computed, reactive, ref } from 'vue';
+import { computed, ref } from 'vue';
 
 export default {
   components: {
@@ -51,23 +51,11 @@ export default {
   setup() {
     const store = useStore();
     const listStatus = computed(() => store.getters.get_room_list);
-    const status = reactive({
-      LIVE: true,
-      OPEN: false,
-      END: false,
-    });
-    const selectedSession = ref('');
+    const status = computed(() => store.state.list_status);
+    const selectedSession = ref("");
 
     const listMenuSelect = (key) => {
-      store.commit('STATUS_CHANGE', key);
-      for (let s in status) {
-        if (s == store.state.list_status) {
-          status[s] = true;
-        } else {
-          status[s] = false;
-        }
-      }
-      // if (status[`${store.state.list_status}`])
+      store.commit("STATUS_CHANGE", key);
     };
     store.dispatch('getChatRooms');
     const newChat = () => {

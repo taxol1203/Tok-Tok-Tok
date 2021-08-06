@@ -13,7 +13,7 @@ export default createStore({
   modules: { moduleQna, auth },
   state: {
     //user-info: state.auth.user로 사용하면 됨
-    rooms: { },
+    rooms: {},
     selected_room: null, // 클릭한 채팅방의 세션id를 저장
     session_key: {},
     //qnahistory를 아마 넣을 예정
@@ -24,7 +24,7 @@ export default createStore({
       state.rooms = payload;
     },
     ADD_ROOMS(state, payload) {
-      payload.messages = []
+      payload.messages = [];
       state.session_key = payload;
     },
     PICK_ROOM(state, payload) {
@@ -41,6 +41,10 @@ export default createStore({
     },
     STATUS_CHANGE(state, payload) {
       state.list_status = payload;
+    },
+    ENTER_ROOM(state) {
+      state.list_status = "LIVE";
+      state.rooms[`${state.selected_room}`].session.status = "LIVE";
     },
   },
   actions: {
@@ -70,6 +74,17 @@ export default createStore({
     pickRoom({ commit }, key) {
       commit("PICK_ROOM", key);
     },
+    async enterRoom({ commit, state }, sessionId) {
+      try {
+        const res = await axios.put(`/api/api/chat/room/${sessionId.value}`, {
+          admin_pk_idx: state.auth.user.pk_idx,
+        });
+        commit("ENTER_ROOM", res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+
   },
   getters: {
     get_messages: (state) => {
@@ -84,13 +99,11 @@ export default createStore({
         }
       }
       roomList.sort(function (a, b) {
-        return a.session.created_at > b.session.created_at?-1:1 
+        return a.session.created_at > b.session.created_at ? -1 : 1;
       });
       return roomList;
     },
     get_user_messages: (state) => {
-      // return state.session_key[`${state.selected_room}`].messages;
-      console.log(state.session_key);
       return state.session_key.messages;
     },
   },

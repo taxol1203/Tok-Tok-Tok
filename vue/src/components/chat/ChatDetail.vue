@@ -19,7 +19,10 @@
       <el-row id="bottomInput">
         <!-- 입력창 -->
         <el-col :span="2">
-          <el-button icon="el-icon-video-camera" class="icon-m-p green-color-btn"></el-button>
+          <el-button
+            icon="el-icon-video-camera"
+            class="icon-m-p green-color-btn"
+          ></el-button>
         </el-col>
         <el-col :span="20">
           <div>
@@ -67,12 +70,12 @@ export default {
       const serverURL = 'https://i5d204.p.ssafy.io/api/chat'; // 서버 채팅 주소
       let socket = new SockJS(serverURL);
       stompClient = Stomp.over(socket);
-      console.log(`connecting to socket=> ${serverURL}`);
+      // console.log(`connecting to socket=> ${serverURL}`);
       stompClient.connect(
         {},
         (frame) => {
           connected = true;
-          console.log('CONNECT SUCCESS:', frame);
+          // console.log('CONNECT SUCCESS:', frame);
           // 구독 == 채팅방 입장.
           stompClient.subscribe('/send/' + sessionId.value, (res) => {
             store.commit('MESSAGE_PUSH', JSON.parse(res.body)); // 수신받은 메세지 표시하기
@@ -104,15 +107,22 @@ export default {
     connect(sessionId.value);
 
     const sendMessage = () => {
-      if (userName.value !== '' && message.value !== '') {
-        // 이벤트 발생 엔터키 + 유효성 검사는 여기에서
-        send({ message: message }); // 전송 실패 감지는 어떻게? 프론트단에서 고민좀 부탁 dream
+      if (userName.value && message.value) {
+        send({ message }); // 전송 실패 감지는 어떻게? 프론트단에서 고민좀 부탁 dream
+        if (store.state.rooms[`${sessionId.value}`].session.status == "OPEN") {
+          console.log("before:" + store.state.rooms[`${sessionId.value}`].session.status);
+          store.dispatch("enterRoom", sessionId);
+          console.log("after" + store.state.rooms[`${sessionId.value}`].session.status);
+        }
+
       }
-      message.value = '';
+      message.value = "";
+      // 어차피 유저는 채팅 상담 신청을 한뒤 메세지를 치지 못하므로 open 상태에서 메세지를 보내는건 관리자뿐이니까
+      // 방상태가 OPEN일때 여기서 put을 보내면되나
     };
 
     const send = () => {
-      console.log('Send message:' + message.value);
+      // console.log('Send message:' + message.value);
       if (stompClient && stompClient.connected) {
         // console.log('IN SOCKET');
         const msg = {
