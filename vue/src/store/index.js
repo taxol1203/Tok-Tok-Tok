@@ -15,7 +15,6 @@ export default createStore({
     //user-info: state.auth.user로 사용하면 됨
     rooms: {},
     selected_room: null, // 클릭한 채팅방의 세션id를 저장
-    session_key: {},
     //qnahistory를 아마 넣을 예정
     list_status: "LIVE",
   },
