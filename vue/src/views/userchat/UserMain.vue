@@ -21,12 +21,7 @@
                 >
               </div>
               <div class="full-box">
-                <el-button @click="createChatRoom" class="green-color-btn"
-                  >채팅방개설요청/상담사상담신청 등</el-button
-                >
-                <div v-if="isChatExist">
-                  <UserChatDetail />
-                </div>
+                <UserQna />
               </div>
             </el-card>
           </div>
@@ -45,6 +40,7 @@ import { computed, ref } from 'vue';
 export default {
   components: {
     UserQna,
+    UserChatDetail,
     ChatDetail,
   },
 
@@ -147,7 +143,7 @@ export default {
 
 .full-box {
   box-sizing: border-box;
-  width: auto;
+  width: 100%;
   height: auto;
   padding: 14px;
   position: relative;
