@@ -43,7 +43,7 @@ export default createStore({
       state.session_key = payload;
       console.log(state.session_key);
     },
-    STATUS_CHAGE(state, payload) {
+    STATUS_CHANGE(state, payload) {
       state.list_status = payload;
     },
   },

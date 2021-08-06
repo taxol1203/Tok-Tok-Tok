@@ -41,9 +41,9 @@
   </div>
 </template>
 <script>
-import ChatItem from './ChatItem.vue';
-import { useStore } from 'vuex';
-import { computed, reactive, ref } from 'vue';
+import ChatItem from "./ChatItem.vue";
+import { useStore } from "vuex";
+import { computed, reactive, ref } from "vue";
 
 export default {
   components: {
@@ -57,10 +57,10 @@ export default {
       OPEN: false,
       END: false,
     });
-    const selectedSession = ref('');
+    const selectedSession = ref("");
 
     const listMenuSelect = (key) => {
-      store.commit('STATUS_CHAGE', key);
+      store.commit("STATUS_CHANGE", key);
       for (let s in status) {
         if (s == store.state.list_status) {
           status[s] = true;
@@ -70,13 +70,13 @@ export default {
       }
       // if (status[`${store.state.list_status}`])
     };
-    store.dispatch('getChatRooms');
+    store.dispatch("getChatRooms");
     const newChat = () => {
-      store.dispatch('createChatRooms');
+      store.dispatch("createChatRooms");
     };
     // 클릭한 채팅방의 세션id를 state에 저장
     const pickRoom = (key) => {
-      store.commit('PICK_ROOM', key);
+      store.commit("PICK_ROOM", key);
       selectedSession.value = key;
     };
     return {
