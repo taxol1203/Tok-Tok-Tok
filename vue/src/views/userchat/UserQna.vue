@@ -1,5 +1,5 @@
 <template>
-  <div style="position: relative; width: 50%; height: 50%; padding: 10px">
+  <div style="position: relative; padding: 10px">
     <!-- 상대방 -->
     <el-scrollbar ref="scrollbar" id="topMessages">
       <div v-for="(item, index) in log" :key="index">
@@ -15,29 +15,22 @@
         </el-row>
         <el-row>
           <el-col>
-            <div class="message-me" @click="connectAgent">상담원 연결</div>
+            <div class="message-me" @click="createChatRoom">상담원 연결</div>
           </el-col>
         </el-row>
       </div>
-      <!-- v-html="question"<div v-for="answer in answers" :key="answer.pk_idx">
-        <el-row>
-          <el-col>
-            <div class="message-me" @click="chooseAnswer(answer.fk_next_idx)">
-              {{ answer.content }}
-            </div>
-          </el-col>
-        </el-row>
-      </div> -->
+      <user-chat-detail />
     </el-scrollbar>
   </div>
 </template>
 <script>
 import { useStore } from 'vuex';
 import { computed } from 'vue';
+import UserChatDetail from './UserChatDetail.vue';
 
 export default {
   name: 'Chat',
-  components: {},
+  components: { UserChatDetail },
   setup() {
     const store = useStore();
     store.commit('userQna/CHANGE_SELECT', 1);
@@ -47,8 +40,16 @@ export default {
       store.commit('userQna/CHANGE_SELECT', next_idx);
       store.commit('userQna/ADD_LOG');
     };
+
+    const user_pk_idx = computed(() => store.state.auth.user.pk_idx);
+    const createChatRoom = () => {
+      store.dispatch('createChatRooms', user_pk_idx.value);
+      isChatExist.value = true;
+    };
     return {
       log,
+      user_pk_idx,
+      createChatRoom,
       chooseAnswer,
     };
   },
@@ -62,7 +63,7 @@ export default {
 #topMessages {
   display: block;
   top: 0px;
-  height: 300px;
+  height: 600px;
   width: 100%;
 }
 .el-scroll {
