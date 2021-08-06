@@ -64,6 +64,7 @@ export default {
     const sessionId = computed(() => store.state.selected_room);
     const messages = computed(() => store.getters.get_messages);
     const userPkidx = computed(() => store.state.auth.user.pk_idx);
+    const userName = computed(() => store.state.auth.user.pk_idx);
     const message = ref("");
     let connected = false;
     let stompClient = "";
