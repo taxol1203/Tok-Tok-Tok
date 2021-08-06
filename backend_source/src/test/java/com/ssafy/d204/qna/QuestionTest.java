@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 
 import com.ssafy.d204.api.controller.QnAController;
 import com.ssafy.d204.db.entity.Question;
-
+// 절대 돌리면 안됨
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 public class QuestionTest {

@@ -5,8 +5,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class AssignRoomRequest {
-    int admin_pk_idx;
+@AllArgsConstructor
+public class ChatSessionCreateReq {
+    int fk_client_idx;
+    int fk_created_by_idx;
+    String qna_history;
 }

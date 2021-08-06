@@ -10,7 +10,7 @@ services:
       networks:
         - net
       environment:
-        - POSTGRES_DB=sample
+        - POSTGRES_DB=postgres
         - POSTGRES_USERNAME=postgres
         - POSTGRES_PASSWORD=root
       TZ: Asia/Seoul
@@ -44,7 +44,7 @@ services:
       ports:
         - 8088:8088
       environment:
-        - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/sample
+        - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/postgres
         - SPRING_DATASOURCE_USERNAME=postgres
         - SPRING_DATASOURCE_PASSWORD=root
 #      links:

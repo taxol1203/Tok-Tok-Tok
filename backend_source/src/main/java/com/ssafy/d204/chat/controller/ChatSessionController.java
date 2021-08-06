@@ -1,10 +1,7 @@
 package com.ssafy.d204.chat.controller;
 
-import com.ssafy.d204.chat.dto.AssignRoomRequest;
+import com.ssafy.d204.chat.dto.*;
 import com.ssafy.d204.chat.dao.ChatDao;
-import com.ssafy.d204.chat.dto.ChatMessage;
-import com.ssafy.d204.chat.dto.ChatMessageAndSession;
-import com.ssafy.d204.chat.dto.ChatSession;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -64,15 +61,21 @@ public class ChatSessionController {
     @ApiOperation(value = "채팅방을 개설한다.", response = ChatSession.class)
     @PostMapping("/room")
     @ResponseBody
-    public ResponseEntity<?> createRoom(@RequestBody ChatSession session) {
-        System.out.println(session);
-        ChatSession ret = ChatSession.create();
+    public ResponseEntity<?> createRoom(@RequestBody ChatSessionCreateReq req) {
+//        System.out.println(session);
+        ChatSession temp = ChatSession.create();
+        temp.setFk_client_idx(req.getFk_client_idx());
+        temp.setFk_created_by_idx(req.getFk_created_by_idx());
+        temp.setQna_history(req.getQna_history());
+        ChatSession ret = null;
         try{
-            ret.setFk_client_idx(session.getFk_client_idx());
+            temp.setFk_client_idx(temp.getFk_client_idx());
 //            ret.setCreated_at();
-            ret.setStatus("OPEN");
-            ret.setFk_created_by_idx(session.getFk_created_by_idx());
-            chatDao.createChatRoom(ret);
+            temp.setStatus("OPEN");
+            temp.setFk_created_by_idx(temp.getFk_created_by_idx());
+            temp.setQna_history(temp.getQna_history());
+            chatDao.createChatRoom(temp);
+            ret = chatDao.findRoomBySessionId(temp.getSession_id());
 //            chatDao.pushMessage(new ChatMessage(0,".",ret.getFk_client_idx(),null,false,ret.getSession_id(), ChatMessage.MessageType.JOIN));
         }catch(Exception e){
             e.printStackTrace();
@@ -83,11 +86,10 @@ public class ChatSessionController {
     @ApiOperation(value = "상담사가 해당 상담을 담당하겠다고 선언한다.", response = ChatSession.class)
     @PutMapping("/room/{sessionId}")
     @ResponseBody
-    public ResponseEntity<?> assignRoom(@PathVariable String sessionId, @RequestBody AssignRoomRequest request) {
+    public ResponseEntity<?> assignRoom(@PathVariable String sessionId, @RequestBody AssignRoomRequest req) {
         int result = 0;
-        request.setSessionId(sessionId);
         try{
-            result = chatDao.assignRoomToMe(request);
+            result = chatDao.assignRoomToMe(sessionId, req.getAdmin_pk_idx());
         }catch(Exception e){
             e.printStackTrace();
             return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -100,7 +102,7 @@ public class ChatSessionController {
     @ApiOperation(value = "해당 방의 상담을 종료한다.", response = ChatSession.class)
     @DeleteMapping("/room/{sessionId}")
     @ResponseBody
-    public ResponseEntity<?> closeRoom(@PathVariable String sessionId, @RequestBody int admin_pk_idx) {
+    public ResponseEntity<?> closeRoom(@PathVariable String sessionId, @RequestBody AssignRoomRequest req) {
         int result = 0;
         try{
             ChatSession session = chatDao.findRoomBySessionId(sessionId);
@@ -108,7 +110,7 @@ public class ChatSessionController {
                 return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
             }
             if(session.getFk_host_idx() != 0 &&
-                    session.getFk_host_idx()!= admin_pk_idx){
+                    session.getFk_host_idx()!= req.getAdmin_pk_idx()){
                 return new ResponseEntity<Void>(HttpStatus.FORBIDDEN);
             }
             result = chatDao.quitChatRoom(sessionId);
@@ -126,13 +128,13 @@ public class ChatSessionController {
 
         // 채팅방 정보 아이디에서 받아옴
     @ApiOperation(value = "방의 ID를 가지고 방의 정보를 수신한다.", response = ChatSession.class)
-    @GetMapping("/room/{roomId}")
+    @GetMapping("/room/{sessionId}")
     @ResponseBody
-    public ResponseEntity<?> getRoomInfo(@PathVariable String roomId) {
+    public ResponseEntity<?> getRoomInfo(@PathVariable String sessionId) {
         ChatSession ret = null;
-        System.out.println(roomId);
+        System.out.println(sessionId);
         try{
-            ret = chatDao.findRoomBySessionId(roomId);
+            ret = chatDao.findRoomBySessionId(sessionId);
             if(ret == null){
                 System.out.println("no room");
             }else{
