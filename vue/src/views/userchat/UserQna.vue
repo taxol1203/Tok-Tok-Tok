@@ -21,6 +21,32 @@
       </div>
       <user-chat-detail />
     </el-scrollbar>
+    <!-- 입력창시작 -->
+    <el-row id="bottomInput">
+      <el-col :span="5">
+        <el-button icon="el-icon-video-camera" class="green-color-btn"></el-button>
+      </el-col>
+      <el-col :span="14">
+        <div>
+          <el-input
+            type="text"
+            @keyup.enter="sendMessage"
+            v-model="message"
+            placeholder="Please input"
+            clearable
+          >
+          </el-input>
+        </div>
+      </el-col>
+      <el-col :span="5">
+        <el-button
+          @click="sendMessage"
+          icon="el-icon-s-promotion"
+          class="green-color-btn"
+        ></el-button>
+      </el-col>
+    </el-row>
+    <!-- 입력창 끝 -->
   </div>
 </template>
 <script>
@@ -40,17 +66,19 @@ export default {
       store.commit('userQna/CHANGE_SELECT', next_idx);
       store.commit('userQna/ADD_LOG');
     };
-
     const user_pk_idx = computed(() => store.state.auth.user.pk_idx);
     const createChatRoom = () => {
+      console.log(user_pk_idx.value);
       store.dispatch('createChatRooms', user_pk_idx.value);
-      isChatExist.value = true;
     };
+
+    const sendMessage = () => {};
     return {
       log,
       user_pk_idx,
       createChatRoom,
       chooseAnswer,
+      sendMessage,
     };
   },
 };
@@ -63,7 +91,7 @@ export default {
 #topMessages {
   display: block;
   top: 0px;
-  height: 600px;
+  height: 550px;
   width: 100%;
 }
 .el-scroll {

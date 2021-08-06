@@ -7,92 +7,65 @@
     <p>이거 기다리는거 디자인 물어보기</p>
   </div>
   <div v-if="isOpen == 'LIVE'">LIVE</div>
-  <div style="position: relative; width: 100%; height: 100%; padding: 10px">
-    <el-scrollbar ref="scrollbar" id="topMessages">
-      <div v-for="(msg, index) in messages" :key="index">
-        <el-row>
-          <el-col v-if="msg.fk_author_idx == userPkidx">
-            <div class="message-me">
-              {{ msg.message }}
-            </div>
-          </el-col>
-          <el-col v-else>
-            <div class="message-other">{{ msg.message }}</div>
-          </el-col>
-        </el-row>
-      </div>
-    </el-scrollbar>
-    <!-- 입력창 -->
-    <el-row id="bottomInput" v-if="isOpen == 'LIVE'">
-      <el-col :span="2">
-        <el-button icon="el-icon-video-camera" class="icon-m-p green-color-btn"></el-button>
-      </el-col>
-      <el-col :span="20">
-        <div>
-          <el-input
-            type="text"
-            @keyup.enter="sendMessage"
-            v-model="message"
-            placeholder="Please input"
-            clearable
-          >
-          </el-input>
+  <!-- 실시간채팅 시작 -->
+  <div v-for="(msg, index) in messages" :key="index">
+    <el-row>
+      <el-col v-if="msg.fk_author_idx == userPkidx">
+        <div class="message-me">
+          {{ msg.message }}
         </div>
       </el-col>
-      <el-col :span="2">
-        <el-button
-          @click="sendMessage"
-          icon="el-icon-s-promotion"
-          class="icon-m-p green-color-btn"
-        ></el-button>
+      <el-col v-else>
+        <div class="message-other">{{ msg.message }}</div>
       </el-col>
     </el-row>
   </div>
+  <!-- 실시간채팅 끝 -->
 </template>
 <script>
-import Stomp from "webstomp-client";
-import SockJS from "sockjs-client";
-import { useStore } from "vuex";
-import { ref, computed } from "vue";
+import Stomp from 'webstomp-client';
+import SockJS from 'sockjs-client';
+import { useStore } from 'vuex';
+import { ref, computed } from 'vue';
 
 export default {
-  name: "Chat",
+  name: 'Chat',
   components: {},
   setup() {
     const store = useStore();
     const sessionId = computed(() => store.state.selected_room); //user가 생성한 방 id
     const userPkidx = computed(() => store.state.auth.user.pk_idx);
-    const message = ref("");
-    const messages = computed(() => store.getters["get_user_messages"]);
-    const isOpen = computed(() => store.getters["get_user_room_status"]);
+    const message = ref('');
+    const messages = computed(() => store.getters['get_user_messages']);
+    const isOpen = computed(() => store.getters['get_user_room_status']);
     const loading = true;
 
     let connected = false;
-    let stompClient = "";
+    let stompClient = '';
 
     const connect = () => {
-      const serverURL = "https://i5d204.p.ssafy.io/api/chat"; // 서버 채팅 주소
+      const serverURL = 'https://i5d204.p.ssafy.io/api/chat'; // 서버 채팅 주소
       let socket = new SockJS(serverURL);
       stompClient = Stomp.over(socket);
       stompClient.connect(
         {},
         (frame) => {
           connected = true;
-          console.log("CONNECT SUCCESS ++ status : established", frame);
+          console.log('CONNECT SUCCESS ++ status : established', frame);
           // 구독 == 채팅방 입장.
-          stompClient.subscribe("/send/" + sessionId.value, (res) => {
-            console.log("receive from server:", res.body);
-            store.commit("USER_MSG_PUSH", JSON.parse(res.body)); // 수신받은 메세지 표시하기
+          stompClient.subscribe('/send/' + sessionId.value, (res) => {
+            console.log('receive from server:', res.body);
+            store.commit('USER_MSG_PUSH', JSON.parse(res.body)); // 수신받은 메세지 표시하기
             switch (res.body.type) {
-              case "MSG":
+              case 'MSG':
                 break;
-              case "JOIN":
+              case 'JOIN':
                 // 방을 생성할 때 백엔드단에서 처리하므로 신경 x
                 break;
-              case "QUIT":
+              case 'QUIT':
                 // 만약 둘 중 하나가 나가면 더 이상 채팅을 못치는 프론트구현
                 break;
-              case "VID":
+              case 'VID':
                 // vid 시작시 -> 화상채팅 시작하기 버튼만 딸랑 띄우기
                 break;
               default:
@@ -103,38 +76,38 @@ export default {
         },
         (error) => {
           // 소켓 연결 실패
-          console.log("status : failed, STOMP CLIENT 연결 실패", error);
+          console.log('status : failed, STOMP CLIENT 연결 실패', error);
           connected = false;
         }
       );
     };
     connect(sessionId.value);
     const sendMessage = () => {
-      if (userPkidx.value !== "" && message.value !== "") {
+      if (userPkidx.value !== '' && message.value !== '') {
         // 이벤트 발생 엔터키 + 유효성 검사는 여기에서
         send({ message: message }); // 전송 실패 감지는 어떻게? 프론트단에서 고민좀 부탁 dream
       }
-      message.value = "";
+      message.value = '';
     };
 
     const send = () => {
-      console.log("Send message:" + message.value);
+      console.log('Send message:' + message.value);
       if (userPkidx.value <= 0) {
-        console.log("0이하면 안됨) fk_author_idx: " + userPkidx.value);
+        console.log('0이하면 안됨) fk_author_idx: ' + userPkidx.value);
       }
       //DB에 없는 유저 idx(0같은 것)가 들어가면 안된다.
       if (stompClient && stompClient.connected && userPkidx.value > 0) {
-        console.log("IN SOCKET");
+        console.log('IN SOCKET');
         const msg = {
           message: message.value, // 메세지 내용. type이 MSG인 경우를 제외하곤 비워두고 프론트단에서만 처리.
           fk_author_idx: userPkidx.value, // 작성자의 회원 idx
-          created: "", // 작성시간, 공란으로 비워서 메세지 보내기. response에는 담겨옵니다.
+          created: '', // 작성시간, 공란으로 비워서 메세지 보내기. response에는 담겨옵니다.
           deleted: false, // 삭제된 메세지 여부. default = false
           fk_session_id: sessionId.value, // 현재 채팅세션의 id.
           // 주의할 점은, 방 세션 id가 아닌, 방 정보의 pk_idx를 첨부한다. created 라이프사이클 메서드 참조.
-          type: "MSG", // 메세지 타입.
+          type: 'MSG', // 메세지 타입.
         };
-        stompClient.send("/receive/" + sessionId.value, JSON.stringify(msg), {});
+        stompClient.send('/receive/' + sessionId.value, JSON.stringify(msg), {});
       }
     };
 
