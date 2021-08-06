@@ -3,6 +3,7 @@ import axios from "@/axios";
 import createPersistedState from "vuex-persistedstate";
 import { moduleQna } from "@/store/modules/moduleQna";
 import { auth } from "@/store/modules/auth";
+import { userQna } from "@/store/modules/userQna"
 
 export default createStore({
   plugins: [
@@ -10,7 +11,7 @@ export default createStore({
       paths: ["auth"],
     }),
   ],
-  modules: { moduleQna, auth },
+  modules: { moduleQna, auth, userQna },
   state: {
     //user-info: state.auth.user로 사용하면 됨
     rooms: { },

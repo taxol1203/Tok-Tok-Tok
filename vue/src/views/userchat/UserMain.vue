@@ -36,16 +36,16 @@
   </el-row>
 </template>
 <script>
-import axios from "@/axios";
-import { useStore } from "vuex";
-import UserChatDetail from "./UserChatDetail.vue";
-import ChatDetail from "../../components/chat/ChatDetail.vue";
-import { computed, ref } from "vue";
+import { useStore } from 'vuex';
+import UserChatDetail from './UserChatDetail.vue';
+import UserQna from './UserQna.vue';
+import ChatDetail from '../../components/chat/ChatDetail.vue';
+import { computed, ref } from 'vue';
 /* eslint-disable */
 export default {
   components: {
+    UserQna,
     ChatDetail,
-    UserChatDetail,
   },
 
   setup() {
@@ -56,6 +56,7 @@ export default {
     const sessionId = computed(() => store.state.user_selected_room);
 
     let changeCondition = () => {
+      store.dispatch('userQna/init'); //state.userQna.scenes에 pk_idx별로 예상질문정보+answers에 정답정보 저장
       isHidden.value = !isHidden.value;
     };
     let changeisChatExist = () => {
@@ -63,7 +64,7 @@ export default {
     };
     // 유저의 채팅방 개설요청
     let createChatRoom = () => {
-      store.dispatch("createChatRooms", user_pk_idx.value);
+      store.dispatch('createChatRooms', user_pk_idx.value);
       isChatExist.value = true;
     };
     return {
@@ -84,7 +85,7 @@ export default {
   position: fixed;
   width: 100%;
   height: 100%;
-  background-image: url("../../assets/Microsoft.png");
+  background-image: url('../../assets/Microsoft.png');
   background-repeat: no-repeat;
   background-position: center;
 }
