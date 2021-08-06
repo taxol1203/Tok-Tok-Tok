@@ -50,7 +50,6 @@ export default {
     const store = useStore();
     const user_pk_idx = computed(() => store.state.auth.user.pk_idx);
     const sessionId = computed(() => store.state.user_selected_room);
-
     let changeCondition = () => {
       store.dispatch('userQna/init'); //state.userQna.scenes에 pk_idx별로 예상질문정보+answers에 정답정보 저장
       isHidden.value = !isHidden.value;
