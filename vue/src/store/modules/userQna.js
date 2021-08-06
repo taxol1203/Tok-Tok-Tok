@@ -5,6 +5,7 @@ export const userQna = {
     scenes: {},
     select: '',
     log: [],
+    realChat:false,
   },
   getters: {
     getQuestion: (state) => {
@@ -55,6 +56,9 @@ export const userQna = {
       let tmp = state.log;
       tmp.push(state.scenes[`${state.select}`])
       state.log = tmp;
+    },
+    START_REAL_CHAT: (state) => {
+      state.realChat = true;
     }
   },
   actions: {
