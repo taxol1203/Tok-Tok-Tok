@@ -13,7 +13,7 @@ export default createStore({
   modules: { moduleQna, auth },
   state: {
     //user-info: state.auth.user로 사용하면 됨
-    rooms: { },
+    rooms: {},
     selected_room: null, // 클릭한 채팅방의 세션id를 저장
     session_key: {},
     //qnahistory를 아마 넣을 예정
@@ -24,7 +24,7 @@ export default createStore({
       state.rooms = payload;
     },
     ADD_ROOMS(state, payload) {
-      payload.messages = []
+      payload.messages = [];
       state.session_key = payload;
     },
     PICK_ROOM(state, payload) {
@@ -32,6 +32,10 @@ export default createStore({
     },
     USER_MSG_PUSH(state, payload) {
       state.session_key.messages.push(payload);
+      //방이 대기 상태일 때, msg가 처음 들어오면 live로 바꿈
+      if (state.session_key.status == "OPEN") {
+        state.session_key.status = "LIVE";
+      }
     },
     MESSAGE_PUSH(state, payload) {
       state.rooms[`${state.selected_room}`].messages.push(payload);
@@ -84,7 +88,7 @@ export default createStore({
         }
       }
       roomList.sort(function (a, b) {
-        return a.session.created_at > b.session.created_at?-1:1 
+        return a.session.created_at > b.session.created_at ? -1 : 1;
       });
       return roomList;
     },
@@ -92,6 +96,9 @@ export default createStore({
       // return state.session_key[`${state.selected_room}`].messages;
       console.log(state.session_key);
       return state.session_key.messages;
+    },
+    get_user_room_status: (state) => {
+      return state.session_key.status;
     },
   },
 });
