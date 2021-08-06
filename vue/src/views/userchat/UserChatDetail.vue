@@ -1,6 +1,5 @@
 <template>
   <div style="position: relative; width: 100%; height: 100%; padding: 10px">
-    <!-- 상대방 -->
     <el-scrollbar ref="scrollbar" id="topMessages">
       <div v-for="(msg, index) in messages" :key="index">
         <el-row>
@@ -15,37 +14,34 @@
         </el-row>
       </div>
     </el-scrollbar>
-    <div>
-      <el-row id="bottomInput">
-        <!-- 입력창 -->
-        <el-col :span="2">
-          <el-button icon="el-icon-video-camera" class="icon-m-p green-color-btn"></el-button>
-        </el-col>
-        <el-col :span="20">
-          <div>
-            <el-input
-              type="text"
-              @keyup.enter="sendMessage"
-              v-model="message"
-              placeholder="Please input"
-              clearable
-            >
-            </el-input>
-          </div>
-        </el-col>
-        <el-col :span="2">
-          <el-button
-            @click="sendMessage"
-            icon="el-icon-s-promotion"
-            class="icon-m-p green-color-btn"
-          ></el-button>
-        </el-col>
-      </el-row>
-    </div>
+    <!-- 입력창 -->
+    <el-row id="bottomInput">
+      <el-col :span="2">
+        <el-button icon="el-icon-video-camera" class="icon-m-p green-color-btn"></el-button>
+      </el-col>
+      <el-col :span="20">
+        <div>
+          <el-input
+            type="text"
+            @keyup.enter="sendMessage"
+            v-model="message"
+            placeholder="Please input"
+            clearable
+          >
+          </el-input>
+        </div>
+      </el-col>
+      <el-col :span="2">
+        <el-button
+          @click="sendMessage"
+          icon="el-icon-s-promotion"
+          class="icon-m-p green-color-btn"
+        ></el-button>
+      </el-col>
+    </el-row>
   </div>
 </template>
 <script>
-// import axios from "axios";
 import Stomp from "webstomp-client";
 import SockJS from "sockjs-client";
 import { useStore } from "vuex";
@@ -68,7 +64,6 @@ export default {
       const serverURL = "https://i5d204.p.ssafy.io/api/chat"; // 서버 채팅 주소
       let socket = new SockJS(serverURL);
       stompClient = Stomp.over(socket);
-      // console.log(`connecting to socket=> ${serverURL}`);
       stompClient.connect(
         {},
         (frame) => {
@@ -148,15 +143,15 @@ export default {
   },
 };
 </script>
-<style>
-#bottomInput {
-  bottom: 0px;
-  width: 100%;
-}
+<style scoped>
 #topMessages {
   display: block;
   top: 0px;
   height: 21rem;
+  width: 100%;
+}
+#bottomInput {
+  bottom: 0px;
   width: 100%;
 }
 .el-scroll {
