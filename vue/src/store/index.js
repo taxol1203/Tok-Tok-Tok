@@ -13,7 +13,7 @@ export default createStore({
   modules: { moduleQna, auth },
   state: {
     //user-info: state.auth.user로 사용하면 됨
-    rooms: {},
+    rooms: { },
     selected_room: null, // 클릭한 채팅방의 세션id를 저장
     //qnahistory를 아마 넣을 예정
     list_status: "LIVE",
