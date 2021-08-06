@@ -156,7 +156,7 @@ export default {
 #topMessages {
   display: block;
   top: 0px;
-  height: 700px;
+  height: 21rem;
   width: 100%;
 }
 .el-scroll {
