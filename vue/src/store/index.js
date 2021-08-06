@@ -23,7 +23,7 @@ export default createStore({
       state.rooms = payload;
     },
     ADD_ROOMS(state, payload) {
-      state.rooms.push(payload);
+      state.rooms[payload.session_id] = payload;
     },
     PICK_ROOM(state, payload) {
       state.selected_room = payload;
