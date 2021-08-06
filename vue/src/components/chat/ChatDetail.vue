@@ -1,5 +1,7 @@
 <template>
   <div style="position: relative; width: 650px; height: 750px; padding: 10px">
+    <i class="el-icon-error" @click="closeRoom"></i>
+    <i class="el-icon-close"></i>
     <!-- 상대방 -->
     <el-scrollbar ref="scrollbar" id="topMessages">
       <div v-for="(msg, index) in messages" :key="index">
@@ -109,10 +111,9 @@ export default {
     const sendMessage = () => {
       if (userName.value && message.value) {
         send({ message }); // 전송 실패 감지는 어떻게? 프론트단에서 고민좀 부탁 dream
+        // 관리자가 첫 메세지 보냈을때 방상태를 LIVE로 바꾸기
         if (store.state.rooms[`${sessionId.value}`].session.status == "OPEN") {
-          console.log("before:" + store.state.rooms[`${sessionId.value}`].session.status);
           store.dispatch("enterRoom", sessionId);
-          console.log("after" + store.state.rooms[`${sessionId.value}`].session.status);
         }
 
       }
@@ -138,6 +139,14 @@ export default {
       }
     };
 
+    const closeRoom = () => {
+      // 방 닫는 로직 작성 "admin_pk_idx": 0 넣어서 요청 해줘야함
+      // 방 상태가 LIVE 일때, admin_pk_idx가 나와 같을때
+      if (store.state.rooms[`${sessionId.value}`].session.status == "LIVE") {
+        //여기서 디스패치
+      }
+    };
+
     return {
       store,
       sessionId,
@@ -149,6 +158,7 @@ export default {
       connected,
       stompClient,
       userName,
+      closeRoom,
     };
   },
 };
@@ -187,10 +197,20 @@ export default {
   max-width: 300px;
 }
 #inputBox {
-  width: 90%;
+  /* width: 90%; */
   height: 100%;
   background-color: transparent;
   border: 0px solid #eee;
 }
 /* hover로 버튼 색 변하게 하기: 추가기능 */
+.el-icon-error {
+  float: right;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+.el-icon-close {
+  float: right;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
 </style>
