@@ -2,60 +2,47 @@
   <el-row :gutter="20">
     <div id="UserMain">
       <div class="fab-container">
-        <div>
-          <transition class="same-pos" name="fade" mode="out-in">
-            <el-button
-              class="big-btn"
-              type="primary"
-              icon="el-icon-plus"
-              @click="changeCondition"
-              v-if="!isHidden"
-              circle
-            ></el-button>
-          </transition>
-          <transition class="same-pos" name="fade" mode="out-in">
-            <div id="chat-box" v-if="isHidden">
-              <el-card :body-style="{ padding: '0px' }">
-                <div id="card-head" class="card-header">
-                  <el-button @click="changeCondition" type="danger" icon="el-icon-close"
-                    >닫기</el-button
-                  >
+        <transition class="same-pos" name="fade" mode="out-in">
+          <el-button
+            class="big-btn"
+            type="primary"
+            icon="el-icon-plus"
+            @click="changeCondition"
+            v-if="!isHidden"
+            circle
+          ></el-button>
+        </transition>
+        <transition class="same-pos" name="fade" mode="out-in">
+          <div id="chat-box" v-if="isHidden">
+            <el-card :body-style="{ padding: '0px' }">
+              <div id="card-head" class="card-header">
+                <el-button @click="changeCondition" type="danger" icon="el-icon-close"
+                  >닫기</el-button
+                >
+              </div>
+              <div class="full-box">
+                <div>QnA List</div>
+                <el-button @click="createChatRoom" class="green-color-btn"
+                  >채팅방개설요청/상담사상담신청 등</el-button
+                >
+                <p>채팅방개설버튼은 나중에 말풍선같은 걸로 qna 밑에 위치하도록</p>
+                <div v-if="isChatExist">
+                  <UserChatDetail />
                 </div>
-                <div style="padding: 14px">
-                  <div class="full-box">
-                    <div>QnA List</div>
-                    <el-button @click="createChatRoom" class="green-color-btn"
-                      >채팅방개설요청/상담사상담신청 등</el-button
-                    >
-                    <p>채팅방개설버튼은 나중에 말풍선같은 걸로 qna 밑에 위치하도록</p>
-                    <div v-if="isChatExist">
-                      <UserChatDetail />
-                    </div>
-                    <el-button type="primary" @click="changeisChatExist" circle></el-button>
-                    <div v-if="isChatExist">
-                      <p>isChatExist</p>
-                      <p>{{ isChatExist.value }}</p>
-                    </div>
-                    <div v-if="!isChatExist">
-                      <p>!isChatExist</p>
-                      <p>{{ !isChatExist.value }}</p>
-                    </div>
-                  </div>
-                </div>
-              </el-card>
-            </div>
-          </transition>
-        </div>
+              </div>
+            </el-card>
+          </div>
+        </transition>
       </div>
     </div>
   </el-row>
 </template>
 <script>
-import axios from '@/axios';
-import { useStore } from 'vuex';
-import UserChatDetail from './UserChatDetail.vue';
-import ChatDetail from '../../components/chat/ChatDetail.vue';
-import { computed, ref } from 'vue';
+import axios from "@/axios";
+import { useStore } from "vuex";
+import UserChatDetail from "./UserChatDetail.vue";
+import ChatDetail from "../../components/chat/ChatDetail.vue";
+import { computed, ref } from "vue";
 /* eslint-disable */
 export default {
   components: {
@@ -78,7 +65,7 @@ export default {
     };
     // 유저의 채팅방 개설요청
     let createChatRoom = () => {
-      store.dispatch('createChatRooms', user_pk_idx.value);
+      store.dispatch("createChatRooms", user_pk_idx.value);
       isChatExist.value = true;
     };
     return {
@@ -99,7 +86,7 @@ export default {
   position: fixed;
   width: 100%;
   height: 100%;
-  background-image: url('../../assets/Microsoft.png');
+  background-image: url("../../assets/Microsoft.png");
   background-repeat: no-repeat;
   background-position: center;
 }
@@ -113,16 +100,22 @@ export default {
 }
 
 #chat-box {
-  width: 50%;
-  height: 50%;
-  /* width: 650px;
-  height: 750px; */
+  /* width: 360px;
+  height: 720px; */
+  width: 25rem; /* 1rem = 16px */
+  height: 40rem;
   padding: 10px;
+  position: sticky;
   background-color: gray;
   /* 상속 받을 수 있나? */
   border-radius: 4px;
   /* box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1); */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
+}
+
+el-card {
+  width: 100%;
+  height: 100%;
 }
 
 .big-btn {
@@ -163,6 +156,9 @@ export default {
 
 .full-box {
   box-sizing: border-box;
+  width: auto;
+  height: auto;
+  padding: 14px;
 }
 
 .card-header {
