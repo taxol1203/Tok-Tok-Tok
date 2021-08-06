@@ -83,6 +83,9 @@ export default createStore({
           roomList.push(room);
         }
       }
+      roomList.sort(function (a, b) {
+        return a.session.created_at > b.session.created_at?-1:1 
+      });
       return roomList;
     },
     get_user_messages: (state) => {
