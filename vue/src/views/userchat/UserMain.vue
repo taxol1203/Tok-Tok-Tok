@@ -36,11 +36,11 @@
   </el-row>
 </template>
 <script>
-import axios from '@/axios';
-import { useStore } from 'vuex';
-import UserChatDetail from './UserChatDetail.vue';
-import ChatDetail from '../../components/chat/ChatDetail.vue';
-import { computed, ref } from 'vue';
+import axios from "@/axios";
+import { useStore } from "vuex";
+import UserChatDetail from "./UserChatDetail.vue";
+import ChatDetail from "../../components/chat/ChatDetail.vue";
+import { computed, ref } from "vue";
 /* eslint-disable */
 export default {
   components: {
@@ -63,7 +63,7 @@ export default {
     };
     // 유저의 채팅방 개설요청
     let createChatRoom = () => {
-      store.dispatch('createChatRooms', user_pk_idx.value);
+      store.dispatch("createChatRooms", user_pk_idx.value);
       isChatExist.value = true;
     };
     return {
@@ -84,7 +84,7 @@ export default {
   position: fixed;
   width: 100%;
   height: 100%;
-  background-image: url('../../assets/Microsoft.png');
+  background-image: url("../../assets/Microsoft.png");
   background-repeat: no-repeat;
   background-position: center;
 }
@@ -101,7 +101,7 @@ export default {
   /* width: 360px;
   height: 720px; */
   width: 25rem; /* 1rem = 16px */
-  height: 40rem;
+  height: 45rem; /* 720px */
   padding: 10px;
   position: sticky;
   background-color: gray;

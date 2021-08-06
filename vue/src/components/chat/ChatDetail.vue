@@ -4,7 +4,7 @@
     <el-scrollbar ref="scrollbar" id="topMessages">
       <div v-for="(msg, index) in messages" :key="index">
         <el-row>
-          <el-col v-if="msg.fk_author_idx == userName">
+          <el-col v-if="msg.fk_author_idx == userPkidx">
             <div class="message-me">
               {{ msg.message }}
             </div>
@@ -58,7 +58,7 @@ export default {
     const store = useStore();
     const sessionId = computed(() => store.state.selected_room);
     const messages = computed(() => store.getters.get_messages);
-    const userName = computed(() => store.state.auth.user.pk_idx);
+    const userPkidx = computed(() => store.state.auth.user.pk_idx);
     const message = ref("");
     let connected = false;
     let stompClient = "";
@@ -105,7 +105,7 @@ export default {
     connect(sessionId.value);
 
     const sendMessage = () => {
-      if (userName.value !== "" && message.value !== "") {
+      if (userPkidx.value !== "" && message.value !== "") {
         // 이벤트 발생 엔터키 + 유효성 검사는 여기에서
         send({ message: message }); // 전송 실패 감지는 어떻게? 프론트단에서 고민좀 부탁 dream
       }
@@ -118,7 +118,7 @@ export default {
         // console.log('IN SOCKET');
         const msg = {
           message: message.value, // 메세지 내용. type이 MSG인 경우를 제외하곤 비워두고 프론트단에서만 처리.
-          fk_author_idx: userName.value, // 작성자의 회원 idx
+          fk_author_idx: userPkidx.value, // 작성자의 회원 idx
           created: "", // 작성시간, 공란으로 비워서 메세지 보내기. response에는 담겨옵니다.
           deleted: false, // 삭제된 메세지 여부. default = false
           fk_session_id: sessionId.value, // 현재 채팅세션의 id.
@@ -139,7 +139,7 @@ export default {
       connect,
       connected,
       stompClient,
-      userName,
+      userPkidx,
     };
   },
 };
