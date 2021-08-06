@@ -113,11 +113,6 @@ export default {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
 }
 
-el-card {
-  width: 100%;
-  height: 100%;
-}
-
 .big-btn {
   width: 80px;
   height: 80px;
@@ -159,6 +154,7 @@ el-card {
   width: auto;
   height: auto;
   padding: 14px;
+  position: relative;
 }
 
 .card-header {
