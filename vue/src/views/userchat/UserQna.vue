@@ -13,6 +13,11 @@
             <div class="message-me" @click="chooseAnswer(ans.fk_next_idx)">{{ ans.content }}</div>
           </el-col>
         </el-row>
+        <el-row>
+          <el-col>
+            <div class="message-me" @click="connectAgent">상담원 연결</div>
+          </el-col>
+        </el-row>
       </div>
       <!-- v-html="question"<div v-for="answer in answers" :key="answer.pk_idx">
         <el-row>
