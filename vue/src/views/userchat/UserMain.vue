@@ -95,14 +95,11 @@ export default {
 }
 
 #chat-box {
-  /* width: 360px;
-  height: 720px; */
   width: 25rem; /* 1rem = 16px */
   height: 45rem; /* 720px */
   padding: 10px;
   position: sticky;
   background-color: gray;
-  /* 상속 받을 수 있나? */
   border-radius: 4px;
   /* box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1); */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
@@ -168,9 +165,5 @@ export default {
 
 .item {
   margin-bottom: 18px;
-}
-
-.box-card {
-  /* width: 480px; */
 }
 </style>

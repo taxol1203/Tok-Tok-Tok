@@ -1,9 +1,17 @@
 <template>
+  <div v-if="isOpen == 'OPEN'">
+    <p>현재 모든 상담사가 상담 중입니다. 잠시만 기다려주세요.</p>
+    <div v-loading="loading"></div>
+    <i class="el-icon-loading" style="margin-right: 3px"></i>
+    <i class="el-icon-loading"></i>
+    <p>이거 기다리는거 디자인 물어보기</p>
+  </div>
+  <div v-if="isOpen == 'LIVE'">LIVE</div>
   <div style="position: relative; width: 100%; height: 100%; padding: 10px">
     <el-scrollbar ref="scrollbar" id="topMessages">
       <div v-for="(msg, index) in messages" :key="index">
         <el-row>
-          <el-col v-if="msg.fk_author_idx == userName">
+          <el-col v-if="msg.fk_author_idx == userPkidx">
             <div class="message-me">
               {{ msg.message }}
             </div>
@@ -15,7 +23,7 @@
       </div>
     </el-scrollbar>
     <!-- 입력창 -->
-    <el-row id="bottomInput">
+    <el-row id="bottomInput" v-if="isOpen == 'LIVE'">
       <el-col :span="2">
         <el-button icon="el-icon-video-camera" class="icon-m-p green-color-btn"></el-button>
       </el-col>
@@ -53,9 +61,11 @@ export default {
   setup() {
     const store = useStore();
     const sessionId = computed(() => store.state.selected_room); //user가 생성한 방 id
-    const userName = computed(() => store.state.auth.user.pk_idx);
+    const userPkidx = computed(() => store.state.auth.user.pk_idx);
     const message = ref("");
     const messages = computed(() => store.getters["get_user_messages"]);
+    const isOpen = computed(() => store.getters["get_user_room_status"]);
+    const loading = true;
 
     let connected = false;
     let stompClient = "";
@@ -100,7 +110,7 @@ export default {
     };
     connect(sessionId.value);
     const sendMessage = () => {
-      if (userName.value !== "" && message.value !== "") {
+      if (userPkidx.value !== "" && message.value !== "") {
         // 이벤트 발생 엔터키 + 유효성 검사는 여기에서
         send({ message: message }); // 전송 실패 감지는 어떻게? 프론트단에서 고민좀 부탁 dream
       }
@@ -109,15 +119,15 @@ export default {
 
     const send = () => {
       console.log("Send message:" + message.value);
-      if (userName.value <= 0) {
-        console.log("0이하면 안됨) fk_author_idx: " + userName.value);
+      if (userPkidx.value <= 0) {
+        console.log("0이하면 안됨) fk_author_idx: " + userPkidx.value);
       }
       //DB에 없는 유저 idx(0같은 것)가 들어가면 안된다.
-      if (stompClient && stompClient.connected && userName.value > 0) {
+      if (stompClient && stompClient.connected && userPkidx.value > 0) {
         console.log("IN SOCKET");
         const msg = {
           message: message.value, // 메세지 내용. type이 MSG인 경우를 제외하곤 비워두고 프론트단에서만 처리.
-          fk_author_idx: userName.value, // 작성자의 회원 idx
+          fk_author_idx: userPkidx.value, // 작성자의 회원 idx
           created: "", // 작성시간, 공란으로 비워서 메세지 보내기. response에는 담겨옵니다.
           deleted: false, // 삭제된 메세지 여부. default = false
           fk_session_id: sessionId.value, // 현재 채팅세션의 id.
@@ -138,7 +148,9 @@ export default {
       connect,
       connected,
       stompClient,
-      userName,
+      userPkidx,
+      isOpen,
+      loading,
     };
   },
 };
