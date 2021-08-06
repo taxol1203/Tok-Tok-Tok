@@ -19,8 +19,8 @@ export default {
   },
   setup(props) {
     return {
-      id: props.room.session_id.split('-')[0],
-      time: props.room.created_at.slice(0, 19),
+      id: props.room.session.session_id.split('-')[0],
+      time: props.room.session.created_at.slice(0, 19),
     };
   },
   //   setup(props) {

@@ -24,10 +24,15 @@
       >
     </el-row>
     <div>
+      <!-- {{ listStatus }} -->
       <el-scrollbar height="700px">
-        <div v-for="room in listStatus" :key="room.session_id">
-          {{ room.status }}
-          <el-card @click="pickRoom(room.session_id)" class="list-item box-card" :class="{selected: room.session_id == selectedSession}">
+        <div v-for="room in listStatus" :key="room.session.session_id">
+          {{ room.session.status }}
+          <el-card
+            @click="pickRoom(room.session.session_id)"
+            class="list-item box-card"
+            :class="{ selected: room.session.session_id == selectedSession }"
+          >
             <ChatItem :room="room" />
           </el-card>
         </div>
@@ -48,14 +53,14 @@ export default {
     const store = useStore();
     const listStatus = computed(() => store.getters.get_room_list);
     const status = reactive({
-      "LIVE": true,
-      "OPEN": false,
-      "END": false
+      LIVE: true,
+      OPEN: false,
+      END: false,
     });
-    const selectedSession = ref("");
+    const selectedSession = ref('');
 
     const listMenuSelect = (key) => {
-      store.commit("STATUS_CHAGE", key);
+      store.commit('STATUS_CHAGE', key);
       for (let s in status) {
         if (s == store.state.list_status) {
           status[s] = true;
@@ -71,9 +76,8 @@ export default {
     };
     // 클릭한 채팅방의 세션id를 state에 저장
     const pickRoom = (key) => {
-      store.dispatch('pickRoom', key);
+      store.commit('PICK_ROOM', key);
       selectedSession.value = key;
-
     };
     return {
       newChat,
