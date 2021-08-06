@@ -47,6 +47,10 @@ export default createStore({
     STATUS_CHANGE(state, payload) {
       state.list_status = payload;
     },
+    ENTER_ROOM(state) {
+      state.list_status = "LIVE";
+      state.rooms[`${state.selected_room}`].session.status = "LIVE";
+    },
   },
   actions: {
     async getChatRooms({ commit, state }) {
@@ -75,6 +79,17 @@ export default createStore({
     pickRoom({ commit }, key) {
       commit("PICK_ROOM", key);
     },
+    async enterRoom({ commit, state }, sessionId) {
+      try {
+        const res = await axios.put(`/api/api/chat/room/${sessionId.value}`, {
+          admin_pk_idx: state.auth.user.pk_idx,
+        });
+        commit("ENTER_ROOM", res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+
   },
   getters: {
     get_messages: (state) => {
@@ -94,8 +109,6 @@ export default createStore({
       return roomList;
     },
     get_user_messages: (state) => {
-      // return state.session_key[`${state.selected_room}`].messages;
-      console.log(state.session_key);
       return state.session_key.messages;
     },
     get_user_room_status: (state) => {
