@@ -21,11 +21,9 @@
                 >
               </div>
               <div class="full-box">
-                <div>QnA List</div>
                 <el-button @click="createChatRoom" class="green-color-btn"
                   >채팅방개설요청/상담사상담신청 등</el-button
                 >
-                <p>채팅방개설버튼은 나중에 말풍선같은 걸로 qna 밑에 위치하도록</p>
                 <div v-if="isChatExist">
                   <UserChatDetail />
                 </div>
@@ -38,11 +36,11 @@
   </el-row>
 </template>
 <script>
-import axios from "@/axios";
-import { useStore } from "vuex";
-import UserChatDetail from "./UserChatDetail.vue";
-import ChatDetail from "../../components/chat/ChatDetail.vue";
-import { computed, ref } from "vue";
+import axios from '@/axios';
+import { useStore } from 'vuex';
+import UserChatDetail from './UserChatDetail.vue';
+import ChatDetail from '../../components/chat/ChatDetail.vue';
+import { computed, ref } from 'vue';
 /* eslint-disable */
 export default {
   components: {
@@ -65,7 +63,7 @@ export default {
     };
     // 유저의 채팅방 개설요청
     let createChatRoom = () => {
-      store.dispatch("createChatRooms", user_pk_idx.value);
+      store.dispatch('createChatRooms', user_pk_idx.value);
       isChatExist.value = true;
     };
     return {
@@ -86,7 +84,7 @@ export default {
   position: fixed;
   width: 100%;
   height: 100%;
-  background-image: url("../../assets/Microsoft.png");
+  background-image: url('../../assets/Microsoft.png');
   background-repeat: no-repeat;
   background-position: center;
 }
