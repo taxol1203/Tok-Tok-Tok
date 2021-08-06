@@ -100,7 +100,9 @@ export default {
   filter: brightness(105%);
 }
 .selected {
-  filter: brightness(105%);
+  /* filter: brightness(105%); */
+  background-color: #fff;
+  border-right: 0px;
 }
 #container {
   background: #f7f4f0;
