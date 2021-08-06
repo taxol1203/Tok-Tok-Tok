@@ -38,7 +38,7 @@
                     </div>
                     <div v-if="!isChatExist">
                       <p>!isChatExist</p>
-                      <p>{{ !isChatExist.value }}</p>
+                      <p>{{ isChatExist.value }}</p>
                     </div>
                   </div>
                 </div>
