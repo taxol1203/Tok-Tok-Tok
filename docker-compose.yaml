@@ -10,10 +10,10 @@ services:
       networks:
         - net
       environment:
+        TZ: Asia/Seoul
         - POSTGRES_DB=postgres
         - POSTGRES_USERNAME=postgres
         - POSTGRES_PASSWORD=root
-        TZ: Asia/Seoul
       volumes:
         - postgres:/var/lib/postgresql/data
         - ./postgres/init/:/docker-entrypoint-initdb.d/
