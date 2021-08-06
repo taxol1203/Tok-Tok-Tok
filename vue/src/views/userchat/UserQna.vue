@@ -22,7 +22,7 @@
       <user-chat-detail />
     </el-scrollbar>
     <!-- 입력창시작 -->
-    <el-row id="bottomInput">
+    <el-row id="bottomInput" v-if="realChat">
       <el-col :span="5">
         <el-button icon="el-icon-video-camera" class="green-color-btn"></el-button>
       </el-col>
@@ -67,6 +67,8 @@ export default {
       store.commit('userQna/ADD_LOG');
     };
     const user_pk_idx = computed(() => store.state.auth.user.pk_idx);
+    const realChat = computed(() => store.state.userQna.realChat);
+
     const createChatRoom = () => {
       console.log(user_pk_idx.value);
       store.dispatch('createChatRooms', user_pk_idx.value);
@@ -76,6 +78,7 @@ export default {
     return {
       log,
       user_pk_idx,
+      realChat,
       createChatRoom,
       chooseAnswer,
       sendMessage,
