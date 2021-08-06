@@ -24,11 +24,9 @@
                 </div>
                 <div style="padding: 14px">
                   <div class="full-box">
-                    <div>QnA List</div>
                     <el-button @click="createChatRoom" class="green-color-btn"
                       >채팅방개설요청/상담사상담신청 등</el-button
                     >
-                    <p>채팅방개설버튼은 나중에 말풍선같은 걸로 qna 밑에 위치하도록</p>
                     <!-- <ChatDetail /> -->
                     <UserQna />
                     <UserChatDetail />
@@ -66,6 +64,7 @@ export default {
     console.log('USER PK IDX:' + user_pk_idx.value);
 
     let changeCondition = () => {
+      store.dispatch('userQna/init'); //state.userQna.scenes에 pk_idx별로 예상질문정보+answers에 정답정보 저장
       isHidden.value = !isHidden.value;
     };
     let createChatRoom = () => {

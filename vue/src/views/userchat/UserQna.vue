@@ -2,65 +2,49 @@
   <div style="position: relative; width: 50%; height: 50%; padding: 10px">
     <!-- 상대방 -->
     <el-scrollbar ref="scrollbar" id="topMessages">
-      <div class="message-me">
-        {{ current }}
+      <div v-for="(item, index) in log" :key="index">
+        <el-row>
+          <el-col>
+            <div class="message-other" v-html="item.content"></div>
+          </el-col>
+        </el-row>
+        <el-row v-for="ans in item.answers" :key="ans.pk_idx">
+          <el-col>
+            <div class="message-me" @click="chooseAnswer(ans.fk_next_idx)">{{ ans.content }}</div>
+          </el-col>
+        </el-row>
       </div>
-      <div class="message-me">
-        {{ cur }}
-      </div>
-      <!-- <div class="message-other" v-for="(ans, index) in current.answers" :key="index">
-        {{ ans }}
+      <!-- v-html="question"<div v-for="answer in answers" :key="answer.pk_idx">
+        <el-row>
+          <el-col>
+            <div class="message-me" @click="chooseAnswer(answer.fk_next_idx)">
+              {{ answer.content }}
+            </div>
+          </el-col>
+        </el-row>
       </div> -->
     </el-scrollbar>
-    <div>
-      <el-row id="bottomInput">
-        <!-- 입력창 -->
-        <el-col :span="2">
-          <el-button icon="el-icon-video-camera" class="icon-m-p green-color-btn"></el-button>
-        </el-col>
-        <el-col :span="20">
-          <div>
-            <el-input
-              type="text"
-              @keyup.enter="sendMessage"
-              v-model="message"
-              placeholder="Please input"
-              clearable
-            >
-            </el-input>
-          </div>
-        </el-col>
-        <el-col :span="2">
-          <el-button
-            @click="sendMessage"
-            icon="el-icon-s-promotion"
-            class="icon-m-p green-color-btn"
-          ></el-button>
-        </el-col>
-      </el-row>
-    </div>
   </div>
 </template>
 <script>
-// import axios from "axios";
-import Stomp from 'webstomp-client';
-import SockJS from 'sockjs-client';
 import { useStore } from 'vuex';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 
 export default {
   name: 'Chat',
   components: {},
   setup() {
     const store = useStore();
-    store.dispatch('userQna/init'); //state.userQna.scenes에 pk_idx별로 예상질문정보+answers에 정답정보 저장
     store.commit('userQna/CHANGE_SELECT', 1);
-    const current = computed(() => store.getters['userQna/getCur']);
-    const cur = computed(() => store.state.current);
-    console.log(cur.value);
+    store.commit('userQna/SET_CURRENT');
+    const log = computed(() => store.getters['userQna/logGetter']);
+    const chooseAnswer = (next_idx) => {
+      store.commit('userQna/CHANGE_SELECT', next_idx);
+      store.commit('userQna/ADD_LOG');
+    };
     return {
-      current,
-      cur,
+      log,
+      chooseAnswer,
     };
 
     //이전 코드

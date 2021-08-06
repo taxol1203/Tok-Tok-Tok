@@ -54,7 +54,7 @@ export default {
     };
     const sendContent = () => {
       store.dispatch('moduleQna/editContent', select.value);
-      show.value = !show.value;
+      // show.value = !show.value;
     };
     return {
       store,
