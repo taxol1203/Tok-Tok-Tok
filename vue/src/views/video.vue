@@ -25,20 +25,19 @@
 
   <div class="select">
     <label for="videoSource">Video source: </label
-    ><select ref="videoSelect">
-      <option v-for="(option, index) in mediaOptions.videoinput" :key="index">
+    ><select v-model="videoSelect" @change="start()">
+      <option disabled value="">Please select one</option>
+      <option
+        v-for="(option, index) in mediaOptions.videoinput"
+        :key="index"
+        :value="option.deviceId"
+      >
         {{ option.label }}
       </option>
     </select>
   </div>
+  <span>선택함: {{ videoSelect }}</span>
 
-  <select v-model="selected">
-    <option disabled value="">Please select one</option>
-    <option>A</option>
-    <option>B</option>
-    <option>C</option>
-  </select>
-  <span>선택함: {{ selected }}</span>
   <!-- <button type="button" onclick="socketInit('a');">Socket Init ROOM 1</button>
   <button type="button" onclick="socketInit('b');">Socket Init ROOM 2</button>
   <button type="button" onclick="startVideo();">
@@ -133,31 +132,26 @@ export default {
         });
       }
       const audioSource = audioInputSelect.value; // 선택한 device의 ID
-      const videoSource = videoSelect.value;
+      const videoSource = videoSelect.value; // video device id
 
-      // const constraints = {
-      //   audio: {
-      //     deviceId: audioSource ? { exact: audioSource } : undefined,
-      //     // 현재 option에서 선택된 id를 보유한 오디오 소스를 붙인다
-      //   },
-      //   video: {
-      //     deviceId: videoSource ? { exact: videoSource } : undefined,
-      //   },
-      // };
-      // console.log(constraints);
-      // navigator.mediaDevices
-      //   .getUserMedia(constraints)
-      //   .then(gotStream) // html element와 video/audio를 부 착한다
-      //   .then(gotDevicesList) // 디바이스 목록을 최신화한다.
-      //   .then(() => {
-      //     if (socketRead) {
-      //       sendReconnectRequest(); // 만약 소켓이 연결되어있다면 재접속
-      //     }
-      //   });
-      // // getUserMedia -> 반드시 .then으로 다룰 것.
-      // // .catch(handleError);
-      // // console.log("start");
-      // // console.log(socketRead);
+      const constraints = {
+        audio: {
+          deviceId: audioSource ? { exact: audioSource } : undefined,
+          // 현재 option에서 선택된 id를 보유한 오디오 소스를 붙인다
+        },
+        video: {
+          deviceId: videoSource ? { exact: videoSource } : undefined,
+        },
+      };
+      navigator.mediaDevices
+        .getUserMedia(constraints) //constraints에 대한 사용권한 요청
+        .then(gotStream) // html element와 video/audio를 부착한다
+        .then(gotDevicesList) // 디바이스 목록을 최신화한다.
+        .then(() => {
+          if (socketRead) {
+            sendReconnectRequest(); // 만약 소켓이 연결되어있다면 재접속
+          }
+        });
     };
 
     return {
