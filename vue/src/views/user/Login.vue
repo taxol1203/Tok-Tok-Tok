@@ -8,7 +8,7 @@
           <p>minsu2@naver.com</p>
           <p>minsu2navercom!</p>
           <el-form
-            v-if="token === null"
+            v-if="Object.keys(token).length === 0"
             label-position="top"
             label-width="100px"
             :model="user"
@@ -17,14 +17,10 @@
             status-icon
           >
             <el-form-item label="이메일" prop="email">
-              <el-input type="email" v-model="user.email" autocomplete="off"
-                >user11@naver.com</el-input
-              >
+              <el-input type="email" v-model="user.email" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item label="비밀번호" prop="passwd">
-              <el-input type="password" v-model="user.passwd" autocomplete="off"
-                >asdf555!@#</el-input
-              >
+              <el-input type="password" v-model="user.passwd" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item>
               <transition name="slide-fade">
@@ -46,13 +42,15 @@
 </template>
 
 <script>
-import { reactive, ref } from 'vue';
+import { reactive, ref, computed } from 'vue';
 import { useStore } from 'vuex';
 import router from '@/router';
 
 export default {
   setup() {
     const store = useStore();
+    const token = computed(() => store.state.auth.user);
+    console.log(token.value);
     const formLabelAlign = ref(null);
     const onSubmit = () => {
       let payload = {
@@ -62,7 +60,6 @@ export default {
       formLabelAlign.value.validate((valid) => {
         if (valid) {
           store.dispatch('auth/login', payload);
-          router.go(0);
         }
       });
     };
@@ -101,8 +98,8 @@ export default {
       }
     };
     const logout = () => {
-      localStorage.removeItem('vuex');
-      router.go(0);
+      localStorage.clear();
+      store.commit('auth/logout');
     };
 
     const user = reactive({
@@ -118,8 +115,8 @@ export default {
     };
     return {
       store,
-      token: localStorage.getItem('vuex'),
       user,
+      token,
       formLabelAlign,
       resetForm,
       rules,
