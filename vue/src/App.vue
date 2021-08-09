@@ -1,8 +1,10 @@
 <template>
   <div id="nav">
     <router-link to="/signup">Sign Up</router-link> |
-    <router-link to="/login">Log in</router-link> | <router-link to="/admin">Admin</router-link> |
+    <router-link to="/login">Log in</router-link> |
+    <router-link to="/admin">Admin</router-link> |
     <router-link to="/userchat">User Page</router-link>
+    <router-link to="/video">Video</router-link>
   </div>
   <div class="inner">
     <transition name="page-change" mode="out-in">
@@ -60,7 +62,8 @@ export default {
 } */
 @font-face {
   font-family: "BMJUA";
-  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/BMJUA.woff") format("woff");
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/BMJUA.woff")
+    format("woff");
   font-weight: normal;
   font-style: normal;
 }

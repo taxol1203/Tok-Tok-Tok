@@ -4,6 +4,7 @@ import Signup from "../views/user/Signup.vue";
 import ChatArea from "../views/chat/ChatArea.vue";
 import QnaArea from "../views/qna/QnaArea.vue";
 import UserChat from "../views/userchat/UserMain.vue";
+import Video from "../views/video.vue";
 
 const routes = [
   {
@@ -30,9 +31,12 @@ const routes = [
     },
   },
   {
-    path: "/secret",
-    name: "Secret",
-    component: () => import(/* webpackChunkName: "about" */ "../views/Secret.vue"),
+    path: "/video",
+    name: "Video",
+    component: Video,
+    meta: {
+      authRequired: true,
+    },
   },
   {
     path: "/admin",
