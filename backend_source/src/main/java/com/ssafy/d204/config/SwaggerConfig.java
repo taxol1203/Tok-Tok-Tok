@@ -57,7 +57,8 @@ public class SwaggerConfig {
             .paths(PathSelectors.ant("/**/api/**")
 //						.or(PathSelectors.ant("/**/**"))
             )
-            .build();
+            .build()
+            .useDefaultResponseMessages(false);
     }
 
     @Bean
@@ -90,6 +91,7 @@ public class SwaggerConfig {
             .paths(PathSelectors.ant("/**/api/chat/**")
 //						.or(PathSelectors.ant("/**/chat/**"))
             )
-            .build();
+            .build()
+            .useDefaultResponseMessages(false);
     }
 }

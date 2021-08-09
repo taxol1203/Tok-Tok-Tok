@@ -6,7 +6,10 @@ import com.ssafy.d204.chat.dto.ChatMessage;
 import com.ssafy.d204.chat.dto.ChatMessageAndSession;
 import com.ssafy.d204.chat.dto.ChatSession;
 import com.ssafy.d204.chat.dto.ChatSessionCreateReq;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -42,6 +45,10 @@ public class ChatSessionController {
     @ApiOperation(value = "현재 개설중인 모든 방의 목록을 가져온다.", response = ChatSession.class)
     @GetMapping("/rooms/all")
     @ResponseBody
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "전체 방 목록 조회 성공"),
+        @ApiResponse(code = 500, message = "DB 오류"),
+    })
     public ResponseEntity<?> getAllRoom() {
         List<ChatSession> ret = null;
         try {
@@ -61,6 +68,11 @@ public class ChatSessionController {
     @ApiOperation(value = "(유저측)본인에게 권한이 있는 방만 검색한다.", response = ChatSession.class)
     @GetMapping("/rooms/user/{userid}")
     @ResponseBody
+    @ApiImplicitParam(name = "userId", value="유저의 pk_idx", required=true)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "방 검색 완료"),
+        @ApiResponse(code = 500, message = "DB 오류"),
+    })
     public ResponseEntity<?> getMyRoom(@PathVariable int userid) {
         List<ChatSession> ret = null;
         try {
@@ -73,9 +85,13 @@ public class ChatSessionController {
     }
 
     // 채팅방 생성
-    @ApiOperation(value = "채팅방을 개설한다.", response = ChatSession.class)
+    @ApiOperation(value = "채팅방을 개설한다.")
     @PostMapping("/room")
     @ResponseBody
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "채팅방 개설 성공"),
+        @ApiResponse(code = 500, message = "DB 오류"),
+    })
     public ResponseEntity<?> createRoom(@RequestBody ChatSessionCreateReq req) {
 //        System.out.println(session);
         ChatSession temp = ChatSession.create();
@@ -99,9 +115,15 @@ public class ChatSessionController {
         return new ResponseEntity<ChatSession>(ret, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "상담사가 해당 상담을 담당하겠다고 선언한다.", response = ChatSession.class)
+    @ApiOperation(value = "상담사가 해당 상담을 담당하겠다고 선언한다.")
     @PutMapping("/room/{sessionId}")
+    @ApiImplicitParam(name = "sessionId", value="세션 아이디", required=true)
     @ResponseBody
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "상담사 배정 성공"),
+            @ApiResponse(code = 409, message = "해당 세션이 존재하지 않거나 다른 상담사가 이미 배정된 경우"),
+            @ApiResponse(code = 500, message = "DB 오류"),
+    })
     public ResponseEntity<?> assignRoom(@PathVariable String sessionId,
         @RequestBody AssignRoomRequest req) {
         int result = 0;
@@ -119,8 +141,15 @@ public class ChatSessionController {
             HttpStatus.OK); // 해당 방이 존재하고 아무도 배정을 받지 않았다면 200과 동시에 방 상태가 바뀜
     }
 
-    @ApiOperation(value = "해당 방의 상담을 종료한다.", response = ChatSession.class)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "상담사 배정 성공"),
+        @ApiResponse(code = 208, message = "이미 상담종료된 경우"),
+        @ApiResponse(code = 403, message = "자기에게 배정된 방이 아닌 경우에 상담 종료 시 거부"),
+        @ApiResponse(code = 500, message = "DB 오류"),
+    })
+    @ApiOperation(value = "해당 방의 상담을 종료한다.")
     @DeleteMapping("/room/{sessionId}")
+    @ApiImplicitParam(name = "sessionId", value="세션 아이디", required=true)
     @ResponseBody
     public ResponseEntity<?> closeRoom(@PathVariable String sessionId,
         @RequestBody AssignRoomRequest req) {
@@ -153,7 +182,12 @@ public class ChatSessionController {
     // 채팅방 정보 아이디에서 받아옴
     @ApiOperation(value = "방의 ID를 가지고 방의 정보를 수신한다.", response = ChatSession.class)
     @GetMapping("/room/{sessionId}")
+    @ApiImplicitParam(name = "sessionId", value="세션 아이디", required=true)
     @ResponseBody
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "방 정보 조회 성공"),
+        @ApiResponse(code = 500, message = "DB 오류"),
+    })
     public ResponseEntity<?> getRoomInfo(@PathVariable String sessionId) {
         ChatSession ret = null;
         System.out.println(sessionId);
@@ -171,9 +205,14 @@ public class ChatSessionController {
         return new ResponseEntity<ChatSession>(ret, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "모든 채팅방과 모든 메세지를 가져온다.", response = ChatSession.class)
+
+    @ApiOperation(value = "모든 채팅방과 모든 메세지를 가져온다.", response = ChatMessageAndSession.class)
     @GetMapping("/admin/init")
     @ResponseBody
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "모든 메세지와 방 가져오기 성공"),
+        @ApiResponse(code = 500, message = "DB 오류"),
+    })
     public ResponseEntity<?> getAllMessagesAndSessions() {
         HashMap<String, ChatMessageAndSession> ret = new HashMap<>();
         try {
@@ -198,9 +237,14 @@ public class ChatSessionController {
         return new ResponseEntity<HashMap<String, ChatMessageAndSession>>(ret, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "해당 상담사에게 배정된 방과 아직 전담 상담사가 없는 방과 메세지를 가져온다.", response = ChatSession.class)
+    @ApiOperation(value = "해당 상담사에게 배정된 방과 아직 전담 상담사가 없는 방과 메세지를 가져온다.", response = ChatMessageAndSession.class)
     @GetMapping("/admin/init/{fk_host_idx}")
+    @ApiImplicitParam(name = "fk_host_idx", value="현재 상담사의 pk_idx", required=true)
     @ResponseBody
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "모든 메세지와 방 가져오기 성공"),
+        @ApiResponse(code = 500, message = "DB 오류"),
+    })
     public ResponseEntity<?> getAllMessagesAndSessionsByHostIdx(@PathVariable int fk_host_idx) {
         HashMap<String, ChatMessageAndSession> ret = new HashMap<>();
         try {
@@ -230,9 +274,15 @@ public class ChatSessionController {
         return new ResponseEntity<HashMap<String, ChatMessageAndSession>>(ret, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "해당 세션ID의 이전 메세지들 가져오기", response = ChatSession.class)
+    @ApiOperation(value = "해당 세션ID의 이전 메세지들 가져오기", response = ChatMessage.class)
     @GetMapping("/messages/{sessionId}")
+    @ApiImplicitParam(name = "sessionId", value="세션 아이디", required=true)
     @ResponseBody
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "메세지 가져오기 성공"),
+        @ApiResponse(code = 204, message = "해당 방 메세지 없음"),
+        @ApiResponse(code = 500, message = "DB 오류"),
+    })
     public ResponseEntity<?> getMessagesBySessionId(@PathVariable String sessionId) {
         List<ChatMessage> ret;
         try {
