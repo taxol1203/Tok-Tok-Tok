@@ -46,9 +46,9 @@
 </template>
 
 <script>
-import { reactive, ref } from 'vue';
-import { useStore } from 'vuex';
-import router from '@/router';
+import { reactive, ref } from "vue";
+import { useStore } from "vuex";
+import router from "@/router";
 
 export default {
   setup() {
@@ -61,20 +61,20 @@ export default {
       };
       formLabelAlign.value.validate((valid) => {
         if (valid) {
-          store.dispatch('auth/login', payload);
-          router.go(0);
+          store.dispatch("auth/login", payload);
+          // router.go(0);
         }
       });
     };
     const checkEmail = (rule, value, callback) => {
       // console.log(value);
       if (!value) {
-        return callback(new Error('Please input the email'));
+        return callback(new Error("Please input the email"));
       } else {
         let pattern =
           /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
         if (value.match(pattern) == null) {
-          callback(new Error('Please input email'));
+          callback(new Error("Please input email"));
         } else {
           callback();
         }
@@ -83,7 +83,7 @@ export default {
         let pattern =
           /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
         if (pattern.test(value) == null) {
-          callback(new Error('Please input email'));
+          callback(new Error("Please input email"));
         } else {
           callback();
         }
@@ -91,34 +91,34 @@ export default {
     };
     const validatePasswd = (rule, value, callback) => {
       // console.log(value);
-      if (value === '') {
-        callback(new Error('Please input the password'));
+      if (value === "") {
+        callback(new Error("Please input the password"));
       } else {
         if (value.length < 9 || value.length > 16) {
-          callback(new Error('Please check the password'));
+          callback(new Error("Please check the password"));
         }
         callback();
       }
     };
     const logout = () => {
-      localStorage.removeItem('vuex');
+      localStorage.removeItem("vuex");
       router.go(0);
     };
 
     const user = reactive({
-      email: '',
-      passwd: '',
+      email: "",
+      passwd: "",
     });
     const rules = {
-      passwd: [{ validator: validatePasswd, trigger: 'blur' }],
-      email: [{ validator: checkEmail, trigger: 'blur' }],
+      passwd: [{ validator: validatePasswd, trigger: "blur" }],
+      email: [{ validator: checkEmail, trigger: "blur" }],
     };
     const resetForm = () => {
       formLabelAlign.value.resetFields();
     };
     return {
       store,
-      token: localStorage.getItem('vuex'),
+      token: localStorage.getItem("vuex"),
       user,
       formLabelAlign,
       resetForm,
