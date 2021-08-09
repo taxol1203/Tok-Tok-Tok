@@ -10,7 +10,9 @@
         </el-row>
         <el-row v-for="ans in item.answers" :key="ans.pk_idx">
           <el-col>
-            <div class="message-me" @click="chooseAnswer(ans.fk_next_idx)">{{ ans.content }}</div>
+            <div class="message-me" @click="chooseAnswer(ans.fk_next_idx, ans.content)">
+              {{ ans.content }}
+            </div>
           </el-col>
         </el-row>
         <el-row>
@@ -62,7 +64,10 @@ export default {
     store.commit('userQna/CHANGE_SELECT', 1);
     store.commit('userQna/SET_CURRENT');
     const log = computed(() => store.getters['userQna/logGetter']);
-    const chooseAnswer = (next_idx) => {
+    let history = '';
+    const chooseAnswer = (next_idx, value) => {
+      if (history.length == 0) history += value;
+      else history += '|' + value;
       store.commit('userQna/CHANGE_SELECT', next_idx);
       store.commit('userQna/ADD_LOG');
     };
@@ -71,7 +76,7 @@ export default {
 
     const createChatRoom = () => {
       console.log(user_pk_idx.value);
-      store.dispatch('createChatRooms', user_pk_idx.value);
+      store.dispatch('createChatRooms', history);
     };
 
     const sendMessage = () => {};
@@ -79,6 +84,7 @@ export default {
       log,
       user_pk_idx,
       realChat,
+      history,
       createChatRoom,
       chooseAnswer,
       sendMessage,

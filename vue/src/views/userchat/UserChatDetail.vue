@@ -1,10 +1,10 @@
 <template>
   <div v-if="isOpen == 'OPEN'">
-    <p>현재 모든 상담사가 상담 중입니다. 잠시만 기다려주세요.</p>
+    <!-- <p>현재 모든 상담사가 상담 중입니다. 잠시만 기다려주세요.</p> -->
     <div v-loading="loading"></div>
     <i class="el-icon-loading" style="margin-right: 3px"></i>
-    <i class="el-icon-loading"></i>
-    <p>이거 기다리는거 디자인 물어보기</p>
+    <!-- <i class="el-icon-loading"></i>
+    <p>이거 기다리는거 디자인 물어보기</p> -->
   </div>
   <div v-if="isOpen == 'LIVE'">LIVE</div>
   <!-- 실시간채팅 시작 -->
