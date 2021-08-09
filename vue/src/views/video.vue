@@ -68,6 +68,8 @@ export default {
     });
     const value = "";
     const selectors = [audioInputSelect, audioOutputSelect, videoSelect];
+
+    // 카메라 / 마이크 목록 가져오기
     onMounted(async () => {
       try {
         const deviceInfos = await navigator.mediaDevices.enumerateDevices();
@@ -80,6 +82,40 @@ export default {
         console.log(audioInputSelect);
       }
     });
+
+    // 리스트에 있는데 미디어 디바이스에 접근이 불가능한 경우임.
+    function handleError(error) {
+      // 여기서 에러문구 띄워주면 좋을 것 같습니다.
+      alert("다른 디바이스에서 사용중인지는 않은지 확인해주시기 바랍니다 ");
+      console.log("navigator.MediaDevices.getUserMedia error: ", error.message, error.name);
+    }
+
+    // 카메라 / 마이크 목록 가져오기
+    // device들의 정보를 받아 해석하여 분류하는 코드
+    const gotDevicesList = (deviceInfos) => {
+      for (let i = 0; i < deviceInfos.length; i++) {
+        const deviceInfo = deviceInfos[i];
+        if (deviceInfo.kind === "audioinput") {
+          mediaOptions.audioinput.push(deviceInfo.label);
+        } else if (deviceInfo.kind === "audiooutput") {
+          mediaOptions.audiooutput.push(deviceInfo.label);
+        } else if (deviceInfo.kind === "videoinput") {
+          mediaOptions.videoinput.push(deviceInfo.label);
+        }
+      }
+    };
+
+    return {
+      audioInputSelect,
+      audioOutputSelect,
+      videoSelect,
+      mediaOptions,
+      value,
+      selectors,
+      videoElement,
+      gotDevicesList,
+      handleError,
+    };
 
     // function connect() {
     //   if (!peerStarted && localStream && socketRead) {
@@ -113,20 +149,6 @@ export default {
     //   // 소켓 연결 종료 및 피어커넥션 다 종료
     // }
 
-    // 카메라 / 마이크 목록 가져오기
-    // device들의 정보를 받아 해석하여 분류하는 코드
-    const gotDevicesList = (deviceInfos) => {
-      for (let i = 0; i < deviceInfos.length; i++) {
-        const deviceInfo = deviceInfos[i];
-        if (deviceInfo.kind === "audioinput") {
-          mediaOptions.audioinput.push(deviceInfo.label);
-        } else if (deviceInfo.kind === "audiooutput") {
-          mediaOptions.audiooutput.push(deviceInfo.label);
-        } else if (deviceInfo.kind === "videoinput") {
-          mediaOptions.videoinput.push(deviceInfo.label);
-        }
-      }
-    };
     // 해당 element의 오디오 출력을 담당할 장치를 지정합니다.
     // function attachSinkId(element, sinkId) {
     //   // if (typeof element.sinkId === "undefined") {
@@ -146,7 +168,7 @@ export default {
     //       // Jump back to first output device in the list as it's the default.
     //       audioOutputSelect.selectedIndex = 0;
     //     });
-    //   // } 
+    //   // }
     // }
 
     // // 오디오 출력을 변경하는 코드입니다. 로컬에서 이뤄지는 작업이므로
@@ -165,28 +187,6 @@ export default {
     //   return navigator.mediaDevices.enumerateDevices();
     // }
 
-    function handleError(error) {
-      console.log(
-        // 리스트에 있는데 미디어 디바이스에 접근이 불가능한 경우임.
-        // 여기서 에러문구 띄워주면 좋을 것 같습니다.
-        // 다른 디바이스에서 사용중인지는 않은지 확인해주시기 바랍니다 같은....
-        "navigator.MediaDevices.getUserMedia error: ",
-        error.message,
-        error.name
-      );
-    }
-    return {
-      audioInputSelect,
-      audioOutputSelect,
-      videoSelect,
-      mediaOptions,
-      value,
-      selectors,
-      videoElement,
-      gotDevicesList,
-      handleError,
-
-    };
     // // var screenStream = undefined;
 
     // function startScreenStream() {
@@ -195,7 +195,7 @@ export default {
     //       // screenStream = stream;
 
     //       // Stream에서 비디오 트랙 제거
-    //       for (i = 0; i < localStream.getTracks().length; i++) {
+    //       for (i = 0; i <script localStream.getTracks().length; i++) {
     //         let track = localStream.getTracks()[i];
     //         if (track.kind === "video") {
     //           localStream.removeTrack(track);
@@ -249,10 +249,10 @@ export default {
     //     .then(gotDevicesList) // 디바이스 목록을 최신화한다.
     //     .then(() => {
     //       if (socketRead) {
-    //         sendReconnectRequest(); // 만약 소켓이 연결되어있다면 재접속 
+    //         sendReconnectRequest(); // 만약 소켓이 연결되어있다면 재접속
     //       }
     //     });
-    //   // getUserMedia -> 반드시 .then으로 다룰 것. 
+    //   // getUserMedia -> 반드시 .then으로 다룰 것.
     //   // .catch(handleError);
     //   // console.log("start");
     //   // console.log(socketRead);
@@ -452,7 +452,7 @@ export default {
     //   console.log("Add local video stream...");
     //   peer.addStream(localStream);
 
-    //   // 
+    //   //
     //   peer.addEventListener("addstream", onRemoteStreamAdded, false);
     //   // 상대방이 스트림을 추가했을 때, 발생하는 이벤트.
     //   peer.addEventListener("removestream", onRemoteStreamRemoved, false);
@@ -552,6 +552,6 @@ export default {
     //   }
     //   peerConnection.setRemoteDescription(new RTCSessionDescription(evt));
     // }
-  }
-}
+  },
+};
 </script>
