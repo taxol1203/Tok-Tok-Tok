@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AssignSessionRequest {
-    @ApiModelProperty(example = "상담사의 int pk_idx")
+    @ApiModelProperty(example = "3")
     int admin_pk_idx;
 }

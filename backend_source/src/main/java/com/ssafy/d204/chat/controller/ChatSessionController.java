@@ -29,25 +29,28 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/chat")
 public class ChatSessionController {
 
+    static final String SESSION_ID_EXAMPLE = "SOME-SESSION-ID";
+    static final String PK_IDX_EXAMPLE = "1";
+
     //    @Autowired
     private final ChatSessionService chatSessionService;
 
     // 모든 채팅방 목록 보기
-    @ApiOperation(value = "현재 개설중인 모든 방의 목록을 가져온다.", response = ChatSession.class)
-    @GetMapping("/rooms/all")
+    @ApiOperation(value = "현재 개설중인 모든 방의 목록을 가져온다.")
+    @GetMapping(value= "/rooms/all", produces = "application/json")
     @ResponseBody
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "전체 방 목록 조회 성공"),
-        @ApiResponse(code = 500, message = "DB 오류"),
+        @ApiResponse(code = 200, message = "전체 방 목록 조회 성공", response = ChatSession.class, responseContainer = "List"),
+        @ApiResponse(code = 500, message = "DB 오류", response = Void.class),
     })
     public ResponseEntity<?> findAllSessions() {
         return chatSessionService.findAllSessions();
     }
 
-    @ApiOperation(value = "(유저측)본인에게 권한이 있는 방만 검색한다.", response = ChatSession.class)
-    @GetMapping("/rooms/user/{userid}")
+    @ApiOperation(value = "(유저측)본인에게 권한이 있는 방만 검색한다.", produces = "application/json")
+    @GetMapping(value = "/rooms/user/{userid}", produces = "application/json")
     @ResponseBody
-    @ApiImplicitParam(name = "userId", value = "유저의 pk_idx", required = true)
+    @ApiImplicitParam(name = "userId", value = "유저의 pk_idx", required = true, example = PK_IDX_EXAMPLE)
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "방 검색 완료"),
         @ApiResponse(code = 500, message = "DB 오류"),
@@ -66,7 +69,7 @@ public class ChatSessionController {
 
     // 채팅방 생성
     @ApiOperation(value = "채팅방을 개설한다.")
-    @PostMapping("/room")
+    @PostMapping(value = "/room", produces = "application/json")
     @ResponseBody
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "채팅방 개설 성공"),
@@ -78,7 +81,7 @@ public class ChatSessionController {
 
     @ApiOperation(value = "상담사가 해당 상담을 담당하겠다고 선언한다.")
     @PutMapping("/room/{sessionId}")
-    @ApiImplicitParam(name = "sessionId", value = "세션 아이디", required = true)
+    @ApiImplicitParam(name = "sessionId", value = "세션 아이디", required = true, example = SESSION_ID_EXAMPLE)
     @ResponseBody
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "상담사 배정 성공"),
@@ -98,7 +101,7 @@ public class ChatSessionController {
     })
     @ApiOperation(value = "해당 방의 상담을 종료한다.")
     @DeleteMapping("/room/{sessionId}")
-    @ApiImplicitParam(name = "sessionId", value = "세션 아이디", required = true)
+    @ApiImplicitParam(name = "sessionId", value = "세션 아이디", required = true, example = SESSION_ID_EXAMPLE)
     @ResponseBody
     public ResponseEntity<?> closeSession(@PathVariable String sessionId,
         @RequestBody AssignSessionRequest req) {
@@ -109,7 +112,7 @@ public class ChatSessionController {
     // 채팅방 정보 아이디에서 받아옴
     @ApiOperation(value = "방의 ID를 가지고 방의 정보를 수신한다.", response = ChatSession.class)
     @GetMapping("/room/{sessionId}")
-    @ApiImplicitParam(name = "sessionId", value = "세션 아이디", required = true)
+    @ApiImplicitParam(name = "sessionId", value = "세션 아이디", required = true, example = SESSION_ID_EXAMPLE)
     @ResponseBody
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "방 정보 조회 성공"),
@@ -133,7 +136,7 @@ public class ChatSessionController {
 
     @ApiOperation(value = "해당 상담사에게 배정된 방과 아직 전담 상담사가 없는 방과 메세지를 가져온다.", response = ChatMessageAndSession.class)
     @GetMapping("/admin/init/{fk_host_idx}")
-    @ApiImplicitParam(name = "fk_host_idx", value = "현재 상담사의 pk_idx", required = true)
+    @ApiImplicitParam(name = "fk_host_idx", value = "현재 상담사의 pk_idx", required = true, example = PK_IDX_EXAMPLE)
     @ResponseBody
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "모든 메세지와 방 가져오기 성공"),
@@ -145,7 +148,7 @@ public class ChatSessionController {
 
     @ApiOperation(value = "해당 세션ID의 이전 메세지들 가져오기", response = ChatMessage.class)
     @GetMapping("/messages/{sessionId}")
-    @ApiImplicitParam(name = "sessionId", value = "세션 아이디", required = true)
+    @ApiImplicitParam(name = "sessionId", value = "세션 아이디", required = true, example = SESSION_ID_EXAMPLE)
     @ResponseBody
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "메세지 가져오기 성공"),

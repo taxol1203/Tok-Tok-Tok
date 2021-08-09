@@ -7,19 +7,19 @@ import lombok.Data;
 @AllArgsConstructor
 @Data
 public class ChatMessage {
-    @ApiModelProperty(example = "메세지의 id(빈칸)")
+    @ApiModelProperty(example = "1")
     private int pk_idx;
-    @ApiModelProperty(example = "메세지 내용")
+    @ApiModelProperty(example = "Hello, Everyone! I'm the best in the Universe!")
     private String message;
-    @ApiModelProperty(example = "메세지를 작성한 회원의 int pk_idx")
+    @ApiModelProperty(example = "3")
     private int fk_author_idx;
-    @ApiModelProperty(example = "메세지 전송날짜(빈칸)")
+    @ApiModelProperty(example = "2021-08-09 14:49:05.465979+09")
     private String created; // 생성날짜.
-    @ApiModelProperty(example = "메세지가 삭제되었는지 여부(빈칸)")
+    @ApiModelProperty(example = "false")
     private boolean deleted = false; // 삭제되었는지 여부. 만약 true일 경우 유저에게 숨기기
-    @ApiModelProperty(example = "해당 메세지의 대상 세션 id")
+    @ApiModelProperty(example = "1a2a3a4a5a-6a1234-a123-412-41124124")
     private String fk_session_id;
-    @ApiModelProperty(example = "메세지의 type.")
+    @ApiModelProperty(example = "MSG")
     private String type;
 //    public enum MessageType{
 //        JOIN, QUIT, MSG, VID, NEWR, DELR;

@@ -26,6 +26,8 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin("*")
 @RequestMapping("/auth")
 public class AuthController {
+    static final String SESSION_ID_EXAMPLE = "SOME-SESSION-ID";
+    static final String PK_IDX_EXAMPLE = "1";
 
     UserService uSvc;
 
@@ -34,7 +36,7 @@ public class AuthController {
     }
 
     @GetMapping(value = "/user/{pk_idx}")
-    @ApiImplicitParam(name = "pk_idx", value="유저의 이메일이 아닌 고유 회원번호, db에 저장되는 int 타입의 pk_idx")
+    @ApiImplicitParam(name = "pk_idx", value="유저의 이메일이 아닌 고유 회원번호, db에 저장되는 int 타입의 pk_idx", example = PK_IDX_EXAMPLE)
     @ApiOperation(value = "pk_idx로 유저 정보 가져오기")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "pk_idx에 해당하는 유저정보가 있을 경우"),

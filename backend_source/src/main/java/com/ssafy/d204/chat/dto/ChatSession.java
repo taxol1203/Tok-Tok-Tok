@@ -6,23 +6,23 @@ import lombok.Data;
 
 @Data
 public class ChatSession {
-    @ApiModelProperty(example = "세션의 고유id, String")
+    @ApiModelProperty(example = "3ff711a0-23b3-428a-96fa-thisissample")
     private String session_id;
-    @ApiModelProperty(example = "세션 생성날짜")
+    @ApiModelProperty(example = "2021-08-09 14:49:05.465979+09")
     private String created_at; // long으로 바꿀 수 있는지 생각해보기
-    @ApiModelProperty(example = "세션 생성자의 pk_idx")
+    @ApiModelProperty(example = "7", value="1234")
     private int fk_created_by_idx;
-    @ApiModelProperty(example = "고객의 pk_idx")
+    @ApiModelProperty(example = "7")
     private int fk_client_idx;
-    @ApiModelProperty(example = "상담사의 pk_idx")
+    @ApiModelProperty(example = "3")
     private int fk_host_idx;
-    @ApiModelProperty(example = "세션의 접근허가 id(미구현)")
+    @ApiModelProperty(example = "-1", value="미구현")
     private int fk_permission_idx;
-    @ApiModelProperty(example = "세션을 생성할 때의 qna 목록")
+    @ApiModelProperty(example = "/")
     private String qna_history;
-    @ApiModelProperty(example = "세션 생성할 때 선택했던 qna 목록")
+    @ApiModelProperty(example = "OPEN")
     String status;
-    @ApiModelProperty(example = "읽지 않은 메세지 갯수 (미구현)")
+    @ApiModelProperty(example = "7", value="미구현")
     int unread;
 
     //    SessionState status;
