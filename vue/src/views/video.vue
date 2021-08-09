@@ -114,8 +114,8 @@ export default {
     // }
 
     // 카메라 / 마이크 목록 가져오기
+    // device들의 정보를 받아 해석하여 분류하는 코드
     const gotDevicesList = (deviceInfos) => {
-      // }); // 리스트 비우기. 아마 VUE에선 좀 더 세련된 방법으로 가능하지 않을까 합니다.
       for (let i = 0; i < deviceInfos.length; i++) {
         const deviceInfo = deviceInfos[i];
         if (deviceInfo.kind === "audioinput") {
@@ -125,33 +125,7 @@ export default {
         } else if (deviceInfo.kind === "videoinput") {
           mediaOptions.videoinput.push(deviceInfo.label);
         }
-        // deviceInfo.label || `microphone ${audioInputSelect.length + 1}`;
-        // audioInputSelect.appendChild(option);
-        // } else if (deviceInfo.kind === "audiooutput") {
-        //   option.text =
-        //     deviceInfo.label || `speaker ${audioOutputSelect.length + 1}`;
-        //   audioOutputSelect.appendChild(option);
-        // } else if (deviceInfo.kind === "videoinput") {
-        //   option.text =
-        //     deviceInfo.label || `camera ${videoSelect.length + 1}`;
-        //   videoSelect.appendChild(option);
-        // } else {
-        //   console.log("Some other kind of source/device: ", deviceInfo);
-        // }
       }
-      console.log(options);
-      // 윗 부분은 device들의 정보를 받아 해석하여 분류하는 코드이므로 건들지 않도록 합니다.
-
-      //   selectors.forEach((select, selectorIndex) => {
-      //     if (
-      //       Array.prototype.slice
-      //         .call(select.childNodes)
-      //         .some((n) => n.value === values[selectorIndex])
-      //     ) {
-      //       select.value = values[selectorIndex];
-      //     }
-      //   });
-      //   // 이 윗 부분은 제가 JS 가방끈이 짧아서 잘 모르겠습니다...ㅎㅎ!
     };
     // 해당 element의 오디오 출력을 담당할 장치를 지정합니다.
     // function attachSinkId(element, sinkId) {
@@ -390,9 +364,9 @@ export default {
     // // localVideo.mute = true;
     // // 서로의 화상이 보일 element를 가져오면 되며 아마 vue에선 $refs가 있을텐데 이게 좋은 방법인진 잘 모르겠음
 
-    // var localStream = null;
-    // var peerConnection = null;
-    // var peerStarted = false;
+    var localStream = null;
+    var peerConnection = null;
+    var peerStarted = false;
     // var mediaConstraints = {
     //   mandatory: {
     //     OfferToReceiveAudio: true,
