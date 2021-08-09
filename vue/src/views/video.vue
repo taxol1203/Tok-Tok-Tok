@@ -1,14 +1,18 @@
 <template>
   <div class="select">
     <label for="audioSource">Audio input source: </label>
-    <select ref="audioInputSelect" v-model="selectedAudioInput">
+    <select v-model="audioInputSelect" @change="start()">
       <option disabled value="">Please select one</option>
-      <option v-for="(option, index) in mediaOptions.audioinput" :key="index" :value="option.deviceId">
+      <option
+        v-for="(option, index) in mediaOptions.audioinput"
+        :key="index"
+        :value="option.deviceId"
+      >
         {{ option.label }}
       </option>
     </select>
   </div>
-  <span>선택함: {{ selectedAudioInput }}</span>
+  <span>선택함: {{ audioInputSelect }}</span>
 
   <div class="select">
     <label for="audioOutput">Audio output destination: </label>
@@ -78,7 +82,6 @@ export default {
     });
     const value = "";
     const selectors = [audioInputSelect, audioOutputSelect, videoSelect];
-    let selectedAudioInput = ref("");
     let selected = ref("");
 
     var localStream = null;
@@ -121,7 +124,7 @@ export default {
       }
     };
 
-    function start() {
+    const start = () => {
       console.log("IN START");
       //이미 localStream이 있으면 종료하는 부분
       if (localStream) {
@@ -130,35 +133,32 @@ export default {
         });
       }
       const audioSource = audioInputSelect.value; // 선택한 device의 ID
-      console.log(audioInputSelect);
-      console.log(audioInputSelect.value);
-      // console.log(selectedAudioInput);
       const videoSource = videoSelect.value;
 
-      const constraints = {
-        audio: {
-          deviceId: audioSource ? { exact: audioSource } : undefined,
-          // 현재 option에서 선택된 id를 보유한 오디오 소스를 붙인다
-        },
-        video: {
-          deviceId: videoSource ? { exact: videoSource } : undefined,
-        },
-      };
-      console.log(constraints);
-      navigator.mediaDevices
-        .getUserMedia(constraints)
-        .then(gotStream) // html element와 video/audio를 부 착한다
-        .then(gotDevicesList) // 디바이스 목록을 최신화한다.
-        .then(() => {
-          if (socketRead) {
-            sendReconnectRequest(); // 만약 소켓이 연결되어있다면 재접속
-          }
-        });
-      // getUserMedia -> 반드시 .then으로 다룰 것.
-      // .catch(handleError);
-      // console.log("start");
-      // console.log(socketRead);
-    }
+      // const constraints = {
+      //   audio: {
+      //     deviceId: audioSource ? { exact: audioSource } : undefined,
+      //     // 현재 option에서 선택된 id를 보유한 오디오 소스를 붙인다
+      //   },
+      //   video: {
+      //     deviceId: videoSource ? { exact: videoSource } : undefined,
+      //   },
+      // };
+      // console.log(constraints);
+      // navigator.mediaDevices
+      //   .getUserMedia(constraints)
+      //   .then(gotStream) // html element와 video/audio를 부 착한다
+      //   .then(gotDevicesList) // 디바이스 목록을 최신화한다.
+      //   .then(() => {
+      //     if (socketRead) {
+      //       sendReconnectRequest(); // 만약 소켓이 연결되어있다면 재접속
+      //     }
+      //   });
+      // // getUserMedia -> 반드시 .then으로 다룰 것.
+      // // .catch(handleError);
+      // // console.log("start");
+      // // console.log(socketRead);
+    };
 
     return {
       audioInputSelect,
@@ -170,8 +170,8 @@ export default {
       videoElement,
       gotDevicesList,
       handleError,
-      selectedAudioInput,
       selected,
+      start,
     };
 
     // function connect() {
@@ -297,7 +297,7 @@ export default {
     // //   });
     // // }
 
-    // audioInputSelect.onchange = start;
+    audioInputSelect.onchange = start;
     // audioOutputSelect.onchange = changeAudioDestination;
     // videoSelect.onchange = start;
     // // ===================The following is socket======================
