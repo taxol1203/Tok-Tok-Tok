@@ -48,25 +48,25 @@
 </template>
 <script>
 // import axios from "axios";
-import Stomp from 'webstomp-client';
-import SockJS from 'sockjs-client';
-import { useStore } from 'vuex';
-import { ref, computed } from 'vue';
+import Stomp from "webstomp-client";
+import SockJS from "sockjs-client";
+import { useStore } from "vuex";
+import { ref, computed } from "vue";
 
 export default {
-  name: 'Chat',
+  name: "Chat",
   components: {},
   setup() {
     const store = useStore();
     const sessionId = computed(() => store.state.selected_room);
     const messages = computed(() => store.getters.get_messages);
     const userPkidx = computed(() => store.state.auth.user.pk_idx);
-    const message = ref('');
+    const message = ref("");
     let connected = false;
-    let stompClient = '';
+    let stompClient = "";
 
     const connect = () => {
-      const serverURL = 'https://i5d204.p.ssafy.io/api/chat'; // 서버 채팅 주소
+      const serverURL = "https://i5d204.p.ssafy.io/api/chat"; // 서버 채팅 주소
       let socket = new SockJS(serverURL);
       stompClient = Stomp.over(socket);
       // console.log(`connecting to socket=> ${serverURL}`);
@@ -76,19 +76,19 @@ export default {
           connected = true;
           // console.log('CONNECT SUCCESS:', frame);
           // 구독 == 채팅방 입장.
-          stompClient.subscribe('/send/' + sessionId.value, (res) => {
+          stompClient.subscribe("/send/" + sessionId.value, (res) => {
             // console.log('receive from server:', res.body);
-            store.commit('MESSAGE_PUSH', JSON.parse(res.body)); // 수신받은 메세지 표시하기
+            store.commit("MESSAGE_PUSH", JSON.parse(res.body)); // 수신받은 메세지 표시하기
             switch (res.body.type) {
-              case 'MSG':
+              case "MSG":
                 break;
-              case 'JOIN':
+              case "JOIN":
                 // 방을 생성할 때 백엔드단에서 처리하므로 신경 x
                 break;
-              case 'QUIT':
+              case "QUIT":
                 // 만약 둘 중 하나가 나가면 더 이상 채팅을 못치는 프론트구현
                 break;
-              case 'VID':
+              case "VID":
                 // vid 시작시 -> 화상채팅 시작하기 버튼만 딸랑 띄우기
                 break;
               default:
@@ -99,7 +99,7 @@ export default {
         },
         (error) => {
           // 소켓 연결 실패
-          console.log('status : failed, STOMP CLIENT 연결 실패', error);
+          console.log("status : failed, STOMP CLIENT 연결 실패", error);
           connected = false;
         }
       );
@@ -107,14 +107,14 @@ export default {
     connect(sessionId.value);
 
     const sendMessage = () => {
-      if (userName.value && message.value) {
+      if (userPkidx.value && message.value) {
         send({ message }); // 전송 실패 감지는 어떻게? 프론트단에서 고민좀 부탁 dream
         // 관리자가 첫 메세지 보냈을때 방상태를 LIVE로 바꾸기
-        if (store.state.rooms[`${sessionId.value}`].session.status == 'OPEN') {
-          store.dispatch('enterRoom', sessionId);
+        if (store.state.rooms[`${sessionId.value}`].session.status == "OPEN") {
+          store.dispatch("enterRoom", sessionId);
         }
       }
-      message.value = '';
+      message.value = "";
       // 어차피 유저는 채팅 상담 신청을 한뒤 메세지를 치지 못하므로 open 상태에서 메세지를 보내는건 관리자뿐이니까
       // 방상태가 OPEN일때 여기서 put을 보내면되나
     };
@@ -126,20 +126,20 @@ export default {
         const msg = {
           message: message.value, // 메세지 내용. type이 MSG인 경우를 제외하곤 비워두고 프론트단에서만 처리.
           fk_author_idx: userPkidx.value, // 작성자의 회원 idx
-          created: '', // 작성시간, 공란으로 비워서 메세지 보내기. response에는 담겨옵니다.
+          created: "", // 작성시간, 공란으로 비워서 메세지 보내기. response에는 담겨옵니다.
           deleted: false, // 삭제된 메세지 여부. default = false
           fk_session_id: sessionId.value, // 현재 채팅세션의 id.
           // 주의할 점은, 방 세션 id가 아닌, 방 정보의 pk_idx를 첨부한다. created 라이프사이클 메서드 참조.
-          type: 'MSG', // 메세지 타입.
+          type: "MSG", // 메세지 타입.
         };
-        stompClient.send('/receive/' + sessionId.value, JSON.stringify(msg), {});
+        stompClient.send("/receive/" + sessionId.value, JSON.stringify(msg), {});
       }
     };
 
     const closeRoom = () => {
       // 방 닫는 로직 작성 "admin_pk_idx": 0 넣어서 요청 해줘야함
       // 방 상태가 LIVE 일때, admin_pk_idx가 나와 같을때
-      if (store.state.rooms[`${sessionId.value}`].session.status == 'LIVE') {
+      if (store.state.rooms[`${sessionId.value}`].session.status == "LIVE") {
         //여기서 디스패치
       }
     };
