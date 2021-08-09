@@ -1,9 +1,10 @@
 <template>
   <div class="select">
-    <label for="audioSource">Audio input source: </label
-    ><select ref="audioInputSelect">
+    <label for="audioSource">Audio input source: </label>
+    <select ref="audioInputSelect" v-model="selectedAudioInput">
+      <option disabled value="">Please select one</option>
       <option v-for="(option, index) in mediaOptions.audioinput" :key="index">
-        {{ option }}
+        {{ option.label }}
       </option>
     </select>
   </div>
@@ -12,7 +13,7 @@
     <label for="audioOutput">Audio output destination: </label>
     <select ref="audioOutputSelect">
       <option v-for="(option, index) in mediaOptions.audiooutput" :key="index">
-        {{ option }}
+        {{ option.label }}
       </option>
     </select>
   </div>
@@ -21,7 +22,7 @@
     <label for="videoSource">Video source: </label
     ><select ref="videoSelect">
       <option v-for="(option, index) in mediaOptions.videoinput" :key="index">
-        {{ option }}
+        {{ option.label }}
       </option>
     </select>
   </div>
@@ -68,6 +69,11 @@ export default {
     });
     const value = "";
     const selectors = [audioInputSelect, audioOutputSelect, videoSelect];
+    let selectedAudioInput = "";
+
+    var localStream = null;
+    var peerConnection = null;
+    var peerStarted = false;
 
     // 카메라 / 마이크 목록 가져오기
     onMounted(async () => {
@@ -78,9 +84,8 @@ export default {
         handleError;
         // enumerateDevices()에 .then으로 해당 함수의 실행을 마치고 난 뒤에 로딩을 해야
         // 모든 장치를 가져와서 표시가 가능합니다.
-        // start(); // 기본 장치로 stream 바인딩하기
-        console.log(audioInputSelect);
       }
+      start(); // 기본 장치로 stream 바인딩하기
     });
 
     // 리스트에 있는데 미디어 디바이스에 접근이 불가능한 경우임.
@@ -93,17 +98,56 @@ export default {
     // 카메라 / 마이크 목록 가져오기
     // device들의 정보를 받아 해석하여 분류하는 코드
     const gotDevicesList = (deviceInfos) => {
+      console.log(deviceInfos);
       for (let i = 0; i < deviceInfos.length; i++) {
         const deviceInfo = deviceInfos[i];
         if (deviceInfo.kind === "audioinput") {
-          mediaOptions.audioinput.push(deviceInfo.label);
+          mediaOptions.audioinput.push(deviceInfo);
         } else if (deviceInfo.kind === "audiooutput") {
-          mediaOptions.audiooutput.push(deviceInfo.label);
+          mediaOptions.audiooutput.push(deviceInfo);
         } else if (deviceInfo.kind === "videoinput") {
-          mediaOptions.videoinput.push(deviceInfo.label);
+          mediaOptions.videoinput.push(deviceInfo);
         }
       }
     };
+
+    function start() {
+      console.log("IN START");
+      //이미 localStream이 있으면 종료하는 부분
+      if (localStream) {
+        localStream.getTracks().forEach((track) => {
+          track.stop();
+        });
+      }
+      const audioSource = audioInputSelect.value; // 선택한 device의 ID
+      // console.log(audioInputSelect.value);
+      // console.log(selectedAudioInput);
+      const videoSource = videoSelect.value;
+
+      const constraints = {
+        audio: {
+          deviceId: audioSource ? { exact: audioSource } : undefined,
+          // 현재 option에서 선택된 id를 보유한 오디오 소스를 붙인다
+        },
+        video: {
+          deviceId: videoSource ? { exact: videoSource } : undefined,
+        },
+      };
+      console.log(constraints);
+      navigator.mediaDevices
+        .getUserMedia(constraints)
+        .then(gotStream) // html element와 video/audio를 부 착한다
+        .then(gotDevicesList) // 디바이스 목록을 최신화한다.
+        .then(() => {
+          if (socketRead) {
+            sendReconnectRequest(); // 만약 소켓이 연결되어있다면 재접속
+          }
+        });
+      // getUserMedia -> 반드시 .then으로 다룰 것.
+      // .catch(handleError);
+      // console.log("start");
+      // console.log(socketRead);
+    }
 
     return {
       audioInputSelect,
@@ -115,6 +159,7 @@ export default {
       videoElement,
       gotDevicesList,
       handleError,
+      selectedAudioInput,
     };
 
     // function connect() {
@@ -223,40 +268,6 @@ export default {
     // }
     // // 선택한 오디오 비디오 디바이스를 element에 바인딩하고
     // // 소켓에 연결까지 함
-    // function start() {
-    //   if (localStream) {
-    //     localStream.getTracks().forEach((track) => {
-    //       track.stop();
-    //     });
-    //   }
-    //   const audioSource = audioInputSelect.value; // 선택한 device의 ID
-    //   const videoSource = videoSelect.value;
-
-    //   const constraints = {
-    //     audio: {
-    //       deviceId: audioSource ? { exact: audioSource } : undefined,
-    //       // 현재 option에서 선택된 id를 보유한 오디오 소스를 붙인다
-    //     },
-    //     video: {
-    //       deviceId: videoSource ?
-    //         { exact: videoSource }
-    //         : undefined,
-    //     },
-    //   };
-    //   navigator.mediaDevices
-    //     .getUserMedia(constraints)
-    //     .then(gotStream) // html element와 video/audio를 부 착한다
-    //     .then(gotDevicesList) // 디바이스 목록을 최신화한다.
-    //     .then(() => {
-    //       if (socketRead) {
-    //         sendReconnectRequest(); // 만약 소켓이 연결되어있다면 재접속
-    //       }
-    //     });
-    //   // getUserMedia -> 반드시 .then으로 다룰 것.
-    //   // .catch(handleError);
-    //   // console.log("start");
-    //   // console.log(socketRead);
-    // }
 
     // // 재접속을 하는 이유는, Stream에 바인딩된 Device가 바뀌어도
     // // peer에 반영이 되지 않습니다.
@@ -364,9 +375,6 @@ export default {
     // // localVideo.mute = true;
     // // 서로의 화상이 보일 element를 가져오면 되며 아마 vue에선 $refs가 있을텐데 이게 좋은 방법인진 잘 모르겠음
 
-    var localStream = null;
-    var peerConnection = null;
-    var peerStarted = false;
     // var mediaConstraints = {
     //   mandatory: {
     //     OfferToReceiveAudio: true,
