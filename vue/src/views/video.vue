@@ -2,29 +2,37 @@
   <div class="select">
     <label for="audioSource">Audio input source: </label
     ><select ref="audioInputSelect">
-      <option v-for="(option, index) in options" :key="index">
+      <option v-for="(option, index) in mediaOptions.audioinput" :key="index">
         {{ option }}
       </option>
     </select>
   </div>
 
-  <!-- <div class="select">
-    <label for="audioOutput">Audio output destination: </label
-    ><select ref="audioOutputSelect"></select>
+  <div class="select">
+    <label for="audioOutput">Audio output destination: </label>
+    <select ref="audioOutputSelect">
+      <option v-for="(option, index) in mediaOptions.audiooutput" :key="index">
+        {{ option }}
+      </option>
+    </select>
   </div>
 
   <div class="select">
     <label for="videoSource">Video source: </label
-    ><select ref="videoSelect"></select>
+    ><select ref="videoSelect">
+      <option v-for="(option, index) in mediaOptions.videoinput" :key="index">
+        {{ option }}
+      </option>
+    </select>
   </div>
-  <button type="button" onclick="socketInit('a');">Socket Init ROOM 1</button>
+  <!-- <button type="button" onclick="socketInit('a');">Socket Init ROOM 1</button>
   <button type="button" onclick="socketInit('b');">Socket Init ROOM 2</button>
   <button type="button" onclick="startVideo();">
-      Start capturing video information
-    </button>
-    <button type="button" onclick="stopVideo();">
-      Stop capturing video information
-    </button> -->
+    Start capturing video information
+  </button>
+  <button type="button" onclick="stopVideo();">
+    Stop capturing video information
+  </button> -->
   <!-- &nbsp;&nbsp;&nbsp;&nbsp;
   <button type="button" onclick="connect();">establish connection</button>
   <button type="button" onclick="startScreenStream();">화면공유</button>
@@ -46,28 +54,33 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, onMounted, reactive } from "vue";
 export default {
   setup() {
     const videoElement = ref("");
     const audioInputSelect = ref("");
     const audioOutputSelect = ref("");
     const videoSelect = ref("");
-    const options = [];
+    const mediaOptions = reactive({
+      audioinput: [],
+      audiooutput: [],
+      videoinput: [],
+    });
     const value = "";
     const selectors = [audioInputSelect, audioOutputSelect, videoSelect];
+    onMounted(async () => {
+      try {
+        const deviceInfos = await navigator.mediaDevices.enumerateDevices();
+        gotDevicesList(deviceInfos);
+      } catch {
+        handleError;
+        // enumerateDevices()에 .then으로 해당 함수의 실행을 마치고 난 뒤에 로딩을 해야
+        // 모든 장치를 가져와서 표시가 가능합니다.
+        // start(); // 기본 장치로 stream 바인딩하기
+        console.log(audioInputSelect);
+      }
+    });
 
-    const init = () => {
-      navigator.mediaDevices
-        .enumerateDevices()
-        .then(gotDevicesList) // 사용 가능한 비디오/오디오 자원 목록 가져오기
-        .catch();
-      // enumerateDevices()에 .then으로 해당 함수의 실행을 마치고 난 뒤에 로딩을 해야
-      // 모든 장치를 가져와서 표시가 가능합니다.
-      // start(); // 기본 장치로 stream 바인딩하기
-      console.log(audioInputSelect);
-    };
-    init();
     // function connect() {
     //   if (!peerStarted && localStream && socketRead) {
     //     sendOffer(); // offer 시작
@@ -102,20 +115,15 @@ export default {
 
     // 카메라 / 마이크 목록 가져오기
     const gotDevicesList = (deviceInfos) => {
-      const values = selectors.map((select) => select.value);
-      console.log("#######");
-      console.log(values);
-      selectors.forEach((select) => {
-        while (select.firstChild) {
-          select.removeChild(select.firstChild);
-        }
-      }); // 리스트 비우기. 아마 VUE에선 좀 더 세련된 방법으로 가능하지 않을까 합니다.
-      console.log(deviceInfos);
-      for (let i = 0; i !== deviceInfos.length; ++i) {
+      // }); // 리스트 비우기. 아마 VUE에선 좀 더 세련된 방법으로 가능하지 않을까 합니다.
+      for (let i = 0; i < deviceInfos.length; i++) {
         const deviceInfo = deviceInfos[i];
-        console.log(deviceInfo);
         if (deviceInfo.kind === "audioinput") {
-          options.push(deviceInfo.label);
+          mediaOptions.audioinput.push(deviceInfo.label);
+        } else if (deviceInfo.kind === "audiooutput") {
+          mediaOptions.audiooutput.push(deviceInfo.label);
+        } else if (deviceInfo.kind === "videoinput") {
+          mediaOptions.videoinput.push(deviceInfo.label);
         }
         // deviceInfo.label || `microphone ${audioInputSelect.length + 1}`;
         // audioInputSelect.appendChild(option);
@@ -144,18 +152,6 @@ export default {
       //     }
       //   });
       //   // 이 윗 부분은 제가 JS 가방끈이 짧아서 잘 모르겠습니다...ㅎㅎ!
-    };
-    return {
-      audioInputSelect,
-      audioOutputSelect,
-      videoSelect,
-      options,
-      value,
-      selectors,
-      videoElement,
-      gotDevicesList,
-      init,
-
     };
     // 해당 element의 오디오 출력을 담당할 장치를 지정합니다.
     // function attachSinkId(element, sinkId) {
@@ -195,16 +191,28 @@ export default {
     //   return navigator.mediaDevices.enumerateDevices();
     // }
 
-    // function handleError(error) {
-    //   console.log(
-    //     // 리스트에 있는데 미디어 디바이스에 접근이 불가능한 경우임.
-    //     // 여기서 에러문구 띄워주면 좋을 것 같습니다.
-    //     // 다른 디바이스에서 사용중인지는 않은지 확인해주시기 바랍니다 같은....
-    //     "navigator.MediaDevices.getUserMedia error: ",
-    //     error.message,
-    //     error.name
-    //   );
-    // }
+    function handleError(error) {
+      console.log(
+        // 리스트에 있는데 미디어 디바이스에 접근이 불가능한 경우임.
+        // 여기서 에러문구 띄워주면 좋을 것 같습니다.
+        // 다른 디바이스에서 사용중인지는 않은지 확인해주시기 바랍니다 같은....
+        "navigator.MediaDevices.getUserMedia error: ",
+        error.message,
+        error.name
+      );
+    }
+    return {
+      audioInputSelect,
+      audioOutputSelect,
+      videoSelect,
+      mediaOptions,
+      value,
+      selectors,
+      videoElement,
+      gotDevicesList,
+      handleError,
+
+    };
     // // var screenStream = undefined;
 
     // function startScreenStream() {
