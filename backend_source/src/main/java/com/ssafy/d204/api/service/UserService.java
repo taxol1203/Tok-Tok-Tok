@@ -1,16 +1,18 @@
 package com.ssafy.d204.api.service;
 
 import com.ssafy.d204.api.request.DuplicateCheckEmailPostReq;
+import com.ssafy.d204.api.request.UserLoginPostReq;
 import com.ssafy.d204.api.request.UserRegisterPostReq;
 import com.ssafy.d204.db.entity.User;
+import org.springframework.http.ResponseEntity;
 
 public interface UserService {
 
-    User getUserById(String id);
+    ResponseEntity<?> loginUser(UserLoginPostReq loginInfo);
 
-    int registUser(UserRegisterPostReq info);
+    ResponseEntity<?> registUser(UserRegisterPostReq info);
 
-    User checkEmail(DuplicateCheckEmailPostReq email);
+    ResponseEntity<?> checkEmail(DuplicateCheckEmailPostReq email);
 
-    User getUserByIdx(int pk_idx);
+    ResponseEntity<?> getUserByIdx(int pk_idx);
 }

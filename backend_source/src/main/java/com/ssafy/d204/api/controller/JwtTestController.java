@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/jwt")
-public class JwtTestController extends SuperController {
+public class JwtTestController{
 
     @Autowired
     UserService uSvc;
