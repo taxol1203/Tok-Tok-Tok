@@ -8,10 +8,10 @@
           width="80"
         />
         <h3 style="margin: 10px">
-          {{ user.username }}
+          {{ user.client.username }}
         </h3>
         <div style="color: gray; margin-bottom: 10px">
-          {{ user.email }}
+          {{ user.client.email }}
         </div>
       </div>
       <hr style="border: 2px solid whitesmoke" width="90%" />
@@ -19,10 +19,13 @@
         <i class="el-icon-s-opportunity" style="margin-right: 3px"></i>
         고객 채팅봇 기록
       </el-row>
-      <el-row class="rowitem message-me"> 기기 고장 </el-row>
+      <el-row v-for="(item, index) in user.qna" :key="index" class="rowitem message-me">
+        {{ item }}
+      </el-row>
+      <!-- <el-row class="rowitem message-me"> 기기 고장 </el-row>
       <el-row class="rowitem message-me"> surface laptop 3 </el-row>
       <el-row class="rowitem message-me"> 전원이 안 들어옵니다. </el-row>
-      <el-row class="rowitem message-me"> 해결 되지 않았습니다. </el-row>
+      <el-row class="rowitem message-me"> 해결 되지 않았습니다. </el-row> -->
     </el-col>
     <hr style="border: 2px solid whitesmoke; margin-top: 40px" width="90%" />
     <el-col>
@@ -31,26 +34,25 @@
         고객 정보
       </el-row>
     </el-col>
-    <el-row class="rowitem2"> username: {{ user.username }} </el-row>
-    <el-row class="rowitem2"> email: {{ user.email }} </el-row>
+    <el-row class="rowitem2"> username: {{ user.client.username }} </el-row>
+    <el-row class="rowitem2"> email: {{ user.client.email }} </el-row>
     <el-row class="rowitem2"> phone: 010-1234-5678 </el-row>
     <hr style="border: 2px solid whitesmoke; margin-top: 40px" width="90%" />
   </el-row>
 </template>
 <script>
-import { useStore } from "vuex";
-import { computed } from "vue";
+import { useStore } from 'vuex';
+import { computed } from 'vue';
 
 export default {
   data() {
     return {
-      url: "@/assets/profile.jpg",
+      url: '@/assets/profile.jpg',
     };
   },
   setup() {
     const store = useStore();
-    const user = computed(() => store.state.auth.user);
-
+    const user = computed(() => store.getters['get_client_info']);
     return {
       store,
       user,

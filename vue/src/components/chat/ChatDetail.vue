@@ -107,7 +107,7 @@ export default {
     connect(sessionId.value);
 
     const sendMessage = () => {
-      if (userName.value && message.value) {
+      if (userPkidx.value && message.value) {
         send({ message }); // 전송 실패 감지는 어떻게? 프론트단에서 고민좀 부탁 dream
         // 관리자가 첫 메세지 보냈을때 방상태를 LIVE로 바꾸기
         if (store.state.rooms[`${sessionId.value}`].session.status == 'OPEN') {
