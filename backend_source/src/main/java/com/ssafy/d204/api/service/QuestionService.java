@@ -3,18 +3,19 @@ package com.ssafy.d204.api.service;
 import com.ssafy.d204.db.entity.Answer;
 import com.ssafy.d204.db.entity.Question;
 import java.util.List;
+import org.springframework.http.ResponseEntity;
 
 public interface QuestionService {
 
-    List<Question> retrieveQuestion();
+    ResponseEntity<?> retrieveQuestion();
 
-    Question detailQuestion(int pk_idx);
+    ResponseEntity<?> detailQuestion(int pk_idx);
 
-    boolean writeQuestion(Question content);
+    ResponseEntity<?> writeQuestion(Question content);
 
-    boolean updateQuestion(Question content);
+    ResponseEntity<?> updateQuestion(Question content);
 
-    boolean deleteQuestion(int pk_idx);
+    ResponseEntity<?> deleteQuestion(int pk_idx);
 
-    boolean updateNextAnswer(Answer content);
+    ResponseEntity<?> updateNextAnswer(Answer content);
 }

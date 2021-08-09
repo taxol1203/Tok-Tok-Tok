@@ -5,6 +5,8 @@ import com.ssafy.d204.db.entity.Question;
 import com.ssafy.d204.db.repository.QuestionDao;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,33 +16,50 @@ public class QuestionServiceImpl implements QuestionService {
     private QuestionDao questionDao;
 
     @Override
-    public List<Question> retrieveQuestion() {
-        return questionDao.retrieveQuestion();
+    public ResponseEntity<?> retrieveQuestion(){
+        return new ResponseEntity<List<Question>>(questionDao.retrieveQuestion(), HttpStatus.OK);
     }
 
     @Override
-    public Question detailQuestion(int pk_idx) {
-        return questionDao.detailQuestion(pk_idx);
+    public ResponseEntity<?> detailQuestion(int pk_idx) {
+        return new ResponseEntity<Question>(questionDao.detailQuestion(pk_idx), HttpStatus.OK);
     }
 
     @Override
-    public boolean writeQuestion(Question content) {
-        return questionDao.writeQuestion(content);
+    public ResponseEntity<?> writeQuestion(Question content) {
+        boolean result = questionDao.writeQuestion(content);
+        if (result) {
+            return new ResponseEntity<Void>(HttpStatus.OK);
+        }
+        return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
     }
 
     @Override
-    public boolean updateQuestion(Question content) {
-        return questionDao.updateQuestion(content);
+    public ResponseEntity<?> updateQuestion(Question content) {
+
+        boolean result = questionDao.updateQuestion(content);
+        if (result) {
+            return new ResponseEntity<Void>(HttpStatus.OK);
+        }
+        return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
     }
 
     @Override
-    public boolean deleteQuestion(int pk_idx) {
-        return questionDao.deleteQuestion(pk_idx);
+    public ResponseEntity<?> deleteQuestion(int pk_idx) {
+        boolean result = questionDao.deleteQuestion(pk_idx);
+        if (result) {
+            return new ResponseEntity<Void>(HttpStatus.OK);
+        }
+        return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
     }
 
     @Override
-    public boolean updateNextAnswer(Answer content) {
-        return questionDao.updateNextAnswer(content);
+    public ResponseEntity<?> updateNextAnswer(Answer content) {
+        boolean result = questionDao.updateNextAnswer(content);
+        if (result) {
+            return new ResponseEntity<Void>(HttpStatus.OK);
+        }
+        return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
     }
 
 }
