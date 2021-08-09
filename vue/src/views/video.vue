@@ -3,11 +3,12 @@
     <label for="audioSource">Audio input source: </label>
     <select ref="audioInputSelect" v-model="selectedAudioInput">
       <option disabled value="">Please select one</option>
-      <option v-for="(option, index) in mediaOptions.audioinput" :key="index">
+      <option v-for="(option, index) in mediaOptions.audioinput" :key="index" :value="option.deviceId">
         {{ option.label }}
       </option>
     </select>
   </div>
+  <span>선택함: {{ selectedAudioInput }}</span>
 
   <div class="select">
     <label for="audioOutput">Audio output destination: </label>
@@ -26,6 +27,14 @@
       </option>
     </select>
   </div>
+
+  <select v-model="selected">
+    <option disabled value="">Please select one</option>
+    <option>A</option>
+    <option>B</option>
+    <option>C</option>
+  </select>
+  <span>선택함: {{ selected }}</span>
   <!-- <button type="button" onclick="socketInit('a');">Socket Init ROOM 1</button>
   <button type="button" onclick="socketInit('b');">Socket Init ROOM 2</button>
   <button type="button" onclick="startVideo();">
@@ -69,7 +78,8 @@ export default {
     });
     const value = "";
     const selectors = [audioInputSelect, audioOutputSelect, videoSelect];
-    let selectedAudioInput = "";
+    let selectedAudioInput = ref("");
+    let selected = ref("");
 
     var localStream = null;
     var peerConnection = null;
@@ -120,7 +130,8 @@ export default {
         });
       }
       const audioSource = audioInputSelect.value; // 선택한 device의 ID
-      // console.log(audioInputSelect.value);
+      console.log(audioInputSelect);
+      console.log(audioInputSelect.value);
       // console.log(selectedAudioInput);
       const videoSource = videoSelect.value;
 
@@ -160,6 +171,7 @@ export default {
       gotDevicesList,
       handleError,
       selectedAudioInput,
+      selected,
     };
 
     // function connect() {
