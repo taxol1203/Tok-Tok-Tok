@@ -95,9 +95,9 @@ public class ChatSessionController {
             return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         if(result == 0){
-            return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+            return new ResponseEntity<Void>(HttpStatus.CONFLICT); // 409 해당 방이 없거나 혹은 다른 상담사가 이미 가져간 경우
         }
-        return new ResponseEntity<Void>(HttpStatus.OK);
+        return new ResponseEntity<Void>(HttpStatus.OK); // 해당 방이 존재하고 아무도 배정을 받지 않았다면 200과 동시에 방 상태가 바뀜
     }
     @ApiOperation(value = "해당 방의 상담을 종료한다.", response = ChatSession.class)
     @DeleteMapping("/room/{sessionId}")
@@ -107,21 +107,25 @@ public class ChatSessionController {
         try{
             ChatSession session = chatDao.findRoomBySessionId(sessionId);
             if(session == null){
+                // 해당하는 방이 없다면 204
                 return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
             }
             if(session.getFk_host_idx() != 0 &&
                     session.getFk_host_idx()!= req.getAdmin_pk_idx()){
                 return new ResponseEntity<Void>(HttpStatus.FORBIDDEN);
+                // 자기 상담하는 방도 아닌데 닫으려고 하면 403
             }
             result = chatDao.quitChatRoom(sessionId);
-        }catch(Exception e){
+        }catch(Exception e) {
             e.printStackTrace();
             return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        if(result == 0){
+        if(result == 0) {
             new ResponseEntity<Void>(HttpStatus.ALREADY_REPORTED);
+            // 이미 방이 닫혔다면 208
         }
         return new ResponseEntity<Void>(HttpStatus.OK);
+        // 성공시 200
     }
 
 
