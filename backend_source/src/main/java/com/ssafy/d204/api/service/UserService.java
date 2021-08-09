@@ -5,8 +5,12 @@ import com.ssafy.d204.api.request.UserRegisterPostReq;
 import com.ssafy.d204.db.entity.User;
 
 public interface UserService {
-	User getUserById(String id);
-	int registUser(UserRegisterPostReq info);
-	User checkEmail(DuplicateCheckEmailPostReq email);
-	public User getUserByIdx(int pk_idx);
+
+  User getUserById(String id);
+
+  int registUser(UserRegisterPostReq info);
+
+  User checkEmail(DuplicateCheckEmailPostReq email);
+
+  User getUserByIdx(int pk_idx);
 }

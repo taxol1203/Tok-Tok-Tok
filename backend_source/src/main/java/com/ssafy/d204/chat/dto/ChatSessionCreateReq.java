@@ -8,7 +8,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ChatSessionCreateReq {
-    int fk_client_idx;
-    int fk_created_by_idx;
-    String qna_history;
+
+  int fk_client_idx;
+  int fk_created_by_idx;
+  String qna_history;
 }

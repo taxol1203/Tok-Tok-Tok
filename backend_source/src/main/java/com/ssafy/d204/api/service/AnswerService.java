@@ -1,16 +1,23 @@
 package com.ssafy.d204.api.service;
 
+import com.ssafy.d204.db.entity.Answer;
 import java.util.List;
 
-import com.ssafy.d204.db.entity.Answer;
-
 public interface AnswerService {
-	public List<Answer> retrieveAnswer();
-	public Answer detailAnswer(int pk_idx);
-	public boolean writeAnswer(Answer content);
-	public boolean updateAnswer(Answer content);
-	public boolean deleteAnswer(int pk_idx);
-	public boolean updateNextQuestion(Answer fk_next_idx);
-	public int getNextQuestion(int pk_idx);
-	public List<Answer> getNextAnswers(int pk_idx);
+
+  List<Answer> retrieveAnswer();
+
+  Answer detailAnswer(int pk_idx);
+
+  boolean writeAnswer(Answer content);
+
+  boolean updateAnswer(Answer content);
+
+  boolean deleteAnswer(int pk_idx);
+
+  boolean updateNextQuestion(Answer fk_next_idx);
+
+  int getNextQuestion(int pk_idx);
+
+  List<Answer> getNextAnswers(int pk_idx);
 }

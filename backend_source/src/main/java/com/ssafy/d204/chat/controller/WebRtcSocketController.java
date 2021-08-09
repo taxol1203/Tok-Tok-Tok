@@ -1,16 +1,20 @@
 package com.ssafy.d204.chat.controller;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.CrossOrigin;
-
-import javax.websocket.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import javax.websocket.CloseReason;
+import javax.websocket.OnClose;
+import javax.websocket.OnError;
+import javax.websocket.OnMessage;
+import javax.websocket.OnOpen;
+import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
-import java.io.IOException;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 
 /*
@@ -38,7 +42,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class WebRtcSocketController {
 
   private volatile static int onlineCount = 0;
-  private static ConcurrentHashMap<String, List<Session>> webSocketMap = new ConcurrentHashMap<>();
+  private static final ConcurrentHashMap<String, List<Session>> webSocketMap = new ConcurrentHashMap<>();
   // above 2 fields need to be thread safe.
   private Session session;
 //    private String userId = "";

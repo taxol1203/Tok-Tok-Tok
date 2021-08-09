@@ -4,7 +4,8 @@ import lombok.Data;
 
 @Data
 public class SignalMessage {
-    private String type;
-    private String dest;
-    private Object data;
+
+  private String type;
+  private String dest;
+  private Object data;
 }
