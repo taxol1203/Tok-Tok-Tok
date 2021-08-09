@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class UserRegisterPostReq {
 
-  String email;
-  String passwd;
-  String username;
+    String email;
+    String passwd;
+    String username;
 }

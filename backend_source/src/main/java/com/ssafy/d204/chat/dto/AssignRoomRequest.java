@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AssignRoomRequest {
 
-  int admin_pk_idx;
+    int admin_pk_idx;
 }

@@ -15,31 +15,31 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @MapperScan(basePackages = "com.ssafy.d204.db.repository,com.ssafy.d204.chat.dao")
 public class Project1Application implements WebMvcConfigurer {
 
-  @Autowired
-  private JwtInterceptor jwtInterceptor;
+    @Autowired
+    private JwtInterceptor jwtInterceptor;
 
-  //JWTInterceptor를 설치한다.
-  @Override
-  public void addInterceptors(InterceptorRegistry registry) {
-    registry.addInterceptor(jwtInterceptor)
+    //JWTInterceptor를 설치한다.
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(jwtInterceptor)
 //		        .addPathPatterns("/api/jwt/**") // 기본 적용 경로
-        .addPathPatterns("/api/jwt/**"); // 기본 적용 경로
+            .addPathPatterns("/api/jwt/**"); // 기본 적용 경로
 //		        .excludePathPatterns(Arrays.asList("/user/confirm/**", "/board/list"));// 적용 제외 경로
-    // 만약 예외경로 적용하고자 한다면 참고하기
-  }
+        // 만약 예외경로 적용하고자 한다면 참고하기
+    }
 
-  //Interceptor CORS bypass
-  @Override
-  public void addCorsMappings(CorsRegistry registry) {
-    registry.addMapping("/**")
-        .allowedOrigins("*")
-        .allowedMethods("*")
-        .allowedHeaders("*")
-        .exposedHeaders("auth-token");
-  }
+    //Interceptor CORS bypass
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+            .allowedOrigins("*")
+            .allowedMethods("*")
+            .allowedHeaders("*")
+            .exposedHeaders("auth-token");
+    }
 
-  public static void main(String[] args) {
-    SpringApplication.run(Project1Application.class, args);
-  }
+    public static void main(String[] args) {
+        SpringApplication.run(Project1Application.class, args);
+    }
 
 }

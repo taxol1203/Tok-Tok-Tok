@@ -11,7 +11,7 @@ import lombok.Data;
 @Data
 public class UserLoginPostReq {
 
-  String email;
-  String passwd;
+    String email;
+    String passwd;
 }
 	

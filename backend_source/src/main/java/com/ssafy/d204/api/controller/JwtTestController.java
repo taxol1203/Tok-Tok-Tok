@@ -15,12 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/jwt")
 public class JwtTestController extends SuperController {
 
-  @Autowired
-  UserService uSvc;
+    @Autowired
+    UserService uSvc;
 
-  @PostMapping(value = "/secret")
-  @ApiOperation(value = "jwtInterceptor Test")
-  public ResponseEntity<?> getSecret() throws Exception {
-    return new ResponseEntity<String>("this is secret!", HttpStatus.OK);
-  }
+    @PostMapping(value = "/secret")
+    @ApiOperation(value = "jwtInterceptor Test")
+    public ResponseEntity<?> getSecret() throws Exception {
+        return new ResponseEntity<String>("this is secret!", HttpStatus.OK);
+    }
 }

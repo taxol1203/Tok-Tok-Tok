@@ -23,28 +23,29 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/chat")
 public class ChatMessageController {
 
-  @Autowired
-  private final SimpMessagingTemplate simpMessagingTemplate;
-  private final ChatDao chatDao;
+    @Autowired
+    private final SimpMessagingTemplate simpMessagingTemplate;
+    private final ChatDao chatDao;
 
-  @MessageMapping("/receive/{sessionId}")  // 클라이언트가 메세지를 보내는 주소
-  @SendTo("/send/{sessionId}") // 클라이언트가 listen 하는 주소
-  public ChatMessage SocketHandler(ChatMessage chatMessage, @DestinationVariable String sessionId) {
-    System.out.println(sessionId);
-    System.out.println(chatMessage);
-    // 채팅 후처리, REDIS등 적용은 여기에서
+    @MessageMapping("/receive/{sessionId}")  // 클라이언트가 메세지를 보내는 주소
+    @SendTo("/send/{sessionId}") // 클라이언트가 listen 하는 주소
+    public ChatMessage SocketHandler(ChatMessage chatMessage,
+        @DestinationVariable String sessionId) {
+        System.out.println(sessionId);
+        System.out.println(chatMessage);
+        // 채팅 후처리, REDIS등 적용은 여기에서
 //        this.simpMessagingTemplate.convertAndSend("/send/"+sessionId, chatMessage);
-    try {
-      chatDao.pushMessage(chatMessage);
-    } catch (Exception e) {
-      System.out.println("err");
-      e.printStackTrace();
-      // do something when error occured.
-    }
+        try {
+            chatDao.pushMessage(chatMessage);
+        } catch (Exception e) {
+            System.out.println("err");
+            e.printStackTrace();
+            // do something when error occured.
+        }
 
-    this.simpMessagingTemplate.convertAndSend("/send/admin", chatMessage);
+        this.simpMessagingTemplate.convertAndSend("/send/admin", chatMessage);
 //        this.simpMessagingTemplate.convertAndSend("/send/"+sessionId, chatMessage);
-    return chatMessage;
+        return chatMessage;
 //        return null;
-  }
+    }
 }

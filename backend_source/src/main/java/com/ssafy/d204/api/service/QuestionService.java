@@ -6,15 +6,15 @@ import java.util.List;
 
 public interface QuestionService {
 
-  List<Question> retrieveQuestion();
+    List<Question> retrieveQuestion();
 
-  Question detailQuestion(int pk_idx);
+    Question detailQuestion(int pk_idx);
 
-  boolean writeQuestion(Question content);
+    boolean writeQuestion(Question content);
 
-  boolean updateQuestion(Question content);
+    boolean updateQuestion(Question content);
 
-  boolean deleteQuestion(int pk_idx);
+    boolean deleteQuestion(int pk_idx);
 
-  boolean updateNextAnswer(Answer content);
+    boolean updateNextAnswer(Answer content);
 }

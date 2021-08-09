@@ -15,24 +15,24 @@ import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 @EnableWebSocketMessageBroker
 public class MessageSocketConfig implements WebSocketMessageBrokerConfigurer {
 
-  @Override
-  public void configureMessageBroker(MessageBrokerRegistry config) {
-    config.enableSimpleBroker("/send");
+    @Override
+    public void configureMessageBroker(MessageBrokerRegistry config) {
+        config.enableSimpleBroker("/send");
 //        config.setApplicationDestinationPrefixes("/pub");
-  }
+    }
 
-  @Override
-  public void registerStompEndpoints(StompEndpointRegistry registry) {
-    // TODO : CORS 설정 * 안먹히는 문제
-    registry.addEndpoint("/chat")
-        .setAllowedOrigins("https://localhost:8080", "https://i5d204.p.ssafy.io",
-            "http://localhost:8080").withSockJS();
+    @Override
+    public void registerStompEndpoints(StompEndpointRegistry registry) {
+        // TODO : CORS 설정 * 안먹히는 문제
+        registry.addEndpoint("/chat")
+            .setAllowedOrigins("https://localhost:8080", "https://i5d204.p.ssafy.io",
+                "http://localhost:8080").withSockJS();
 //        registry.addEndpoint("/msgServer").setAllowedOrigins("*");
-  }
+    }
 
-  @Bean
-  public ServerEndpointExporter serverEndpointExporter() {
-    return new ServerEndpointExporter();
-  }
+    @Bean
+    public ServerEndpointExporter serverEndpointExporter() {
+        return new ServerEndpointExporter();
+    }
 
 }

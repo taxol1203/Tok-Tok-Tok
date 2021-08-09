@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class DuplicateCheckEmailPostReq {
 
-  String email;
+    String email;
 }

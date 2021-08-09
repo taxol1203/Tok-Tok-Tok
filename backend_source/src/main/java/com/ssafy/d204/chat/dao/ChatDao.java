@@ -7,25 +7,25 @@ import java.util.List;
 //@Repository
 public interface ChatDao {
 
-  // ChatSession management
-  List<ChatSession> findAllRoom();
+    // ChatSession management
+    List<ChatSession> findAllRoom();
 
-  List<ChatSession> findAllRoomByFkHostIdx(int fk_host_idx);
+    List<ChatSession> findAllRoomByFkHostIdx(int fk_host_idx);
 
-  List<ChatSession> findMyRoom(int sessionId);
+    List<ChatSession> findMyRoom(int sessionId);
 
-  ChatSession findRoomBySessionId(String session_id);
+    ChatSession findRoomBySessionId(String session_id);
 
-  int createChatRoom(ChatSession session);
+    int createChatRoom(ChatSession session);
 
-  int assignRoomToMe(String sessionId, int admin_pk_idx);
+    int assignRoomToMe(String sessionId, int admin_pk_idx);
 
-  int quitChatRoom(String sessionId);
+    int quitChatRoom(String sessionId);
 
-  // ChatMessage Persistent API
-  int pushMessage(ChatMessage chatMessage);
+    // ChatMessage Persistent API
+    int pushMessage(ChatMessage chatMessage);
 
-  List<ChatMessage> getAllMessages();
+    List<ChatMessage> getAllMessages();
 
-  List<ChatMessage> getMessagesBySessionId(String session_pk_idx);
+    List<ChatMessage> getMessagesBySessionId(String session_pk_idx);
 }

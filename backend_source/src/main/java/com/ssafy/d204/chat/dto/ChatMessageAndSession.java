@@ -8,6 +8,6 @@ import lombok.Data;
 @Data
 public class ChatMessageAndSession {
 
-  ChatSession session;
-  List<ChatMessage> messages;
+    ChatSession session;
+    List<ChatMessage> messages;
 }

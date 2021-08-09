@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class ModifyRoomStatusReq {
 
-  String status;
+    String status;
 }

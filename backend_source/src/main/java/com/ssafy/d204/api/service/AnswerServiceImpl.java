@@ -9,47 +9,47 @@ import org.springframework.stereotype.Service;
 @Service
 public class AnswerServiceImpl implements AnswerService {
 
-  @Autowired
-  private AnswerDao answerDao;
+    @Autowired
+    private AnswerDao answerDao;
 
-  @Override
-  public List<Answer> retrieveAnswer() {
-    return answerDao.retrieveAnswer();
-  }
+    @Override
+    public List<Answer> retrieveAnswer() {
+        return answerDao.retrieveAnswer();
+    }
 
-  @Override
-  public Answer detailAnswer(int pk_idx) {
-    return answerDao.detailAnswer(pk_idx);
-  }
+    @Override
+    public Answer detailAnswer(int pk_idx) {
+        return answerDao.detailAnswer(pk_idx);
+    }
 
-  @Override
-  public boolean writeAnswer(Answer content) {
-    return answerDao.writeAnswer(content);
-  }
+    @Override
+    public boolean writeAnswer(Answer content) {
+        return answerDao.writeAnswer(content);
+    }
 
-  @Override
-  public boolean updateAnswer(Answer content) {
-    return answerDao.updateAnswer(content);
-  }
+    @Override
+    public boolean updateAnswer(Answer content) {
+        return answerDao.updateAnswer(content);
+    }
 
-  @Override
-  public boolean deleteAnswer(int pk_idx) {
-    return answerDao.deleteAnswer(pk_idx);
-  }
+    @Override
+    public boolean deleteAnswer(int pk_idx) {
+        return answerDao.deleteAnswer(pk_idx);
+    }
 
-  @Override
-  public boolean updateNextQuestion(Answer fk_next_idx) {
-    return answerDao.updateNextQuestion(fk_next_idx);
-  }
+    @Override
+    public boolean updateNextQuestion(Answer fk_next_idx) {
+        return answerDao.updateNextQuestion(fk_next_idx);
+    }
 
-  @Override
-  public int getNextQuestion(int pk_idx) {
-    return answerDao.getNextQuestion(pk_idx);
-  }
+    @Override
+    public int getNextQuestion(int pk_idx) {
+        return answerDao.getNextQuestion(pk_idx);
+    }
 
-  @Override
-  public List<Answer> getNextAnswers(int pk_idx) {
-    return answerDao.getNextAnswers(pk_idx);
-  }
+    @Override
+    public List<Answer> getNextAnswers(int pk_idx) {
+        return answerDao.getNextAnswers(pk_idx);
+    }
 
 }

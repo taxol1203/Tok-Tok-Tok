@@ -6,11 +6,11 @@ import com.ssafy.d204.db.entity.User;
 
 public interface UserDao {
 
-  User getUser(String id);
+    User getUser(String id);
 
-  int registUser(UserRegisterPostReq info);
+    int registUser(UserRegisterPostReq info);
 
-  User checkEmail(DuplicateCheckEmailPostReq email);
+    User checkEmail(DuplicateCheckEmailPostReq email);
 
-  User getUserByIdx(int pk_idx);
+    User getUserByIdx(int pk_idx);
 }

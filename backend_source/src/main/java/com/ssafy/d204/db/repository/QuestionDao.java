@@ -8,15 +8,15 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface QuestionDao {
 
-  List<Question> retrieveQuestion();
+    List<Question> retrieveQuestion();
 
-  Question detailQuestion(int pk_idx);
+    Question detailQuestion(int pk_idx);
 
-  boolean writeQuestion(Question question);
+    boolean writeQuestion(Question question);
 
-  boolean updateQuestion(Question question);
+    boolean updateQuestion(Question question);
 
-  boolean deleteQuestion(int pk_idx);
+    boolean deleteQuestion(int pk_idx);
 
-  boolean updateNextAnswer(Answer content);
+    boolean updateNextAnswer(Answer content);
 }

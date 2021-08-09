@@ -6,6 +6,6 @@ import lombok.Data;
 @Data
 public class UserLoginPostRes {
 
-  String token;
-  User user;
+    String token;
+    User user;
 }
