@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AssignRoomRequest {
+public class AssignSessionRequest {
     @ApiModelProperty(example = "상담사의 int pk_idx")
     int admin_pk_idx;
 }

@@ -3,45 +3,45 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ssafy.d204.chat.dao.ChatDao">
   <!-- 전체 채팅세션 확인하기 -->
-  <select id="findAllRoom" resultType="ChatSession">
+  <select id="findAllSession" resultType="ChatSession">
     SELECT *
     FROM "SSAFY_PJT1".chat_session;
   </select>
-  <select id="findAllRoomByFkHostIdx" resultType="ChatSession">
+  <select id="findAllSessionByFkHostIdx" resultType="ChatSession">
     SELECT *
     FROM "SSAFY_PJT1".chat_session
     WHERE fk_host_idx = #{fk_host_idx}
        OR status = 'OPEN';
   </select>
-  <select id="findMyRoom" resultType="ChatSession">
+  <select id="findMySession" resultType="ChatSession">
     SELECT *
     FROM "SSAFY_PJT1".chat_session
     WHERE fk_client_idx = #{id};
   </select>
 
   <!-- session id로 방 정보 가져오기 -->
-  <select id="findRoomBySessionId" resultType="ChatSession">
+  <select id="findSessionBySessionId" resultType="ChatSession">
     SELECT *
     FROM "SSAFY_PJT1".chat_session
     WHERE session_id = #{sessionId};
   </select>
 
   <!-- 세션 등록 -->
-  <insert id="createChatRoom" parameterType="ChatSession">
+  <insert id="createChatSession" parameterType="ChatSession">
     INSERT INTO "SSAFY_PJT1".chat_session ("session_id", "created_at", "fk_created_by_idx",
                                            "fk_client_idx", "status", "qna_history")
     values (#{session_id}, now(), #{fk_created_by_idx}, #{fk_client_idx}, #{status},
             #{qna_history});
   </insert>
 
-  <update id="assignRoomToMe">
+  <update id="assignSessionToMe">
     UPDATE "SSAFY_PJT1".chat_session
     SET fk_host_idx = #{admin_pk_idx},
         status      = 'LIVE'
     WHERE session_id = #{sessionId}
       AND status = 'OPEN';
   </update>
-  <delete id="quitChatRoom" parameterType="String">
+  <delete id="quitChatSession" parameterType="String">
     UPDATE "SSAFY_PJT1".chat_session
     SET "status" = 'END'
     WHERE "session_id" = #{sessionId};

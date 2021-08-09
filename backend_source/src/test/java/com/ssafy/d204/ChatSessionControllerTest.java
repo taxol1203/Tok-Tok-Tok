@@ -1,21 +1,16 @@
 package com.ssafy.d204;
 
-import com.mysql.cj.Session;
-import com.ssafy.d204.api.controller.QnAController;
 import com.ssafy.d204.chat.controller.ChatSessionController;
-import com.ssafy.d204.chat.dto.AssignRoomRequest;
+import com.ssafy.d204.chat.dto.AssignSessionRequest;
 import com.ssafy.d204.chat.dto.ChatSession;
 import com.ssafy.d204.chat.dto.ChatSessionCreateReq;
-import com.ssafy.d204.db.entity.Answer;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.hamcrest.*;
 
 import java.util.List;
 
@@ -27,7 +22,7 @@ public class ChatSessionControllerTest {
 
 	@Test
 	void createChatSession(){
-		ResponseEntity<?> roomResponse = csc.getAllRoom();
+		ResponseEntity<?> roomResponse = csc.findAllSessions();
 		Assertions.assertEquals(200,roomResponse.getStatusCodeValue());
 		List<ChatSession> sessionsBefore = (List<ChatSession>) roomResponse.getBody();
 
@@ -36,31 +31,31 @@ public class ChatSessionControllerTest {
 		createSessionRequest.setFk_client_idx(1);
 
 		ChatSession newSession =
-				(ChatSession) csc.createRoom(new ChatSessionCreateReq(1,1, "/")).getBody();
+				(ChatSession) csc.createChatSession(new ChatSessionCreateReq(1,1, "/")).getBody();
 //		MatcherAssert(sessionsBefore.size(), isGreater);
-		ResponseEntity<?> roomResponse2 = csc.getAllRoom();
+		ResponseEntity<?> roomResponse2 = csc.findAllSessions();
 		Assertions.assertEquals(200,roomResponse2.getStatusCodeValue());
 		List<ChatSession> sessionsAfter =
 				(List<ChatSession>) roomResponse2.getBody();
 
 		Assertions.assertTrue(sessionsBefore.size() < sessionsAfter.size());
 
-		AssignRoomRequest asr = new AssignRoomRequest();
+		AssignSessionRequest asr = new AssignSessionRequest();
 		asr.setAdmin_pk_idx(2);
-		csc.assignRoom(newSession.getSession_id(), asr);
+		csc.assignSessionToMe(newSession.getSession_id(), asr);
 
 
 		// 상담사가 직접 방을 닫도록 해야한다.
 		// 만약 상담사가 아닌 사람이 종료요청을 하면 forbidden 먹는지 여부 테스트
 		ResponseEntity<?> closeWithoutAuthorityResponse
-				= csc.closeRoom(newSession.getSession_id(), new AssignRoomRequest(1));
+				= csc.closeSession(newSession.getSession_id(), new AssignSessionRequest(1));
 		System.out.println(closeWithoutAuthorityResponse.getStatusCodeValue()+ " " + HttpStatus.FORBIDDEN.value());
 		Assertions.assertTrue(
 				closeWithoutAuthorityResponse.getStatusCodeValue()
 						== HttpStatus.FORBIDDEN.value());
 		System.out.println("1");
 		ResponseEntity<?> closeWithAuthorityResponse
-				= csc.closeRoom(newSession.getSession_id(), new AssignRoomRequest(2));
+				= csc.closeSession(newSession.getSession_id(), new AssignSessionRequest(2));
 		System.out.println("1");
 		Assertions.assertTrue(
 				closeWithAuthorityResponse.getStatusCodeValue()
@@ -73,8 +68,5 @@ public class ChatSessionControllerTest {
 		Assertions.assertTrue(
 				noSuchRoomExists.getStatusCodeValue()
 				== HttpStatus.NO_CONTENT.value());
-
-
-
 	}
 }
