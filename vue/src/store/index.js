@@ -121,11 +121,22 @@ export default createStore({
       return state.session_key.status;
     },
     get_client_info: (state) => {
+
+      var tmp = state.rooms[`${state.selected_room}`].session.qna_history
+      if (tmp != null) {
+        tmp = tmp.split('|')
+        tmp = tmp.splice(0, 1);
+      } else {
+        tmp = [];
+      }
       var payload = {
         client: state.rooms[`${state.selected_room}`].client,
-        qna: state.rooms[`${state.selected_room}`].session.qna_history.split('|')
+        qna: tmp
       }
       return payload;
     },
+    get_selected_idx: (state) => {
+      return state.selected_room
+    }
   },
 });

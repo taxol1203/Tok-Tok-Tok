@@ -33,7 +33,7 @@ export default {
   components: {},
   setup() {
     const store = useStore();
-    const sessionId = computed(() => store.state.selected_room); //user가 생성한 방 id
+    const sessionId = computed(() => store.getters['get_selected_idx']); //user가 생성한 방 id
     const userPkidx = computed(() => store.state.auth.user.pk_idx);
     const message = ref('');
     const messages = computed(() => store.getters['get_user_messages']);
