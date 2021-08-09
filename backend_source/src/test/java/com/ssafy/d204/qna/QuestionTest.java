@@ -9,12 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
-
+import org.springframework.test.context.ActiveProfiles;
 import com.ssafy.d204.api.controller.QnAController;
 import com.ssafy.d204.db.entity.Question;
 // 절대 돌리면 안됨
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
+@ActiveProfiles("test")
 public class QuestionTest {
 	@Autowired
 	QnAController qnaController;

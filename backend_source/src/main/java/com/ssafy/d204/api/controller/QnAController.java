@@ -75,9 +75,8 @@ public class QnAController {
     // 대신 실질적으로 의미를 갖는 Answer 클래스를 넣자.
     @ApiOperation(value = "현재 질문에 따른 다음 답변들의 정보를 전부 반환한다.", response = List.class)
     @GetMapping("/question/nextAnswers/{pk_idx}")
-    public ResponseEntity<List<Answer>> getNextAnswers(@PathVariable int pk_idx) throws Exception {
-        return new ResponseEntity<List<Answer>>(answerService.getNextAnswers(pk_idx),
-            HttpStatus.OK);
+    public ResponseEntity<?> getNextAnswers(@PathVariable int pk_idx) throws Exception {
+        return answerService.getNextAnswers(pk_idx);
     }
 
     @ApiOperation(value = "현재 질문에 다음 답변을 추가한다. pk_idx에 연결할 답변, fk_previous_idx에 현재 질문의 인덱스를 넣는다.", response = String.class)
@@ -90,33 +89,30 @@ public class QnAController {
 
     @ApiOperation(value = "모든 답변의 정보를 반환한다.", response = List.class)
     @GetMapping("/answer")
-    public ResponseEntity<List<Answer>> retrieveAnswer() throws Exception {
+    public ResponseEntity<?> retrieveAnswer() throws Exception {
         logger.debug("retrieveAnswer - 호출");
-        return new ResponseEntity<List<Answer>>(answerService.retrieveAnswer(), HttpStatus.OK);
+        return answerService.retrieveAnswer();
     }
 
     @ApiOperation(value = "답변 번호에 해당하는 답변의 정보를 반환한다.", response = Answer.class)
     @GetMapping("/answer/{pk_idx}")
-    public ResponseEntity<Answer> detailAnswer(@PathVariable int pk_idx) {
+    public ResponseEntity<?> detailAnswer(@PathVariable int pk_idx) {
         logger.debug("detailAnswer - 호출");
-        return new ResponseEntity<Answer>(answerService.detailAnswer(pk_idx), HttpStatus.OK);
+        return answerService.detailAnswer(pk_idx);
     }
 
     @ApiOperation(value = "답변 번호에 해당하는 다음 질문의 인덱스를 반환한다.", response = Answer.class)
     @GetMapping("/answer/nextQuestion/{pk_idx}")
-    public ResponseEntity<Integer> getNextQuestion(@PathVariable int pk_idx) {
+    public ResponseEntity<?> getNextQuestion(@PathVariable int pk_idx) {
         logger.debug("detailAnswer - 호출");
-        return new ResponseEntity<Integer>(answerService.getNextQuestion(pk_idx), HttpStatus.OK);
+        return answerService.getNextQuestion(pk_idx);
     }
 
     @ApiOperation(value = "새로운 답변 정보를 입력한다. title, content, fk_next_idx를 입력하여 전송 할 수 있다. \"fk_next_idx\": 0 를 지우고 execute를 하면 연결되는 다음 질문의 기본 값(fk_next_idx)는 2(상담종료)이다. (0으로 실행하면 오류)", response = String.class)
     @PostMapping("/answer")
     public ResponseEntity<?> writeAnswer(@RequestBody Answer content) {
         logger.debug("writeAnswer - 호출");
-        if (answerService.writeAnswer(content)) {
-            return new ResponseEntity<Void>(HttpStatus.OK);
-        }
-        return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+        return answerService.writeAnswer(content);
     }
 
     @ApiOperation(value = "답변 번호에 해당하는 답변의 정보를 수정한다. (content, fk_next_idx) 여기서 이전 질문(fk_previous_idx)는 변경하지 않는다.", response = String.class)
@@ -125,28 +121,19 @@ public class QnAController {
         logger.debug("updateAnswer - 호출");
         logger.debug("" + content);
 
-        if (answerService.updateAnswer(content)) {
-            return new ResponseEntity<Void>(HttpStatus.OK);
-        }
-        return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+       return answerService.updateAnswer(content);
     }
 
     @ApiOperation(value = "답변 번호에 해당하는 질문의 정보를 삭제한다.", response = String.class)
     @DeleteMapping("/answer/{pk_idx}")
     public ResponseEntity<?> deleteAnswer(@PathVariable int pk_idx) {
         logger.debug("deleteAnswer - 호출");
-        if (answerService.deleteAnswer(pk_idx)) {
-            return new ResponseEntity<Void>(HttpStatus.OK);
-        }
-        return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+        return answerService.deleteAnswer(pk_idx);
     }
 
     @ApiOperation(value = "답변 번호에 해당하는 다음 질문의 번호를 수정한다. 다음 질문의 기본 값 중 1번은 (상담사 연결) 2번은 (상담 종료)이다.", response = String.class)
     @PutMapping("/answer/nextIdx/{pk_idx}")
     public ResponseEntity<?> updateNextQuestion(@RequestBody Answer fk_next_idx) {
-        if (answerService.updateNextQuestion(fk_next_idx)) {
-            return new ResponseEntity<Void>(HttpStatus.OK);
-        }
-        return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+        return answerService.updateNextQuestion(fk_next_idx);
     }
 }

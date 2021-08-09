@@ -9,18 +9,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
-
+import org.springframework.test.context.ActiveProfiles;
 import com.ssafy.d204.api.controller.QnAController;
 import com.ssafy.d204.db.entity.Answer;
 // 절대 돌리면 안됨
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
+@ActiveProfiles("test")
 public class AnswerTest {
 	@Autowired
 	QnAController qnaController;
 	
 	ResponseEntity<Answer> response;
-	ResponseEntity<List<Answer>> responses;
+	ResponseEntity<?> responses;
 	
 	static Answer a1;
 	static Answer a2;
@@ -40,7 +41,7 @@ public class AnswerTest {
 	void countTest() throws Exception {
 		// 전체 답변 불러오기
 		responses = qnaController.retrieveAnswer();	
-		List<Answer> answers = responses.getBody();
+		List<Answer> answers = (List<Answer>) responses.getBody();
 		
 		// 전체 답변 지움
 		for(Answer aa : answers) {
@@ -49,7 +50,7 @@ public class AnswerTest {
 		
 		// 답변의 개수가 0개인지 확인
 		responses = qnaController.retrieveAnswer();	
-		answers = responses.getBody();
+		answers = (List<Answer>) responses.getBody();
 		Assertions.assertEquals(0,answers.size());
 		
 		// 3개의 답변 insert
@@ -59,7 +60,7 @@ public class AnswerTest {
 		
 		// 총 3개의 답변인지 확인
 		responses = qnaController.retrieveAnswer();	
-		answers = responses.getBody();
+		answers = (List<Answer>) responses.getBody();
 		Assertions.assertEquals(3,answers.size());
 	}
 	
@@ -68,7 +69,7 @@ public class AnswerTest {
 	void updateTest() throws Exception {
 		// 전체 답변 불러오기
 		responses = qnaController.retrieveAnswer();	
-		List<Answer> answers = responses.getBody();
+		List<Answer> answers = (List<Answer>) responses.getBody();
 		
 		// 전체 답변 지우기
 		for(Answer aa : answers) {
@@ -81,7 +82,7 @@ public class AnswerTest {
 		// 하나의 답변의 기본키를 얻는다.
 		int curIdx;
 		responses = qnaController.retrieveAnswer();	
-		answers = responses.getBody();
+		answers = (List<Answer>) responses.getBody();
 		curIdx = answers.get(0).getPk_idx();
 		
 		// 얻은 기본키를 통하여 답변 수정
@@ -89,7 +90,7 @@ public class AnswerTest {
 		qnaController.updateAnswer(updateQ);
 		
 		// 제대로 수정 되었는지 확인
-		updateQ = qnaController.detailAnswer(curIdx).getBody();
+		updateQ = (Answer) qnaController.detailAnswer(curIdx).getBody();
 		Assertions.assertEquals("updated", updateQ.getContent());
 	}
 	
@@ -98,7 +99,7 @@ public class AnswerTest {
 	void updateNextQuestion() throws Exception {
 		// 전체 답변 불러오고 샂게
 		responses = qnaController.retrieveAnswer();	
-		List<Answer> answers = responses.getBody();
+		List<Answer> answers = (List<Answer>) responses.getBody();
 		
 		for(Answer aa : answers) {
 			qnaController.deleteAnswer(aa.getPk_idx());
@@ -107,7 +108,7 @@ public class AnswerTest {
 		qnaController.writeAnswer(a1);
 		int curIdx;
 		responses = qnaController.retrieveAnswer();	
-		answers = responses.getBody();
+		answers = (List<Answer>) responses.getBody();
 		
 		curIdx = answers.get(0).getPk_idx();
 		
@@ -115,7 +116,7 @@ public class AnswerTest {
 		Answer updateQ = new Answer(curIdx, 1);
 		qnaController.updateNextQuestion(updateQ);
 		// 제대로 변경 되었는지 확인
-		updateQ = qnaController.detailAnswer(curIdx).getBody();
+		updateQ = (Answer) qnaController.detailAnswer(curIdx).getBody();
 		Assertions.assertEquals(1, updateQ.getFk_next_idx());
 		Assertions.assertEquals(1, qnaController.getNextQuestion(curIdx).getBody());
 	}
