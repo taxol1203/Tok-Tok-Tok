@@ -41,10 +41,10 @@
   <button type="button" @click="startVideo()">Start capturing video information</button>
   <button type="button" @click="stopVideo()">Stop capturing video information</button>
   <br /><br />
-  <button type="button" @click="connect()">establish connection</button>
-  <button type="button" @click="startScreenStream()">화면공유</button>
-  <button type="button" @click="stopScreenStream()">화면공유</button>
-  <button type="button" @click="leave()">leave</button>
+  <button type="button" @click="connect">establish connection</button>
+  <button type="button" @click="startScreenStream">화면공유시작</button>
+  <button type="button" @click="start">화면공유중단</button>
+  <button type="button" @click="leave">leave</button>
   <br />
   <div>
     <video
@@ -495,6 +495,32 @@ export default {
       peerConnection.setRemoteDescription(new RTCSessionDescription(evt));
     }
 
+    const startScreenStream = () => {
+      navigator.mediaDevices
+        .getDisplayMedia()
+        .then((stream) => {
+          // screenStream = stream;
+
+          // Stream에서 비디오 트랙 제거
+          for (let i = 0; i < localStream.getTracks().length; i++) {
+            let track = localStream.getTracks()[i];
+            if (track.kind === 'video') {
+              localStream.removeTrack(track);
+            }
+          }
+          localStream.addTrack(stream.getVideoTracks()[0]);
+
+          if (socketRead) {
+            sendReconnectRequest();
+          }
+          // return navigator.mediaDevices.enumerateDevices();
+        })
+        .catch((err) => {
+          console.log(err);
+          alert('화면 선택이 안되었습니다. 다시 확인해주세요');
+        });
+      // start();
+    };
     return {
       audioInputSelect,
       audioOutputSelect,
@@ -514,44 +540,8 @@ export default {
       stop,
       changeAudioDestination,
       attachSinkId,
+      startScreenStream,
     };
-
-    // // var screenStream = undefined;
-
-    // function startScreenStream() {
-    //   navigator.mediaDevices.getDisplayMedia()
-    //     .then((stream) => {
-    //       // screenStream = stream;
-
-    //       // Stream에서 비디오 트랙 제거
-    //       for (i = 0; i <script localStream.getTracks().length; i++) {
-    //         let track = localStream.getTracks()[i];
-    //         if (track.kind === "video") {
-    //           localStream.removeTrack(track);
-    //         }
-    //       }
-    //       localStream.addTrack(stream.getVideoTracks()[0]);
-
-    //       if (socketRead) {
-    //         sendReconnectRequest();
-    //       }
-    //       // return navigator.mediaDevices.enumerateDevices();
-    //     })
-    //     .catch((err) => {
-    //       console.log(err);
-    //       alert("화면 선택이 안되었습니다. 다시 확인해주세요");
-    //     });
-    //   // start();
-    // }
-    // function stopScreenStream() {
-    //   // 화면 공유의 경우에는, 스트림을 생성한 뒤에 카메라로 연결된
-    //   // 비디오 트랙을 제거 후 화면공유 트랙을 집어넣는 방식입니다.
-    //   // 그렇기에 그냥 start() 하면 알ㅇ아서 지금 선택된 카메라로
-    //   // 스트림을 다시 생성합니다.
-    //   start();
-    // }
-    // // 선택한 오디오 비디오 디바이스를 element에 바인딩하고
-    // // 소켓에 연결까지 함
   },
 };
 </script>
