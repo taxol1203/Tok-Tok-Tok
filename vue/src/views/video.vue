@@ -40,7 +40,7 @@
   <button type="button" @click="socketInit('b')">Socket Init ROOM 2</button>
   <button type="button" @click="startVideo()">Start capturing video information</button>
   <button type="button" @click="stopVideo()">Stop capturing video information</button>
-  &nbsp;&nbsp;&nbsp;&nbsp;
+  <br /><br />
   <button type="button" @click="connect()">establish connection</button>
   <button type="button" @click="startScreenStream()">화면공유</button>
   <button type="button" @click="stopScreenStream()">화면공유</button>
