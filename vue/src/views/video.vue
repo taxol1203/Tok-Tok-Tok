@@ -81,6 +81,13 @@ export default {
     var peerConnection = null;
     var peerStarted = false;
 
+    var mediaConstraints = {
+      mandatory: {
+        OfferToReceiveAudio: true,
+        OfferToReceiveVideo: true,
+      },
+    };
+
     // 카메라 / 마이크 목록 가져오기
     onMounted(async () => {
       try {
@@ -266,6 +273,134 @@ export default {
 
     // // ===================The above is socket======================
 
+    const connect = () => {
+      if (!peerStarted && localStream && socketRead) {
+        sendOffer(); // offer 시작
+        peerStarted = true;
+      } else {
+        if (!localStream) {
+          alert("Please capture local video data first.");
+        }
+        if (!socketRead) {
+          alert("Please open socket before connect.");
+        }
+        if (peerStarted) {
+          alert("Already peer have started.");
+        }
+      }
+    };
+
+    const sendOffer = () => {
+      peerConnection = prepareNewConnection();
+      peerConnection.createOffer(
+        function (sessionDescription) {
+          //Called on success
+          peerConnection.setLocalDescription(sessionDescription);
+          console.log("Send: SDP");
+          console.log(sessionDescription);
+          sendSDP(sessionDescription);
+        },
+        function (err) {
+          //Called on failure
+          console.log("Failed to create offer");
+        },
+        mediaConstraints
+      );
+    };
+
+    function prepareNewConnection() {
+      var pc_config = {
+        iceServers: [
+          {
+            url: "stun:13.124.49.8:3478",
+            username: "test",
+            credential: "test",
+          },
+          // 방화벽, 네트워크 설정 등의 장벽 때문에 상대방의 네트워크 위치를 파악하기 힘들기 때문에
+          // STUN 서버를 통해 정보를 주고 받는다.
+        ],
+      };
+      var peer = null;
+      try {
+        peer = new webkitRTCPeerConnection(pc_config);
+      } catch (e) {
+        console.log("Failed to establish connection, error:" + e.message);
+      }
+
+      // Send all ICE candidates to the other party
+      peer.onicecandidate = function (evt) {
+        if (evt.candidate) {
+          // console.log(evt.candidate);
+          sendCandidate({
+            type: "candidate",
+            sdpMLineIndex: evt.candidate.sdpMLineIndex,
+            sdpMid: evt.candidate.sdpMid,
+            candidate: evt.candidate.candidate,
+          });
+        }
+        // 이론상으론 다대다도 가능하지만, 각 클라이언트에 가해지는 컴퓨팅 부담이 심해져서 1:1로만 사용하기.
+      };
+      console.log("Add local video stream...");
+      peer.addStream(localStream);
+
+      //
+      peer.addEventListener("addstream", onRemoteStreamAdded, false);
+      // 상대방이 스트림을 추가했을 때, 발생하는 이벤트.
+      peer.addEventListener("removestream", onRemoteStreamRemoved, false);
+
+      peer.onconnectionstatechange = function (evt) {
+        console.log(evt);
+        switch (peer.connectionState) {
+          case "connected":
+            // alert("peer connected");
+            break;
+          case "disconnected":
+            alert("peer disconnected");
+            break;
+          case "failed":
+            // One or more transports has terminated unexpectedly or in an error
+            alert("peer failed");
+            break;
+          case "closed":
+            alert("peer closed");
+            // The connection has been closed
+            break;
+        }
+      };
+
+      // When the remote video stream is received, use the local video element for display
+      function onRemoteStreamAdded(event) {
+        console.log("Add remote video stream");
+        console.log(event.stream);
+        // remoteVideo.src = window.URL.createObjectURL(event.stream);
+        remoteVideo.srcObject = event.stream;
+        // #remote-video에 상대방 스트림 바인딩하기
+      }
+
+      // When the remote communication ends, cancel the display in the local video element
+      function onRemoteStreamRemoved(event) {
+        console.log("Remove remote video stream");
+        remoteVideo.src = "";
+      }
+
+      return peer;
+    }
+
+    function setOffer(evt) {
+      if (peerConnection) {
+        console.error("peerConnection already exists!");
+        return;
+      }
+      peerConnection = prepareNewConnection();
+      peerConnection.setRemoteDescription(new RTCSessionDescription(evt));
+    }
+
+    const sendCandidate = (candidate) => {
+      var text = JSON.stringify(candidate);
+      console.log(text); // "type":"candidate","sdpMLineIndex":0,"sdpMid":"0","candidate":"....
+      socket.send(text); // socket send
+    };
+
     return {
       audioInputSelect,
       audioOutputSelect,
@@ -282,24 +417,11 @@ export default {
       socketInit,
       leave,
       stop,
+      connect,
+      sendOffer,
+      prepareNewConnection,
+      sendCandidate,
     };
-
-    // function connect() {
-    //   if (!peerStarted && localStream && socketRead) {
-    //     sendOffer(); // offer 시작
-    //     peerStarted = true;
-    //   } else {
-    //     if (!localStream) {
-    //       alert("Please capture local video data first.");
-    //     }
-    //     if (!socketRead) {
-    //       alert("Please open socket before connect.");
-    //     }
-    //     if (peerStarted) {
-    //       alert("Already peer have started.");
-    //     }
-    //   }
-    // }
 
     // 해당 element의 오디오 출력을 담당할 장치를 지정합니다.
     // function attachSinkId(element, sinkId) {
@@ -384,13 +506,6 @@ export default {
     // // videoElement.value.mute = true;
     // // 서로의 화상이 보일 element를 가져오면 되며 아마 vue에선 $refs가 있을텐데 이게 좋은 방법인진 잘 모르겠음
 
-    // var mediaConstraints = {
-    //   mandatory: {
-    //     OfferToReceiveAudio: true,
-    //     OfferToReceiveVideo: true,
-    //   },
-    // };
-
     // //----------------------Exchange information -----------------------
     // // 이 부분은 그대로 복붙해서 사용할 것
     // function onOffer(evt) {
@@ -428,116 +543,6 @@ export default {
     // }
 
     // //---------------------- Process connection -----------------------
-    // function sendCandidate(candidate) {
-    //   var text = JSON.stringify(candidate);
-    //   console.log(text); // "type":"candidate","sdpMLineIndex":0,"sdpMid":"0","candidate":"....
-    //   socket.send(text); // socket send
-    // }
-    // function prepareNewConnection() {
-    //   var pc_config = {
-    //     iceServers: [
-    //       {
-    //         url: "stun:13.124.49.8:3478",
-    //         username: "test",
-    //         credential: "test",
-    //       },
-    //       // 방화벽, 네트워크 설정 등의 장벽 때문에 상대방의 네트워크 위치를 파악하기 힘들기 때문에
-    //       // STUN 서버를 통해 정보를 주고 받는다.
-    //     ],
-    //   };
-    //   var peer = null;
-    //   try {
-    //     peer = new webkitRTCPeerConnection(pc_config);
-    //   } catch (e) {
-    //     console.log("Failed to establish connection, error:" + e.message);
-    //   }
-
-    //   // Send all ICE candidates to the other party
-    //   peer.onicecandidate = function (evt) {
-    //     if (evt.candidate) {
-    //       console.log(evt.candidate);
-    //       console.log(evt.candidate);
-    //       sendCandidate({
-    //         type: "candidate",
-    //         sdpMLineIndex: evt.candidate.sdpMLineIndex,
-    //         sdpMid: evt.candidate.sdpMid,
-    //         candidate: evt.candidate.candidate,
-    //       });
-    //     }
-    //     // 이론상으론 다대다도 가능하지만, 각 클라이언트에 가해지는 컴퓨팅 부담이 심해져서 1:1로만 사용하기.
-    //   };
-    //   console.log("Add local video stream...");
-    //   peer.addStream(localStream);
-
-    //   //
-    //   peer.addEventListener("addstream", onRemoteStreamAdded, false);
-    //   // 상대방이 스트림을 추가했을 때, 발생하는 이벤트.
-    //   peer.addEventListener("removestream", onRemoteStreamRemoved, false);
-
-    //   peer.onconnectionstatechange = function (evt) {
-    //     console.log(evt);
-    //     switch (peer.connectionState) {
-    //       case "connected":
-    //         // alert("peer connected");
-    //         break;
-    //       case "disconnected":
-    //         alert("peer disconnected");
-    //         break;
-    //       case "failed":
-    //         // One or more transports has terminated unexpectedly or in an error
-    //         alert("peer failed");
-    //         break;
-    //       case "closed":
-    //         alert("peer closed");
-    //         // The connection has been closed
-    //         break;
-    //     }
-    //   };
-
-    //   // When the remote video stream is received, use the local video element for display
-    //   function onRemoteStreamAdded(event) {
-    //     console.log("Add remote video stream");
-    //     console.log(event.stream);
-    //     // remoteVideo.src = window.URL.createObjectURL(event.stream);
-    //     remoteVideo.srcObject = event.stream;
-    //     // #remote-video에 상대방 스트림 바인딩하기
-    //   }
-
-    //   // When the remote communication ends, cancel the display in the local video element
-    //   function onRemoteStreamRemoved(event) {
-    //     console.log("Remove remote video stream");
-    //     remoteVideo.src = "";
-    //   }
-
-    //   return peer;
-    // }
-
-    // function sendOffer() {
-    //   peerConnection = prepareNewConnection();
-    //   peerConnection.createOffer(
-    //     function (sessionDescription) {
-    //       //Called on success
-    //       peerConnection.setLocalDescription(sessionDescription);
-    //       console.log("Send: SDP");
-    //       console.log(sessionDescription);
-    //       sendSDP(sessionDescription);
-    //     },
-    //     function (err) {
-    //       //Called on failure
-    //       console.log("Failed to create offer");
-    //     },
-    //     mediaConstraints
-    //   );
-    // }
-
-    // function setOffer(evt) {
-    //   if (peerConnection) {
-    //     console.error("peerConnection already exists!");
-    //     return;
-    //   }
-    //   peerConnection = prepareNewConnection();
-    //   peerConnection.setRemoteDescription(new RTCSessionDescription(evt));
-    // }
 
     // function sendAnswer(evt) {
     //   console.log("Send Answer, create remote session description...");
