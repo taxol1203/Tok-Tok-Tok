@@ -3,10 +3,6 @@
     <el-col :span="12">
       <div>
         <el-card shadow="always">
-          <p>user11@naver.com</p>
-          <p>asdf555!@#</p>
-          <p>minsu2@naver.com</p>
-          <p>minsu2navercom!</p>
           <el-form
             v-if="Object.keys(token).length === 0"
             label-position="top"
@@ -44,13 +40,12 @@
 <script>
 import { reactive, ref, computed } from 'vue';
 import { useStore } from 'vuex';
-import router from '@/router';
 
 export default {
   setup() {
     const store = useStore();
     const token = computed(() => store.state.auth.user);
-    console.log(token.value);
+    // console.log(token.value);
     const formLabelAlign = ref(null);
     const onSubmit = () => {
       let payload = {

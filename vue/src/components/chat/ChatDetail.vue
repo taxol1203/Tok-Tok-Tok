@@ -51,21 +51,26 @@
 import Stomp from 'webstomp-client';
 import SockJS from 'sockjs-client';
 import { useStore } from 'vuex';
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 
 export default {
   name: 'Chat',
   components: {},
   setup() {
     const store = useStore();
-    const sessionId = computed(() => store.state.selected_room);
+    const sessionId = computed(() => store.getters['get_selected_idx']);
     const messages = computed(() => store.getters.get_messages);
     const userPkidx = computed(() => store.state.auth.user.pk_idx);
     const message = ref('');
     let connected = false;
     let stompClient = '';
 
+    watch(sessionId, () => {
+      connect();
+    });
+
     const connect = () => {
+      // console.log(sessionId.value);
       const serverURL = 'https://i5d204.p.ssafy.io/api/chat'; // 서버 채팅 주소
       let socket = new SockJS(serverURL);
       stompClient = Stomp.over(socket);
@@ -74,13 +79,12 @@ export default {
         {},
         (frame) => {
           connected = true;
-          // console.log('CONNECT SUCCESS:', frame);
           // 구독 == 채팅방 입장.
           stompClient.subscribe('/send/' + sessionId.value, (res) => {
-            // console.log('receive from server:', res.body);
-            store.commit('MESSAGE_PUSH', JSON.parse(res.body)); // 수신받은 메세지 표시하기
-            switch (res.body.type) {
+            // console.log('receive from server:', JSON.parse(res.body).type);
+            switch (JSON.parse(res.body).type) {
               case 'MSG':
+                store.commit('MESSAGE_PUSH', JSON.parse(res.body)); // 수신받은 메세지 표시하기
                 break;
               case 'JOIN':
                 // 방을 생성할 때 백엔드단에서 처리하므로 신경 x
@@ -99,20 +103,22 @@ export default {
         },
         (error) => {
           // 소켓 연결 실패
-          console.log('status : failed, STOMP CLIENT 연결 실패', error);
+          // console.log('status : failed, STOMP CLIENT 연결 실패', error);
           connected = false;
         }
       );
     };
-    connect(sessionId.value);
+    connect();
 
     const sendMessage = () => {
       if (userPkidx.value && message.value) {
         send({ message }); // 전송 실패 감지는 어떻게? 프론트단에서 고민좀 부탁 dream
         // 관리자가 첫 메세지 보냈을때 방상태를 LIVE로 바꾸기
-        if (store.state.rooms[`${sessionId.value}`].session.status == 'OPEN') {
-          store.dispatch('enterRoom', sessionId);
-        }
+        // 보냈을 때 바로 바꾸니까 관리자 측에서 메시지를 받을 때 잃어버리는 경우가 있어서 받을때 바꾸는 것으로 해결했습니다 -소빈
+        // 'MESSAGE_PUSH' 커밋 시 변경
+        // if (store.state.rooms[`${sessionId.value}`].session.status == 'OPEN') {
+        //   store.dispatch('enterRoom', sessionId);
+        // }
       }
       message.value = '';
       // 어차피 유저는 채팅 상담 신청을 한뒤 메세지를 치지 못하므로 open 상태에서 메세지를 보내는건 관리자뿐이니까

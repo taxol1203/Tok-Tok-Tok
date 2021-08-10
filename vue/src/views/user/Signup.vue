@@ -91,7 +91,6 @@ export default {
       }, 1000);
     };
     var validatePass = (rule, value, callback) => {
-      console.log(value);
       if (value === '') {
         callback(new Error('Please input the password'));
       } else {
@@ -103,7 +102,6 @@ export default {
       }
     };
     var validateCheck = (rule, value, callback) => {
-      console.log('check:', value);
       if (value === '') {
         callback(new Error('Please input the password again'));
       } else if (value !== user.passwd) {
@@ -113,7 +111,6 @@ export default {
       }
     };
     var validateName = (rule, value, callback) => {
-      console.log('nickname:', value);
       if (value === '') {
         callback(new Error('Please input the username again'));
       } else {

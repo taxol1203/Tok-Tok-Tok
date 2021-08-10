@@ -19,11 +19,11 @@
   </div>
 </template>
 <script>
-import axios from "@/axios";
-import ChatList from "../../components/chat/ChatList.vue";
-import ChatDetail from "../../components/chat/ChatDetail.vue";
-import UserInfo from "../../components/chat/UserInfo.vue";
-import { useStore } from "vuex";
+import axios from '@/axios';
+import ChatList from '../../components/chat/ChatList.vue';
+import ChatDetail from '../../components/chat/ChatDetail.vue';
+import UserInfo from '../../components/chat/UserInfo.vue';
+import { useStore } from 'vuex';
 
 export default {
   components: {
@@ -35,10 +35,8 @@ export default {
   setup() {
     const store = useStore();
 
-    axios.get("api/api/chat/admin/init").then((response) => {
+    axios.get('api/api/chat/admin/init').then((response) => {
       store.state.session_key = response.data;
-
-      console.log("CHAT AREA" + store.state.session_key);
       // console.log(store.state.session_key["d6142966-8ac7-42be-a774-4be4f62a3940"].messages[1]);
     });
 

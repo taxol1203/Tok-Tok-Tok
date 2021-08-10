@@ -61,6 +61,7 @@ export default {
   components: { UserChatDetail },
   setup() {
     const store = useStore();
+    const message = '';
     store.commit('userQna/CHANGE_SELECT', 1);
     store.commit('userQna/SET_CURRENT');
     const log = computed(() => store.getters['userQna/logGetter']);
@@ -82,6 +83,7 @@ export default {
     const sendMessage = () => {};
     return {
       sessionId,
+      message,
       log,
       user_pk_idx,
       realChat,

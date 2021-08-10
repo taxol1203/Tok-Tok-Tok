@@ -1,16 +1,16 @@
 import { createStore } from "vuex";
 import axios from "@/axios";
-// import createPersistedState from "vuex-persistedstate";
+import createPersistedState from "vuex-persistedstate";
 import { moduleQna } from "@/store/modules/moduleQna";
 import { auth } from "@/store/modules/auth";
 import { userQna } from "@/store/modules/userQna"
 
 export default createStore({
-  // plugins: [
-  //   createPersistedState({
-  //     paths: ["auth"],
-  //   }),
-  // ],
+  plugins: [
+    createPersistedState({
+      paths: ["auth"],
+    }),
+  ],
   modules: { moduleQna, auth, userQna },
   state: {
     //user-info: state.auth.user로 사용하면 됨
@@ -40,7 +40,13 @@ export default createStore({
       }
     },
     MESSAGE_PUSH(state, payload) {
+      console.log(payload)
       state.rooms[`${state.selected_room}`].messages.push(payload);
+      // 관리자가 첫 메세지 보냈을때 방상태를 LIVE로 바꾸기
+      if (state.rooms[`${state.selected_room}`].session.status == "OPEN") {
+        state.rooms[`${state.selected_room}`].session.status = "LIVE";
+        state.list_status = "LIVE";
+      }
     },
     SAVE_USER_CHAT_ROOM_ID(state, payload) {
       state.selected_room = payload;
