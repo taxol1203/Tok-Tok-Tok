@@ -12,7 +12,6 @@
       </option>
     </select>
   </div>
-  <span>선택함: {{ audioInputSelect }}</span>
 
   <div class="select">
     <label for="audioOutput">Audio output destination: </label>
@@ -36,17 +35,12 @@
       </option>
     </select>
   </div>
-  <span>선택함: {{ videoSelect }}</span>
 
-  <!-- <button type="button" onclick="socketInit('a');">Socket Init ROOM 1</button>
+  <button type="button" onclick="socketInit('a');">Socket Init ROOM 1</button>
   <button type="button" onclick="socketInit('b');">Socket Init ROOM 2</button>
-  <button type="button" onclick="startVideo();">
-    Start capturing video information
-  </button>
-  <button type="button" onclick="stopVideo();">
-    Stop capturing video information
-  </button> -->
-  <!-- &nbsp;&nbsp;&nbsp;&nbsp;
+  <button type="button" onclick="startVideo();">Start capturing video information</button>
+  <button type="button" onclick="stopVideo();">Stop capturing video information</button>
+  &nbsp;&nbsp;&nbsp;&nbsp;
   <button type="button" onclick="connect();">establish connection</button>
   <button type="button" onclick="startScreenStream();">화면공유</button>
   <button type="button" onclick="stopScreenStream();">화면공유</button>
@@ -62,8 +56,8 @@
       id="remote-video"
       autoplay
       style="width: 240px; height: 180px; border: 1px solid black"
-    ></video> -->
-  <!-- </div> -->
+    ></video>
+  </div>
 </template>
 
 <script>
@@ -97,6 +91,7 @@ export default {
         // enumerateDevices()에 .then으로 해당 함수의 실행을 마치고 난 뒤에 로딩을 해야
         // 모든 장치를 가져와서 표시가 가능합니다.
       }
+      videoElement.value.volume = 0; // 하울링 방지
       start(); // 기본 장치로 stream 바인딩하기
     });
 
@@ -110,7 +105,10 @@ export default {
     // 카메라 / 마이크 목록 가져오기
     // device들의 정보를 받아 해석하여 분류하는 코드
     const gotDevicesList = (deviceInfos) => {
-      console.log(deviceInfos);
+      //장치 가져올 때 초기화 하는 부분
+      mediaOptions.audioinput = [];
+      mediaOptions.audiooutput = [];
+      mediaOptions.videoinput = [];
       for (let i = 0; i < deviceInfos.length; i++) {
         const deviceInfo = deviceInfos[i];
         if (deviceInfo.kind === "audioinput") {
@@ -143,6 +141,7 @@ export default {
           deviceId: videoSource ? { exact: videoSource } : undefined,
         },
       };
+
       navigator.mediaDevices
         .getUserMedia(constraints) //constraints에 대한 사용권한 요청
         .then(gotStream) // html element와 video/audio를 부착한다
@@ -153,6 +152,28 @@ export default {
           }
         });
     };
+
+    // 로컬 엘리먼트랑 스트림을 연결하여 보여주기
+    const gotStream = function (stream) {
+      // console.log(stream);
+      console.log(stream.getTracks());
+      localStream = stream; // 스트림 접근용 변수에 저장
+      videoElement.value.srcObject = stream;
+      // this.$refs.videoElement.srcObject = stream;
+      // console.log(this.$refs.videoElement.srcObject);
+      console.log(videoElement);
+      console.log(videoElement.value.srcObject);
+      // 비디오 엘리멘트에 스트림을 연결하여 화면에 표시하는 기능
+      return navigator.mediaDevices.enumerateDevices();
+    };
+
+    // 재접속을 하는 이유는, Stream에 바인딩된 Device가 바뀌어도
+    // peer에 반영이 되지 않습니다.
+    // renegotiation이 필요한 부분
+    function sendReconnectRequest() {
+      let req = { type: "reconnectRequest" };
+      socket.send(JSON.stringify(req));
+    }
 
     return {
       audioInputSelect,
@@ -166,6 +187,7 @@ export default {
       handleError,
       selected,
       start,
+      gotStream,
     };
 
     // function connect() {
@@ -229,15 +251,6 @@ export default {
     //   attachSinkId(remoteVideo, audioDestination);
     // }
 
-    // // 로컬 엘리먼트랑 스트림을 연결하여 보여주기
-    // function gotStream(stream) {
-    //   console.log(stream);
-    //   localStream = stream; // 스트림 접근용 변수에 저장
-    //   videoElement.srcObject = stream;
-    //   // 비디오 엘리멘트에 스트림을 연결하여 화면에 표시하는 기능
-    //   return navigator.mediaDevices.enumerateDevices();
-    // }
-
     // // var screenStream = undefined;
 
     // function startScreenStream() {
@@ -275,14 +288,6 @@ export default {
     // // 선택한 오디오 비디오 디바이스를 element에 바인딩하고
     // // 소켓에 연결까지 함
 
-    // // 재접속을 하는 이유는, Stream에 바인딩된 Device가 바뀌어도
-    // // peer에 반영이 되지 않습니다.
-    // // renegotiation이 필요한 부분
-    // function sendReconnectRequest() {
-    //   let req = { type: "reconnectRequest" };
-    //   socket.send(JSON.stringify(req));
-    // }
-
     // // function changeTracks(newStream) {
     // //   let newTracks = newStream.getTracks().forEach((newTrack) => {
     // //     console.log(newTrack);
@@ -294,12 +299,13 @@ export default {
     audioInputSelect.onchange = start;
     // audioOutputSelect.onchange = changeAudioDestination;
     // videoSelect.onchange = start;
-    // // ===================The following is socket======================
-    // // var user = "1a2a3a4a-1a2a3a4a"
-    // var socketUrl = "wss://i5d204.p.ssafy.io/api/msgServer/"; // 메세지 시그널링 서버 주소
-    // // var socketUrl = "wss://59.151.220.195:8088/api/msgServer/"; // 메세지 시그널링 서버 주소
-    // var socket = null;
-    // var socketRead = false; // socket이 열려있는지 flag. 소켓 통신이 이벤트 기반 처리기 때문에 flag값 없이는 코딩이 불가능함
+
+    // ===================The following is socket======================
+    // var user = "1a2a3a4a-1a2a3a4a"
+    var socketUrl = "wss://i5d204.p.ssafy.io/api/msgServer/"; // 메세지 시그널링 서버 주소
+    // var socketUrl = "wss://59.151.220.195:8088/api/msgServer/"; // 메세지 시그널링 서버 주소
+    var socket = null;
+    var socketRead = false; // socket이 열려있는지 flag. 소켓 통신이 이벤트 기반 처리기 때문에 flag값 없이는 코딩이 불가능함
     // function socketInit(roomId) {
     //   console.log(socketUrl);
     //   socket = new WebSocket(socketUrl + roomId); // roomId 붙여서 접속
@@ -377,7 +383,6 @@ export default {
 
     // var localVideo = document.getElementById("local-video");
     // var remoteVideo = document.getElementById("remote-video");
-    // localVideo.volume = 0; // 하울링 방지
     // // localVideo.mute = true;
     // // 서로의 화상이 보일 element를 가져오면 되며 아마 vue에선 $refs가 있을텐데 이게 좋은 방법인진 잘 모르겠음
 
