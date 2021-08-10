@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<?> getUserByIdx(int pk_idx) {
         try {
-            User user = userDao.getUserByIdx(pk_idx);;
+            User user = userDao.getUserByIdx(pk_idx);
             if (user == null) {
                 return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
             }
