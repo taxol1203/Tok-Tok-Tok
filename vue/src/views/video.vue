@@ -36,15 +36,15 @@
     </select>
   </div>
 
-  <button type="button" onclick="socketInit('a');">Socket Init ROOM 1</button>
-  <button type="button" onclick="socketInit('b');">Socket Init ROOM 2</button>
-  <button type="button" onclick="startVideo();">Start capturing video information</button>
-  <button type="button" onclick="stopVideo();">Stop capturing video information</button>
+  <button type="button" @click="socketInit('a')">Socket Init ROOM 1</button>
+  <button type="button" @click="socketInit('b')">Socket Init ROOM 2</button>
+  <button type="button" @click="startvideo()">Start capturing video information</button>
+  <button type="button" @click="stopvidieo()">Stop capturing video information</button>
   &nbsp;&nbsp;&nbsp;&nbsp;
-  <button type="button" onclick="connect();">establish connection</button>
-  <button type="button" onclick="startScreenStream();">화면공유</button>
-  <button type="button" onclick="stopScreenStream();">화면공유</button>
-  <button type="button" onclick="leave();">leave</button>
+  <button type="button" @click="connect()">establish connection</button>
+  <button type="button" @click="startScreenStream()">화면공유</button>
+  <button type="button" @click="stopScreenStream()">화면공유</button>
+  <button type="button" @click="leave()">leave</button>
   <br />
   <div>
     <video
@@ -153,16 +153,20 @@ export default {
         });
     };
 
+    const stop = () => {
+      socket.close();
+      peerConnection.removeStream(localStream);
+      peerConnection.close();
+      peerConnection = null;
+      peerStarted = false;
+      // 소켓 연결 종료 및 피어커넥션 다 종료
+    };
+
     // 로컬 엘리먼트랑 스트림을 연결하여 보여주기
     const gotStream = function (stream) {
-      // console.log(stream);
       console.log(stream.getTracks());
       localStream = stream; // 스트림 접근용 변수에 저장
       videoElement.value.srcObject = stream;
-      // this.$refs.videoElement.srcObject = stream;
-      // console.log(this.$refs.videoElement.srcObject);
-      console.log(videoElement);
-      console.log(videoElement.value.srcObject);
       // 비디오 엘리멘트에 스트림을 연결하여 화면에 표시하는 기능
       return navigator.mediaDevices.enumerateDevices();
     };
@@ -174,6 +178,93 @@ export default {
       let req = { type: "reconnectRequest" };
       socket.send(JSON.stringify(req));
     }
+
+    // ===================The following is socket======================
+    var user = "1a2a3a4a-1a2a3a4a";
+    var socketUrl = "wss://i5d204.p.ssafy.io/api/msgServer/"; // 메세지 시그널링 서버 주소
+    // var socketUrl = "wss://59.151.220.195:8088/api/msgServer/"; // 메세지 시그널링 서버 주소
+    var socket = null;
+    var socketRead = false; // socket이 열려있는지 flag. 소켓 통신이 이벤트 기반 처리기 때문에 flag값 없이는 코딩이 불가능함
+    const socketInit = (roomId) => {
+      socket = new WebSocket(socketUrl + roomId); // roomId 붙여서 접속
+      socket.onclose = function () {
+        socket = null;
+        peerStarted = false;
+        localStream = null;
+      };
+      socket.onopen = function () {
+        console.log("Successfully connected to the server...");
+        socketRead = true;
+        // 소켓 연결 성공
+      };
+      socket.onclose = function (e) {
+        console.log(e);
+        console.log("The connection to the server is closed:" + e.code);
+        alert("상담이 종료되었습니다.");
+        socketRead = false;
+        peerStarted = false;
+        if (peerConnection != null) {
+          peerConnection.close();
+          peerConnection = null;
+        }
+        localStream = null;
+        videoElement.value.srcObject = null;
+        // 소켓 연결이 끊어지거나, 연결 시도 중 실패할 경우
+      };
+
+      socket.onmessage = function (res) {
+        var evt = JSON.parse(res.data);
+        console.log(evt);
+        // 시그널링 서버에서 이루어지는 Handshake는 여기를 참조
+        // https://dzone.com/articles/scaling-webrtc-based-applications
+        if (evt.type === "offer") {
+          console.log("Receive the offer, set the offer, and send the answer...");
+          onOffer(evt);
+        } else if (evt.type === "answer" && peerStarted) {
+          console.log("Receive answer, set answer SDP");
+          onAnswer(evt);
+        } else if (evt.type === "candidate" && peerStarted) {
+          console.log("ICE candidate received...");
+          onCandidate(evt);
+        } else if (evt.type === "bye" && peerStarted) {
+          console.log("WebRTC communication disconnected");
+          stop();
+        } else if (evt.type === "reconnectRequest" && peerStarted) {
+          // alert("reconnect req ");
+          let res = { type: "reconnectResponse" };
+          peerStarted = false;
+          // localStream = null;
+          remoteVideo.src = "";
+          async () => {
+            await peerConnection.close();
+          };
+          peerConnection = null;
+          socket.send(JSON.stringify(res));
+
+          // connect();
+        } else if (evt.type === "reconnectResponse" && socketRead) {
+          peerStarted = false;
+          // localStream = null;
+          remoteVideo.src = "";
+          async () => {
+            await peerConnection.close();
+          };
+
+          peerConnection = null;
+          connect();
+          // await peerConnection.close();
+          // alert("reconnect start")
+        }
+      };
+    };
+
+    // stop connection
+    const leave = () => {
+      console.log("hang up.");
+      stop();
+    };
+
+    // // ===================The above is socket======================
 
     return {
       audioInputSelect,
@@ -188,6 +279,9 @@ export default {
       selected,
       start,
       gotStream,
+      socketInit,
+      leave,
+      stop,
     };
 
     // function connect() {
@@ -205,21 +299,6 @@ export default {
     //       alert("Already peer have started.");
     //     }
     //   }
-    // }
-
-    // // stop connection
-    // function leave() {
-    //   console.log("hang up.");
-    //   stop();
-    // }
-
-    // function stop() {
-    //   socket.close();
-    //   peerConnection.removeStream(localStream);
-    //   peerConnection.close();
-    //   peerConnection = null;
-    //   peerStarted = false;
-    //   // 소켓 연결 종료 및 피어커넥션 다 종료
     // }
 
     // 해당 element의 오디오 출력을 담당할 장치를 지정합니다.
@@ -300,90 +379,9 @@ export default {
     // audioOutputSelect.onchange = changeAudioDestination;
     // videoSelect.onchange = start;
 
-    // ===================The following is socket======================
-    // var user = "1a2a3a4a-1a2a3a4a"
-    var socketUrl = "wss://i5d204.p.ssafy.io/api/msgServer/"; // 메세지 시그널링 서버 주소
-    // var socketUrl = "wss://59.151.220.195:8088/api/msgServer/"; // 메세지 시그널링 서버 주소
-    var socket = null;
-    var socketRead = false; // socket이 열려있는지 flag. 소켓 통신이 이벤트 기반 처리기 때문에 flag값 없이는 코딩이 불가능함
-    // function socketInit(roomId) {
-    //   console.log(socketUrl);
-    //   socket = new WebSocket(socketUrl + roomId); // roomId 붙여서 접속
-    //   console.log("!");
-    //   socket.onclose = function () {
-    //     socket = null;
-    //     peerStarted = false;
-    //     localStream = null;
-    //   };
-    //   socket.onopen = function () {
-    //     console.log("Successfully connected to the server...");
-    //     socketRead = true;
-    //     // 소켓 연결 성공
-    //   };
-    //   socket.onclose = function (e) {
-    //     console.log(e);
-    //     console.log("The connection to the server is closed:" + e.code);
-    //     alert("상담이 종료되었습니다.");
-    //     socketRead = false;
-    //     peerStarted = false;
-    //     if (peerConnection != null) {
-    //       peerConnection.close();
-    //       peerConnection = null;
-    //     }
-    //     localStream = null;
-    //     localVideo.srcObject = null;
-    //     // 소켓 연결이 끊어지거나, 연결 시도 중 실패할 경우
-    //   };
-
-    //   socket.onmessage = function (res) {
-    //     var evt = JSON.parse(res.data);
-    //     console.log(evt);
-    //     // 시그널링 서버에서 이루어지는 Handshake는 여기를 참조
-    //     // https://dzone.com/articles/scaling-webrtc-based-applications
-    //     if (evt.type === "offer") {
-    //       console.log(
-    //         "Receive the offer, set the offer, and send the answer..."
-    //       );
-    //       onOffer(evt);
-    //     } else if (evt.type === "answer" && peerStarted) {
-    //       console.log("Receive answer, set answer SDP");
-    //       onAnswer(evt);
-    //     } else if (evt.type === "candidate" && peerStarted) {
-    //       console.log("ICE candidate received...");
-    //       onCandidate(evt);
-    //     } else if (evt.type === "bye" && peerStarted) {
-    //       console.log("WebRTC communication disconnected");
-    //       stop();
-    //     } else if (evt.type === "reconnectRequest" && peerStarted) {
-    //       // alert("reconnect req ");
-    //       let res = { type: "reconnectResponse" };
-    //       peerStarted = false;
-    //       // localStream = null;
-    //       remoteVideo.src = "";
-    //       async () => { await peerConnection.close(); };
-    //       peerConnection = null;
-    //       socket.send(JSON.stringify(res));
-
-    //       // connect();
-    //     } else if (evt.type === "reconnectResponse" && socketRead) {
-    //       peerStarted = false;
-    //       // localStream = null;
-    //       remoteVideo.src = "";
-    //       async () => { await peerConnection.close(); };
-
-    //       peerConnection = null;
-    //       connect();
-    //       // await peerConnection.close();
-    //       // alert("reconnect start")
-    //     }
-    //   };
-    // }
-
-    // // ===================The above is socket======================
-
-    // var localVideo = document.getElementById("local-video");
+    // var videoElement.value = document.getElementById("local-video");
     // var remoteVideo = document.getElementById("remote-video");
-    // // localVideo.mute = true;
+    // // videoElement.value.mute = true;
     // // 서로의 화상이 보일 element를 가져오면 되며 아마 vue에선 $refs가 있을텐데 이게 좋은 방법인진 잘 모르겠음
 
     // var mediaConstraints = {
