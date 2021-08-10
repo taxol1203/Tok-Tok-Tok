@@ -1,16 +1,5 @@
 package com.ssafy.d204.chat.handler;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ssafy.d204.chat.dto.SignalMessage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.web.socket.TextMessage;
-import org.springframework.web.socket.WebSocketSession;
-import org.springframework.web.socket.handler.TextWebSocketHandler;
-
-import java.util.HashMap;
-import java.util.Map;
-
 public class SignalingSocketHandler {
 //        extends TextWebSocketHandler {
 //

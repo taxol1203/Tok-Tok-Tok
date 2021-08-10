@@ -1,220 +1,161 @@
 package com.ssafy.d204.chat.controller;
 
-import com.ssafy.d204.chat.dto.*;
-import com.ssafy.d204.chat.dao.ChatDao;
+import com.ssafy.d204.chat.dto.AssignSessionRequest;
+import com.ssafy.d204.chat.dto.ChatMessage;
+import com.ssafy.d204.chat.dto.ChatMessageAndSession;
+import com.ssafy.d204.chat.dto.ChatSession;
+import com.ssafy.d204.chat.dto.ChatSessionCreateReq;
+import com.ssafy.d204.chat.service.ChatSessionService;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.reactive.TransactionSynchronizationManager;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/api/chat")
 public class ChatSessionController {
-//    @Autowired
-    private final ChatDao chatDao;
-//
-//    ChatSessionController(@Autowired ChatDao chatDao){
-//        super();
-//        this.chatDao = chatDao;
-//    }
+
+    static final String SESSION_ID_EXAMPLE = "SOME-SESSION-ID";
+    static final String PK_IDX_EXAMPLE = "1";
+
+    //    @Autowired
+    private final ChatSessionService chatSessionService;
+
     // 모든 채팅방 목록 보기
-    @ApiOperation(value = "현재 개설중인 모든 방의 목록을 가져온다.", response = ChatSession.class)
-    @GetMapping("/rooms/all")
+    @ApiOperation(value = "현재 개설중인 모든 방의 목록을 가져온다.")
+    @GetMapping(value= "/rooms/all", produces = "application/json")
     @ResponseBody
-    public ResponseEntity<?> getAllRoom() {
-        List<ChatSession> ret = null;
-        try{
-            System.out.println("oh2");
-            ret = chatDao.findAllRoom();
-            for(ChatSession cs : ret){
-                System.out.println("oh");
-                System.out.println(cs);
-            }
-        }catch(Exception e){
-            e.printStackTrace();
-            return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        return new ResponseEntity<List<ChatSession>>(ret, HttpStatus.OK);
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "전체 방 목록 조회 성공", response = ChatSession.class, responseContainer = "List"),
+        @ApiResponse(code = 500, message = "DB 오류"),
+    })
+    public ResponseEntity<?> findAllSessions() {
+        return chatSessionService.findAllSessions();
     }
 
-    @ApiOperation(value = "(유저측)본인에게 권한이 있는 방만 검색한다.", response = ChatSession.class)
-    @GetMapping("/rooms/user/{userid}")
+    @ApiOperation(value = "(유저측)본인에게 권한이 있는 방만 검색한다.", produces = "application/json")
+    @GetMapping(value = "/rooms/user/{userid}", produces = "application/json")
     @ResponseBody
-    public ResponseEntity<?> getMyRoom(@PathVariable int userid) {
-        List<ChatSession> ret = null;
-        try{
-            ret = chatDao.findMyRoom(userid);
-        }catch(Exception e){
-            e.printStackTrace();
-            return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        return new ResponseEntity<List<ChatSession>>(ret, HttpStatus.OK);
+    @ApiImplicitParam(name = "userId", value = "유저의 pk_idx", required = true, example = PK_IDX_EXAMPLE)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "방 검색 완료", response = ChatSession.class, responseContainer = "List"),
+        @ApiResponse(code = 500, message = "DB 오류", response = Void.class),
+    })
+    public ResponseEntity<?> findMySession(@PathVariable int userid) {
+        return chatSessionService.findMySession(userid);
+//        List<ChatSession> ret = null;
+//        try {
+//            ret = chatDao.findMySession(userid);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//        return new ResponseEntity<List<ChatSession>>(ret, HttpStatus.OK);
     }
 
     // 채팅방 생성
-    @ApiOperation(value = "채팅방을 개설한다.", response = ChatSession.class)
-    @PostMapping("/room")
+    @ApiOperation(value = "채팅방을 개설한다.")
+    @PostMapping(value = "/room", produces = "application/json")
     @ResponseBody
-    public ResponseEntity<?> createRoom(@RequestBody ChatSessionCreateReq req) {
-//        System.out.println(session);
-        ChatSession temp = ChatSession.create();
-        temp.setFk_client_idx(req.getFk_client_idx());
-        temp.setFk_created_by_idx(req.getFk_created_by_idx());
-        temp.setQna_history(req.getQna_history());
-        ChatSession ret = null;
-        try{
-            temp.setFk_client_idx(temp.getFk_client_idx());
-//            ret.setCreated_at();
-            temp.setStatus("OPEN");
-            temp.setFk_created_by_idx(temp.getFk_created_by_idx());
-            temp.setQna_history(temp.getQna_history());
-            chatDao.createChatRoom(temp);
-            ret = chatDao.findRoomBySessionId(temp.getSession_id());
-//            chatDao.pushMessage(new ChatMessage(0,".",ret.getFk_client_idx(),null,false,ret.getSession_id(), ChatMessage.MessageType.JOIN));
-        }catch(Exception e){
-            e.printStackTrace();
-            return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        return new ResponseEntity<ChatSession>(ret, HttpStatus.OK);
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "채팅방 개설 성공", response = Void.class),
+        @ApiResponse(code = 500, message = "DB 오류", response = Void.class),
+    })
+    public ResponseEntity<?> createChatSession(@RequestBody ChatSessionCreateReq req) {
+        return chatSessionService.createChatSession(req);
     }
-    @ApiOperation(value = "상담사가 해당 상담을 담당하겠다고 선언한다.", response = ChatSession.class)
-    @PutMapping("/room/{sessionId}")
+
+    @ApiOperation(value = "상담사가 해당 상담을 담당하겠다고 선언한다.")
+    @PutMapping(value = "/room/{sessionId}", produces = "application/json")
+    @ApiImplicitParam(name = "sessionId", value = "세션 아이디", required = true, example = SESSION_ID_EXAMPLE)
     @ResponseBody
-    public ResponseEntity<?> assignRoom(@PathVariable String sessionId, @RequestBody AssignRoomRequest req) {
-        int result = 0;
-        try{
-            result = chatDao.assignRoomToMe(sessionId, req.getAdmin_pk_idx());
-        }catch(Exception e){
-            e.printStackTrace();
-            return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        if(result == 0){
-            return new ResponseEntity<Void>(HttpStatus.CONFLICT);
-        }
-        return new ResponseEntity<Void>(HttpStatus.OK);
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "상담사 배정 성공", response = Void.class),
+        @ApiResponse(code = 409, message = "해당 세션이 존재하지 않거나 다른 상담사가 이미 배정된 경우", response = Void.class),
+        @ApiResponse(code = 500, message = "DB 오류", response = Void.class),
+    })
+    public ResponseEntity<?> assignSessionToMe(@PathVariable String sessionId,
+        @RequestBody AssignSessionRequest req) {
+        return chatSessionService.assignSessionToMe(sessionId, req);
     }
-    @ApiOperation(value = "해당 방의 상담을 종료한다.", response = ChatSession.class)
-    @DeleteMapping("/room/{sessionId}")
+
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "상담사 배정 성공", response = Void.class),
+        @ApiResponse(code = 208, message = "이미 상담종료된 경우", response = Void.class),
+        @ApiResponse(code = 403, message = "자기에게 배정된 방이 아닌 경우에 상담 종료 시 거부", response = Void.class),
+        @ApiResponse(code = 500, message = "DB 오류", response = Void.class),
+    })
+    @ApiOperation(value = "해당 방의 상담을 종료한다.")
+    @DeleteMapping(value = "/room/{sessionId}", produces = "application/json")
+    @ApiImplicitParam(name = "sessionId", value = "세션 아이디", required = true, example = SESSION_ID_EXAMPLE)
     @ResponseBody
-    public ResponseEntity<?> closeRoom(@PathVariable String sessionId, @RequestBody AssignRoomRequest req) {
-        int result = 0;
-        try{
-            ChatSession session = chatDao.findRoomBySessionId(sessionId);
-            if(session == null){
-                return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
-            }
-            if(session.getFk_host_idx() != 0 &&
-                    session.getFk_host_idx()!= req.getAdmin_pk_idx()){
-                return new ResponseEntity<Void>(HttpStatus.FORBIDDEN);
-            }
-            result = chatDao.quitChatRoom(sessionId);
-        }catch(Exception e){
-            e.printStackTrace();
-            return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        if(result == 0){
-            new ResponseEntity<Void>(HttpStatus.ALREADY_REPORTED);
-        }
-        return new ResponseEntity<Void>(HttpStatus.OK);
+    public ResponseEntity<?> closeSession(@PathVariable String sessionId,
+        @RequestBody AssignSessionRequest req) {
+        return chatSessionService.closeSession(sessionId, req);
     }
 
 
-
-        // 채팅방 정보 아이디에서 받아옴
-    @ApiOperation(value = "방의 ID를 가지고 방의 정보를 수신한다.", response = ChatSession.class)
-    @GetMapping("/room/{sessionId}")
+    // 채팅방 정보 아이디에서 받아옴
+    @ApiOperation(value = "방의 ID를 가지고 방의 정보를 수신한다.")
+    @GetMapping(value = "/room/{sessionId}", produces = "application/json")
+    @ApiImplicitParam(name = "sessionId", value = "세션 아이디", required = true, example = SESSION_ID_EXAMPLE)
     @ResponseBody
-    public ResponseEntity<?> getRoomInfo(@PathVariable String sessionId) {
-        ChatSession ret = null;
-        System.out.println(sessionId);
-        try{
-            ret = chatDao.findRoomBySessionId(sessionId);
-            if(ret == null){
-                System.out.println("no room");
-            }else{
-                System.out.println(ret);
-            }
-        }catch(Exception e){
-            e.printStackTrace();
-            return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        return new ResponseEntity<ChatSession>(ret, HttpStatus.OK);
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "방 정보 조회 성공", response = ChatSession.class),
+        @ApiResponse(code = 500, message = "DB 오류", response = Void.class),
+    })
+    public ResponseEntity<?> getSessionInfo(@PathVariable String sessionId) {
+        return chatSessionService.getSessionInfo(sessionId);
     }
 
-    @ApiOperation(value = "모든 채팅방과 모든 메세지를 가져온다.", response = ChatSession.class)
-    @GetMapping("/admin/init")
+
+    @ApiOperation(value = "모든 채팅방과 모든 메세지를 가져온다.")
+    @GetMapping(value = "/admin/init", produces = "application/json")
     @ResponseBody
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "모든 메세지와 방 가져오기 성공", response = ChatMessageAndSession.class),
+        @ApiResponse(code = 500, message = "DB 오류", response = Void.class),
+    })
     public ResponseEntity<?> getAllMessagesAndSessions() {
-        HashMap<String, ChatMessageAndSession> ret = new HashMap<>();
-        try{
-            List<ChatSession> sessions = chatDao.findAllRoom();
-            if(sessions.size() == 0){
-                return new ResponseEntity<HashMap<String, ChatMessageAndSession>>(ret, HttpStatus.OK);
-            }
-            for(ChatSession session : sessions){
-                ret.put(session.getSession_id(), new ChatMessageAndSession(session,new ArrayList<ChatMessage>()));
-            }
-            sessions = null; // for gc
-            List<ChatMessage> messages = chatDao.getAllMessages();
-            for(ChatMessage message : messages){
-                ret.get(message.getFk_session_id()).getMessages().add(message);
-            }
-        }catch(Exception e){
-            e.printStackTrace();
-            return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        return new ResponseEntity<HashMap<String, ChatMessageAndSession>>(ret, HttpStatus.OK);
-    }
-    @ApiOperation(value = "해당 상담사에게 배정된 방과 아직 전담 상담사가 없는 방과 메세지를 가져온다.", response = ChatSession.class)
-    @GetMapping("/admin/init/{fk_host_idx}")
-    @ResponseBody
-    public ResponseEntity<?> getAllMessagesAndSessionsByHostIdx(@PathVariable int fk_host_idx) {
-        HashMap<String, ChatMessageAndSession> ret = new HashMap<>();
-        try{
-            List<ChatSession> sessions = chatDao.findAllRoomByFkHostIdx(fk_host_idx);
-            if(sessions.size() == 0){
-                return new ResponseEntity<HashMap<String, ChatMessageAndSession>>(ret, HttpStatus.OK);
-            }
-            for(ChatSession session : sessions){
-                ret.put(session.getSession_id(), new ChatMessageAndSession(session,new ArrayList<ChatMessage>()));
-            }
-            sessions = null; // for gc
-            List<ChatMessage> messages = chatDao.getAllMessages();
-            for(ChatMessage message : messages){
-                if(!ret.containsKey(message.getFk_session_id())){
-                    continue;
-                }
-                ret.get(message.getFk_session_id())
-                        .getMessages()
-                        .add(message);
-            }
-        }catch(Exception e){
-            e.printStackTrace();
-            return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        return new ResponseEntity<HashMap<String, ChatMessageAndSession>>(ret, HttpStatus.OK);
-    }
-    @ApiOperation(value = "해당 세션ID의 이전 메세지들 가져오기", response = ChatSession.class)
-    @GetMapping("/messages/{sessionId}")
-    @ResponseBody
-    public ResponseEntity<?> getMessagesBySessionId(@PathVariable String sessionId) {
-        List<ChatMessage> ret;
-        try{
-            ret = chatDao.getMessagesBySessionId(sessionId);
-        }catch(Exception e){
-            e.printStackTrace();
-            return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        if(ret.size() == 0){
-            return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<List<ChatMessage>>(ret, HttpStatus.OK);
+        return chatSessionService.getAllMessagesAndSessions();
     }
 
+    @ApiOperation(value = "해당 상담사에게 배정된 방과 아직 전담 상담사가 없는 방과 메세지를 가져온다.", response = ChatMessageAndSession.class)
+    @GetMapping(value = "/admin/init/{fk_host_idx}", produces = "application/json")
+    @ApiImplicitParam(name = "fk_host_idx", value = "현재 상담사의 pk_idx", required = true, example = PK_IDX_EXAMPLE)
+    @ResponseBody
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "모든 메세지와 방 가져오기 성공", response = ChatMessageAndSession.class,responseContainer = "Set<String,ChatMessageAndSession>"),
+        @ApiResponse(code = 500, message = "DB 오류", response = Void.class),
+    })
+    public ResponseEntity<?> getAllMessagesAndSessionsByHostIdx(@PathVariable int fk_host_idx) {
+        return chatSessionService.getAllMessagesAndSessionsByHostIdx(fk_host_idx);
+    }
+
+    @ApiOperation(value = "해당 세션ID의 이전 메세지들 가져오기")
+    @GetMapping(value = "/messages/{sessionId}", produces = "application/json")
+    @ApiImplicitParam(name = "sessionId", value = "세션 아이디", required = true, example = SESSION_ID_EXAMPLE)
+    @ResponseBody
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "메세지 가져오기 성공", response = ChatMessage.class, responseContainer = "List"),
+        @ApiResponse(code = 204, message = "해당 방 메세지 없음", response = Void.class),
+        @ApiResponse(code = 500, message = "DB 오류", response = Void.class),
+    })
+    public ResponseEntity<?> getMessagesBySessionId(@PathVariable String sessionId) {
+        return chatSessionService.getMessagesBySessionId(sessionId);
+    }
 }

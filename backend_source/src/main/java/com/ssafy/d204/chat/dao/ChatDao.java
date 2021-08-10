@@ -1,26 +1,25 @@
 package com.ssafy.d204.chat.dao;
 
-import com.ssafy.d204.chat.dto.AssignRoomRequest;
 import com.ssafy.d204.chat.dto.ChatMessage;
 import com.ssafy.d204.chat.dto.ChatSession;
+import java.util.List;
+import org.springframework.stereotype.Repository;
 
-import java.util.*;
-
-//@Repository
+@Repository
 public interface ChatDao {
+
     // ChatSession management
-    public List<ChatSession> findAllRoom();
-    public List<ChatSession> findAllRoomByFkHostIdx(int fk_host_idx);
-    public List<ChatSession> findMyRoom(int sessionId);
-    public ChatSession findRoomBySessionId(String session_id);
+    List<ChatSession> findAllSession();
+    List<ChatSession> findAllSessionByFkHostIdx(int fk_host_idx);
+    List<ChatSession> findMySession(int sessionId);
+    ChatSession findSessionBySessionId(String session_id);
 
-    public int createChatRoom(ChatSession session);
-
-    public int assignRoomToMe(String sessionId, int admin_pk_idx);
-    public int quitChatRoom(String sessionId);
+    int createChatSession(ChatSession session);
+    int assignSessionToMe(String sessionId, int admin_pk_idx);
+    int quitChatSession(String sessionId);
 
     // ChatMessage Persistent API
-    public int pushMessage(ChatMessage chatMessage);
-    public List<ChatMessage> getAllMessages();
-    public List<ChatMessage> getMessagesBySessionId(String session_pk_idx);
+    int pushMessage(ChatMessage chatMessage);
+    List<ChatMessage> getAllMessages();
+    List<ChatMessage> getMessagesBySessionId(String session_pk_idx);
 }

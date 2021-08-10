@@ -22,12 +22,12 @@ public class SecurityJavaConfig extends WebSecurityConfigurerAdapter {
 //                .authorizeRequests()
 //                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll() // - (1)
 //                .and()
-                /* 중략 */
+            /* 중략 */
 //                .anyRequest().authenticated().and()
-                .cors().disable()
-                .csrf().disable()
-                .formLogin().disable()
-                .headers().frameOptions().disable();
+            .cors().disable()
+            .csrf().disable()
+            .formLogin().disable()
+            .headers().frameOptions().disable();
     }
 
     @Bean
@@ -48,7 +48,7 @@ public class SecurityJavaConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 

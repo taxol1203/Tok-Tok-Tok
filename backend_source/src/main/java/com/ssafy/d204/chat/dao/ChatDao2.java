@@ -1,11 +1,7 @@
 package com.ssafy.d204.chat.dao;
 // import 생략....
 
-import com.ssafy.d204.chat.dto.ChatSession;
 import org.springframework.stereotype.Repository;
-
-import javax.annotation.PostConstruct;
-import java.util.*;
 
 @Repository
 public class ChatDao2 {
