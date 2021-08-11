@@ -64,23 +64,18 @@
       </div>
     </el-col>
   </el-row>
-  <el-row :gutter="20" justify="center">
-    <el-col :span="12" :offset="0" id="footer">
-      <strong>Help Desk </strong>
-      <em>
-        <a href="tel:02-3429-5041">02-3429-5041</a>
-      </em>
-      <br />
-      <span>평일 상담시간: 09:00 ~ 19:00</span>
-    </el-col>
-  </el-row>
+  <Footer />
 </template>
 
 <script>
 import { reactive, ref, watch, computed } from "vue";
 import { useStore } from "vuex";
+import Footer from "@/components/footer.vue";
 
 export default {
+  components: {
+    Footer,
+  },
   setup() {
     const store = useStore();
     const ruleForm = ref(null);
@@ -209,9 +204,5 @@ export default {
   background-color: #006f3e;
   color: #fff;
   border: 0;
-}
-#footer {
-  margin-top: 2rem;
-  margin-bottom: 2rem;
 }
 </style>
