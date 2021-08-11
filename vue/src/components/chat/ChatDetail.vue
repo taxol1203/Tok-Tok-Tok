@@ -1,6 +1,6 @@
 <template>
   <div style="position: relative; width: 650px; height: 750px; padding: 10px">
-    <!-- <i class="el-icon-close"></i> -->
+    <i class="el-icon-close"></i>
     <i v-if="chatStatus == 'LIVE'" class="el-icon-error" @click="closeRoom"></i>
     <!-- 상대방 -->
     <el-scrollbar ref="scrollbar" id="topMessages">
