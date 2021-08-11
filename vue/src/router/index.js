@@ -56,6 +56,11 @@ const routes = [
         component: QnaArea,
         name: "qna",
       },
+      {
+        path: "user",
+        component: () => import("../views/user/User.vue"),
+        name: "user",
+      },
     ],
   },
   {

@@ -25,10 +25,12 @@
               <i class="el-icon-document"></i>
               <template #title>예상 시나리오 작성</template>
             </el-menu-item></router-link>
+            <router-link  to="/admin/user">
             <el-menu-item index="3">
               <i class="el-icon-setting"></i>
               <template #title>설정</template>
             </el-menu-item>
+            </router-link>
           </el-menu>
       <!-- NavBar 끝 -->
     <el-main>
