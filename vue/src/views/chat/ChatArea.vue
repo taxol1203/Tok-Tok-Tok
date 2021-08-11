@@ -1,7 +1,12 @@
 <template lang="">
   <div>
     <el-container>
-      <el-aside><ChatList :test="test" /></el-aside>
+      <el-aside v-if="videoMode == 'CLOSE'"><ChatList /></el-aside>
+      <el-container v-if="videoMode != 'CLOSE'">
+        <el-main>
+          <VideoChatDetail />
+        </el-main>
+      </el-container>
       <el-container>
         <!-- <el-header v-if="store.state.selected_room"><UserTitle /></el-header> -->
         <!-- <el-main> -->
@@ -21,21 +26,25 @@
 <script>
 import ChatList from "../../components/chat/ChatList.vue";
 import ChatDetail from "../../components/chat/ChatDetail.vue";
+import VideoChatDetail from "@/components/VideoChat/VideoChatDetail.vue";
 import UserInfo from "../../components/chat/UserInfo.vue";
+import { computed } from "vue";
 import { useStore } from "vuex";
 
 export default {
   components: {
     ChatList,
-    // UserTitle,
+    VideoChatDetail,
     ChatDetail,
     UserInfo,
   },
   setup() {
     const store = useStore();
+    const videoMode = computed(() => store.state.video_open);
 
     return {
       store,
+      videoMode,
     };
   },
 };

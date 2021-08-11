@@ -1,63 +1,63 @@
 <template>
-  <el-container>
-    <button type="button" @click="socketInit('a')">Socket Init ROOM 1</button>
-    <button type="button" @click="socketInit('b')">Socket Init ROOM 2</button>
-    <button type="button" @click="connect">establish connection</button>
-    <br />
-    <div>
-      <video ref="videoElement" autoplay></video>
-      <video
-        ref="remoteVideo"
-        autoplay
-        style="width: 240px; height: 180px; border: 1px solid black"
-      ></video>
-    </div>
-    <el-footer>
-      <el-row class="videoOptions">
-        <div class="select">
-          <label for="audioSource">Audio input source: </label>
-          <select v-model="audioInputSelect" @change="start()">
-            <option disabled value="">Please select one</option>
-            <option
-              v-for="(option, index) in mediaOptions.audioinput"
-              :key="index"
-              :value="option.deviceId"
-            >
-              {{ option.label }}
-            </option>
-          </select>
-        </div>
-        <div class="select">
-          <label for="audioOutput">Audio output destination: </label>
-          <select ref="audioOutputSelect" @change="changeAudioDestination">
-            <option
-              v-for="(option, index) in mediaOptions.audiooutput"
-              :key="index"
-            >
-              {{ option.label }}
-            </option>
-          </select>
-        </div>
+  <div class="select">
+    <label for="audioSource">Audio input source: </label>
+    <select v-model="audioInputSelect" @change="start()">
+      <option disabled value="">Please select one</option>
+      <option
+        v-for="(option, index) in mediaOptions.audioinput"
+        :key="index"
+        :value="option.deviceId"
+      >
+        {{ option.label }}
+      </option>
+    </select>
+  </div>
 
-        <div class="select">
-          <label for="videoSource">Video source: </label
-          ><select v-model="videoSelect" @change="start()">
-            <option disabled value="">Please select one</option>
-            <option
-              v-for="(option, index) in mediaOptions.videoinput"
-              :key="index"
-              :value="option.deviceId"
-            >
-              {{ option.label }}
-            </option>
-          </select>
-        </div>
-        <button type="button" @click="startScreenStream">화면공유시작</button>
-        <button type="button" @click="start">화면공유중단</button>
-        <button type="button" @click="leave">leave</button>
-      </el-row>
-    </el-footer>
-  </el-container>
+  <div class="select">
+    <label for="audioOutput">Audio output destination: </label>
+    <select ref="audioOutputSelect" @change="changeAudioDestination">
+      <option v-for="(option, index) in mediaOptions.audiooutput" :key="index">
+        {{ option.label }}
+      </option>
+    </select>
+  </div>
+
+  <div class="select">
+    <label for="videoSource">Video source: </label
+    ><select v-model="videoSelect" @change="start()">
+      <option disabled value="">Please select one</option>
+      <option
+        v-for="(option, index) in mediaOptions.videoinput"
+        :key="index"
+        :value="option.deviceId"
+      >
+        {{ option.label }}
+      </option>
+    </select>
+  </div>
+
+  <button type="button" @click="socketInit('a')">Socket Init ROOM 1</button>
+  <button type="button" @click="socketInit('b')">Socket Init ROOM 2</button>
+  <button type="button" @click="startVideo()">Start capturing video information</button>
+  <button type="button" @click="stopVideo()">Stop capturing video information</button>
+  <br /><br />
+  <button type="button" @click="connect">establish connection</button>
+  <button type="button" @click="startScreenStream">화면공유시작</button>
+  <button type="button" @click="start">화면공유중단</button>
+  <button type="button" @click="leave">leave</button>
+  <br />
+  <div>
+    <video
+      ref="videoElement"
+      autoplay
+      style="width: 240px; height: 180px; border: 1px solid black"
+    ></video>
+    <video
+      ref="remoteVideo"
+      autoplay
+      style="width: 240px; height: 180px; border: 1px solid black"
+    ></video>
+  </div>
 </template>
 
 <script>
@@ -545,14 +545,3 @@ export default {
   },
 };
 </script>
-<style scoped>
-.select {
-  width: 20em;
-}
-.videoOptions {
-  justify-content: center;
-}
-.videoElement {
-  width: 500px;
-}
-</style>
