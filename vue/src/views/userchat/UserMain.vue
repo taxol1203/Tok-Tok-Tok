@@ -118,8 +118,10 @@ export default {
 }
 
 #close-btn {
-  font-size: 2rem;
+  font-size: 3rem;
   color: white;
+  font-style: bold;
+  color: #006f3e;
 }
 
 /* 위치 고정을 시키지 않으면 렌더링하면서 (생명&소멸) 서로 다른 공간에 보여짐 */
@@ -147,7 +149,7 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #006f3e;
+  /* background-color: #006f3e; */
 }
 
 .text {
