@@ -13,18 +13,36 @@
             status-icon
           >
             <el-form-item label="이메일" prop="email">
-              <el-input type="email" v-model="user.email" autocomplete="off"></el-input>
+              <el-input
+                type="email"
+                v-model="user.email"
+                autocomplete="off"
+                placeholder="이메일을 입력해 주세요"
+                @keyup.enter="nextPasswd"
+              ></el-input>
             </el-form-item>
             <el-form-item label="비밀번호" prop="passwd">
-              <el-input type="password" v-model="user.passwd" autocomplete="off"></el-input>
+              <el-input
+                type="password"
+                v-model="user.passwd"
+                autocomplete="off"
+                placeholder="비밀번호를 입력해 주세요"
+                @keyup.enter="onSubmit('formLabelAlign')"
+                ref="refPasswd"
+              ></el-input>
             </el-form-item>
             <el-form-item>
               <transition name="slide-fade">
-                <el-button type="button" class="green-color-btn" @click="onSubmit('formLabelAlign')"
+                <el-button
+                  type="button"
+                  class="green-color-btn"
+                  @click="onSubmit('formLabelAlign')"
+                  :disabled="!isValid"
                   >로그인</el-button
                 >
               </transition>
               <el-button @click="resetForm('formLabelAlign')">다시쓰기</el-button>
+              <el-button class="green-color-btn">회원가입으로가는버튼이필요할까</el-button>
             </el-form-item>
           </el-form>
           <div v-else>
@@ -35,17 +53,21 @@
       </div>
     </el-col>
   </el-row>
+  <Footer />
 </template>
 
 <script>
-import { reactive, ref, computed } from 'vue';
-import { useStore } from 'vuex';
+import { reactive, ref, computed } from "vue";
+import { useStore } from "vuex";
+import Footer from "@/components/footer.vue";
 
 export default {
+  components: {
+    Footer,
+  },
   setup() {
     const store = useStore();
     const token = computed(() => store.state.auth.user);
-    // console.log(token.value);
     const formLabelAlign = ref(null);
     const onSubmit = () => {
       let payload = {
@@ -54,59 +76,51 @@ export default {
       };
       formLabelAlign.value.validate((valid) => {
         if (valid) {
-          store.dispatch('auth/login', payload);
+          store.dispatch("auth/login", payload);
         }
       });
     };
+    const refPasswd = ref("");
+    const isValid = computed(() => user.email && user.passwd);
+
     const checkEmail = (rule, value, callback) => {
-      // console.log(value);
       if (!value) {
-        return callback(new Error('Please input the email'));
+        return callback(new Error("이메일을 입력해 주세요"));
       } else {
         let pattern =
           /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
         if (value.match(pattern) == null) {
-          callback(new Error('Please input email'));
+          callback(new Error("이메일 형식을 맞춰 주세요"));
         } else {
           callback();
         }
       }
-      setTimeout(() => {
-        let pattern =
-          /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
-        if (pattern.test(value) == null) {
-          callback(new Error('Please input email'));
-        } else {
-          callback();
-        }
-      }, 1000);
     };
-    const validatePasswd = (rule, value, callback) => {
-      // console.log(value);
-      if (value === '') {
-        callback(new Error('Please input the password'));
+    var validatePass = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("비밀번호를 입력해 주세요"));
       } else {
-        if (value.length < 9 || value.length > 16) {
-          callback(new Error('Please check the password'));
-        }
         callback();
       }
     };
     const logout = () => {
       localStorage.clear();
-      store.commit('auth/logout');
+      store.commit("auth/logout");
     };
 
     const user = reactive({
-      email: '',
-      passwd: '',
+      email: "",
+      passwd: "",
     });
     const rules = {
-      passwd: [{ validator: validatePasswd, trigger: 'blur' }],
-      email: [{ validator: checkEmail, trigger: 'blur' }],
+      email: [{ validator: checkEmail, trigger: "blur" }],
+      passwd: [{ validator: validatePass, trigger: "blur" }],
     };
     const resetForm = () => {
       formLabelAlign.value.resetFields();
+    };
+    const nextPasswd = () => {
+      refPasswd.value.focus();
     };
     return {
       store,
@@ -117,8 +131,11 @@ export default {
       rules,
       onSubmit,
       checkEmail,
-      validatePasswd,
+      validatePass,
       logout,
+      refPasswd,
+      nextPasswd,
+      isValid,
     };
   },
 };
