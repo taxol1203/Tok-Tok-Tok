@@ -63,8 +63,8 @@ services:
       depends_on:
         - spring
       volumes:
-#        - ./nginx/:/usr/share/nginx/
-        - /home/ubuntu/cert/:/usr/share/nginx/
+        - ./nginx/:/usr/share/nginx/
+#        - /home/ubuntu/cert/:/usr/share/nginx/
 
 #    redis:
 #      container_name: redis
