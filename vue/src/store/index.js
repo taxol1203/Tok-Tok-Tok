@@ -59,7 +59,7 @@ export default createStore({
       state.list_status = payload;
     },
     CHAT_CLOSE(state) {
-      state.rooms[`${state.selected_room}`].session.status = "QUIT"
+      state.rooms[`${state.selected_room}`].session.status = "END"
       state.selected_room = '';
       console.log("close")
     }
@@ -129,6 +129,7 @@ export default createStore({
       let roomList = [];
       for (let i in state.rooms) {
         let room = state.rooms[i];
+        console.log(room.session.status)
         if (room.session.status === state.list_status) {
           roomList.push(room);
         }
@@ -150,21 +151,6 @@ export default createStore({
     qnaGetter: (state) => {
       return state.rooms[`${state.selected_room}`].session.qna_history.split('|')
     },
-    // get_client_info: (state) => {
-
-    //   var tmp = state.rooms[`${state.selected_room}`].session.qna_history
-    //   if (tmp != null) {
-    //     tmp = tmp.split('|')
-    //     tmp = tmp.splice(0, 1);
-    //   } else {
-    //     tmp = [];
-    //   }
-    //   var payload = {
-    //     client: state.rooms[`${state.selected_room}`].client,
-    //     qna: tmp
-    //   }
-    //   return payload;
-    // },
     get_selected_idx: (state) => {
       return state.selected_room
     },
