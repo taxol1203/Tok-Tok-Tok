@@ -62,8 +62,8 @@ services:
       user: root
       depends_on:
         - spring
-      volumes:
-        - ./nginx/:/usr/share/nginx/
+#      volumes:
+#        - ./nginx/:/usr/share/nginx/
 #        - /home/ubuntu/cert/:/usr/share/nginx/
 
 #    redis:
@@ -92,7 +92,7 @@ services:
 
 volumes:
   postgres: {}
-  frontend: {}
+#  frontend: {}
   jenkins: {}
 #  redis: {}
 
