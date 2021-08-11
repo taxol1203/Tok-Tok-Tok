@@ -11,12 +11,14 @@
             ref="ruleForm"
             class="demo-ruleForm"
           >
-            <el-form-item label="사용자명/사용자 이름/닉네임/아이디" prop="username">
+            <el-form-item label="닉네임" prop="username">
               <el-input
                 type="text"
                 v-model="user.username"
                 autocomplete="off"
-                placeholder="사용자명/사용자이름/닉네임/아이디를 입력해주세요"
+                placeholder="닉네임을 입력해주세요"
+                id="1"
+                @keyup.enter="move2"
               ></el-input>
             </el-form-item>
             <el-form-item label="이메일" prop="email">
@@ -25,6 +27,8 @@
                 v-model="user.email"
                 autocomplete="off"
                 placeholder="이메일을 입력해주세요"
+                ref="two"
+                id="2"
               >
                 <template #append>
                   <el-button class="green-color-btn" id="green-btn" @click="duplicate"
@@ -41,12 +45,12 @@
                 placeholder="비밀번호(9~16자 조건 명확히되면 여기 추가?)"
               ></el-input>
             </el-form-item>
-            <el-form-item label="비밀번호 확인/비밀번호 재확인" prop="check">
+            <el-form-item label="비밀번호 확인" prop="check">
               <el-input
                 type="password"
                 v-model="user.check"
                 autocomplete="off"
-                placeholder="비밀번호 확인/재입력/재확인"
+                placeholder="비밀번호 확인"
               ></el-input>
             </el-form-item>
             <el-button class="green-color-btn" @click="onSubmit()" :disabled="!isValid"
@@ -81,6 +85,7 @@ export default {
       });
     };
     const isValid = ref(false);
+    const two = ref("");
 
     const duplicate = () => {
       let tmp = {
@@ -167,6 +172,9 @@ export default {
         }
       });
     });
+    const move2 = () => {
+      this.$refs.two.focus();
+    };
     return {
       store,
       ruleForm,
@@ -176,6 +184,8 @@ export default {
       user,
       rules,
       isValid,
+      move2,
+      two,
     };
   },
 };
