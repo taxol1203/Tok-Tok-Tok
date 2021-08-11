@@ -30,18 +30,19 @@ export default createStore({
       state.session_key = payload;
     },
     PICK_ROOM(state, payload) {
-      console.log(state.rooms[payload])
+      console.log(state.rooms[payload]);
       state.selected_room = payload;
     },
     USER_MSG_PUSH(state, payload) {
       state.session_key.messages.push(payload);
+      console.log(payload);
       //방이 대기 상태일 때, msg가 처음 들어오면 live로 바꿈
       if (state.session_key.status == "OPEN") {
         state.session_key.status = "LIVE";
       }
     },
     MESSAGE_PUSH(state, payload) {
-      console.log(payload)
+      console.log(payload);
       state.rooms[`${state.selected_room}`].messages.push(payload);
       // 관리자가 첫 메세지 보냈을때 방상태를 LIVE로 바꾸기
       if (state.rooms[`${state.selected_room}`].session.status == "OPEN") {
@@ -71,7 +72,7 @@ export default createStore({
       try {
         const res = await axios.get(`api/api/chat/admin/init/${state.auth.user.pk_idx}`);
         for (var p in res.data) {
-          const client = await axios.get(`api/auth/user/${res.data[p].session.fk_client_idx}`)
+          const client = await axios.get(`api/auth/user/${res.data[p].session.fk_client_idx}`);
           res.data[p].client = client.data;
         }
         commit("GET_ROOMS", res.data);
@@ -135,9 +136,9 @@ export default createStore({
     },
     get_client_info: (state) => {
 
-      var tmp = state.rooms[`${state.selected_room}`].session.qna_history
+      var tmp = state.rooms[`${state.selected_room}`].session.qna_history;
       if (tmp != null) {
-        tmp = tmp.split('|')
+        tmp = tmp.split('|');
         tmp = tmp.splice(0, 1);
       } else {
         tmp = [];
@@ -145,11 +146,11 @@ export default createStore({
       var payload = {
         client: state.rooms[`${state.selected_room}`].client,
         qna: tmp
-      }
+      };
       return payload;
     },
     get_selected_idx: (state) => {
-      return state.selected_room
+      return state.selected_room;
     }
   },
 });
