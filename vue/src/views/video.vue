@@ -21,42 +21,50 @@
     <el-footer>
       <el-row class="videoOptions">
         <div class="select">
-          <label for="audioSource">Audio input source: </label>
-          <select v-model="audioInputSelect" @change="start()">
-            <option disabled value="">Please select one</option>
-            <option
+          <el-select
+            v-model="audioInputSelect"
+            placeholder="마이크 선택"
+            @change="start()"
+          >
+            <el-option
               v-for="(option, index) in mediaOptions.audioinput"
               :key="index"
+              :label="`${index + 1}. ${option.label}`"
               :value="option.deviceId"
             >
-              {{ option.label }}
-            </option>
-          </select>
+            </el-option>
+          </el-select>
         </div>
         <div class="select">
-          <label for="audioOutput">Audio output destination: </label>
-          <select ref="audioOutputSelect" @change="changeAudioDestination">
-            <option
+          <el-select
+            v-model="audioOutputSelect"
+            placeholder="스피커 선택"
+            @change="changeAudioDestination"
+          >
+            <el-option
               v-for="(option, index) in mediaOptions.audiooutput"
               :key="index"
+              :label="`${index + 1}. ${option.label}`"
+              :value="option.deviceId"
             >
-              {{ option.label }}
-            </option>
-          </select>
+            </el-option>
+          </el-select>
         </div>
 
         <div class="select">
-          <label for="videoSource">Video source: </label
-          ><select v-model="videoSelect" @change="start()">
-            <option disabled value="">Please select one</option>
-            <option
+          <el-select
+            v-model="videoSelect"
+            placeholder="카메라 선택"
+            @change="start()"
+          >
+            <el-option
               v-for="(option, index) in mediaOptions.videoinput"
               :key="index"
+              :label="`${index + 1}. ${option.label}`"
               :value="option.deviceId"
             >
-              {{ option.label }}
-            </option>
-          </select>
+            </el-option>
+          </el-select>
         </div>
         <button type="button" @click="startScreenStream">화면공유시작</button>
         <button type="button" @click="start">화면공유중단</button>
