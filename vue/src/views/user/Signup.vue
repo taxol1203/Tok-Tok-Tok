@@ -61,7 +61,7 @@
 </template>
 
 <script>
-import { reactive, ref, watch } from "vue";
+import { reactive, ref, watch, computed } from "vue";
 import { useStore } from "vuex";
 
 export default {
@@ -80,8 +80,9 @@ export default {
         }
       });
     };
-    const isValid = ref(false);
-    const two = ref("");
+    // const isValid = ref(false);
+    //일단은 입력만 다하면 켜지도록
+    const isValid = computed(() => user.username && user.email && user.passwd && user.check);
 
     const duplicate = () => {
       let tmp = {
@@ -155,16 +156,7 @@ export default {
       check: [{ validator: validateCheck, trigger: "blur" }],
       email: [{ validator: checkEmail, trigger: "blur" }],
     };
-    //실시간 유효성 검사
-    watch(user, () => {
-      ruleForm.value.validate((valid) => {
-        if (valid) {
-          isValid.value = valid;
-        } else {
-          isValid.value = valid;
-        }
-      });
-    });
+
     return {
       store,
       ruleForm,
