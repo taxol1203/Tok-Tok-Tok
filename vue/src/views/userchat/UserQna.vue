@@ -69,7 +69,8 @@ export default {
     const log = computed(() => store.getters['userQna/logGetter']);
     let history = '';
     const chooseAnswer = (next_idx, value) => {
-      history += '|' + value;
+      if (history == '') history += value;
+      else history += '|' + value;
       store.commit('userQna/CHANGE_SELECT', next_idx);
       store.commit('userQna/ADD_LOG');
     };
