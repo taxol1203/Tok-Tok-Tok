@@ -1,36 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
-	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ssafy.d204.db.repository.QuestionDao"> 
-	<!-- 게시글 전체 조회 -->
-	<select id="retrieveQuestion" resultType="Question">
-		SELECT pk_idx, "content"
-		FROM "SSAFY_PJT1".question;
-	</select>
-	
-	<!-- 게시글 상세 조회 -->
-	<select id="detailQuestion" resultType="Question">
-		SELECT pk_idx, "content"
-		FROM "SSAFY_PJT1".question
-		where pk_idx = #{pk_idx};
-	</select>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.d204.db.repository.QuestionDao">
+  <!-- 게시글 전체 조회 -->
+  <select id="retrieveQuestion" resultType="Question">
+    SELECT pk_idx, "content", "title"
+    FROM "SSAFY_PJT1".question;
+  </select>
 
-	<!-- 게시글 등록 -->
-	<insert id="writeQuestion" parameterType="Question">
-		INSERT INTO "SSAFY_PJT1".question ("content") 
-		values ( #{content} );
-	</insert>
-	
-	<!-- 게시글 수정 -->
-	<update id="updateQuestion" parameterType="Question">
-		update "SSAFY_PJT1".question 
-		set content = #{content}
-		where pk_idx = #{pk_idx};
-	</update>
+  <!-- 게시글 상세 조회 -->
+  <select id="detailQuestion" resultType="Question">
+    SELECT pk_idx, "content", "title"
+    FROM "SSAFY_PJT1".question
+    where pk_idx = #{pk_idx};
+  </select>
 
-	<!-- 게시글 삭제 -->
-	<delete id="deleteQuestion" parameterType="int">
-		delete from "SSAFY_PJT1".question 
-		where pk_idx = #{pk_idx};
-	</delete>
+  <!-- 게시글 등록 -->
+  <insert id="writeQuestion" parameterType="Question">
+    INSERT INTO "SSAFY_PJT1".question ("content", "title")
+    values (#{content}, #{title});
+  </insert>
+
+  <!-- 질문 수정 -->
+  <update id="updateQuestion" parameterType="Question">
+    update "SSAFY_PJT1".question
+    set content = #{content},
+        title   = #{title}
+    where pk_idx = #{pk_idx};
+  </update>
+
+  <!-- 게시글 삭제 -->
+  <delete id="deleteQuestion" parameterType="int">
+    delete
+    from "SSAFY_PJT1".question
+    where pk_idx = #{pk_idx};
+  </delete>
+
+  <!-- 질문 수정 -->
+  <update id="updateNextAnswer" parameterType="Answer">
+    update "SSAFY_PJT1".answer
+    set fk_previous_idx = #{fk_previous_idx}
+    where pk_idx = #{pk_idx};
+  </update>
 </mapper>

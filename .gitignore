@@ -1,3 +1,5 @@
+# aws
+*.pem
 # vue
 node_modules/
 #yarn.lock
@@ -145,3 +147,4 @@ cython_debug/
 .idea/
 
 .python-version
+

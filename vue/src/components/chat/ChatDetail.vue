@@ -1,143 +1,108 @@
 <template>
-  <div class="border-solid chat-detail grid-content">
-    <el-row :gutter="12">
-      <!-- 채팅창 부분+녹색 -->
-      <el-col :span="24" :offset="0"> [Chat Detail]</el-col>
-    </el-row>
+  <div style="position: relative; width: 650px; height: 750px; padding: 10px">
+    <!-- <i class="el-icon-close"></i> -->
+    <i v-if="chatStatus == 'LIVE'" class="el-icon-error" @click="closeRoom"></i>
     <!-- 상대방 -->
-    <div v-for="(msg, index) in messages.messageArrayKey" :key="index">
-      <el-row :gutter="12">
-        <el-col :span="20" :offset="4" v-if="msg.fk_author_idx == '1'">
-          <div class="message-me border-solid">
-            {{ msg.message }}
+    <el-scrollbar ref="scrollbar" id="topMessages">
+      <div v-for="(msg, index) in messages" :key="index">
+        <el-row>
+          <el-col v-if="msg.fk_author_idx == userPkidx">
+            <div class="message-me">
+              {{ msg.message }}
+            </div>
+          </el-col>
+          <el-col v-else>
+            <div class="message-other">{{ msg.message }}</div>
+          </el-col>
+        </el-row>
+      </div>
+    </el-scrollbar>
+    <div v-if="chatStatus != 'END'">
+      <el-row id="bottomInput">
+        <!-- 입력창 -->
+        <el-col :span="2">
+          <el-button icon="el-icon-video-camera" class="icon-m-p green-color-btn"></el-button>
+        </el-col>
+        <el-col :span="20">
+          <div>
+            <el-input
+              type="text"
+              @keyup.enter="sendMessage"
+              v-model="message"
+              placeholder="Please input"
+              clearable
+            >
+            </el-input>
           </div>
         </el-col>
-        <el-col :span="20" :offset="0" v-else>
-          <div class="message-other border-solid">{{ msg.message }}</div>
+        <el-col :span="2">
+          <el-button
+            @click="sendMessage"
+            icon="el-icon-s-promotion"
+            class="icon-m-p green-color-btn"
+          ></el-button>
         </el-col>
       </el-row>
     </div>
-
-    <el-row>
-      <el-col :span="20" :offset="0">
-        <div class="user-name border-solid">상담사 사진(기본 사진) | 상담사 이름</div>
-      </el-col>
-      <el-col :span="20" :offset="0">
-        <div class="message-other border-solid">Other Message</div>
-      </el-col>
-      <el-col :span="20" :offset="4">
-        <div class="message-me border-solid">My Message</div>
-      </el-col>
-      <!-- 입력창 -->
-      <el-col :span="3" :offset="0">
-        <el-button type="primary" icon="el-icon-video-camera" class="icon-m-p"></el-button>
-      </el-col>
-      <el-col :span="18" :offset="0">
-        <div class="border-solid">
-          <input type="text" @keyup.enter="sendMessage" v-model="message" />
-        </div>
-      </el-col>
-      <el-col :span="3" :offset="0">
-        <el-button
-          @click="sendMessage"
-          icon="el-icon-s-promotion"
-          class="icon-m-p"
-          plain
-        ></el-button>
-      </el-col>
-    </el-row>
   </div>
 </template>
 <script>
-import axios from "axios";
-import Stomp from "webstomp-client";
-import SockJS from "sockjs-client";
-import { useStore } from "vuex";
-import { ref, reactive } from "vue";
+// import axios from "axios";
+import Stomp from 'webstomp-client';
+import SockJS from 'sockjs-client';
+import { useStore } from 'vuex';
+import { ref, computed, watch, onMounted } from 'vue';
 
 export default {
-  name: "Chat",
+  name: 'Chat',
   components: {},
   setup() {
-    let sessionId = ref("");
-    let roomName = "";
-    let messages = reactive({ messageArrayKey: [] });
-    let message = ref("");
-    let session_pk = 0;
-    let connected = false;
-    let stompClient = "";
-    let userName = "1"; // user id나 email받으면 그거 넣기@@@@@
-
     const store = useStore();
+    const sessionId = computed(() => store.getters['get_selected_idx']);
+    const messages = computed(() => store.getters.get_messages);
+    const userPkidx = computed(() => store.state.auth.user.pk_idx);
+    const chatStatus = computed(() => store.getters['statusGetter']);
+    const message = ref('');
+    const scrollbar = ref('');
+    onMounted(() => {
+      scrollbar.value.setScrollTop(750);
+    });
+    let connected = false;
+    let stompClient = '';
 
-    sessionId.value = store.state.selected_room;
-    // sessionId = this.$route.params.id; // path parameter로 방 id 전송함. 만약 url에 노출되는게 별로면 props로 전달하는 걸로 변경하셔도...
-
-    axios.get("http://localhost:8088/temp/api/chat/room/" + sessionId.value).then((response) => {
-      roomName = response.data.name; // 방에 대한 정보를 가져옵니다.
-      console.log(response);
-      console.log("room info");
-      axios
-        .get("http://localhost:8088/temp/api/chat/messages/" + sessionId.value)
-        .then((response) => {
-          console.log(response.data, "채팅 내역 수신");
-          messages.messageArrayKey = response.data;
-
-          connect(sessionId.value);
-        });
+    watch(sessionId, () => {
+      connect();
     });
 
-    // 소켓 연결 시작
-    // this.connect(sessionId.value);
-
-    const sendMessage = () => {
-      if (userName !== "" && message.value !== "") {
-        // 이벤트 발생 엔터키 + 유효성 검사는 여기에서
-        send({ message: message }); // 전송 실패 감지는 어떻게? 프론트단에서 고민좀 부탁 dream
-      }
-      message.value = "";
-    };
-
-    const send = () => {
-      console.log("Send message:" + message.value);
-      if (stompClient && stompClient.connected) {
-        const msg = {
-          message: message.value, // 메세지 내용. type이 MSG인 경우를 제외하곤 비워두고 프론트단에서만 처리.
-          fk_author_idx: 1, // 작성자의 회원 idx
-          created: "", // 작성시간, 공란으로 비워서 메세지 보내기. response에는 담겨옵니다.
-          deleted: false, // 삭제된 메세지 여부. default = false
-          fk_session_id: sessionId.value, // 현재 채팅세션의 id.
-          // 주의할 점은, 방 세션 id가 아닌, 방 정보의 pk_idx를 첨부한다. created 라이프사이클 메서드 참조.
-          type: "MSG", // 메세지 타입.
-        };
-        stompClient.send("/receive/" + sessionId.value, JSON.stringify(msg), {});
-      }
-    };
-
     const connect = () => {
-      const serverURL = "http://localhost:8088/temp/chat"; // 서버 채팅 주소
+      // console.log(sessionId.value);
+      const serverURL = 'https://i5d204.p.ssafy.io/api/chat'; // 서버 채팅 주소
       let socket = new SockJS(serverURL);
       stompClient = Stomp.over(socket);
-      console.log(`connecting to socket=> ${serverURL}`);
+      // console.log(`connecting to socket=> ${serverURL}`);
       stompClient.connect(
         {},
         (frame) => {
           connected = true;
-          console.log("status : established", frame);
           // 구독 == 채팅방 입장.
-          stompClient.subscribe("/send/" + sessionId.value, (res) => {
-            console.log("receive from server:", res.body);
-            messages.messageArrayKey.push(JSON.parse(res.body)); // 수신받은 메세지 표시하기
-            switch (res.body.type) {
-              case "MSG":
+          stompClient.subscribe('/send/' + sessionId.value, (res) => {
+            // console.log('receive from server:', JSON.parse(res.body).type);
+            switch (JSON.parse(res.body).type) {
+              case 'MSG':
+                // console.log(chatStatus.value);
+                if (chatStatus.value == 'OPEN') store.dispatch('enterRoom', JSON.parse(res.body));
+                else {
+                  store.commit('MESSAGE_PUSH', JSON.parse(res.body)); // 수신받은 메세지 표시하기
+                }
+
                 break;
-              case "JOIN":
+              case 'JOIN':
                 // 방을 생성할 때 백엔드단에서 처리하므로 신경 x
                 break;
-              case "QUIT":
+              case 'QUIT':
                 // 만약 둘 중 하나가 나가면 더 이상 채팅을 못치는 프론트구현
                 break;
-              case "VID":
+              case 'VID':
                 // vid 시작시 -> 화상채팅 시작하기 버튼만 딸랑 띄우기
                 break;
               default:
@@ -148,62 +113,117 @@ export default {
         },
         (error) => {
           // 소켓 연결 실패
-          console.log("status : failed", error);
+          // console.log('status : failed, STOMP CLIENT 연결 실패', error);
           connected = false;
         }
       );
     };
+    connect();
+
+    const sendMessage = () => {
+      if (userPkidx.value && message.value) {
+        send({ message }); // 전송 실패 감지는 어떻게? 프론트단에서 고민좀 부탁 dream
+        // 관리자가 첫 메세지 보냈을때 방상태를 LIVE로 바꾸기
+        // 보냈을 때 바로 바꾸니까 관리자 측에서 메시지를 받을 때 잃어버리는 경우가 있어서 받을때 바꾸는 것으로 해결했습니다 -소빈
+        // 'MESSAGE_PUSH' 커밋 시 변경
+        // if (store.state.rooms[`${sessionId.value}`].session.status == 'OPEN') {
+        //   store.dispatch('enterRoom', sessionId);
+        // }
+      }
+      message.value = '';
+      // 어차피 유저는 채팅 상담 신청을 한뒤 메세지를 치지 못하므로 open 상태에서 메세지를 보내는건 관리자뿐이니까
+      // 방상태가 OPEN일때 여기서 put을 보내면되나
+    };
+
+    const send = () => {
+      // console.log('Send message:' + message.value);
+      if (stompClient && stompClient.connected) {
+        // console.log('IN SOCKET');
+        const msg = {
+          message: message.value, // 메세지 내용. type이 MSG인 경우를 제외하곤 비워두고 프론트단에서만 처리.
+          fk_author_idx: userPkidx.value, // 작성자의 회원 idx
+          created: '', // 작성시간, 공란으로 비워서 메세지 보내기. response에는 담겨옵니다.
+          deleted: false, // 삭제된 메세지 여부. default = false
+          fk_session_id: sessionId.value, // 현재 채팅세션의 id.
+          // 주의할 점은, 방 세션 id가 아닌, 방 정보의 pk_idx를 첨부한다. created 라이프사이클 메서드 참조.
+          type: 'MSG', // 메세지 타입.
+        };
+        stompClient.send('/receive/' + sessionId.value, JSON.stringify(msg), {});
+      }
+    };
+
+    const closeRoom = () => {
+      // 방 닫는 로직 작성 "admin_pk_idx": 0 넣어서 요청 해줘야함
+      // 방 상태가 LIVE 일때, admin_pk_idx가 나와 같을때
+      store.dispatch('chatClose');
+    };
 
     return {
+      store,
+      chatStatus,
       sessionId,
-      roomName,
       messages,
       message,
-      session_pk,
-      store,
+      scrollbar,
       sendMessage,
       send,
       connect,
       connected,
       stompClient,
-      userName,
+      userPkidx,
+      closeRoom,
     };
   },
 };
 </script>
-<style>
-.border-solid {
-  border: solid 1px;
-  border-radius: 4px;
-  box-shadow: 0 2px 24px 0 rgba(0, 0, 0, 0.1);
-  padding: 1px;
-  margin: 5px 1px 5px 1px;
+<style scoped>
+#topMessages {
+  display: block;
+  top: 0px;
+  height: 700px;
+  width: 100%;
 }
-.user-name {
-  padding: 1px 0px 0px 0px;
-  margin: 15px 0px 0px 0px;
+#bottomInput {
+  bottom: 0px;
+  width: 100%;
 }
-
-.chat-detail {
-  color: white;
-  background-color: rgb(39, 37, 31);
-  font-family: "BMJUA";
-  box-sizing: border-box;
+.el-scroll {
+  overflow-x: hidden;
 }
-
 .message-me {
-  background-color: #006f3e;
+  border: 1px solid #f7f4f0;
+  border-radius: 10px 10px 0px 10px;
+  background: #f7f4f0;
+  float: right;
+  padding: 10px;
+  margin: 5px 10px 5px 5px;
+  max-width: 300px;
 }
 .message-other {
-  background-color: #258c60;
+  border: 1px solid #27251f;
+  border-radius: 10px 10px 10px 0px;
+  color: #fff;
+  background: #27251f;
+  float: left;
+  padding: 10px;
+  margin: 5px 10px 5px 5px;
+  max-width: 300px;
 }
-
-.defualt-m-p {
-  padding: 1px;
-  margin: 5px 1px 5px 1px;
+#inputBox {
+  /* width: 90%; */
+  height: 100%;
+  background-color: transparent;
+  border: 0px solid #eee;
 }
-.icon-m-p {
-  padding: 0px 10px 0px 10px;
-  margin: 0px 5px 0px 5px;
+/* hover로 버튼 색 변하게 하기: 추가기능 */
+.el-icon-error {
+  float: right;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+.el-icon-close {
+  float: right;
+  font-size: 1.5rem;
+  cursor: pointer;
 }
 </style>

@@ -2,9 +2,9 @@
   <div id="nav">
     <router-link to="/signup">Sign Up</router-link> |
     <router-link to="/login">Log in</router-link> | <router-link to="/admin">Admin</router-link> |
-    <router-link to="/dummy">Dummy Page</router-link>
+    <router-link to="/userchat">User Page</router-link>
   </div>
-  <div id="top-padding">
+  <div class="inner">
     <transition name="page-change" mode="out-in">
       <router-view />
     </transition>
@@ -20,6 +20,10 @@ export default {
 /* 전체 프로젝트 폰트 변경(상속, cascading) */
 * {
   font-family: BMJUA;
+  text-decoration: none;
+}
+.el-main {
+  overflow: hidden;
 }
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -39,15 +43,21 @@ export default {
 }
 
 #nav a.router-link-exact-active {
-  color: #42b983;
+  color: #006f3e;
 }
-
-#colorVer {
-  background-color: #258c60;
+/* 258c60  */
+.green-color-btn {
+  background-color: #006f3e;
   color: #fff;
   border: 0;
 }
 
+/* .inner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+} */
 @font-face {
   font-family: "BMJUA";
   src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/BMJUA.woff") format("woff");
@@ -63,7 +73,7 @@ export default {
   opacity: 1;
 }
 .page-change-enter-active {
-  transition: all 1s ease-out;
+  transition: all 0.5s ease-out;
 }
 /* 소멸 부분 */
 .page-change-leave-from {
@@ -73,10 +83,6 @@ export default {
   opacity: 0;
 }
 .page-change-leave-active {
-  transition: all 4s ease-out;
-}
-
-#top-padding {
-  padding-top: 5%;
+  transition: all 1s ease-out;
 }
 </style>

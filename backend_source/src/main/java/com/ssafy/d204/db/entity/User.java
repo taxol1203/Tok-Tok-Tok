@@ -1,14 +1,16 @@
 package com.ssafy.d204.db.entity;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
 public class User {
-	long memberId;
-	String email;
-	String passwd;
-	String username;
+    @ApiModelProperty(example = "4")
+    long pk_idx;
+    @ApiModelProperty(example = "sample@gmail.com")
+    String email;
+    @ApiModelProperty(example = "!this field returns with empty string due to Security!")
+    String passwd;
+    @ApiModelProperty(example = "SampleMan")
+    String username;
 }

@@ -3,7 +3,9 @@ import Login from "../views/user/Login.vue";
 import Signup from "../views/user/Signup.vue";
 import ChatArea from "../views/chat/ChatArea.vue";
 import QnaArea from "../views/qna/QnaArea.vue";
-import Dummy from "../views/dummy/DummyMain.vue";
+import UserChat from "../views/userchat/UserMain.vue";
+import { ElMessage } from 'element-plus';
+
 
 const routes = [
   {
@@ -54,12 +56,17 @@ const routes = [
         component: QnaArea,
         name: "qna",
       },
+      {
+        path: "user",
+        component: () => import("../views/user/User.vue"),
+        name: "user",
+      },
     ],
   },
   {
-    path: "/dummy",
-    name: "Dummy",
-    component: Dummy,
+    path: "/userchat",
+    name: "UserChat",
+    component: UserChat,
     meta: {
       authRequired: false,
     },
@@ -71,6 +78,7 @@ const router = createRouter({
   routes,
 });
 
+// 로그인 권한 부분. 잠시 꺼둠
 router.beforeEach(async (to, from, next) => {
   if (
     to.matched.some((routeInfo) => {
@@ -80,9 +88,13 @@ router.beforeEach(async (to, from, next) => {
     return next();
   }
   if (localStorage.getItem("jwt") === null) {
-    alert("로그인해주세요");
+    ElMessage({
+      showClose: true,
+      message: '로그인이 필요합니다.',
+      type: 'error',
+    });
     return next({ name: "Login" });
-  }
+  } 
   return next();
 });
 

@@ -4,22 +4,24 @@ services:
     postgres:
       build: ./postgres
       container_name: postgres
-      image: "postgres:13.3"
+#      image: "postgres:13.3"
       ports:
         - 5432:5432
+      networks:
+        - net
       environment:
-        - POSTGRES_DB=sample
+        - TZ=Asia/Seoul
+        - POSTGRES_DB=postgres
         - POSTGRES_USERNAME=postgres
         - POSTGRES_PASSWORD=root
-#        TZ: Asia/Seoul
       volumes:
-#        - ./init.sql:/docker-entrypoint-initdb.d/init.sql
         - postgres:/var/lib/postgresql/data
-
-
+        - ./postgres/init/:/docker-entrypoint-initdb.d/
     django:
       build: ./django
       container_name: django
+      networks:
+        - net
       volumes:
         - ./django:/usr/src/app
     #   environment:
@@ -34,41 +36,66 @@ services:
         - "8000:8000"
     spring:
       build: ./spring
+      container_name: spring
+      networks:
+        - net
       depends_on:
         - postgres
       ports:
         - 8088:8088
       environment:
-        - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/sample
+        - TZ=Asia/Seoul
+        - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/postgres
         - SPRING_DATASOURCE_USERNAME=postgres
         - SPRING_DATASOURCE_PASSWORD=root
 #      links:
 #        - postgres:postgres
-    vue:
-      container_name: vue
+    frontend:
+      container_name: frontend
       build: ./vue
       ports:
-        - "8080:8080"
-    redis:
-      container_name: redis
-      image: redis
-      ports:
-        - "6379:6379"
-#      environment:
-#        TZ: Asia/Seoul
-#    jenkins:
-#      build: ./jenkins
-#      container_name: jenkins
-##      image: jenkins/jenkins:lts-jdk11
-#      ports:
-#        - 9090:8080
-#      user: root
+        - "80:80"
+        - "443:443"
+      networks:
+        - net
+      restart: always
+      user: root
+      depends_on:
+        - spring
 #      volumes:
-#        - ./jenkins:/var/jenkinse_home
+#        - ./nginx/:/usr/share/nginx/
+#        - /home/ubuntu/cert/:/usr/share/nginx/
+
+#    redis:
+#      container_name: redis
+#      image: redis
+#      ports:
+#        - "6379:6379"
 #      environment:
-#        TZ: Asia/Seoul
+#        - TZ=Asia/Seoul
+    jenkins:
+#      build: ./jenkins
+      container_name: jenkins
+      image: jenkins/jenkins:lts-jdk11
+      restart: unless-stopped
+      user: root
+      privileged: true
+      ports:
+        - 9090:8080
+      volumes:
+        - '/home/ubuntu/docker/jenkins-data:/var/jenkins_home'
+        - '/var/run/docker.sock:/var/run/docker.sock'
+        - '/usr/bin/docker:/usr/bin/docker'
+#        - ./jenkins:/var/jenkinse_home
+      environment:
+        - TZ=Asia/Seoul
 
 volumes:
   postgres: {}
-  redis: {}
+#  frontend: {}
   jenkins: {}
+#  redis: {}
+
+
+networks:
+  net:

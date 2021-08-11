@@ -1,24 +1,38 @@
 <template lang="">
   <el-container>
-    <el-aside style="border: 1px solid #eee">
+    <el-aside>
       <!-- <QnaList  /> -->
       <QnaList />
     </el-aside>
-    <el-main style="border: 1px solid #eee">
-      <QnaEdit />
+    <el-main>
+      <QnaEdit v-if="key > 0" />
     </el-main>
   </el-container>
 </template>
 <script>
-import QnaList from '../../components/qna/QnaList.vue';
-import QnaEdit from '../../components/qna/QnaEdit.vue';
+import QnaList from '@/components/qna/QnaList.vue';
+import QnaEdit from '@/components/qna/QnaEdit.vue';
+import { useStore } from 'vuex';
+import { computed } from 'vue';
 
 export default {
   components: {
     QnaList,
     QnaEdit,
   },
+  setup() {
+    const store = useStore();
+    const key = computed(() => store.getters['moduleQna/getKey']);
+    return {
+      store,
+      key,
+    };
+  },
 };
 </script>
 
-<style lang=""></style>
+<style>
+.el-aside {
+  overflow: hidden;
+}
+</style>

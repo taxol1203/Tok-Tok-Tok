@@ -1,5 +1,6 @@
-// import axios from 'axios'
+import axios from "axios";
 
-// export default axios.create({
-//   baseURL: 'http://127.0.0.1:8088/temp/api/'
-// })
+export default axios.create({
+  // baseURL: 'http://59.151.220.195:8089/'
+  baseURL: "https://i5d204.p.ssafy.io/",
+});

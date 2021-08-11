@@ -6,36 +6,36 @@ CREATE SCHEMA IF NOT EXISTS "SSAFY_PJT1";
 
 CREATE TABLE "SSAFY_PJT1".account
 (
-    email character varying NOT NULL,
-    pk_idx serial NOT NULL,
-    passwd character varying NOT NULL,
+    email    character varying NOT NULL,
+    pk_idx   serial            NOT NULL,
+    passwd   character varying NOT NULL,
     username character varying NOT NULL,
     PRIMARY KEY (pk_idx)
 );
 
 CREATE TABLE "SSAFY_PJT1".role
 (
-    pk_idx serial NOT NULL,
-    name character varying NOT NULL,
+    pk_idx  serial                   NOT NULL,
+    name    character varying        NOT NULL,
     created timestamp with time zone NOT NULL,
     updated timestamp with time zone NOT NULL,
-    admin boolean,
+    admin   boolean,
     PRIMARY KEY (pk_idx)
 );
 
 CREATE TABLE "SSAFY_PJT1".permission
 (
-    pk_idx serial NOT NULL,
-    name character varying NOT NULL,
-    created timestamp with time zone NOT NULL,
-    updated timestamp with time zone NOT NULL,
+    pk_idx      serial                   NOT NULL,
+    name        character varying        NOT NULL,
+    created     timestamp with time zone NOT NULL,
+    updated     timestamp with time zone NOT NULL,
     fk_role_idx integer,
     PRIMARY KEY (pk_idx)
 );
 
 CREATE TABLE "SSAFY_PJT1".user_roles
 (
-    pk_idx serial NOT NULL,
+    pk_idx      serial NOT NULL,
     fk_user_idx integer,
     fk_role_idx integer,
     PRIMARY KEY (pk_idx)
@@ -44,52 +44,52 @@ CREATE TABLE "SSAFY_PJT1".user_roles
 CREATE TABLE "SSAFY_PJT1".chat_session
 (
 --     pk_idx serial NOT NULL,
-    session_id character varying NOT NULL,
-    created_at timestamp with time zone NOT NULL,
-    fk_created_by_idx integer NOT NULL,
-    fk_client_idx integer,
-    fk_host_idx integer,
+    session_id        character varying        NOT NULL,
+    created_at        timestamp with time zone NOT NULL,
+    fk_created_by_idx integer                  NOT NULL,
+    fk_client_idx     integer,
+    fk_host_idx       integer,
     fk_permission_idx integer,
-    status character varying(4),
-    unread integer,
+    status            character varying(4),
+    unread            integer,
     PRIMARY KEY (session_id)
 );
 
 CREATE TABLE "SSAFY_PJT1".chat_message
 (
-    pk_idx serial NOT NULL,
-    message text NOT NULL,
-    fk_author_idx integer NOT NULL,
-    created timestamp with time zone NOT NULL,
-    deleted boolean,
-    fk_session_id character varying NOT NULL,
-    type character varying(4),
+    pk_idx        serial                   NOT NULL,
+    message       text                     NOT NULL,
+    fk_author_idx integer                  NOT NULL,
+    created       timestamp with time zone NOT NULL,
+    deleted       boolean,
+    fk_session_id character varying        NOT NULL,
+    type          character varying(4),
     PRIMARY KEY (pk_idx)
 );
 
 CREATE TABLE "SSAFY_PJT1".service_case
 (
-    pk_idx serial NOT NULL,
-    title character varying NOT NULL,
-    link character varying,
-    fk_charge_idx integer NOT NULL,
-    fk_customer_idx integer NOT NULL,
-    fk_session_id character varying NOT NULL,
-    feedback integer,
+    pk_idx          serial            NOT NULL,
+    title           character varying NOT NULL,
+    link            character varying,
+    fk_charge_idx   integer           NOT NULL,
+    fk_customer_idx integer           NOT NULL,
+    fk_session_id   character varying NOT NULL,
+    feedback        integer,
     PRIMARY KEY (pk_idx)
 );
 
 CREATE TABLE "SSAFY_PJT1".question
 (
-    pk_idx serial NOT NULL,
+    pk_idx  serial NOT NULL,
     content character varying,
     PRIMARY KEY (pk_idx)
 );
 
 CREATE TABLE "SSAFY_PJT1".answer
 (
-    pk_idx serial NOT NULL,
-    content character varying NOT NULL,
+    pk_idx      serial            NOT NULL,
+    content     character varying NOT NULL,
     fk_next_idx integer default 2,
     PRIMARY KEY (pk_idx)
 );
