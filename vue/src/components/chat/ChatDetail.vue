@@ -17,7 +17,7 @@
         </el-row>
       </div>
     </el-scrollbar>
-    <div v-if="listStatus != 'END'">
+    <div v-if="chatStatus != 'END'">
       <el-row id="bottomInput">
         <!-- 입력창 -->
         <el-col :span="2">
@@ -61,7 +61,6 @@ export default {
     const sessionId = computed(() => store.getters['get_selected_idx']);
     const messages = computed(() => store.getters.get_messages);
     const userPkidx = computed(() => store.state.auth.user.pk_idx);
-    const listStatus = computed(() => store.state.list_status);
     const chatStatus = computed(() => store.getters['statusGetter']);
     const message = ref('');
     let connected = false;
@@ -159,7 +158,6 @@ export default {
     return {
       store,
       chatStatus,
-      listStatus,
       sessionId,
       messages,
       message,
