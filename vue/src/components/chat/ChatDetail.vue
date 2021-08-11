@@ -95,7 +95,10 @@ export default {
             // console.log('receive from server:', JSON.parse(res.body).type);
             switch (JSON.parse(res.body).type) {
               case 'MSG':
-                store.commit('MESSAGE_PUSH', JSON.parse(res.body)); // 수신받은 메세지 표시하기
+                console.log(messages);
+                if (messages.value.length < 1) store.dispatch('enterRoom', JSON.parse(res.body));
+                else store.commit('MESSAGE_PUSH', JSON.parse(res.body)); // 수신받은 메세지 표시하기
+
                 break;
               case 'JOIN':
                 // 방을 생성할 때 백엔드단에서 처리하므로 신경 x
