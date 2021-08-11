@@ -11,7 +11,7 @@ RUN yarn run build
 
 FROM nginx
 RUN rm /etc/nginx/conf.d/default.conf
-COPY nginx/ /user/share/nginx/
+COPY nginx/ /usr/share/nginx/
 #COPY nginx/fullchain.pem /usr/share/nginx/
 #COPY nginx/privkey.pem /usr/share/nginx/
 COPY nginx/app.conf /etc/nginx/conf.d/
