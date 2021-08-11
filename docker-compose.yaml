@@ -92,7 +92,7 @@ services:
 
 volumes:
   postgres: {}
-  frontend: {}
+#  frontend: {}
   jenkins: {}
 #  redis: {}
 
