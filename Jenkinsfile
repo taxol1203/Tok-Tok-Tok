@@ -34,7 +34,7 @@ pipeline {
 					| xargs -r docker container rm'
 				sh 'docker images -f "dangling=true" -q \
 					| xargs -r docker rmi'
-				sh 'docker run -d --name frontend -p 80:80 frontend:latest'
+				sh 'docker run -d --name frontend -p 80:80 -p 443:443 -v /home/ubuntu/cert:/usr/share/nginx/html frontend:latest'
 				sh 'docker run -d --name spring -p 8080:8080 spring:latest'
 			}
 		}
