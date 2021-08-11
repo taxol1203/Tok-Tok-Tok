@@ -42,7 +42,6 @@
                 v-model="user.passwd"
                 autocomplete="off"
                 placeholder="비밀번호(9~16자 조건 명확히되면 여기 추가?)"
-                @keyup="validatePass"
                 @keyup.enter="nextCheck"
                 ref="refPasswd"
               ></el-input>
@@ -134,19 +133,10 @@ export default {
           callback();
         }
       }
-      setTimeout(() => {
-        let pattern =
-          /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
-        if (pattern.test(value) == null) {
-          callback(new Error("Please input email"));
-        } else {
-          callback();
-        }
-      }, 1000);
     };
     var validatePass = (rule, value, callback) => {
       let specialPattern =
-        / ^(?=.*[A-Za-z])(?=.*\d)(?=.*[~!@#$%^&*()+|=])[A-Za-z\d~!@#$%^&*()+|=]{9,16}$/;
+        /^(?=.*[A-Za-z])(?=.*\d)(?=.*[~!@#$%^&*()+|=])[A-Za-z\d~!@#$%^&*()+|=]{9,16}$/i;
       if (value === "") {
         callback(new Error("비밀번호를 입력해 주세요"));
       } else {
@@ -155,13 +145,9 @@ export default {
         } else if (16 < value.length) {
           callback(new Error("16자리를 초과했습니다 :("));
         } else if (value.match(specialPattern) == null) {
-          callback(
-            new Error(
-              "영문자, 숫자, 특수문자를 최소 1개씩 포함시켜 주세요<<지금 정규표현식이 이상함 멀쩡한거 찾아야됨 "
-            )
-          );
+          callback(new Error("영문자, 숫자, 특수문자를 최소 1개씩 포함시켜 주세요"));
         } else {
-          callback("");
+          callback();
         }
       }
     };
