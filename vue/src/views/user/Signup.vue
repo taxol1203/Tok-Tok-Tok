@@ -17,8 +17,6 @@
                 v-model="user.username"
                 autocomplete="off"
                 placeholder="닉네임을 입력해주세요"
-                id="1"
-                @keyup.enter="move2"
               ></el-input>
             </el-form-item>
             <el-form-item label="이메일" prop="email">
@@ -27,8 +25,6 @@
                 v-model="user.email"
                 autocomplete="off"
                 placeholder="이메일을 입력해주세요"
-                ref="two"
-                id="2"
               >
                 <template #append>
                   <el-button class="green-color-btn" id="green-btn" @click="duplicate"
@@ -121,7 +117,6 @@ export default {
       }, 1000);
     };
     var validatePass = (rule, value, callback) => {
-      // console.log(value);
       if (value === "") {
         callback(new Error("Please input the password"));
       } else {
@@ -133,7 +128,6 @@ export default {
       }
     };
     var validateCheck = (rule, value, callback) => {
-      // console.log("check:", value);
       if (value === "") {
         callback(new Error("Please input the password again"));
       } else if (value !== user.passwd) {
@@ -143,7 +137,6 @@ export default {
       }
     };
     var validateName = (rule, value, callback) => {
-      // console.log("nickname:", value);
       if (value === "") {
         callback(new Error("Please input the username again"));
       } else {
@@ -172,9 +165,6 @@ export default {
         }
       });
     });
-    const move2 = () => {
-      this.$refs.two.focus();
-    };
     return {
       store,
       ruleForm,
@@ -184,8 +174,6 @@ export default {
       user,
       rules,
       isValid,
-      move2,
-      two,
     };
   },
 };
