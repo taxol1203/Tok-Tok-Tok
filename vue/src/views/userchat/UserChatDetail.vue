@@ -18,10 +18,9 @@
       <el-col v-else>
         <div class="message-other">{{ msg.message }}</div>
         <div
-          class="message-other"
+          class="message-other vr"
           v-if="msg.type == 'VID'"
           @click="openVideo"
-          style="color: red"
         >
           메세지를 클릭해 주세요.
         </div>
@@ -101,6 +100,9 @@ export default {
   height: 100%;
   background-color: transparent;
   border: 0px solid #eee;
+}
+.vr:hover {
+  background-color: white;
 }
 /* hover로 버튼 색 변하게 하기: 추가기능 */
 </style>

@@ -71,6 +71,9 @@ export default createStore({
     },
     OPEN_VIDEO(state) {
       state.video_status = "OPEN";
+    },
+    CLOSE_VIDEO(state) {
+      state.video_status = "CLOSE";
     }
   },
   actions: {

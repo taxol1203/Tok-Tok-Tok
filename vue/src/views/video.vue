@@ -1,15 +1,21 @@
 <template>
   <el-container>
-    <button type="button" @click="socketInit('a')">Socket Init ROOM 1</button>
+    <!-- <button type="button" @click="socketInit('a')">Socket Init ROOM 1</button>
     <button type="button" @click="socketInit('b')">Socket Init ROOM 2</button>
-    <button type="button" @click="connect">establish connection</button>
+    <button type="button" @click="connect">establish connection</button> -->
     <br />
     <div>
-      <video ref="videoElement" autoplay></video>
+      <video
+        ref="videoElement"
+        autoplay
+        class="myVideo"
+        :class="{ myVideoLive: videoStatus == 'LIVE' }"
+      ></video>
       <video
         ref="remoteVideo"
         autoplay
-        style="width: 240px; height: 180px; border: 1px solid black"
+        v-if="videoStatus == 'LIVE'"
+        class="remoteVideo"
       ></video>
     </div>
     <el-footer>
@@ -54,21 +60,40 @@
         </div>
         <button type="button" @click="startScreenStream">화면공유시작</button>
         <button type="button" @click="start">화면공유중단</button>
-        <button type="button" @click="leave">leave</button>
+        <el-button v-if="videoStatus == 'CLOSE'" class="enterBtn" plain
+          >시작종료버튼자리</el-button
+        >
+        <el-button
+          v-if="videoStatus == 'OPEN'"
+          @click="connect"
+          class="enterBtn"
+          plain
+          >상담시작</el-button
+        >
+        <el-button
+          v-if="videoStatus == 'LIVE'"
+          @click="leave"
+          class="closeBtn"
+          plain
+          >상담종료</el-button
+        >
       </el-row>
     </el-footer>
   </el-container>
 </template>
 
 <script>
-import { ref, onMounted, reactive } from 'vue';
+import { ref, onMounted, reactive, computed } from 'vue';
+import { useStore } from 'vuex';
 export default {
   setup() {
+    const store = useStore();
     const videoElement = ref('');
     const audioInputSelect = ref('');
     const audioOutputSelect = ref('');
     const videoSelect = ref('');
     const remoteVideo = ref('');
+    const videoStatus = computed(() => store.state.video_status);
 
     const mediaOptions = reactive({
       audioinput: [],
@@ -364,6 +389,7 @@ export default {
     const leave = () => {
       console.log('hang up.');
       stop();
+      store.commit("CLOSE_VIDEO");
     };
     const stop = () => {
       socket.close();
@@ -522,12 +548,14 @@ export default {
       // start();
     };
     return {
+      store,
       audioInputSelect,
       audioOutputSelect,
       videoSelect,
       mediaOptions,
       videoElement,
       remoteVideo,
+      videoStatus,
       gotDevicesList,
       handleError,
       start,
@@ -546,13 +574,32 @@ export default {
 };
 </script>
 <style scoped>
+.myVideo {
+  border: 1px solid black;
+}
+.myVideoLive {
+  border: 1px solid black;
+  /* 사이즈 작게 왼쪽 아래 라든가? */
+}
+.remoteVideo {
+  border: 1px solid black;
+  /* 꽉찬화면? */
+}
 .select {
-  width: 20em;
+  width: 10rem;
 }
 .videoOptions {
   justify-content: center;
 }
 .videoElement {
   width: 500px;
+}
+.enterBtn {
+  background-color: #006f3e;
+  color: white;
+}
+#closeBtn {
+  background-color: red;
+  color: white;
 }
 </style>
