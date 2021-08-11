@@ -41,7 +41,7 @@
                 type="password"
                 v-model="user.passwd"
                 autocomplete="off"
-                placeholder="비밀번호(9~16자 조건 명확히되면 여기 추가?)"
+                placeholder="비밀번호(9~16자, 영문, 숫자, 특수문자(~,!,@,#,$,%,^,&,*,(,),+,|,=)를 최소 1개씩 포함시켜주세요)"
                 @keyup.enter="nextCheck"
                 ref="refPasswd"
               ></el-input>
@@ -64,6 +64,16 @@
       </div>
     </el-col>
   </el-row>
+  <el-row :gutter="20" justify="center">
+    <el-col :span="12" :offset="0" id="footer">
+      <strong>Help Desk </strong>
+      <em>
+        <a href="tel:02-3429-5041">02-3429-5041</a>
+      </em>
+      <br />
+      <span>평일 상담시간: 09:00 ~ 19:00</span>
+    </el-col>
+  </el-row>
 </template>
 
 <script>
@@ -76,9 +86,9 @@ export default {
     const ruleForm = ref(null);
     const onSubmit = () => {
       let payload = {
+        username: user.username,
         email: user.email,
         passwd: user.passwd,
-        username: user.username,
       };
       ruleForm.value.validate((valid) => {
         if (valid) {
@@ -104,34 +114,38 @@ export default {
       ruleForm.value.resetFields();
     };
 
+    var validateName = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("닉네임을 입력해 주세요"));
+      } else {
+        callback();
+      }
+    };
     var checkEmail = (rule, value, callback) => {
       if (!value) {
-        return callback(new Error("Please input the email"));
+        return callback(new Error("이메일을 입력해 주세요"));
       } else {
         let pattern =
           /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
         if (value.match(pattern) == null) {
-          callback(new Error("Please input email"));
+          callback(new Error("이메일 형식을 맞춰주세요"));
         } else {
           callback();
         }
       }
-      setTimeout(() => {
-        let pattern =
-          /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
-        if (pattern.test(value) == null) {
-          callback(new Error("Please input email"));
-        } else {
-          callback();
-        }
-      }, 1000);
     };
     var validatePass = (rule, value, callback) => {
+      let specialPattern =
+        /^(?=.*[A-Za-z])(?=.*\d)(?=.*[~!@#$%^&*()+|=])[A-Za-z\d~!@#$%^&*()+|=]{9,16}$/i;
       if (value === "") {
-        callback(new Error("Please input the password"));
+        callback(new Error("비밀번호를 입력해 주세요"));
       } else {
-        if (9 > value.length || 16 < value.length) {
-          callback(new Error("Please check the pw rule"));
+        if (9 > value.length) {
+          callback(new Error("아직 9자리가 아니에요"));
+        } else if (16 < value.length) {
+          callback(new Error("16자리를 초과했습니다 :("));
+        } else if (value.match(specialPattern) == null) {
+          callback(new Error("영문자, 숫자, 특수문자를 최소 1개씩 포함시켜 주세요"));
         } else {
           callback();
         }
@@ -139,25 +153,18 @@ export default {
     };
     var validateCheck = (rule, value, callback) => {
       if (value === "") {
-        callback(new Error("Please input the password again"));
+        callback(new Error("비밀번호를 다시 입력해주세요"));
       } else if (value !== user.passwd) {
-        callback(new Error("Two inputs don't match!"));
-      } else {
-        callback();
-      }
-    };
-    var validateName = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("Please input the username again"));
+        callback(new Error("두 비밀번호가 달라요! 확인해 보시겠어요?"));
       } else {
         callback();
       }
     };
     const user = reactive({
+      username: "",
       email: "",
       passwd: "",
       check: "",
-      username: "",
     });
     const rules = {
       username: [{ validator: validateName, trigger: "blur" }],
@@ -202,5 +209,9 @@ export default {
   background-color: #006f3e;
   color: #fff;
   border: 0;
+}
+#footer {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
 }
 </style>
