@@ -16,7 +16,7 @@
                 type="text"
                 v-model="user.username"
                 autocomplete="off"
-                placeholder="닉네임을 입력해주세요"
+                placeholder="닉네임을 입력해 주세요"
                 @keyup.enter="nextEmail"
               ></el-input>
             </el-form-item>
@@ -25,7 +25,7 @@
                 type="email"
                 v-model="user.email"
                 autocomplete="off"
-                placeholder="이메일을 입력해주세요"
+                placeholder="이메일을 입력해 주세요"
                 @keyup.enter="nextPasswd"
                 ref="refEmail"
               >
@@ -41,7 +41,7 @@
                 type="password"
                 v-model="user.passwd"
                 autocomplete="off"
-                placeholder="비밀번호(9~16자, 영문, 숫자, 특수문자(~,!,@,#,$,%,^,&,*,(,),+,|,=)를 최소 1개씩 포함시켜주세요)"
+                placeholder="비밀번호(9~16자, 영문, 숫자, 특수문자(~,!,@,#,$,%,^,&,*,(,),+,|,=)를 최소 1개씩 포함시켜 주세요)"
                 @keyup.enter="nextCheck"
                 ref="refPasswd"
               ></el-input>
@@ -123,7 +123,7 @@ export default {
         let pattern =
           /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
         if (value.match(pattern) == null) {
-          callback(new Error("이메일 형식을 맞춰주세요"));
+          callback(new Error("이메일 형식을 맞춰 주세요"));
         } else {
           callback();
         }
