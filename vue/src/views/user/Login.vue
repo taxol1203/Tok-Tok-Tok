@@ -27,12 +27,17 @@
                 v-model="user.passwd"
                 autocomplete="off"
                 placeholder="비밀번호를 입력해 주세요"
+                @keyup.enter="onSubmit('formLabelAlign')"
                 ref="refPasswd"
               ></el-input>
             </el-form-item>
             <el-form-item>
               <transition name="slide-fade">
-                <el-button type="button" class="green-color-btn" @click="onSubmit('formLabelAlign')"
+                <el-button
+                  type="button"
+                  class="green-color-btn"
+                  @click="onSubmit('formLabelAlign')"
+                  :disabled="!isValid"
                   >로그인</el-button
                 >
               </transition>
@@ -75,6 +80,7 @@ export default {
       });
     };
     const refPasswd = ref("");
+    const isValid = computed(() => user.email && user.passwd);
 
     const checkEmail = (rule, value, callback) => {
       if (!value) {
@@ -88,32 +94,12 @@ export default {
           callback();
         }
       }
-      // 이거 필요한가?
-      setTimeout(() => {
-        let pattern =
-          /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
-        if (pattern.test(value) == null) {
-          callback(new Error("Please input email"));
-        } else {
-          callback();
-        }
-      }, 1000);
     };
     var validatePass = (rule, value, callback) => {
-      let specialPattern =
-        /^(?=.*[A-Za-z])(?=.*\d)(?=.*[~!@#$%^&*()+|=])[A-Za-z\d~!@#$%^&*()+|=]{9,16}$/i;
       if (value === "") {
         callback(new Error("비밀번호를 입력해 주세요"));
       } else {
-        if (9 > value.length) {
-          callback(new Error("아직 9자리가 아니에요"));
-        } else if (16 < value.length) {
-          callback(new Error("16자리를 초과했습니다 :("));
-        } else if (value.match(specialPattern) == null) {
-          callback(new Error("영문자, 숫자, 특수문자를 최소 1개씩 포함시켜 주세요"));
-        } else {
-          callback();
-        }
+        callback();
       }
     };
     const logout = () => {
@@ -127,7 +113,7 @@ export default {
     });
     const rules = {
       email: [{ validator: checkEmail, trigger: "blur" }],
-      passwd: [{ validator: validatePasswd, trigger: "blur" }],
+      passwd: [{ validator: validatePass, trigger: "blur" }],
     };
     const resetForm = () => {
       formLabelAlign.value.resetFields();
@@ -144,10 +130,11 @@ export default {
       rules,
       onSubmit,
       checkEmail,
-      validatePasswd,
+      validatePass,
       logout,
       refPasswd,
       nextPasswd,
+      isValid,
     };
   },
 };
