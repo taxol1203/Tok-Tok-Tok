@@ -17,7 +17,7 @@
         </el-row>
       </div>
     </el-scrollbar>
-    <div>
+    <div v-if="chatStatus != 'END'">
       <el-row id="bottomInput">
         <!-- 입력창 -->
         <el-col :span="2">

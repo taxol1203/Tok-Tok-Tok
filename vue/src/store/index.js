@@ -29,7 +29,7 @@ export default createStore({
       state.session_key = payload;
     },
     PICK_ROOM(state, payload) {
-      console.log(state.rooms[payload])
+      // console.log(state.rooms[payload])
       state.selected_room = payload;
     },
     USER_MSG_PUSH(state, payload) {
@@ -40,8 +40,8 @@ export default createStore({
       }
     },
     MESSAGE_PUSH(state, payload) {
-      console.log(state.rooms[`${state.selected_room}`].session.status)
-      console.log(payload)
+      // console.log(state.rooms[`${state.selected_room}`].session.status)
+      // console.log(payload)
       if (!(Object.keys(state.rooms[`${state.selected_room}`]).includes('messages'))) {
         state.rooms[`${state.selected_room}`].messages = [payload];
       }
@@ -59,9 +59,9 @@ export default createStore({
       state.list_status = payload;
     },
     CHAT_CLOSE(state) {
-      state.rooms[`${state.selected_room}`].session.status = "QUIT"
+      state.rooms[`${state.selected_room}`].session.status = "END"
       state.selected_room = '';
-      console.log("close")
+      // console.log("close")
     }
   },
   actions: {
@@ -101,7 +101,7 @@ export default createStore({
         const res = await axios.put(`/api/api/chat/room/${state.selected_room}`, {
           admin_pk_idx: state.auth.user.pk_idx,
         });
-        console.log(payload)
+        // console.log(payload)
         if(res.status == 200) commit("MESSAGE_PUSH", payload);
       } catch (err) {
         console.log(err);
@@ -129,6 +129,7 @@ export default createStore({
       let roomList = [];
       for (let i in state.rooms) {
         let room = state.rooms[i];
+        // console.log(room.session.status)
         if (room.session.status === state.list_status) {
           roomList.push(room);
         }
@@ -150,21 +151,6 @@ export default createStore({
     qnaGetter: (state) => {
       return state.rooms[`${state.selected_room}`].session.qna_history.split('|')
     },
-    // get_client_info: (state) => {
-
-    //   var tmp = state.rooms[`${state.selected_room}`].session.qna_history
-    //   if (tmp != null) {
-    //     tmp = tmp.split('|')
-    //     tmp = tmp.splice(0, 1);
-    //   } else {
-    //     tmp = [];
-    //   }
-    //   var payload = {
-    //     client: state.rooms[`${state.selected_room}`].client,
-    //     qna: tmp
-    //   }
-    //   return payload;
-    // },
     get_selected_idx: (state) => {
       return state.selected_room
     },
