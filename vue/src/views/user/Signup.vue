@@ -41,7 +41,7 @@
                 type="password"
                 v-model="user.passwd"
                 autocomplete="off"
-                placeholder="비밀번호(9~16자 조건 명확히되면 여기 추가?)"
+                placeholder="비밀번호(9~16자, 영문, 숫자, 특수문자(~,!,@,#,$,%,^,&,*,(,),+,|,=)를 최소 1개씩 포함시켜주세요)"
                 @keyup.enter="nextCheck"
                 ref="refPasswd"
               ></el-input>
@@ -86,9 +86,9 @@ export default {
     const ruleForm = ref(null);
     const onSubmit = () => {
       let payload = {
+        username: user.username,
         email: user.email,
         passwd: user.passwd,
-        username: user.username,
       };
       ruleForm.value.validate((valid) => {
         if (valid) {
@@ -161,10 +161,10 @@ export default {
       }
     };
     const user = reactive({
+      username: "",
       email: "",
       passwd: "",
       check: "",
-      username: "",
     });
     const rules = {
       username: [{ validator: validateName, trigger: "blur" }],
