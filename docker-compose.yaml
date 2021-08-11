@@ -4,7 +4,7 @@ services:
     postgres:
       build: ./postgres
       container_name: postgres
-      image: "postgres:13.3"
+#      image: "postgres:13.3"
       ports:
         - 5432:5432
       networks:
@@ -64,6 +64,7 @@ services:
         - spring
 #      volumes:
 #        - ./nginx/:/usr/share/nginx/
+#        - /home/ubuntu/cert/:/usr/share/nginx/
 
 #    redis:
 #      container_name: redis
@@ -71,7 +72,7 @@ services:
 #      ports:
 #        - "6379:6379"
 #      environment:
-#        TZ: Asia/Seoul
+#        - TZ=Asia/Seoul
     jenkins:
 #      build: ./jenkins
       container_name: jenkins
@@ -91,7 +92,7 @@ services:
 
 volumes:
   postgres: {}
-  frontend: {}
+#  frontend: {}
   jenkins: {}
 #  redis: {}
 

@@ -1,7 +1,7 @@
 <template>
   <div style="position: relative; width: 650px; height: 750px; padding: 10px">
-    <i class="el-icon-error" @click="closeRoom"></i>
-    <i class="el-icon-close"></i>
+    <!-- <i class="el-icon-close"></i> -->
+    <i v-if="chatStatus == 'LIVE'" class="el-icon-error" @click="closeRoom"></i>
     <!-- 상대방 -->
     <el-scrollbar ref="scrollbar" id="topMessages">
       <div v-for="(msg, index) in messages" :key="index">
@@ -17,7 +17,7 @@
         </el-row>
       </div>
     </el-scrollbar>
-    <div>
+    <div v-if="chatStatus != 'END'">
       <el-row id="bottomInput">
         <!-- 입력창 -->
         <el-col :span="2">
@@ -51,7 +51,7 @@
 import Stomp from 'webstomp-client';
 import SockJS from 'sockjs-client';
 import { useStore } from 'vuex';
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 
 export default {
   name: 'Chat',
@@ -61,7 +61,12 @@ export default {
     const sessionId = computed(() => store.getters['get_selected_idx']);
     const messages = computed(() => store.getters.get_messages);
     const userPkidx = computed(() => store.state.auth.user.pk_idx);
+    const chatStatus = computed(() => store.getters['statusGetter']);
     const message = ref('');
+    const scrollbar = ref('');
+    onMounted(() => {
+      scrollbar.value.setScrollTop(750);
+    });
     let connected = false;
     let stompClient = '';
 
@@ -84,7 +89,12 @@ export default {
             // console.log('receive from server:', JSON.parse(res.body).type);
             switch (JSON.parse(res.body).type) {
               case 'MSG':
-                store.commit('MESSAGE_PUSH', JSON.parse(res.body)); // 수신받은 메세지 표시하기
+                // console.log(chatStatus.value);
+                if (chatStatus.value == 'OPEN') store.dispatch('enterRoom', JSON.parse(res.body));
+                else {
+                  store.commit('MESSAGE_PUSH', JSON.parse(res.body)); // 수신받은 메세지 표시하기
+                }
+
                 break;
               case 'JOIN':
                 // 방을 생성할 때 백엔드단에서 처리하므로 신경 x
@@ -145,16 +155,16 @@ export default {
     const closeRoom = () => {
       // 방 닫는 로직 작성 "admin_pk_idx": 0 넣어서 요청 해줘야함
       // 방 상태가 LIVE 일때, admin_pk_idx가 나와 같을때
-      if (store.state.rooms[`${sessionId.value}`].session.status == 'LIVE') {
-        //여기서 디스패치
-      }
+      store.dispatch('chatClose');
     };
 
     return {
       store,
+      chatStatus,
       sessionId,
       messages,
       message,
+      scrollbar,
       sendMessage,
       send,
       connect,

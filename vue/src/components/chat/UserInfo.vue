@@ -8,10 +8,10 @@
           width="80"
         />
         <h3 style="margin: 10px">
-          {{ user.client.username }}
+          {{ user.username }}
         </h3>
         <div style="color: gray; margin-bottom: 10px">
-          {{ user.client.email }}
+          {{ user.email }}
         </div>
       </div>
       <hr style="border: 2px solid whitesmoke" width="90%" />
@@ -19,7 +19,7 @@
         <i class="el-icon-s-opportunity" style="margin-right: 3px"></i>
         고객 채팅봇 기록
       </el-row>
-      <el-row v-for="(item, index) in user.qna" :key="index" class="rowitem message-me">
+      <el-row v-for="(item, index) in qna" :key="index" class="rowitem message-me">
         {{ item }}
       </el-row>
       <!-- <el-row class="rowitem message-me"> 기기 고장 </el-row>
@@ -34,15 +34,15 @@
         고객 정보
       </el-row>
     </el-col>
-    <el-row class="rowitem2"> username: {{ user.client.username }} </el-row>
-    <el-row class="rowitem2"> email: {{ user.client.email }} </el-row>
+    <el-row class="rowitem2"> username: {{ user.username }} </el-row>
+    <el-row class="rowitem2"> email: {{ user.email }} </el-row>
     <el-row class="rowitem2"> phone: 010-1234-5678 </el-row>
     <hr style="border: 2px solid whitesmoke; margin-top: 40px" width="90%" />
   </el-row>
 </template>
 <script>
 import { useStore } from 'vuex';
-import { computed } from 'vue';
+import { computed, watch } from 'vue';
 
 export default {
   data() {
@@ -52,10 +52,13 @@ export default {
   },
   setup() {
     const store = useStore();
-    const user = computed(() => store.getters['get_client_info']);
+    const user = computed(() => store.getters['clientGetter']);
+    const qna = computed(() => store.getters['qnaGetter']);
+    // const user = computed(() => store.getters['get_client_info']);
     return {
       store,
       user,
+      qna,
     };
   },
 };

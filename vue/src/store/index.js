@@ -29,7 +29,7 @@ export default createStore({
       state.session_key = payload;
     },
     PICK_ROOM(state, payload) {
-      console.log(state.rooms[payload])
+      // console.log(state.rooms[payload])
       state.selected_room = payload;
     },
     USER_MSG_PUSH(state, payload) {
@@ -40,7 +40,11 @@ export default createStore({
       }
     },
     MESSAGE_PUSH(state, payload) {
-      console.log(payload)
+      // console.log(state.rooms[`${state.selected_room}`].session.status)
+      // console.log(payload)
+      if (!(Object.keys(state.rooms[`${state.selected_room}`]).includes('messages'))) {
+        state.rooms[`${state.selected_room}`].messages = [payload];
+      }
       state.rooms[`${state.selected_room}`].messages.push(payload);
       // 관리자가 첫 메세지 보냈을때 방상태를 LIVE로 바꾸기
       if (state.rooms[`${state.selected_room}`].session.status == "OPEN") {
@@ -54,17 +58,18 @@ export default createStore({
     STATUS_CHANGE(state, payload) {
       state.list_status = payload;
     },
-    ENTER_ROOM(state) {
-      state.list_status = "LIVE";
-      state.rooms[`${state.selected_room}`].session.status = "LIVE";
-    },
+    CHAT_CLOSE(state) {
+      state.rooms[`${state.selected_room}`].session.status = "END"
+      state.selected_room = '';
+      // console.log("close")
+    }
   },
   actions: {
     async getChatRooms({ commit, state }) {
       try {
         const res = await axios.get(`api/api/chat/admin/init/${state.auth.user.pk_idx}`);
         for (var p in res.data) {
-          const client = await axios.get(`api/auth/user/${res.data[p].session.fk_client_idx}`)
+          const client = await axios.get(`api/auth/user/${res.data[p].session.fk_client_idx}`) //해당 방에 관련된 유저정보 담기
           res.data[p].client = client.data;
         }
         commit("GET_ROOMS", res.data);
@@ -91,15 +96,28 @@ export default createStore({
     pickRoom({ commit }, key) {
       commit("PICK_ROOM", key);
     },
-    async enterRoom({ commit, state }, sessionId) {
+    async enterRoom({ commit, state }, payload) {
       try {
-        const res = await axios.put(`/api/api/chat/room/${sessionId.value}`, {
+        const res = await axios.put(`/api/api/chat/room/${state.selected_room}`, {
           admin_pk_idx: state.auth.user.pk_idx,
         });
-        commit("ENTER_ROOM", res.data);
+        // console.log(payload)
+        if(res.status == 200) commit("MESSAGE_PUSH", payload);
       } catch (err) {
         console.log(err);
       }
+    },
+    chatClose({ commit, state }) {
+      axios
+        .delete(`/api/api/chat/room/${state.selected_room}`, {
+          data: {
+            admin_pk_idx: state.auth.user.pk_idx,
+          }
+        }).then(() => {
+          commit('CHAT_CLOSE')
+        }).catch(err => {
+          console.log(err)
+        });
     }
 
   },
@@ -111,6 +129,7 @@ export default createStore({
       let roomList = [];
       for (let i in state.rooms) {
         let room = state.rooms[i];
+        // console.log(room.session.status)
         if (room.session.status === state.list_status) {
           roomList.push(room);
         }
@@ -126,23 +145,17 @@ export default createStore({
     get_user_room_status: (state) => {
       return state.session_key.status;
     },
-    get_client_info: (state) => {
-
-      var tmp = state.rooms[`${state.selected_room}`].session.qna_history
-      if (tmp != null) {
-        tmp = tmp.split('|')
-        tmp = tmp.splice(0, 1);
-      } else {
-        tmp = [];
-      }
-      var payload = {
-        client: state.rooms[`${state.selected_room}`].client,
-        qna: tmp
-      }
-      return payload;
+    clientGetter: (state) => {
+      return state.rooms[`${state.selected_room}`].client;
+    },
+    qnaGetter: (state) => {
+      return state.rooms[`${state.selected_room}`].session.qna_history.split('|')
     },
     get_selected_idx: (state) => {
       return state.selected_room
+    },
+    statusGetter: (state) => {
+      return state.rooms[`${state.selected_room}`].session.status;
     }
   },
 });
