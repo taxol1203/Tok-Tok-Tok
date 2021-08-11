@@ -23,7 +23,6 @@
           <el-button
             icon="el-icon-video-camera"
             class="icon-m-p green-color-btn"
-            @click="openVideo"
           ></el-button>
         </el-col>
         <el-col :span="20">
@@ -68,16 +67,6 @@ export default {
     let connected = false;
     let stompClient = "";
 
-    const openVideo = () => {
-      store.commit("OPEN_VIDEO");
-      // 사용자에게 초대 메세지 보내기 메세지타입 VID
-      send("VID");
-    };
-
-    watch(sessionId, () => {
-      connect();
-    });
-
     const connect = () => {
       const serverURL = "https://i5d204.p.ssafy.io/api/chat"; // 서버 채팅 주소
       let socket = new SockJS(serverURL);
@@ -87,12 +76,13 @@ export default {
         {},
         (frame) => {
           connected = true;
+          // console.log('CONNECT SUCCESS:', frame);
           // 구독 == 채팅방 입장.
-          stompClient.subscribe('/send/' + sessionId.value, (res) => {
-            // console.log('receive from server:', JSON.parse(res.body).type);
-            switch (JSON.parse(res.body).type) {
-              case 'MSG':
-                store.commit('MESSAGE_PUSH', JSON.parse(res.body)); // 수신받은 메세지 표시하기
+          stompClient.subscribe("/send/" + sessionId.value, (res) => {
+            // console.log('receive from server:', res.body);
+            store.commit("MESSAGE_PUSH", JSON.parse(res.body)); // 수신받은 메세지 표시하기
+            switch (res.body.type) {
+              case "MSG":
                 break;
               case "JOIN":
                 // 방을 생성할 때 백엔드단에서 처리하므로 신경 x
@@ -102,8 +92,6 @@ export default {
                 break;
               case "VID":
                 // vid 시작시 -> 화상채팅 시작하기 버튼만 딸랑 띄우기
-                // 여기서 화상채팅 수락 모달창 뜨게 하면 될듯 유저챗디테일에서
-                console.log("Video Open!!");
                 break;
               default:
                 // 알수없는 오류...
@@ -122,7 +110,7 @@ export default {
 
     const sendMessage = () => {
       if (userPkidx.value && message.value) {
-        send("MSG"); // 전송 실패 감지는 어떻게? 프론트단에서 고민좀 부탁 dream
+        send({ message }); // 전송 실패 감지는 어떻게? 프론트단에서 고민좀 부탁 dream
         // 관리자가 첫 메세지 보냈을때 방상태를 LIVE로 바꾸기
         if (store.state.rooms[`${sessionId.value}`].session.status == "OPEN") {
           store.dispatch("enterRoom", sessionId);
@@ -133,7 +121,8 @@ export default {
       // 방상태가 OPEN일때 여기서 put을 보내면되나
     };
 
-    const send = (type) => {
+    const send = () => {
+      // console.log('Send message:' + message.value);
       if (stompClient && stompClient.connected) {
         let msg;
         if (type === "VID") {
@@ -180,7 +169,6 @@ export default {
       stompClient,
       userPkidx,
       closeRoom,
-      openVideo,
     };
   },
 };

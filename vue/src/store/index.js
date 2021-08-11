@@ -3,7 +3,7 @@ import axios from "@/axios";
 import createPersistedState from "vuex-persistedstate";
 import { moduleQna } from "@/store/modules/moduleQna";
 import { auth } from "@/store/modules/auth";
-import { userQna } from "@/store/modules/userQna";
+import { userQna } from "@/store/modules/userQna"
 
 export default createStore({
   plugins: [
@@ -19,7 +19,6 @@ export default createStore({
     session_key: {},
     //qnahistory를 아마 넣을 예정
     list_status: "LIVE",
-    video_open: false,
   },
   mutations: {
     GET_ROOMS(state, payload) {
@@ -60,12 +59,6 @@ export default createStore({
       state.list_status = "LIVE";
       state.rooms[`${state.selected_room}`].session.status = "LIVE";
     },
-    OPEN_VIDEO(state) {
-      state.video_open = true;
-    },
-    CLOSE_VIDEO(state) {
-      state.video_open = false;
-    }
   },
   actions: {
     async getChatRooms({ commit, state }) {
