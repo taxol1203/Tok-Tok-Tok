@@ -1,50 +1,44 @@
 <template lang="">
   <div>
     <el-container>
-      <el-aside v-if="videoMode == 'CLOSE'"><ChatList /></el-aside>
-      <el-container v-if="videoMode != 'CLOSE'">
-        <el-main>
-          <VideoChatDetail />
-        </el-main>
-      </el-container>
+      <el-aside v-if="videoStatus == 'CLOSE'"><ChatList /></el-aside>
+      <el-main v-else>
+        <VideoChatDetail />
+      </el-main>
       <el-container>
-        <!-- <el-header v-if="store.state.selected_room"><UserTitle /></el-header> -->
-        <!-- <el-main> -->
-        <!-- <el-container> -->
         <transition name="chat-change" mode="out-in">
-          <div v-if="store.state.selected_room"><ChatDetail /></div>
+          <div v-if="sessionId"><ChatDetail /></div>
         </transition>
         <transition name="chat-change" mode="out-in">
-          <el-aside v-if="store.state.selected_room"><UserInfo /></el-aside>
+          <el-aside v-if="sessionId"><UserInfo /></el-aside>
         </transition>
-        <!-- </el-container> -->
-        <!-- </el-main> -->
       </el-container>
     </el-container>
   </div>
 </template>
 <script>
-import ChatList from "../../components/chat/ChatList.vue";
-import ChatDetail from "../../components/chat/ChatDetail.vue";
+import ChatList from '../../components/chat/ChatList.vue';
+import ChatDetail from '../../components/chat/ChatDetail.vue';
+import UserInfo from '../../components/chat/UserInfo.vue';
 import VideoChatDetail from "@/components/VideoChat/VideoChatDetail.vue";
-import UserInfo from "../../components/chat/UserInfo.vue";
-import { computed } from "vue";
-import { useStore } from "vuex";
+import { useStore } from 'vuex';
+import { computed } from 'vue';
 
 export default {
   components: {
     ChatList,
-    VideoChatDetail,
     ChatDetail,
     UserInfo,
+    VideoChatDetail,
   },
   setup() {
     const store = useStore();
-    const videoMode = computed(() => store.state.video_open);
-
+    const sessionId = computed(() => store.getters['get_selected_idx']);
+    const videoStatus = computed(() => store.state.video_status);
     return {
       store,
-      videoMode,
+      sessionId,
+      videoStatus,
     };
   },
 };

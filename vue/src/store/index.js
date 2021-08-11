@@ -19,7 +19,9 @@ export default createStore({
     session_key: {},
     //qnahistory를 아마 넣을 예정
     list_status: "LIVE",
-    video_open: "CLOSE",
+    closeMsg: "",
+    video_status: "CLOSE",
+
   },
   mutations: {
     GET_ROOMS(state, payload) {
@@ -64,11 +66,11 @@ export default createStore({
       state.selected_room = '';
       // console.log("close")
     },
-    OPEN_VIDEO(state) {
-      state.video_open = 'OPEN';
+    CLOSE_MSG(state) {
+      state.closeMsg = "상담이 종료되었습니다.";
     },
-    CLOSE_VIDEO(state) {
-      state.video_open = 'CLOSE';
+    OPEN_VIDEO(state) {
+      state.video_status = "OPEN";
     }
   },
   actions: {

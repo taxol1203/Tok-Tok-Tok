@@ -94,9 +94,14 @@ export default {
             // console.log('receive from server:', JSON.parse(res.body).type);
             switch (JSON.parse(res.body).type) {
               case 'MSG':
-                console.log(messages);
                 if (chatStatus.value == 'OPEN') store.dispatch('enterRoom', JSON.parse(res.body));
-                else store.commit('MESSAGE_PUSH', JSON.parse(res.body)); // 수신받은 메세지 표시하기
+                else {
+                  console.log(chatStatus.value);
+                  store.commit('MESSAGE_PUSH', JSON.parse(res.body)); // 수신받은 메세지 표시하기
+                }
+                setTimeout(() => {
+                  scrollbar.value.setScrollTop(999999999999999999999);
+                }, 150);
 
                 break;
               case 'JOIN':
