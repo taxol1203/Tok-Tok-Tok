@@ -17,6 +17,7 @@
         </el-row>
       </div>
     </el-scrollbar>
+    <button v-if="isPopupToBottom">최근 메세지로 jump!</button>
     <div>
       <el-row id="bottomInput">
         <!-- 입력창 -->
@@ -64,7 +65,17 @@ export default {
     const message = ref('');
     let connected = false;
     let stompClient = '';
-
+    const scrollbar = ref('');
+    let isScrollbarAtBottom = true;
+    let isPopupToBottom = false;
+    // 스크롤바 움직였고 현재 하이트랑 비교해서 \
+    // 차이가 있다면 isScrollbarAtBottom = false;
+    // 이 상태에서 메세지 도착시 isPopupToBottom = true->버튼 표시
+    watch(messages, ()=>{
+      console.log("new message!")
+      console.log(scrollbar);
+      
+    });
     watch(sessionId, () => {
       connect();
     });
