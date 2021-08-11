@@ -21,7 +21,7 @@
                 >
               </div>
               <div class="full-box">
-                <UserQna />
+                <UserQna :close="isHidden" />
               </div>
             </el-card>
           </div>
@@ -31,11 +31,13 @@
   </el-row>
 </template>
 <script>
+import Stomp from 'webstomp-client';
+import SockJS from 'sockjs-client';
 import { useStore } from 'vuex';
 import UserChatDetail from './UserChatDetail.vue';
 import UserQna from './UserQna.vue';
 import ChatDetail from '../../components/chat/ChatDetail.vue';
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 /* eslint-disable */
 export default {
   components: {
@@ -43,16 +45,19 @@ export default {
     UserChatDetail,
     ChatDetail,
   },
-
   setup() {
     let isChatExist = ref(false);
-    let isHidden = ref(false);
+    const isHidden = computed(() => store.getters['userQna/showUserChat']);
     const store = useStore();
     const user_pk_idx = computed(() => store.state.auth.user.pk_idx);
-    const sessionId = computed(() => store.state.user_selected_room);
+    const sessionId = computed(() => store.getters['get_selected_idx']);
+    onMounted(() => {
+      //state.userQna.scenes에 pk_idx별로 예상질문정보+answers에 정답정보 저장
+      store.dispatch('userQna/init');
+    });
     let changeCondition = () => {
-      store.dispatch('userQna/init'); //state.userQna.scenes에 pk_idx별로 예상질문정보+answers에 정답정보 저장
-      isHidden.value = !isHidden.value;
+      if (isHidden.value === true) connect();
+      store.commit('userQna/CHANGE_STATE');
     };
     let changeisChatExist = () => {
       isChatExist.value = !isChatExist.value;
@@ -62,15 +67,62 @@ export default {
       store.dispatch('createChatRooms', user_pk_idx.value);
       isChatExist.value = true;
     };
+    let connected = false;
+    let stompClient = '';
+    const connect = () => {
+      const serverURL = 'https://i5d204.p.ssafy.io/api/chat'; // 서버 채팅 주소
+      let socket = new SockJS(serverURL);
+      stompClient = Stomp.over(socket);
+      stompClient.connect(
+        {},
+        (frame) => {
+          connected = true;
+          console.log('CONNECT SUCCESS ++ status : established', frame);
+          // 구독 == 채팅방 입장.
+          stompClient.subscribe('/send/' + sessionId.value, (res) => {
+            console.log('receive from server:', res.body);
+            switch (JSON.parse(res.body).type) {
+              case 'MSG':
+                store.commit('USER_MSG_PUSH', JSON.parse(res.body)); // 수신받은 메세지 표시하기
+                setTimeout(() => {
+                  scrollbar.value.setScrollTop(999999999999999999999);
+                }, 150);
+                break;
+              case 'JOIN':
+                // 방을 생성할 때 백엔드단에서 처리하므로 신경 x
+                break;
+              case 'END':
+                store.commit('CLOSE_MSG');
+                // 만약 둘 중 하나가 나가면 더 이상 채팅을 못치는 프론트구현
+                break;
+              case 'VID':
+                // vid 시작시 -> 화상채팅 시작하기 버튼만 딸랑 띄우기
+                break;
+              default:
+                // 알수없는 오류... 이거나 메시지가 하나도 없는 경우...
+                break;
+            }
+          });
+        },
+        (error) => {
+          // 소켓 연결 실패
+          console.log('status : failed, STOMP CLIENT 연결 실패', error);
+          connected = false;
+        }
+      );
+    };
     return {
       store,
       sessionId,
       user_pk_idx,
       isChatExist,
       isHidden,
+      connected,
+      stompClient,
       changeisChatExist,
       changeCondition,
       createChatRoom,
+      connect,
     };
   },
 };

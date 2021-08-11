@@ -65,6 +65,7 @@ export default createStore({
       // console.log("close")
     },
     CLOSE_MSG(state) {
+      state.selected_room = ""
       state.closeMsg = "상담이 종료되었습니다."
     }
   },
@@ -160,6 +161,9 @@ export default createStore({
     },
     statusGetter: (state) => {
       return state.rooms[`${state.selected_room}`].session.status;
+    },
+    closeMsgGetter: (state) => {
+      return state.closeMsg;
     }
   },
 });

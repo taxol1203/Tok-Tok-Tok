@@ -22,6 +22,7 @@
         </el-row>
       </div>
       <user-chat-detail v-if="sessionId" />
+      <p>{{ closeMsg }}</p>
     </el-scrollbar>
     <!-- 입력창시작 -->
     <el-row id="bottomInput" v-if="sessionId">
@@ -55,7 +56,7 @@
 import Stomp from 'webstomp-client';
 import SockJS from 'sockjs-client';
 import { useStore } from 'vuex';
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 import UserChatDetail from './UserChatDetail.vue';
 
 export default {
@@ -64,6 +65,8 @@ export default {
   setup() {
     const store = useStore();
     const userMsg = ref('');
+    const closeMsg = computed(() => store.getters['closeMsgGetter']);
+    const scrollbar = ref('');
     store.commit('userQna/CHANGE_SELECT', 1);
     store.commit('userQna/SET_CURRENT');
     const log = computed(() => store.getters['userQna/logGetter']);
@@ -73,20 +76,25 @@ export default {
       else history += '|' + value;
       store.commit('userQna/CHANGE_SELECT', next_idx);
       store.commit('userQna/ADD_LOG');
+      scrollbar.value.setScrollTop(999999999999999999999);
     };
+
+    onMounted(() => {
+      scrollbar.value.setScrollTop(999999999999999999999);
+    });
     const user_pk_idx = computed(() => store.state.auth.user.pk_idx);
     const realChat = computed(() => store.state.userQna.realChat);
-    const sessionId = computed(() => store.state.selected_room);
+    const sessionId = computed(() => store.getters['get_selected_idx']);
+    const isHidden = computed(() => store.getters['userQna/showUserChat']);
     const createChatRoom = () => {
       console.log(user_pk_idx.value);
-      send('JOIN');
       store.dispatch('createChatRooms', history);
       console.log(sessionId.value);
     };
     watch(sessionId, () => {
       connect();
+      send('JOIN');
     });
-
     let connected = false;
     let stompClient = '';
 
@@ -105,6 +113,9 @@ export default {
             switch (JSON.parse(res.body).type) {
               case 'MSG':
                 store.commit('USER_MSG_PUSH', JSON.parse(res.body)); // 수신받은 메세지 표시하기
+                setTimeout(() => {
+                  scrollbar.value.setScrollTop(999999999999999999999);
+                }, 150);
                 break;
               case 'JOIN':
                 // 방을 생성할 때 백엔드단에서 처리하므로 신경 x
@@ -140,6 +151,7 @@ export default {
 
     const send = (type) => {
       console.log('Send message:' + userMsg.value);
+      console.log(sessionId.value);
       if (user_pk_idx.value <= 0) {
         console.log('0이하면 안됨) fk_author_idx: ' + user_pk_idx.value);
       }
@@ -165,8 +177,12 @@ export default {
       user_pk_idx,
       realChat,
       history,
+      connect,
       connected,
       stompClient,
+      closeMsg,
+      isHidden,
+      scrollbar,
       createChatRoom,
       chooseAnswer,
       sendMessage,

@@ -20,7 +20,6 @@
       </el-col>
     </el-row>
   </div>
-  <p>{{ closeMsg }}</p>
   <!-- 실시간채팅 끝 -->
 </template>
 <script>
@@ -36,7 +35,6 @@ export default {
     const userPkidx = computed(() => store.state.auth.user.pk_idx);
     const messages = computed(() => store.getters['get_user_messages']);
     const isOpen = computed(() => store.getters['get_user_room_status']);
-    const closeMsg = computed(() => store.getters['clostMsgGetter']);
     const loading = true;
 
     return {
@@ -46,7 +44,6 @@ export default {
       messages,
       isOpen,
       loading,
-      closeMsg,
     };
   },
 };

@@ -84,7 +84,7 @@ export default {
         {},
         (frame) => {
           connected = true;
-          scrollbar.value.setScrollTop(999999999999999999999);
+          if (scrollbar.value != null) scrollbar.value.setScrollTop(999999999999999999999);
           // 구독 == 채팅방 입장.
           stompClient.subscribe('/send/' + sessionId.value, (res) => {
             // console.log('receive from server:', JSON.parse(res.body).type);

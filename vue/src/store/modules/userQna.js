@@ -5,7 +5,8 @@ export const userQna = {
     scenes: {},
     select: '',
     log: [],
-    realChat:false,
+    realChat: false,
+    hidden: false,
   },
   getters: {
     getQuestion: (state) => {
@@ -27,6 +28,9 @@ export const userQna = {
     logGetter: (state) => {
       console.log(state.log)
       return state.log;
+    },
+    showUserChat: (state) => {
+      return state.hidden
     }
   },
   mutations: {
@@ -59,10 +63,17 @@ export const userQna = {
     },
     START_REAL_CHAT: (state) => {
       state.realChat = true;
+    },
+    CHANGE_STATE: (state) => {
+      state.hidden = !state.hidden;
     }
   },
   actions: {
-    async init({ commit }) {
+    async init({ state, commit }) {
+      state.scenes = {}
+      state.select= ''
+      state.log= []
+      state.realChat= false
       try {
         const que = await axios.get(`/api/qna/question`)
         if(que.status === 200) commit('INIT_QUES', que.data);
