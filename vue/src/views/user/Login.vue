@@ -13,10 +13,22 @@
             status-icon
           >
             <el-form-item label="이메일" prop="email">
-              <el-input type="email" v-model="user.email" autocomplete="off"></el-input>
+              <el-input
+                type="email"
+                v-model="user.email"
+                autocomplete="off"
+                placeholder="이메일을 입력해 주세요"
+                @keyup.enter="nextPasswd"
+              ></el-input>
             </el-form-item>
             <el-form-item label="비밀번호" prop="passwd">
-              <el-input type="password" v-model="user.passwd" autocomplete="off"></el-input>
+              <el-input
+                type="password"
+                v-model="user.passwd"
+                autocomplete="off"
+                placeholder="비밀번호를 입력해 주세요"
+                ref="refPasswd"
+              ></el-input>
             </el-form-item>
             <el-form-item>
               <transition name="slide-fade">
@@ -50,7 +62,6 @@ export default {
   setup() {
     const store = useStore();
     const token = computed(() => store.state.auth.user);
-    // console.log(token.value);
     const formLabelAlign = ref(null);
     const onSubmit = () => {
       let payload = {
@@ -63,18 +74,21 @@ export default {
         }
       });
     };
+    const refPasswd = ref("");
+
     const checkEmail = (rule, value, callback) => {
       if (!value) {
-        return callback(new Error("Please input the email"));
+        return callback(new Error("이메일을 입력해 주세요"));
       } else {
         let pattern =
           /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
         if (value.match(pattern) == null) {
-          callback(new Error("Please input email"));
+          callback(new Error("이메일 형식을 맞춰 주세요"));
         } else {
           callback();
         }
       }
+      // 이거 필요한가?
       setTimeout(() => {
         let pattern =
           /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
@@ -85,15 +99,21 @@ export default {
         }
       }, 1000);
     };
-    const validatePasswd = (rule, value, callback) => {
-      // console.log(value);
+    var validatePass = (rule, value, callback) => {
+      let specialPattern =
+        /^(?=.*[A-Za-z])(?=.*\d)(?=.*[~!@#$%^&*()+|=])[A-Za-z\d~!@#$%^&*()+|=]{9,16}$/i;
       if (value === "") {
-        callback(new Error("Please input the password"));
+        callback(new Error("비밀번호를 입력해 주세요"));
       } else {
-        if (value.length < 9 || value.length > 16) {
-          callback(new Error("Please check the password"));
+        if (9 > value.length) {
+          callback(new Error("아직 9자리가 아니에요"));
+        } else if (16 < value.length) {
+          callback(new Error("16자리를 초과했습니다 :("));
+        } else if (value.match(specialPattern) == null) {
+          callback(new Error("영문자, 숫자, 특수문자를 최소 1개씩 포함시켜 주세요"));
+        } else {
+          callback();
         }
-        callback();
       }
     };
     const logout = () => {
@@ -106,11 +126,14 @@ export default {
       passwd: "",
     });
     const rules = {
-      passwd: [{ validator: validatePasswd, trigger: "blur" }],
       email: [{ validator: checkEmail, trigger: "blur" }],
+      passwd: [{ validator: validatePasswd, trigger: "blur" }],
     };
     const resetForm = () => {
       formLabelAlign.value.resetFields();
+    };
+    const nextPasswd = () => {
+      refPasswd.value.focus();
     };
     return {
       store,
@@ -123,6 +146,8 @@ export default {
       checkEmail,
       validatePasswd,
       logout,
+      refPasswd,
+      nextPasswd,
     };
   },
 };
