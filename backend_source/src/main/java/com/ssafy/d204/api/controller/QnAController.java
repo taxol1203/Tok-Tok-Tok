@@ -83,7 +83,7 @@ public class QnAController {
         }
     }
 
-    @ApiOperation(value = "질문 번호에 해당하는 질문의 정보를 삭제한다.  ", response = String.class)
+    @ApiOperation(value = "질문 번호에 해당하는 질문의 정보를 삭제한다. ", response = String.class)
     @DeleteMapping("/question/{pk_idx}")
     public ResponseEntity<?> deleteQuestion(@PathVariable int pk_idx) {
         logger.debug("deleteQuestion - 호출");
