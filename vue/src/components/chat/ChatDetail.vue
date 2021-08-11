@@ -65,7 +65,7 @@ export default {
     const message = ref('');
     const scrollbar = ref('');
     onMounted(() => {
-      scrollbar.value.setScrollTop(750);
+      scrollbar.value.setScrollTop(999999999999999999999);
     });
     let connected = false;
     let stompClient = '';
@@ -84,19 +84,24 @@ export default {
         {},
         (frame) => {
           connected = true;
+          scrollbar.value.setScrollTop(999999999999999999999);
           // 구독 == 채팅방 입장.
           stompClient.subscribe('/send/' + sessionId.value, (res) => {
             // console.log('receive from server:', JSON.parse(res.body).type);
             switch (JSON.parse(res.body).type) {
               case 'MSG':
-                // console.log(chatStatus.value);
+                console.log(chatStatus.value);
                 if (chatStatus.value == 'OPEN') store.dispatch('enterRoom', JSON.parse(res.body));
                 else {
+                  console.log(chatStatus.value);
                   store.commit('MESSAGE_PUSH', JSON.parse(res.body)); // 수신받은 메세지 표시하기
                 }
-
+                setTimeout(() => {
+                  scrollbar.value.setScrollTop(999999999999999999999);
+                }, 150);
                 break;
               case 'JOIN':
+                store.dispatch('getChatRooms');
                 // 방을 생성할 때 백엔드단에서 처리하므로 신경 x
                 break;
               case 'QUIT':
@@ -122,7 +127,7 @@ export default {
 
     const sendMessage = () => {
       if (userPkidx.value && message.value) {
-        send({ message }); // 전송 실패 감지는 어떻게? 프론트단에서 고민좀 부탁 dream
+        send('MSG'); // 전송 실패 감지는 어떻게? 프론트단에서 고민좀 부탁 dream
         // 관리자가 첫 메세지 보냈을때 방상태를 LIVE로 바꾸기
         // 보냈을 때 바로 바꾸니까 관리자 측에서 메시지를 받을 때 잃어버리는 경우가 있어서 받을때 바꾸는 것으로 해결했습니다 -소빈
         // 'MESSAGE_PUSH' 커밋 시 변경
@@ -135,7 +140,7 @@ export default {
       // 방상태가 OPEN일때 여기서 put을 보내면되나
     };
 
-    const send = () => {
+    const send = (type) => {
       // console.log('Send message:' + message.value);
       if (stompClient && stompClient.connected) {
         // console.log('IN SOCKET');
@@ -146,7 +151,7 @@ export default {
           deleted: false, // 삭제된 메세지 여부. default = false
           fk_session_id: sessionId.value, // 현재 채팅세션의 id.
           // 주의할 점은, 방 세션 id가 아닌, 방 정보의 pk_idx를 첨부한다. created 라이프사이클 메서드 참조.
-          type: 'MSG', // 메세지 타입.
+          type: type, // 메세지 타입.
         };
         stompClient.send('/receive/' + sessionId.value, JSON.stringify(msg), {});
       }
@@ -155,6 +160,7 @@ export default {
     const closeRoom = () => {
       // 방 닫는 로직 작성 "admin_pk_idx": 0 넣어서 요청 해줘야함
       // 방 상태가 LIVE 일때, admin_pk_idx가 나와 같을때
+      send('END');
       store.dispatch('chatClose');
     };
 

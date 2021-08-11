@@ -19,6 +19,7 @@ export default createStore({
     session_key: {},
     //qnahistory를 아마 넣을 예정
     list_status: "LIVE",
+    closeMsg: ""
   },
   mutations: {
     GET_ROOMS(state, payload) {
@@ -62,6 +63,9 @@ export default createStore({
       state.rooms[`${state.selected_room}`].session.status = "END"
       state.selected_room = '';
       // console.log("close")
+    },
+    CLOSE_MSG(state) {
+      state.closeMsg = "상담이 종료되었습니다."
     }
   },
   actions: {
