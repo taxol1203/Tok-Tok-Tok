@@ -75,7 +75,7 @@ services:
     jenkins:
 #      build: ./jenkins
       container_name: jenkins
-#      image: jenkins/jenkins:lts-jdk11
+      image: jenkins/jenkins:lts-jdk11
       restart: unless-stopped
       user: root
       privileged: true
