@@ -51,7 +51,7 @@
 import Stomp from 'webstomp-client';
 import SockJS from 'sockjs-client';
 import { useStore } from 'vuex';
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 
 export default {
   name: 'Chat',
@@ -63,6 +63,10 @@ export default {
     const userPkidx = computed(() => store.state.auth.user.pk_idx);
     const chatStatus = computed(() => store.getters['statusGetter']);
     const message = ref('');
+    const scrollbar = ref('');
+    onMounted(() => {
+      scrollbar.value.setScrollTop(750);
+    });
     let connected = false;
     let stompClient = '';
 
@@ -85,9 +89,11 @@ export default {
             // console.log('receive from server:', JSON.parse(res.body).type);
             switch (JSON.parse(res.body).type) {
               case 'MSG':
-                console.log(messages);
-                if (messages.value.length < 1) store.dispatch('enterRoom', JSON.parse(res.body));
-                else store.commit('MESSAGE_PUSH', JSON.parse(res.body)); // 수신받은 메세지 표시하기
+                // console.log(chatStatus.value);
+                if (chatStatus.value == 'OPEN') store.dispatch('enterRoom', JSON.parse(res.body));
+                else {
+                  store.commit('MESSAGE_PUSH', JSON.parse(res.body)); // 수신받은 메세지 표시하기
+                }
 
                 break;
               case 'JOIN':
@@ -150,9 +156,6 @@ export default {
       // 방 닫는 로직 작성 "admin_pk_idx": 0 넣어서 요청 해줘야함
       // 방 상태가 LIVE 일때, admin_pk_idx가 나와 같을때
       store.dispatch('chatClose');
-      if (store.state.rooms[`${sessionId.value}`].session.status == 'LIVE') {
-        //여기서 디스패치
-      }
     };
 
     return {
@@ -161,6 +164,7 @@ export default {
       sessionId,
       messages,
       message,
+      scrollbar,
       sendMessage,
       send,
       connect,
