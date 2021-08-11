@@ -17,8 +17,8 @@ pipeline {
 		stage('Docker build') {
 			agent any
 			steps {
-				sh 'docker build -t frontend:latest ./vue'
-				sh 'docker build -t spring:latest ./spring'
+				sh 'docker build -t frontend:latest frontend'
+				sh 'docker build -t spring:latest spring'
 			}
 		}
 		stage('Docker run') {
@@ -34,8 +34,8 @@ pipeline {
 					| xargs -r docker container rm'
 				sh 'docker images -f "dangling=true" -q \
 					| xargs -r docker rmi'
-				sh 'docker run -d --name frontend -p 80:80 -v /home/cert/:/usr/share/nginx/ frontend:latest'
-				sh 'docker run -d --name frontend -p 8080:8080 spring:latest'
+				sh 'docker run -d --name frontend -p 80:80 frontend:latest'
+				sh 'docker run -d --name spring -p 8080:8080 spring:latest'
 			}
 		}
 	}
