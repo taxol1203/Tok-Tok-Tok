@@ -4,7 +4,7 @@ services:
     postgres:
       build: ./postgres
       container_name: postgres
-      image: "postgres:13.3"
+#      image: "postgres:13.3"
       ports:
         - 5432:5432
       networks:
