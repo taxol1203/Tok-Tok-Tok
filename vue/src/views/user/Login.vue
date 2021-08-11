@@ -42,6 +42,7 @@
                 >
               </transition>
               <el-button @click="resetForm('formLabelAlign')">다시쓰기</el-button>
+              <el-button class="green-color-btn">회원가입으로가는버튼이필요할까</el-button>
             </el-form-item>
           </el-form>
           <div v-else>
