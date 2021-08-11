@@ -72,21 +72,27 @@ services:
 #        - "6379:6379"
 #      environment:
 #        TZ: Asia/Seoul
-#    jenkins:
-#      build: ./jenkins
-#      container_name: jenkins
-##      image: jenkins/jenkins:lts-jdk11
-#      ports:
-#        - 9090:8080
-#      user: root
-#      volumes:
+    jenkins:
+      build: ./jenkins
+      container_name: jenkins
+#      image: jenkins/jenkins:lts-jdk11
+      restart: unless-stopped
+      user: root
+      privileged: true
+      ports:
+        - 9090:8080
+      volumes:
+        - '/home/ubuntu/docker/jenkins-data:/var/jenkins_home'
+        - '/var/run/docker.sock:/var/run/docker.sock'
+        - '/usr/bin/docker:/usr/bin/docker'
 #        - ./jenkins:/var/jenkinse_home
-#      environment:
-#        TZ: Asia/Seoul
+      environment:
+        - TZ=Asia/Seoul
 
 volumes:
   postgres: {}
   frontend: {}
+  jenkins: {}
 #  redis: {}
 
 

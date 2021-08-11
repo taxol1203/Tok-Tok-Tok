@@ -10,5 +10,5 @@ RUN apt-get install -y openssh-client
 #RUN echo export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 >> ~/.bashrc
 #RUN echo export PATH="$PATH:$JAVA_HOME/bin" >> ~/.bashrc
 #RUN source ~/.bashrc
-USER 1001
+#USER 1001
 #RUN javac -version
