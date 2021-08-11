@@ -2,7 +2,6 @@
   <el-row justify="center">
     <el-col :span="12">
       <div>
-        <!-- status-icon -->
         <el-card shadow="always">
           <el-form
             :model="user"
@@ -41,7 +40,7 @@
                 type="password"
                 v-model="user.passwd"
                 autocomplete="off"
-                placeholder="비밀번호(9~16자, 영문, 숫자, 특수문자(~,!,@,#,$,%,^,&,*,(,),+,|,=)를 최소 1개씩 포함시켜 주세요)"
+                placeholder="9~16자, 영문, 숫자, 특수문자(~,!,@,#,$,%,^,&,*,(,),+,|,=)를 최소 1개씩 포함시켜 주세요)"
                 @keyup.enter="nextCheck"
                 ref="refPasswd"
               ></el-input>
@@ -53,6 +52,7 @@
                 autocomplete="off"
                 placeholder="비밀번호 확인"
                 ref="refCheck"
+                @keyup.enter="onSubmit()"
               ></el-input>
             </el-form-item>
             <el-button class="green-color-btn" @click="onSubmit()" :disabled="!isValid"
@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import { reactive, ref, watch, computed } from "vue";
+import { reactive, ref, computed } from "vue";
 import { useStore } from "vuex";
 import Footer from "@/components/footer.vue";
 
