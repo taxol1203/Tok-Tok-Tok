@@ -1,19 +1,19 @@
 <template lang="">
   <div>
     <el-container>
-      <el-aside><ChatList :test="test" /></el-aside>
+      <el-aside v-if="!videoMode"><ChatList /></el-aside>
+      <el-container v-if="videoMode">
+        <el-main>
+          <VideoChatDetail />
+        </el-main>
+      </el-container>
       <el-container>
-        <!-- <el-header v-if="store.state.selected_room"><UserTitle /></el-header> -->
-        <!-- <el-main> -->
-        <!-- <el-container> -->
         <transition name="chat-change" mode="out-in">
           <div v-if="store.state.selected_room"><ChatDetail /></div>
         </transition>
         <transition name="chat-change" mode="out-in">
           <el-aside v-if="store.state.selected_room"><UserInfo /></el-aside>
         </transition>
-        <!-- </el-container> -->
-        <!-- </el-main> -->
       </el-container>
     </el-container>
   </div>
@@ -23,27 +23,30 @@ import axios from "@/axios";
 import ChatList from "../../components/chat/ChatList.vue";
 import ChatDetail from "../../components/chat/ChatDetail.vue";
 import UserInfo from "../../components/chat/UserInfo.vue";
+import VideoChatDetail from "@/components/VideoChat/VideoChatDetail.vue";
 import { useStore } from "vuex";
+import { computed } from '@vue/runtime-core';
 
 export default {
   components: {
     ChatList,
-    // UserTitle,
     ChatDetail,
     UserInfo,
+    VideoChatDetail,
   },
   setup() {
     const store = useStore();
+    const videoMode = computed(() => store.state.video_open);
 
-    axios.get("api/api/chat/admin/init").then((response) => {
-      store.state.session_key = response.data;
+    // axios.get("api/api/chat/admin/init").then((response) => {
+    //   store.state.session_key = response.data;
 
-      console.log("CHAT AREA" + store.state.session_key);
-      // console.log(store.state.session_key["d6142966-8ac7-42be-a774-4be4f62a3940"].messages[1]);
-    });
+    //   console.log("CHAT AREA" + store.state.session_key);
+    // });
 
     return {
       store,
+      videoMode,
     };
   },
 };

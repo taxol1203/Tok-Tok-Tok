@@ -58,16 +58,16 @@ export default {
       store.commit("STATUS_CHANGE", key);
     };
     store.dispatch('getChatRooms');
-    const newChat = () => {
-      store.dispatch('createChatRooms');
-    };
+    // const newChat = () => {
+    //   store.dispatch('createChatRooms');
+    // };
     // 클릭한 채팅방의 세션id를 state에 저장
     const pickRoom = (key) => {
       store.commit('PICK_ROOM', key);
       selectedSession.value = key;
     };
     return {
-      newChat,
+      // newChat,
       store,
       pickRoom,
       listStatus,

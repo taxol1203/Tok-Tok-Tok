@@ -21,7 +21,11 @@
       <el-row id="bottomInput">
         <!-- 입력창 -->
         <el-col :span="2">
-          <el-button icon="el-icon-video-camera" class="icon-m-p green-color-btn"></el-button>
+          <el-button
+            icon="el-icon-video-camera"
+            class="icon-m-p green-color-btn"
+            @click="openVideo"
+          ></el-button>
         </el-col>
         <el-col :span="20">
           <div>
@@ -65,6 +69,12 @@ export default {
     let connected = false;
     let stompClient = "";
 
+    const openVideo = () => {
+      store.commit("OPEN_VIDEO");
+      // 사용자에게 초대 메세지 보내기 메세지타입 VID
+      send("VID");
+    };
+
     const connect = () => {
       const serverURL = "https://i5d204.p.ssafy.io/api/chat"; // 서버 채팅 주소
       let socket = new SockJS(serverURL);
@@ -74,13 +84,11 @@ export default {
         {},
         (frame) => {
           connected = true;
-          // console.log('CONNECT SUCCESS:', frame);
-          // 구독 == 채팅방 입장.
           stompClient.subscribe("/send/" + sessionId.value, (res) => {
-            // console.log('receive from server:', res.body);
-            store.commit("MESSAGE_PUSH", JSON.parse(res.body)); // 수신받은 메세지 표시하기
-            switch (res.body.type) {
+            switch (JSON.parse(res.body).type) {
               case "MSG":
+                console.log(JSON.parse(res.body));
+                store.commit("MESSAGE_PUSH", JSON.parse(res.body)); // 수신받은 메세지 표시하기
                 break;
               case "JOIN":
                 // 방을 생성할 때 백엔드단에서 처리하므로 신경 x
@@ -90,6 +98,8 @@ export default {
                 break;
               case "VID":
                 // vid 시작시 -> 화상채팅 시작하기 버튼만 딸랑 띄우기
+                // 여기서 화상채팅 수락 모달창 뜨게 하면 될듯 유저챗디테일에서
+                console.log("Video Open!!");
                 break;
               default:
                 // 알수없는 오류...
@@ -108,7 +118,7 @@ export default {
 
     const sendMessage = () => {
       if (userPkidx.value && message.value) {
-        send({ message }); // 전송 실패 감지는 어떻게? 프론트단에서 고민좀 부탁 dream
+        send("MSG"); // 전송 실패 감지는 어떻게? 프론트단에서 고민좀 부탁 dream
         // 관리자가 첫 메세지 보냈을때 방상태를 LIVE로 바꾸기
         if (store.state.rooms[`${sessionId.value}`].session.status == "OPEN") {
           store.dispatch("enterRoom", sessionId);
@@ -119,19 +129,29 @@ export default {
       // 방상태가 OPEN일때 여기서 put을 보내면되나
     };
 
-    const send = () => {
-      // console.log('Send message:' + message.value);
+    const send = (type) => {
       if (stompClient && stompClient.connected) {
-        // console.log('IN SOCKET');
-        const msg = {
-          message: message.value, // 메세지 내용. type이 MSG인 경우를 제외하곤 비워두고 프론트단에서만 처리.
-          fk_author_idx: userPkidx.value, // 작성자의 회원 idx
-          created: "", // 작성시간, 공란으로 비워서 메세지 보내기. response에는 담겨옵니다.
-          deleted: false, // 삭제된 메세지 여부. default = false
-          fk_session_id: sessionId.value, // 현재 채팅세션의 id.
-          // 주의할 점은, 방 세션 id가 아닌, 방 정보의 pk_idx를 첨부한다. created 라이프사이클 메서드 참조.
-          type: "MSG", // 메세지 타입.
-        };
+        let msg;
+        if (type === "VID") {
+          msg = {
+            message: "화상상담을 신청합니다.",
+            fk_author_idx: userPkidx.value,
+            created: "",
+            deleted: false,
+            fk_session_id: sessionId.value,
+            type: type,
+          };
+        } else {
+          msg = {
+            message: message.value, // 메세지 내용. type이 MSG인 경우를 제외하곤 비워두고 프론트단에서만 처리.
+            fk_author_idx: userPkidx.value, // 작성자의 회원 idx
+            created: "", // 작성시간, 공란으로 비워서 메세지 보내기. response에는 담겨옵니다.
+            deleted: false, // 삭제된 메세지 여부. default = false
+            fk_session_id: sessionId.value, // 현재 채팅세션의 id.
+            // 주의할 점은, 방 세션 id가 아닌, 방 정보의 pk_idx를 첨부한다. created 라이프사이클 메서드 참조.
+            type: type, // 메세지 타입.
+          };
+        }
         stompClient.send("/receive/" + sessionId.value, JSON.stringify(msg), {});
       }
     };
@@ -156,6 +176,7 @@ export default {
       stompClient,
       userPkidx,
       closeRoom,
+      openVideo,
     };
   },
 };
