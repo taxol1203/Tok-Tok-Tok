@@ -53,6 +53,7 @@ export default {
   setup() {
     const store = useStore();
     const user = computed(() => store.getters['get_client_info']);
+    console.log(user.value);
     return {
       store,
       user,

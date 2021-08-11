@@ -42,7 +42,7 @@
 <script>
 import ChatItem from './ChatItem.vue';
 import { useStore } from 'vuex';
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 
 export default {
   components: {
@@ -57,7 +57,9 @@ export default {
     const listMenuSelect = (key) => {
       store.commit('STATUS_CHANGE', key);
     };
-    store.dispatch('getChatRooms');
+    onMounted(() => {
+      store.dispatch('getChatRooms');
+    });
     const newChat = () => {
       store.dispatch('createChatRooms');
     };

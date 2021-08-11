@@ -40,7 +40,11 @@ export default createStore({
       }
     },
     MESSAGE_PUSH(state, payload) {
+      console.log(state.rooms[`${state.selected_room}`].session.status)
       console.log(payload)
+      if (!(Object.keys(state.rooms[`${state.selected_room}`]).includes('messages'))) {
+        state.rooms[`${state.selected_room}`].messages = [payload];
+      }
       state.rooms[`${state.selected_room}`].messages.push(payload);
       // 관리자가 첫 메세지 보냈을때 방상태를 LIVE로 바꾸기
       if (state.rooms[`${state.selected_room}`].session.status == "OPEN") {
@@ -53,10 +57,6 @@ export default createStore({
     },
     STATUS_CHANGE(state, payload) {
       state.list_status = payload;
-    },
-    ENTER_ROOM(state) {
-      state.list_status = "LIVE";
-      state.rooms[`${state.selected_room}`].session.status = "LIVE";
     },
   },
   actions: {
@@ -91,12 +91,13 @@ export default createStore({
     pickRoom({ commit }, key) {
       commit("PICK_ROOM", key);
     },
-    async enterRoom({ commit, state }, sessionId) {
+    async enterRoom({ commit, state }, payload) {
       try {
-        const res = await axios.put(`/api/api/chat/room/${sessionId.value}`, {
+        const res = await axios.put(`/api/api/chat/room/${state.selected_room}`, {
           admin_pk_idx: state.auth.user.pk_idx,
         });
-        commit("ENTER_ROOM", res.data);
+        console.log(payload)
+        if(res.status == 200) commit("MESSAGE_PUSH", payload);
       } catch (err) {
         console.log(err);
       }

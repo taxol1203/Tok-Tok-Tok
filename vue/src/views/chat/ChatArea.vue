@@ -1,16 +1,16 @@
 <template lang="">
   <div>
     <el-container>
-      <el-aside><ChatList :test="test" /></el-aside>
+      <el-aside><ChatList /></el-aside>
       <el-container>
         <!-- <el-header v-if="store.state.selected_room"><UserTitle /></el-header> -->
         <!-- <el-main> -->
         <!-- <el-container> -->
         <transition name="chat-change" mode="out-in">
-          <div v-if="store.state.selected_room"><ChatDetail /></div>
+          <div v-if="sessionId"><ChatDetail /></div>
         </transition>
         <transition name="chat-change" mode="out-in">
-          <el-aside v-if="store.state.selected_room"><UserInfo /></el-aside>
+          <el-aside v-if="sessionId"><UserInfo /></el-aside>
         </transition>
         <!-- </el-container> -->
         <!-- </el-main> -->
@@ -19,29 +19,24 @@
   </div>
 </template>
 <script>
-import axios from '@/axios';
 import ChatList from '../../components/chat/ChatList.vue';
 import ChatDetail from '../../components/chat/ChatDetail.vue';
 import UserInfo from '../../components/chat/UserInfo.vue';
 import { useStore } from 'vuex';
+import { computed } from 'vue';
 
 export default {
   components: {
     ChatList,
-    // UserTitle,
     ChatDetail,
     UserInfo,
   },
   setup() {
     const store = useStore();
-
-    axios.get('api/api/chat/admin/init').then((response) => {
-      store.state.session_key = response.data;
-      // console.log(store.state.session_key["d6142966-8ac7-42be-a774-4be4f62a3940"].messages[1]);
-    });
+    const sessionId = computed(() => store.getters['get_selected_idx']);
 
     return {
-      store,
+      sessionId,
     };
   },
 };
