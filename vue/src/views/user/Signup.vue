@@ -17,6 +17,7 @@
                 v-model="user.username"
                 autocomplete="off"
                 placeholder="닉네임을 입력해주세요"
+                @keyup.enter="nextEmail"
               ></el-input>
             </el-form-item>
             <el-form-item label="이메일" prop="email">
@@ -25,6 +26,8 @@
                 v-model="user.email"
                 autocomplete="off"
                 placeholder="이메일을 입력해주세요"
+                @keyup.enter="nextPasswd"
+                ref="refEmail"
               >
                 <template #append>
                   <el-button class="green-color-btn" id="green-btn" @click="duplicate"
@@ -39,6 +42,8 @@
                 v-model="user.passwd"
                 autocomplete="off"
                 placeholder="비밀번호(9~16자 조건 명확히되면 여기 추가?)"
+                @keyup.enter="nextCheck"
+                ref="refPasswd"
               ></el-input>
             </el-form-item>
             <el-form-item label="비밀번호 확인" prop="check">
@@ -47,6 +52,7 @@
                 v-model="user.check"
                 autocomplete="off"
                 placeholder="비밀번호 확인"
+                ref="refCheck"
               ></el-input>
             </el-form-item>
             <el-button class="green-color-btn" @click="onSubmit()" :disabled="!isValid"
@@ -80,6 +86,9 @@ export default {
         }
       });
     };
+    const refEmail = ref("");
+    const refPasswd = ref("");
+    const refCheck = ref("");
     // const isValid = ref(false);
     //일단은 입력만 다하면 켜지도록
     const isValid = computed(() => user.username && user.email && user.passwd && user.check);
@@ -157,6 +166,16 @@ export default {
       email: [{ validator: checkEmail, trigger: "blur" }],
     };
 
+    const nextEmail = () => {
+      refEmail.value.focus();
+    };
+    const nextPasswd = () => {
+      refPasswd.value.focus();
+    };
+    const nextCheck = () => {
+      refCheck.value.focus();
+    };
+
     return {
       store,
       ruleForm,
@@ -166,6 +185,12 @@ export default {
       user,
       rules,
       isValid,
+      refEmail,
+      refPasswd,
+      refCheck,
+      nextEmail,
+      nextPasswd,
+      nextCheck,
     };
   },
 };
