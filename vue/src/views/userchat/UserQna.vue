@@ -10,7 +10,9 @@
         </el-row>
         <el-row v-for="ans in item.answers" :key="ans.pk_idx">
           <el-col>
-            <div class="message-me" @click="chooseAnswer(ans.fk_next_idx)">{{ ans.content }}</div>
+            <div class="message-me" @click="chooseAnswer(ans.fk_next_idx, ans.content)">
+              {{ ans.content }}
+            </div>
           </el-col>
         </el-row>
         <el-row>
@@ -19,10 +21,10 @@
           </el-col>
         </el-row>
       </div>
-      <user-chat-detail />
+      <user-chat-detail v-if="sessionId" />
     </el-scrollbar>
     <!-- 입력창시작 -->
-    <el-row id="bottomInput" v-if="realChat">
+    <el-row id="bottomInput" v-if="sessionId">
       <el-col :span="5">
         <el-button icon="el-icon-video-camera" class="green-color-btn"></el-button>
       </el-col>
@@ -59,26 +61,33 @@ export default {
   components: { UserChatDetail },
   setup() {
     const store = useStore();
+    const message = '';
     store.commit('userQna/CHANGE_SELECT', 1);
     store.commit('userQna/SET_CURRENT');
     const log = computed(() => store.getters['userQna/logGetter']);
-    const chooseAnswer = (next_idx) => {
+    let history = '';
+    const chooseAnswer = (next_idx, value) => {
+      history += '|' + value;
       store.commit('userQna/CHANGE_SELECT', next_idx);
       store.commit('userQna/ADD_LOG');
     };
     const user_pk_idx = computed(() => store.state.auth.user.pk_idx);
     const realChat = computed(() => store.state.userQna.realChat);
-
+    const sessionId = computed(() => store.state.selected_room);
     const createChatRoom = () => {
       console.log(user_pk_idx.value);
-      store.dispatch('createChatRooms', user_pk_idx.value);
+      store.dispatch('createChatRooms', history);
+      console.log(sessionId.value);
     };
 
     const sendMessage = () => {};
     return {
+      sessionId,
+      message,
       log,
       user_pk_idx,
       realChat,
+      history,
       createChatRoom,
       chooseAnswer,
       sendMessage,

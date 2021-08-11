@@ -24,8 +24,9 @@ public class MessageSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         // TODO : CORS 설정 * 안먹히는 문제
-        registry.addEndpoint("/chat").setAllowedOrigins("https://localhost:8080", "https://i5d204.p.ssafy.io")
-                .withSockJS();
+        registry.addEndpoint("/chat")
+            .setAllowedOrigins("https://localhost:8080", "https://i5d204.p.ssafy.io",
+                "http://localhost:8080").withSockJS();
 //        registry.addEndpoint("/msgServer").setAllowedOrigins("*");
     }
 
@@ -33,5 +34,4 @@ public class MessageSocketConfig implements WebSocketMessageBrokerConfigurer {
     public ServerEndpointExporter serverEndpointExporter() {
         return new ServerEndpointExporter();
     }
-
 }

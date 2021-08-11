@@ -2,7 +2,7 @@
   <!-- 여기는 채팅방 리스트 카드 한칸한칸
   들어갈 내용은 왼쪽 프로필이미지, 상대방 이름(아이디), 마지막 대화내용, 안읽은 메시지수? -->
   <i class="el-icon-user-solid"></i>
-  <span>{{ user.username }}님 방({{ id }})</span>
+  <span>{{ client.username }}님 방({{ id }})</span>
   <br />
   <br />
   <br />
@@ -10,8 +10,7 @@
 </template>
 <script>
 // import { computed } from '@vue/runtime-core'
-import { useStore } from "vuex";
-import { computed } from "vue";
+import { useStore } from 'vuex';
 
 export default {
   props: {
@@ -22,12 +21,12 @@ export default {
   },
   setup(props) {
     const store = useStore();
-    const user = computed(() => store.state.auth.user);
+
     return {
-      id: props.room.session.session_id.split("-")[0],
+      id: props.room.session.session_id.split('-')[0],
       time: props.room.session.created_at.slice(0, 19),
+      client: props.room.client,
       store,
-      user,
     };
   },
   //   setup(props) {

@@ -52,17 +52,17 @@
 </template>
 <script>
 // import axios from "axios";
-import Stomp from "webstomp-client";
-import SockJS from "sockjs-client";
-import { useStore } from "vuex";
-import { ref, computed } from "vue";
+import Stomp from 'webstomp-client';
+import SockJS from 'sockjs-client';
+import { useStore } from 'vuex';
+import { ref, computed, watch } from 'vue';
 
 export default {
   name: "Chat",
   components: {},
   setup() {
     const store = useStore();
-    const sessionId = computed(() => store.state.selected_room);
+    const sessionId = computed(() => store.getters['get_selected_idx']);
     const messages = computed(() => store.getters.get_messages);
     const userPkidx = computed(() => store.state.auth.user.pk_idx);
     const message = ref("");
@@ -75,6 +75,10 @@ export default {
       send("VID");
     };
 
+    watch(sessionId, () => {
+      connect();
+    });
+
     const connect = () => {
       const serverURL = "https://i5d204.p.ssafy.io/api/chat"; // 서버 채팅 주소
       let socket = new SockJS(serverURL);
@@ -84,11 +88,12 @@ export default {
         {},
         (frame) => {
           connected = true;
-          stompClient.subscribe("/send/" + sessionId.value, (res) => {
+          // 구독 == 채팅방 입장.
+          stompClient.subscribe('/send/' + sessionId.value, (res) => {
+            // console.log('receive from server:', JSON.parse(res.body).type);
             switch (JSON.parse(res.body).type) {
-              case "MSG":
-                console.log(JSON.parse(res.body));
-                store.commit("MESSAGE_PUSH", JSON.parse(res.body)); // 수신받은 메세지 표시하기
+              case 'MSG':
+                store.commit('MESSAGE_PUSH', JSON.parse(res.body)); // 수신받은 메세지 표시하기
                 break;
               case "JOIN":
                 // 방을 생성할 때 백엔드단에서 처리하므로 신경 x
@@ -109,12 +114,12 @@ export default {
         },
         (error) => {
           // 소켓 연결 실패
-          console.log("status : failed, STOMP CLIENT 연결 실패", error);
+          // console.log('status : failed, STOMP CLIENT 연결 실패', error);
           connected = false;
         }
       );
     };
-    connect(sessionId.value);
+    connect();
 
     const sendMessage = () => {
       if (userPkidx.value && message.value) {

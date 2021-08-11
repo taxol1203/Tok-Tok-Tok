@@ -52,10 +52,10 @@ export default {
     const store = useStore();
     const listStatus = computed(() => store.getters.get_room_list);
     const status = computed(() => store.state.list_status);
-    const selectedSession = ref("");
+    const selectedSession = ref('');
 
     const listMenuSelect = (key) => {
-      store.commit("STATUS_CHANGE", key);
+      store.commit('STATUS_CHANGE', key);
     };
     store.dispatch('getChatRooms');
     // const newChat = () => {

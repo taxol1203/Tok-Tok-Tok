@@ -30,6 +30,7 @@ export default createStore({
       state.session_key = payload;
     },
     PICK_ROOM(state, payload) {
+      console.log(state.rooms[payload])
       state.selected_room = payload;
     },
     USER_MSG_PUSH(state, payload) {
@@ -40,7 +41,13 @@ export default createStore({
       }
     },
     MESSAGE_PUSH(state, payload) {
+      console.log(payload)
       state.rooms[`${state.selected_room}`].messages.push(payload);
+      // 관리자가 첫 메세지 보냈을때 방상태를 LIVE로 바꾸기
+      if (state.rooms[`${state.selected_room}`].session.status == "OPEN") {
+        state.rooms[`${state.selected_room}`].session.status = "LIVE";
+        state.list_status = "LIVE";
+      }
     },
     SAVE_USER_CHAT_ROOM_ID(state, payload) {
       state.selected_room = payload;
@@ -63,18 +70,23 @@ export default createStore({
     async getChatRooms({ commit, state }) {
       try {
         const res = await axios.get(`api/api/chat/admin/init/${state.auth.user.pk_idx}`);
+        for (var p in res.data) {
+          const client = await axios.get(`api/auth/user/${res.data[p].session.fk_client_idx}`)
+          res.data[p].client = client.data;
+        }
         commit("GET_ROOMS", res.data);
       } catch (error) {
         console.log(error);
       }
     },
-    async createChatRooms({ commit, state }) {
+    async createChatRooms({ commit, state }, payload) {
       try {
         const res = await axios.post("api/api/chat/room", {
           unread: 0,
           fk_created_by_idx: state.auth.user.pk_idx, // 상담 신청하는 고객의 userid
           fk_client_idx: state.auth.user.pk_idx, // 위 필드와 동일값 넣어주면 됨.
           status: "OPEN", //아마 default 값
+          qna_history: payload
         });
         commit("ADD_ROOMS", res.data); //rooms에 저장
         commit("SAVE_USER_CHAT_ROOM_ID", res.data.session_id); //selected_id
@@ -121,5 +133,23 @@ export default createStore({
     get_user_room_status: (state) => {
       return state.session_key.status;
     },
+    get_client_info: (state) => {
+
+      var tmp = state.rooms[`${state.selected_room}`].session.qna_history
+      if (tmp != null) {
+        tmp = tmp.split('|')
+        tmp = tmp.splice(0, 1);
+      } else {
+        tmp = [];
+      }
+      var payload = {
+        client: state.rooms[`${state.selected_room}`].client,
+        qna: tmp
+      }
+      return payload;
+    },
+    get_selected_idx: (state) => {
+      return state.selected_room
+    }
   },
 });

@@ -1,16 +1,24 @@
 package com.ssafy.d204.api.service;
 
-import java.util.List;
-
 import com.ssafy.d204.db.entity.Answer;
+import java.util.List;
+import org.springframework.http.ResponseEntity;
 
 public interface AnswerService {
-	public List<Answer> retrieveAnswer();
-	public Answer detailAnswer(int pk_idx);
-	public boolean writeAnswer(Answer content);
-	public boolean updateAnswer(Answer content);
-	public boolean deleteAnswer(int pk_idx);
-	public boolean updateNextQuestion(Answer fk_next_idx);
-	public int getNextQuestion(int pk_idx);
-	public List<Answer> getNextAnswers(int pk_idx);
+
+    ResponseEntity<?> retrieveAnswer();
+
+    ResponseEntity<?> detailAnswer(int pk_idx);
+
+    ResponseEntity<?> writeAnswer(Answer content);
+
+    ResponseEntity<?> updateAnswer(Answer content);
+
+    ResponseEntity<?> deleteAnswer(int pk_idx);
+
+    ResponseEntity<?> updateNextQuestion(Answer fk_next_idx);
+
+    ResponseEntity<?> getNextQuestion(int pk_idx);
+
+    ResponseEntity<?> getNextAnswers(int pk_idx);
 }

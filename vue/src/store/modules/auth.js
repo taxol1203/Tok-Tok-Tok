@@ -11,29 +11,34 @@ export const auth = {
   mutations: {
     login(state, payload){
       state.user = payload
+    },
+    logout(state) {
+      state.user = {}
+      state.token = ''
     }
   },
   actions: {
-    login: ({state, commit}, payload) => {
-      axios.post('api/auth/login', payload)
-        .then((res) => {
-              state.token = res.data.token
-          commit('login', res.data.user);
-              ElMessage({
-                showClose: true,
-                message: '로그인이 완료되었습니다.',
-                type: 'success',
-              });
-            })
-            .catch((res) => {
-              console.log(res);
-              console.log('login error');
-              ElMessage({
-                showClose: true,
-                message: '로그인에 문제가 발생했습니다.',
-                type: 'error',
-              });
-            });
+    async login({ state, commit }, payload) {
+      try {
+        const res = await axios.post('api/auth/login', payload)
+        state.token = res.data.token
+        commit('login', res.data.user);
+        localStorage.setItem('jwt', state.token)
+        ElMessage({
+          showClose: true,
+          message: '로그인이 완료되었습니다.',
+          type: 'success',
+        });
+      } catch (res) {
+        console.log(res);
+        console.log('login error');
+        ElMessage({
+          showClose: true,
+          message: '로그인에 문제가 발생했습니다.',
+          type: 'error',
+        });
+      }
+      
     },
     signup: ({ }, payload) => {
       axios

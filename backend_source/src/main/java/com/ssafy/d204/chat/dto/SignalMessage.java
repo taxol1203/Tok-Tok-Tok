@@ -1,5 +1,6 @@
 package com.ssafy.d204.chat.dto;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data

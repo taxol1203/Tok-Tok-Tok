@@ -19,7 +19,6 @@
   </div>
 </template>
 <script>
-import axios from "@/axios";
 import ChatList from "../../components/chat/ChatList.vue";
 import ChatDetail from "../../components/chat/ChatDetail.vue";
 import UserInfo from "../../components/chat/UserInfo.vue";
@@ -37,12 +36,6 @@ export default {
   setup() {
     const store = useStore();
     const videoMode = computed(() => store.state.video_open);
-
-    // axios.get("api/api/chat/admin/init").then((response) => {
-    //   store.state.session_key = response.data;
-
-    //   console.log("CHAT AREA" + store.state.session_key);
-    // });
 
     return {
       store,
