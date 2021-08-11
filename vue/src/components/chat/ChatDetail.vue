@@ -150,7 +150,7 @@ export default {
         let msg;
         if (type === "VID") {
           msg = {
-            message: "화상상담을 신청합니다.",
+            message: "화상상담을 요청합니다.",
             fk_author_idx: userPkidx.value,
             created: "",
             deleted: false,
