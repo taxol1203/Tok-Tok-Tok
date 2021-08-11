@@ -35,7 +35,7 @@ pipeline {
 				sh 'docker images -f "dangling=true" -q \
 					| xargs -r docker rmi'
                 sh 'docker run -d --name spring -p 8080:8080 --network s05p12d204_net spring:latest'
-				sh 'docker run -d --name frontend -p 80:80 -p 443:443 -v /home/ubuntu/S05P12D204/vue/nginx:/usr/share/nginx -v /home/ubuntu/S05P12D204/vue/nginx/conf:/etc/nginx/conf.d --network s05p12d204_net frontend:latest '
+				sh 'docker run -d --name frontend -p 80:80 -p 443:443 -v /home/ubuntu/S05P12D204/vue/nginx:/usr/share/nginx/cert -v /home/ubuntu/S05P12D204/vue/nginx/conf:/etc/nginx/conf.d --network s05p12d204_net frontend:latest '
 
 			}
 		}
