@@ -1,7 +1,7 @@
 <template>
   <div style="position: relative; width: 650px; height: 750px; padding: 10px">
-    <i class="el-icon-error" @click="closeRoom"></i>
-    <i class="el-icon-close"></i>
+    <!-- <i class="el-icon-close"></i> -->
+    <i v-if="chatStatus == 'LIVE'" class="el-icon-error" @click="closeRoom"></i>
     <!-- 상대방 -->
     <el-scrollbar ref="scrollbar" id="topMessages">
       <div v-for="(msg, index) in messages" :key="index">
@@ -61,6 +61,7 @@ export default {
     const sessionId = computed(() => store.getters['get_selected_idx']);
     const messages = computed(() => store.getters.get_messages);
     const userPkidx = computed(() => store.state.auth.user.pk_idx);
+    const chatStatus = computed(() => store.getters['statusGetter']);
     const message = ref('');
     let connected = false;
     let stompClient = '';
@@ -148,6 +149,7 @@ export default {
     const closeRoom = () => {
       // 방 닫는 로직 작성 "admin_pk_idx": 0 넣어서 요청 해줘야함
       // 방 상태가 LIVE 일때, admin_pk_idx가 나와 같을때
+      store.dispatch('chatClose');
       if (store.state.rooms[`${sessionId.value}`].session.status == 'LIVE') {
         //여기서 디스패치
       }
@@ -155,6 +157,7 @@ export default {
 
     return {
       store,
+      chatStatus,
       sessionId,
       messages,
       message,

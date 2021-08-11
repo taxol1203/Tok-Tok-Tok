@@ -58,13 +58,18 @@ export default createStore({
     STATUS_CHANGE(state, payload) {
       state.list_status = payload;
     },
+    CHAT_CLOSE(state) {
+      state.rooms[`${state.selected_room}`].session.status = "QUIT"
+      state.selected_room = '';
+      console.log("close")
+    }
   },
   actions: {
     async getChatRooms({ commit, state }) {
       try {
         const res = await axios.get(`api/api/chat/admin/init/${state.auth.user.pk_idx}`);
         for (var p in res.data) {
-          const client = await axios.get(`api/auth/user/${res.data[p].session.fk_client_idx}`)
+          const client = await axios.get(`api/auth/user/${res.data[p].session.fk_client_idx}`) //해당 방에 관련된 유저정보 담기
           res.data[p].client = client.data;
         }
         commit("GET_ROOMS", res.data);
@@ -101,6 +106,18 @@ export default createStore({
       } catch (err) {
         console.log(err);
       }
+    },
+    chatClose({ commit, state }) {
+      axios
+        .delete(`/api/api/chat/room/${state.selected_room}`, {
+          data: {
+            admin_pk_idx: state.auth.user.pk_idx,
+          }
+        }).then(() => {
+          commit('CHAT_CLOSE')
+        }).catch(err => {
+          console.log(err)
+        });
     }
 
   },
@@ -127,23 +144,32 @@ export default createStore({
     get_user_room_status: (state) => {
       return state.session_key.status;
     },
-    get_client_info: (state) => {
-
-      var tmp = state.rooms[`${state.selected_room}`].session.qna_history
-      if (tmp != null) {
-        tmp = tmp.split('|')
-        tmp = tmp.splice(0, 1);
-      } else {
-        tmp = [];
-      }
-      var payload = {
-        client: state.rooms[`${state.selected_room}`].client,
-        qna: tmp
-      }
-      return payload;
+    clientGetter: (state) => {
+      return state.rooms[`${state.selected_room}`].client;
     },
+    qnaGetter: (state) => {
+      return state.rooms[`${state.selected_room}`].session.qna_history.split('|')
+    },
+    // get_client_info: (state) => {
+
+    //   var tmp = state.rooms[`${state.selected_room}`].session.qna_history
+    //   if (tmp != null) {
+    //     tmp = tmp.split('|')
+    //     tmp = tmp.splice(0, 1);
+    //   } else {
+    //     tmp = [];
+    //   }
+    //   var payload = {
+    //     client: state.rooms[`${state.selected_room}`].client,
+    //     qna: tmp
+    //   }
+    //   return payload;
+    // },
     get_selected_idx: (state) => {
       return state.selected_room
+    },
+    statusGetter: (state) => {
+      return state.rooms[`${state.selected_room}`].session.status;
     }
   },
 });
