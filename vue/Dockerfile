@@ -14,7 +14,7 @@ RUN rm /etc/nginx/conf.d/default.conf
 COPY nginx/ /usr/share/nginx/
 #COPY nginx/fullchain.pem /usr/share/nginx/
 #COPY nginx/privkey.pem /usr/share/nginx/
-COPY nginx/app.conf /etc/nginx/conf.d/
+COPY nginx/conf/app.conf /etc/nginx/conf.d/
 COPY --from=frontend ./homepage/dist /usr/share/nginx/html/homepage
 
 EXPOSE 80
