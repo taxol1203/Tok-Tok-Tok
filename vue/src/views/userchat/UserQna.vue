@@ -79,6 +79,7 @@ export default {
     const sessionId = computed(() => store.state.selected_room);
     const createChatRoom = () => {
       console.log(user_pk_idx.value);
+      send('JOIN');
       store.dispatch('createChatRooms', history);
       console.log(sessionId.value);
     };
@@ -101,14 +102,15 @@ export default {
           // 구독 == 채팅방 입장.
           stompClient.subscribe('/send/' + sessionId.value, (res) => {
             console.log('receive from server:', res.body);
-            store.commit('USER_MSG_PUSH', JSON.parse(res.body)); // 수신받은 메세지 표시하기
-            switch (res.body.type) {
+            switch (JSON.parse(res.body).type) {
               case 'MSG':
+                store.commit('USER_MSG_PUSH', JSON.parse(res.body)); // 수신받은 메세지 표시하기
                 break;
               case 'JOIN':
                 // 방을 생성할 때 백엔드단에서 처리하므로 신경 x
                 break;
-              case 'QUIT':
+              case 'END':
+                store.commit('CLOSE_MSG');
                 // 만약 둘 중 하나가 나가면 더 이상 채팅을 못치는 프론트구현
                 break;
               case 'VID':
@@ -131,12 +133,12 @@ export default {
     const sendMessage = () => {
       if (user_pk_idx.value !== '' && userMsg.value !== '') {
         // 이벤트 발생 엔터키 + 유효성 검사는 여기에서
-        send({ message: userMsg }); // 전송 실패 감지는 어떻게? 프론트단에서 고민좀 부탁 dream
+        send('MSG'); // 전송 실패 감지는 어떻게? 프론트단에서 고민좀 부탁 dream
       }
       userMsg.value = '';
     };
 
-    const send = () => {
+    const send = (type) => {
       console.log('Send message:' + userMsg.value);
       if (user_pk_idx.value <= 0) {
         console.log('0이하면 안됨) fk_author_idx: ' + user_pk_idx.value);
@@ -151,7 +153,7 @@ export default {
           deleted: false, // 삭제된 메세지 여부. default = false
           fk_session_id: sessionId.value, // 현재 채팅세션의 id.
           // 주의할 점은, 방 세션 id가 아닌, 방 정보의 pk_idx를 첨부한다. created 라이프사이클 메서드 참조.
-          type: 'MSG', // 메세지 타입.
+          type: type, // 메세지 타입.
         };
         stompClient.send('/receive/' + sessionId.value, JSON.stringify(msg), {});
       }
