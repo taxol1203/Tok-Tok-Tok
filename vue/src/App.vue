@@ -2,7 +2,7 @@
   <div id="nav">
     <router-link to="/signup">Sign Up</router-link> |
     <router-link to="/login">Log in</router-link> | <router-link to="/admin">Admin</router-link> |
-    <router-link to="/userchat">User Page</router-link>
+    <router-link to="/userchat">User Page</router-link> Noto Sans && KR-bold
   </div>
   <div class="inner">
     <transition name="page-change" mode="out-in">
@@ -19,8 +19,10 @@ export default {
 <style>
 /* 전체 프로젝트 폰트 변경(상속, cascading) */
 * {
-  font-family: BMJUA;
-  text-decoration: none;
+  /* font-family: "Nanum Gothic", sans-serif; */
+  /* font-family: "Noto Sans", sans-serif; */
+  font-family: "Noto Sans", "Noto Sans KR", sans-serif;
+  font-weight: bold;
 }
 .el-main {
   overflow: hidden;
@@ -61,6 +63,12 @@ export default {
 @font-face {
   font-family: "BMJUA";
   src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/BMJUA.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "NanumGothic";
+  src: url("http://fonts.googleapis.com/earlyaccess/nanumgothic.css") format("woff");
   font-weight: normal;
   font-style: normal;
 }
