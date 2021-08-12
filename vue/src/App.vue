@@ -5,6 +5,7 @@
     <router-link to="/userchat">User Page</router-link>
   </div>
   <div class="inner">
+    <!-- transition 문제 이거 지우면 높은 확률로 해결됨 -->
     <transition name="page-change" mode="out-in">
       <router-view />
     </transition>
