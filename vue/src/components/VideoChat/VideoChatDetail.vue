@@ -1,74 +1,121 @@
 <template>
   <el-container>
-    <button type="button" @click="socketInit('a')">Socket Init ROOM 1</button>
+    <!-- <button type="button" @click="socketInit('a')">Socket Init ROOM 1</button>
     <button type="button" @click="socketInit('b')">Socket Init ROOM 2</button>
-    <button type="button" @click="connect">establish connection</button>
+    <button type="button" @click="connect">establish connection</button> -->
+    <button @click="closeVideoWindow">창닫기</button>
     <br />
     <div>
-      <video ref="videoElement" autoplay></video>
+      <video
+        ref="videoElement"
+        autoplay
+        class="myVideo"
+        :class="{ myVideoLive: videoStatus == 'LIVE' }"
+      ></video>
       <video
         ref="remoteVideo"
         autoplay
-        style="width: 240px; height: 180px; border: 1px solid black"
+        v-if="videoStatus == 'LIVE'"
+        class="remoteVideo"
       ></video>
     </div>
     <el-footer>
       <el-row class="videoOptions">
         <div class="select">
-          <label for="audioSource">Audio input source: </label>
-          <select v-model="audioInputSelect" @change="start()">
-            <option disabled value="">Please select one</option>
-            <option
+          <el-select
+            v-model="audioInputSelect"
+            placeholder="마이크 선택"
+            @change="start()"
+          >
+            <el-option
               v-for="(option, index) in mediaOptions.audioinput"
               :key="index"
+              :label="`${index + 1}. ${option.label}`"
               :value="option.deviceId"
             >
-              {{ option.label }}
-            </option>
-          </select>
+            </el-option>
+          </el-select>
         </div>
         <div class="select">
-          <label for="audioOutput">Audio output destination: </label>
-          <select ref="audioOutputSelect" @change="changeAudioDestination">
-            <option
+          <el-select
+            v-model="audioOutputSelect"
+            placeholder="스피커 선택"
+            @change="changeAudioDestination"
+          >
+            <el-option
               v-for="(option, index) in mediaOptions.audiooutput"
               :key="index"
+              :label="`${index + 1}. ${option.label}`"
+              :value="option.deviceId"
             >
-              {{ option.label }}
-            </option>
-          </select>
+            </el-option>
+          </el-select>
         </div>
 
         <div class="select">
-          <label for="videoSource">Video source: </label
-          ><select v-model="videoSelect" @change="start()">
-            <option disabled value="">Please select one</option>
-            <option
+          <el-select
+            v-model="videoSelect"
+            placeholder="카메라 선택"
+            @change="start()"
+          >
+            <el-option
               v-for="(option, index) in mediaOptions.videoinput"
               :key="index"
+              :label="`${index + 1}. ${option.label}`"
               :value="option.deviceId"
             >
-              {{ option.label }}
-            </option>
-          </select>
+            </el-option>
+          </el-select>
         </div>
-        <button type="button" @click="startScreenStream">화면공유시작</button>
-        <button type="button" @click="start">화면공유중단</button>
-        <button type="button" @click="leave">leave</button>
+        <el-button
+          icon="el-icon-monitor"
+          @click="startScreenStream"
+          v-if="screenShare"
+          plain
+        >
+          화면공유
+        </el-button>
+        <el-button
+          icon="el-icon-video-pause"
+          type="button"
+          @click="start"
+          v-else
+          plain
+        >
+          공유중단
+        </el-button>
+        <el-button v-if="videoStatus == 'CLOSE'" class="enterBtn" plain
+          >버튼자리</el-button
+        >
+        <el-button
+          v-if="videoStatus == 'OPEN' && isUser"
+          @click="connect"
+          class="enterBtn"
+          plain
+          >상담시작</el-button
+        >
+        <el-button @click="leave" class="closeBtn" plain>상담종료</el-button>
       </el-row>
     </el-footer>
   </el-container>
 </template>
 
 <script>
-import { ref, onMounted, reactive } from 'vue';
+import { ref, onMounted, reactive, computed } from 'vue';
+import { useStore } from 'vuex';
 export default {
   setup() {
+    const store = useStore();
     const videoElement = ref('');
     const audioInputSelect = ref('');
     const audioOutputSelect = ref('');
     const videoSelect = ref('');
     const remoteVideo = ref('');
+    const videoStatus = computed(() => store.state.video_status);
+    const sessionId = computed(() => store.getters['get_selected_idx']);
+    const screenShare = ref(true);
+    const isUser = computed(() => store.getters.is_user); // 유저일때만 상담시작 버튼 보이게
+
 
     const mediaOptions = reactive({
       audioinput: [],
@@ -79,20 +126,26 @@ export default {
     var localStream = null;
     var peerConnection = null;
     var peerStarted = false;
-
+    const closeVideoWindow = () => {
+      store.commit("CLOSE_VIDEO");
+    };
     // 카메라 / 마이크 목록 가져오기
     onMounted(async () => {
       try {
         const deviceInfos = await navigator.mediaDevices.enumerateDevices();
         gotDevicesList(deviceInfos);
-      } catch {
-        handleError;
+        videoElement.value.volume = 0; // 하울링 방지
+        start(); // 기본 장치로 stream 바인딩하기
+        socketInit(sessionId.value); // 세션아이디로 소켓열기
+
+      } catch (err) {
+        handleError(err);
         // enumerateDevices()에 .then으로 해당 함수의 실행을 마치고 난 뒤에 로딩을 해야
         // 모든 장치를 가져와서 표시가 가능합니다.
       }
-      videoElement.value.volume = 0; // 하울링 방지
-      start(); // 기본 장치로 stream 바인딩하기
     });
+
+
 
     // 리스트에 있는데 미디어 디바이스에 접근이 불가능한 경우임.
     function handleError(error) {
@@ -140,7 +193,7 @@ export default {
           deviceId: videoSource ? { exact: videoSource } : undefined,
         },
       };
-
+      console.log(constraints);
       navigator.mediaDevices
         .getUserMedia(constraints) //constraints에 대한 사용권한 요청
         .then(gotStream) // html element와 video/audio를 부착한다
@@ -156,6 +209,7 @@ export default {
     const gotStream = function (stream) {
       localStream = stream; // 스트림 접근용 변수에 저장
       videoElement.value.srcObject = stream;
+      screenShare.value = true;
       // 비디오 엘리멘트에 스트림을 연결하여 화면에 표시하는 기능
       return navigator.mediaDevices.enumerateDevices();
     };
@@ -169,12 +223,14 @@ export default {
     }
     // ===================The following is socket======================
     // var user = "1a2a3a4a-1a2a3a4a"
-    var socketUrl = 'wss://i5d204.p.ssafy.io/api/msgServer/'; // 메세지 시그널링 서버 주소
+    const socketUrl = 'wss://i5d204.p.ssafy.io/api/msgServer/'; // 메세지 시그널링 서버 주소
     // var socketUrl = "wss://59.151.220.195:8088/api/msgServer/"; // 메세지 시그널링 서버 주소
-    var socket = null;
-    var socketRead = false; // socket이 열려있는지 flag. 소켓 통신이 이벤트 기반 처리기 때문에 flag값 없이는 코딩이 불가능함
+    let socket = null;
+    let socketRead = false; // socket이 열려있는지 flag. 소켓 통신이 이벤트 기반 처리기 때문에 flag값 없이는 코딩이 불가능함
     const socketInit = (roomId) => {
       // console.log(socketUrl, roomId);
+      console.log(socketUrl);
+      console.log(roomId);
       socket = new WebSocket(socketUrl + roomId); // roomId 붙여서 접속
       socket.onclose = function () {
         socket = null;
@@ -197,7 +253,7 @@ export default {
           peerConnection = null;
         }
         localStream = null;
-        localVideo.srcObject = null;
+        videoElement.value.srcObject = null;
         // 소켓 연결이 끊어지거나, 연결 시도 중 실패할 경우
       };
 
@@ -514,6 +570,7 @@ export default {
             sendReconnectRequest();
           }
           // return navigator.mediaDevices.enumerateDevices();
+          screenShare.value = false;
         })
         .catch((err) => {
           console.log(err);
@@ -522,12 +579,17 @@ export default {
       // start();
     };
     return {
+      store,
       audioInputSelect,
       audioOutputSelect,
       videoSelect,
       mediaOptions,
       videoElement,
       remoteVideo,
+      sessionId,
+      screenShare,
+      videoStatus,
+      isUser,
       gotDevicesList,
       handleError,
       start,
@@ -541,18 +603,40 @@ export default {
       changeAudioDestination,
       attachSinkId,
       startScreenStream,
+      closeVideoWindow,
     };
   },
 };
 </script>
 <style scoped>
+.myVideo {
+  border: 1px solid black;
+  width: 50%;
+  height: 50%;
+}
+.myVideoLive {
+  border: 1px solid black;
+  /* 사이즈 작게 왼쪽 아래 라든가? */
+}
+.remoteVideo {
+  border: 1px solid black;
+  /* 꽉찬화면? */
+}
 .select {
-  width: 20em;
+  margin: 0.2rem;
 }
 .videoOptions {
   justify-content: center;
 }
 .videoElement {
   width: 500px;
+}
+.enterBtn {
+  background-color: #006f3e;
+  color: white;
+}
+#closeBtn {
+  background-color: red;
+  color: white;
 }
 </style>

@@ -20,6 +20,7 @@
     </div>
     <el-footer>
       <el-row class="videoOptions">
+        <button @click="test">btn</button>
         <div class="select">
           <el-select
             v-model="audioInputSelect"
@@ -66,25 +67,34 @@
             </el-option>
           </el-select>
         </div>
-        <button type="button" @click="startScreenStream">화면공유시작</button>
-        <button type="button" @click="start">화면공유중단</button>
+        <el-button
+          icon="el-icon-monitor"
+          @click="startScreenStream"
+          v-if="screenShare"
+          plain
+        >
+          화면공유
+        </el-button>
+        <el-button
+          icon="el-icon-video-pause"
+          type="button"
+          @click="start"
+          v-else
+          plain
+        >
+          공유중단
+        </el-button>
         <el-button v-if="videoStatus == 'CLOSE'" class="enterBtn" plain
-          >시작종료버튼자리</el-button
+          >버튼자리</el-button
         >
         <el-button
-          v-if="videoStatus == 'OPEN'"
+          v-if="videoStatus == 'OPEN' && isUser"
           @click="connect"
           class="enterBtn"
           plain
           >상담시작</el-button
         >
-        <el-button
-          v-if="videoStatus == 'LIVE'"
-          @click="leave"
-          class="closeBtn"
-          plain
-          >상담종료</el-button
-        >
+        <el-button @click="leave" class="closeBtn" plain>상담종료</el-button>
       </el-row>
     </el-footer>
   </el-container>
@@ -102,6 +112,10 @@ export default {
     const videoSelect = ref('');
     const remoteVideo = ref('');
     const videoStatus = computed(() => store.state.video_status);
+    const sessionId = computed(() => store.getters['get_selected_idx']);
+    const screenShare = ref(true);
+    const isUser = computed(() => store.getters.is_user); // 유저일때만 상담시작 버튼 보이게
+
 
     const mediaOptions = reactive({
       audioinput: [],
@@ -112,20 +126,26 @@ export default {
     var localStream = null;
     var peerConnection = null;
     var peerStarted = false;
-
+    const test = () => {
+      console.log(sessionId.value);
+    };
     // 카메라 / 마이크 목록 가져오기
     onMounted(async () => {
       try {
         const deviceInfos = await navigator.mediaDevices.enumerateDevices();
         gotDevicesList(deviceInfos);
-      } catch {
-        handleError;
+        videoElement.value.volume = 0; // 하울링 방지
+        start(); // 기본 장치로 stream 바인딩하기
+        socketInit(sessionId.value); // 세션아이디로 소켓열기
+
+      } catch (err) {
+        handleError(err);
         // enumerateDevices()에 .then으로 해당 함수의 실행을 마치고 난 뒤에 로딩을 해야
         // 모든 장치를 가져와서 표시가 가능합니다.
       }
-      videoElement.value.volume = 0; // 하울링 방지
-      start(); // 기본 장치로 stream 바인딩하기
     });
+
+
 
     // 리스트에 있는데 미디어 디바이스에 접근이 불가능한 경우임.
     function handleError(error) {
@@ -173,7 +193,7 @@ export default {
           deviceId: videoSource ? { exact: videoSource } : undefined,
         },
       };
-
+      console.log(constraints);
       navigator.mediaDevices
         .getUserMedia(constraints) //constraints에 대한 사용권한 요청
         .then(gotStream) // html element와 video/audio를 부착한다
@@ -189,6 +209,7 @@ export default {
     const gotStream = function (stream) {
       localStream = stream; // 스트림 접근용 변수에 저장
       videoElement.value.srcObject = stream;
+      screenShare.value = true;
       // 비디오 엘리멘트에 스트림을 연결하여 화면에 표시하는 기능
       return navigator.mediaDevices.enumerateDevices();
     };
@@ -202,12 +223,14 @@ export default {
     }
     // ===================The following is socket======================
     // var user = "1a2a3a4a-1a2a3a4a"
-    var socketUrl = 'wss://i5d204.p.ssafy.io/api/msgServer/'; // 메세지 시그널링 서버 주소
+    const socketUrl = 'wss://i5d204.p.ssafy.io/api/msgServer/'; // 메세지 시그널링 서버 주소
     // var socketUrl = "wss://59.151.220.195:8088/api/msgServer/"; // 메세지 시그널링 서버 주소
-    var socket = null;
-    var socketRead = false; // socket이 열려있는지 flag. 소켓 통신이 이벤트 기반 처리기 때문에 flag값 없이는 코딩이 불가능함
+    let socket = null;
+    let socketRead = false; // socket이 열려있는지 flag. 소켓 통신이 이벤트 기반 처리기 때문에 flag값 없이는 코딩이 불가능함
     const socketInit = (roomId) => {
       // console.log(socketUrl, roomId);
+      console.log(socketUrl);
+      console.log(roomId);
       socket = new WebSocket(socketUrl + roomId); // roomId 붙여서 접속
       socket.onclose = function () {
         socket = null;
@@ -230,7 +253,7 @@ export default {
           peerConnection = null;
         }
         localStream = null;
-        localVideo.srcObject = null;
+        videoElement.value.srcObject = null;
         // 소켓 연결이 끊어지거나, 연결 시도 중 실패할 경우
       };
 
@@ -396,6 +419,7 @@ export default {
     // stop connection
     const leave = () => {
       console.log('hang up.');
+      console.log(videoStatus);
       stop();
       store.commit("CLOSE_VIDEO");
     };
@@ -548,6 +572,7 @@ export default {
             sendReconnectRequest();
           }
           // return navigator.mediaDevices.enumerateDevices();
+          screenShare.value = false;
         })
         .catch((err) => {
           console.log(err);
@@ -564,6 +589,10 @@ export default {
       videoElement,
       remoteVideo,
       videoStatus,
+      sessionId,
+      screenShare,
+      isUser,
+      test,
       gotDevicesList,
       handleError,
       start,
@@ -584,6 +613,8 @@ export default {
 <style scoped>
 .myVideo {
   border: 1px solid black;
+  width: 50%;
+  height: 50%;
 }
 .myVideoLive {
   border: 1px solid black;
@@ -594,7 +625,7 @@ export default {
   /* 꽉찬화면? */
 }
 .select {
-  width: 10rem;
+  margin: 0.2rem;
 }
 .videoOptions {
   justify-content: center;

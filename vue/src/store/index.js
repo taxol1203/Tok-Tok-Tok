@@ -168,6 +168,11 @@ export default createStore({
     },
     statusGetter: (state) => {
       return state.rooms[`${state.selected_room}`].session.status;
+    },
+    is_user: (state) => {
+      if (state.auth.user.pk_idx == state.rooms[`${state.selected_room}`].client.pk_idx) {
+        return true;
+      } else return false;
     }
   },
 });

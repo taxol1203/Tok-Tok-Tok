@@ -1,6 +1,9 @@
 <template>
   <el-row :gutter="20">
     <div id="UserMain">
+      <div class="videoContainer" v-if="videoStatus.value == !'CLOSE'">
+        <VideoChatDetail />
+      </div>
       <div class="fab-container">
         <transition class="same-pos" name="fade" mode="out-in">
           <el-button
@@ -42,6 +45,7 @@ import { useStore } from "vuex";
 import UserChatDetail from "./UserChatDetail.vue";
 import UserQna from "./UserQna.vue";
 import ChatDetail from "../../components/chat/ChatDetail.vue";
+import VideoChatDetail from "@/components/VideoChat/VideoChatDetail.vue";
 import { computed, ref } from "vue";
 /* eslint-disable */
 export default {
@@ -49,6 +53,7 @@ export default {
     UserQna,
     UserChatDetail,
     ChatDetail,
+    VideoChatDetail,
   },
 
   setup() {
@@ -56,7 +61,8 @@ export default {
     let isHidden = ref(false);
     const store = useStore();
     const user_pk_idx = computed(() => store.state.auth.user.pk_idx);
-    const sessionId = computed(() => store.state.user_selected_room);
+    const sessionId = computed(() => store.getters['get_selected_idx']);
+    const videoStatus = computed(() => store.state.video_status);
     let changeCondition = () => {
       store.dispatch("userQna/init"); //state.userQna.scenes에 pk_idx별로 예상질문정보+answers에 정답정보 저장
       isHidden.value = !isHidden.value;
@@ -75,6 +81,7 @@ export default {
       user_pk_idx,
       isChatExist,
       isHidden,
+      videoStatus,
       changeisChatExist,
       changeCondition,
       createChatRoom,
@@ -183,5 +190,13 @@ export default {
 }
 .fade-leave-active {
   transition: all 0.5s ease-out;
+}
+.videoContainer {
+  position: sticky;
+  left: 35%;
+  width: 50rem;
+  height: 40rem;
+  background-color: lightgrey;
+  margin: 5rem;
 }
 </style>
