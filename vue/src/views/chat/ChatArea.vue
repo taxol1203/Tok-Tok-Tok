@@ -5,8 +5,8 @@
       <el-container>
         <transition name="chat-change" mode="out-in">
           <div v-if="sessionId"><ChatDetail /></div>
-          <div v-else>
-            <img class="clear-img" src="@/assets/HiphopLogo.png" alt="hiphop" />
+          <div v-else class="center-content">
+            <img class="clear-img" src="@/assets/FixLogo.png" alt="logo" />
           </div>
         </transition>
         <!-- <transition name="chat-change" mode="out-in"> -->
@@ -44,9 +44,13 @@ export default {
   padding: 0;
   margin: 0;
 }
+.center-content {
+  text-align: center;
+  display: block;
+  margin: auto;
+}
 
 .clear-img {
-  align-content: center;
   opacity: 0.7;
 }
 
