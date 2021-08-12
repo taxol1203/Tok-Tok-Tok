@@ -6,15 +6,18 @@
         class="list-menu-item"
         :class="{ activeMenu: status == 'LIVE' }"
         :span="8"
-        >진행중</el-col
       >
+        <el-badge :value="count[0]" class="item">
+          <span>진행중</span>
+        </el-badge>
+      </el-col>
       <el-col
         @click="listMenuSelect('OPEN')"
         class="list-menu-item"
         :class="{ activeMenu: status == 'OPEN' }"
         :span="8"
       >
-        <el-badge :value="waitingCnt" class="item">
+        <el-badge :value="count[1]" class="badge">
           <span>대기중</span>
         </el-badge>
       </el-col>
@@ -23,7 +26,9 @@
         class="list-menu-item"
         :class="{ activeMenu: status == 'END' }"
         :span="8"
-        >종료</el-col
+        ><el-badge :value="count[2]" class="item">
+          <span>종료</span>
+        </el-badge></el-col
       >
     </el-row>
     <div>
@@ -56,8 +61,8 @@ export default {
     const listStatus = computed(() => store.getters.get_room_list);
     const status = computed(() => store.state.list_status);
     const selectedSession = ref('');
-    const waitingCnt = computed(() => store.getters['waitingGetter']);
-
+    const count = computed(() => store.getters['countGetter']);
+    console.log(count.value);
     const listMenuSelect = (key) => {
       store.commit('STATUS_CHANGE', key);
     };
@@ -79,7 +84,7 @@ export default {
       listStatus,
       listMenuSelect,
       status,
-      waitingCnt,
+      count,
       selectedSession,
     };
   },

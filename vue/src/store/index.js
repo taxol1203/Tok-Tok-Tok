@@ -170,12 +170,20 @@ export default createStore({
     closeMsgGetter: (state) => {
       return state.closeMsg;
     },
-    waitingGetter: (state) => {
-      let cnt = 0;
+    countGetter: (state) => {
+      let cnt = [0, 0, 0];
       for (let i in state.rooms) {
         let room = state.rooms[i];
-        if (room.session.status === 'OPEN') {
-          cnt++;
+        switch (room.session.status) {
+          case 'OPEN':
+            cnt[0]++;
+            break;
+          case 'LIVE':
+            cnt[1]++;
+            break;
+          case 'END':
+            cnt[2]++;
+            break;
         }
       }
       return cnt;
