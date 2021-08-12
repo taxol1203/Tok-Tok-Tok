@@ -2,7 +2,7 @@
   <div id="nav">
     <router-link to="/signup">Sign Up</router-link> |
     <router-link to="/login">Log in</router-link> | <router-link to="/admin">Admin</router-link> |
-    <router-link to="/userchat">User Page</router-link> Noto Sans && KR-bold
+    <router-link to="/userchat">User Page</router-link>
   </div>
   <div class="inner">
     <transition name="page-change" mode="out-in">
