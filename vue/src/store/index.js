@@ -72,6 +72,9 @@ export default createStore({
     stompSetter(state, payload) {
       console.log(payload)
       state.stompClient = payload;
+    },
+    closeSessionkeyStatus(state, payload) {
+      state.session_key.status = payload;
     }
   },
   actions: {
@@ -117,9 +120,9 @@ export default createStore({
         console.log(err);
       }
     },
-    chatClose({ commit, state }) {
+    chatClose({ commit, state }, payload) {
       axios
-        .delete(`/api/api/chat/room/${state.selected_room}`, {
+        .delete(`/api/api/chat/room/${payload}`, {
           data: {
             admin_pk_idx: state.auth.user.pk_idx,
           }
