@@ -29,7 +29,11 @@
                 ref="refEmail"
               >
                 <template #append>
-                  <el-button class="green-color-btn" id="green-btn" @click="duplicate"
+                  <el-button
+                    class="green-color-btn"
+                    id="green-btn"
+                    @click="duplicate"
+                    :disabled="!isEmailFormValid"
                     >중복확인</el-button
                   >
                 </template>
@@ -96,13 +100,22 @@ export default {
     const refCheck = ref("");
     // const isValid = ref(false);
     //일단은 입력만 다하면 켜지도록
-    const isValid = computed(() => user.username && user.email && user.passwd && user.check);
+    const isValid = computed(
+      () => user.username && user.email && user.passwd && user.check && isEmailValid.value
+    );
+    //중복확인 검사용
+    const isEmailValid = computed(() => store.state.auth.emailValid);
+    //형식이 맞는지 검사용
+    const isEmailFormValid = ref(false);
 
     const duplicate = () => {
-      let tmp = {
+      let emailInfo = {
         email: user.email,
       };
-      store.dispatch("auth/duplicateEmail", tmp);
+      console.log(store.dispatch("auth/duplicateEmail", emailInfo));
+      if (user.email == "") {
+        console.log("can check");
+      }
     };
 
     const resetForm = () => {
@@ -118,13 +131,16 @@ export default {
     };
     var checkEmail = (rule, value, callback) => {
       if (!value) {
+        isEmailFormValid.value = false;
         return callback(new Error("이메일을 입력해 주세요"));
       } else {
         let pattern =
           /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
         if (value.match(pattern) == null) {
+          isEmailFormValid.value = false;
           callback(new Error("이메일 형식을 맞춰 주세요"));
         } else {
+          isEmailFormValid.value = true;
           callback();
         }
       }
@@ -193,6 +209,8 @@ export default {
       nextEmail,
       nextPasswd,
       nextCheck,
+      isEmailValid,
+      isEmailFormValid,
     };
   },
 };
