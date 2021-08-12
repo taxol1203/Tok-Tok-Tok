@@ -19,9 +19,7 @@ export default {
 <style>
 /* 전체 프로젝트 폰트 변경(상속, cascading) */
 * {
-  /* font-family: "Nanum Gothic", sans-serif; */
-  /* font-family: "Noto Sans", sans-serif; */
-  font-family: "Noto Sans", "Noto Sans KR", sans-serif;
+  font-family: "Noto Sans", "맑은 고딕", sans-serif;
   font-weight: bold;
 }
 .el-main {
@@ -52,25 +50,6 @@ export default {
   background-color: #006f3e;
   color: #fff;
   border: 0;
-}
-
-/* .inner {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-} */
-@font-face {
-  font-family: "BMJUA";
-  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/BMJUA.woff") format("woff");
-  font-weight: normal;
-  font-style: normal;
-}
-@font-face {
-  font-family: "NanumGothic";
-  src: url("http://fonts.googleapis.com/earlyaccess/nanumgothic.css") format("woff");
-  font-weight: normal;
-  font-style: normal;
 }
 
 /* 생성 부분 */
