@@ -42,7 +42,7 @@
                 >
               </transition>
               <el-button @click="resetForm('formLabelAlign')">다시쓰기</el-button>
-              <el-button class="green-color-btn">회원가입으로가는버튼이필요할까</el-button>
+              <el-button class="green-color-btn" @click="goSignUp()">회원가입</el-button>
             </el-form-item>
           </el-form>
           <div v-else>
@@ -60,6 +60,7 @@
 import { reactive, ref, computed } from "vue";
 import { useStore } from "vuex";
 import Footer from "@/components/footer.vue";
+import router from "@/router";
 
 export default {
   components: {
@@ -122,6 +123,10 @@ export default {
     const nextPasswd = () => {
       refPasswd.value.focus();
     };
+
+    const goSignUp = () => {
+      router.push("/signup");
+    };
     return {
       store,
       user,
@@ -136,6 +141,7 @@ export default {
       refPasswd,
       nextPasswd,
       isValid,
+      goSignUp,
     };
   },
 };
