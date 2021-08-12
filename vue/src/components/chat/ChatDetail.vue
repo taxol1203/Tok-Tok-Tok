@@ -111,6 +111,14 @@ export default {
                 // 만약 둘 중 하나가 나가면 더 이상 채팅을 못치는 프론트구현
                 break;
               case 'VID':
+                if (chatStatus.value == 'OPEN') store.dispatch('enterRoom', JSON.parse(res.body));
+                else {
+                  console.log(chatStatus.value);
+                  store.commit('MESSAGE_PUSH', JSON.parse(res.body)); // 수신받은 메세지 표시하기
+                }
+                setTimeout(() => {
+                  scrollbar.value.setScrollTop(999999999999999999999);
+                }, 150);
                 // vid 시작시 -> 화상채팅 시작하기 버튼만 딸랑 띄우기
                 break;
               default:

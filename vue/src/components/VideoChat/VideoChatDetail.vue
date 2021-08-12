@@ -398,6 +398,7 @@ export default {
         switch (peer.connectionState) {
           case 'connected':
             // alert("peer connected");
+            store.commit("LIVE_VIDEO");
             break;
           case 'disconnected':
             alert('peer disconnected');
