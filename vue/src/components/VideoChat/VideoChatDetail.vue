@@ -6,7 +6,7 @@
     <button @click="closeVideoWindow">창닫기</button>
     <br />
     <el-main>
-      <el-row :gutter="20">
+      <el-row :gutter="20" justify="space-around">
         <el-col :span="12">
           <video
             ref="videoElement"
@@ -619,18 +619,19 @@ export default {
 <style scoped>
 .myVideo {
   border: 1px solid black;
-  width: 50%;
-  height: 50%;
+  height: 30rem;
 }
 .myVideoLive {
   border: 1px solid black;
+  width: 25rem;
+  height: 25rem;
   /* 사이즈 작게 왼쪽 아래 라든가? */
-  width: 50%;
 }
 .remoteVideo {
+  width: 25rem;
+  height: 25rem;
   border: 1px solid black;
   /* 꽉찬화면? */
-  width: 50%;
 }
 .select {
   margin: 0.2rem;

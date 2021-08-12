@@ -192,10 +192,9 @@ export default {
   transition: all 0.5s ease-out;
 }
 .videoContainer {
-  position: sticky;
-  left: 25%;
-  width: 50rem;
-  height: 40rem;
+  position: absolute;
+  width: 65rem;
+  height: 50rem;
   background-color: lightgrey;
   margin: 5rem;
 }
