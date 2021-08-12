@@ -179,7 +179,7 @@ export default {
       }
     };
 
-    const start = () => {
+    const start = async () => {
       console.log('IN START');
       //이미 localStream이 있으면 종료하는 부분
       if (localStream) {
@@ -199,20 +199,26 @@ export default {
           deviceId: videoSource ? { exact: videoSource } : undefined,
         },
       };
-      console.log(constraints);
-      navigator.mediaDevices
-        .getUserMedia(constraints) //constraints에 대한 사용권한 요청
-        .then(gotStream) // html element와 video/audio를 부착한다
-        .then(gotDevicesList) // 디바이스 목록을 최신화한다.
-        .then(() => {
-          if (socketRead) {
-            sendReconnectRequest(); // 만약 소켓이 연결되어있다면 재접속
-          }
-        });
+      // console.log(constraints);
+      // navigator.mediaDevices
+      //   .getUserMedia(constraints) //constraints에 대한 사용권한 요청
+      //   .then(gotStream) // html element와 video/audio를 부착한다
+      //   .then(gotDevicesList) // 디바이스 목록을 최신화한다.
+      //   .then(() => {
+      //     if (socketRead) {
+      //       sendReconnectRequest(); // 만약 소켓이 연결되어있다면 재접속
+      //     }
+      //   });
+      const userMedia = await navigator.mediaDevices.getUserMedia(constraints);
+      const devices = await gotStream(userMedia);
+      gotDevicesList(devices);
+      if (socketRead) {
+        sendReconnectRequest();
+      }
     };
 
     // 로컬 엘리먼트랑 스트림을 연결하여 보여주기
-    const gotStream = function (stream) {
+    const gotStream = (stream) => {
       localStream = stream; // 스트림 접근용 변수에 저장
       videoElement.value.srcObject = stream;
       screenShare.value = true;
@@ -340,7 +346,7 @@ export default {
         },
         function (err) {
           //Called on failure
-          console.log('Failed to create offer');
+          console.log('Failed to create offer' + err);
         },
         mediaConstraints
       );
