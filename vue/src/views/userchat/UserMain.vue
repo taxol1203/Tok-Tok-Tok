@@ -22,13 +22,17 @@
         </el-dialog>
         <transition class="same-pos" name="fade" mode="out-in">
           <div id="chat-box" v-if="isHidden">
-            <el-card :body-style="{ padding: '0px' }" id="chat-card">
-              <div id="card-head" class="card-header">
-                <div></div>
+            <el-row :gutter="40">
+              <el-col :span="20" :offset="0"></el-col>
+              <el-col :span="4" :offset="0">
                 <div style="float: right">
-                  <i @click="DialogVisible = true" class="el-icon-close" id="close-btn"></i>
+                  <i @click="DialogVisible = true" class="el-icon-error" id="close-btn"></i>
+                  <!-- <i @click="DialogVisible = true" class="el-icon-close" id="close-btn"></i> -->
                 </div>
-              </div>
+              </el-col>
+            </el-row>
+            <el-card :body-style="{ padding: '0px' }" id="chat-card">
+              <div id="card-head" class="card-header"></div>
               <div class="full-box">
                 <UserQna :close="isHidden" />
               </div>
@@ -40,11 +44,11 @@
   </el-row>
 </template>
 <script>
-import { useStore } from 'vuex';
-import UserChatDetail from './UserChatDetail.vue';
-import UserQna from './UserQna.vue';
-import ChatDetail from '../../components/chat/ChatDetail.vue';
-import { computed, onMounted, ref } from 'vue';
+import { useStore } from "vuex";
+import UserChatDetail from "./UserChatDetail.vue";
+import UserQna from "./UserQna.vue";
+import ChatDetail from "../../components/chat/ChatDetail.vue";
+import { computed, onMounted, ref } from "vue";
 /* eslint-disable */
 export default {
   components: {
@@ -55,26 +59,26 @@ export default {
   setup() {
     const store = useStore();
     let DialogVisible = ref(false);
-    const isHidden = computed(() => store.getters['userQna/showUserChat']);
+    const isHidden = computed(() => store.getters["userQna/showUserChat"]);
     const user_pk_idx = computed(() => store.state.auth.user.pk_idx);
-    const sessionId = computed(() => store.getters['get_selected_idx']);
+    const sessionId = computed(() => store.getters["get_selected_idx"]);
     const sendEnd = () => {
-      send('END');
-      store.commit('userQna/CHANGE_STATE');
+      send("END");
+      store.commit("userQna/CHANGE_STATE");
       DialogVisible.value = false;
     };
     let changeCondition = () => {
       //+ 버튼 눌러서 상담 시작해야하는 경우
-      store.dispatch('userQna/init');
-      store.commit('userQna/CHANGE_STATE');
+      store.dispatch("userQna/init");
+      store.commit("userQna/CHANGE_STATE");
       DialogVisible.value = false;
     };
     // 유저의 채팅방 개설요청
     let createChatRoom = () => {
-      store.dispatch('createChatRooms', user_pk_idx.value);
+      store.dispatch("createChatRooms", user_pk_idx.value);
     };
     let connected = false;
-    let stompClient = computed(() => store.getters['stompGetter']);
+    let stompClient = computed(() => store.getters["stompGetter"]);
 
     const send = (type) => {
       console.log(sessionId.value);
@@ -84,14 +88,14 @@ export default {
         stompClient.value.connected &&
         user_pk_idx.value > 0
       ) {
-        console.log('IN SOCKET');
+        console.log("IN SOCKET");
         const msg = {
-          message: '',
+          message: "",
           fk_author_idx: user_pk_idx.value, // 작성자의 회원 idx
           fk_session_id: sessionId.value, // 현재 채팅세션의 id.
           type: type, // 메세지 타입.
         };
-        stompClient.value.send('/receive/' + sessionId.value, JSON.stringify(msg), {});
+        stompClient.value.send("/receive/" + sessionId.value, JSON.stringify(msg), {});
       }
     };
     return {
@@ -114,7 +118,7 @@ export default {
   position: fixed;
   width: 100%;
   height: 100%;
-  background-image: url('../../assets/Microsoft.png');
+  background-image: url("../../assets/Microsoft.png");
   background-repeat: no-repeat;
   background-position: center;
 }
@@ -149,10 +153,10 @@ export default {
 }
 
 #close-btn {
-  font-size: 3rem;
+  font-size: 2rem;
   color: white;
   font-style: bold;
-  color: #006f3e;
+  margin-bottom: 10px;
 }
 
 /* 위치 고정을 시키지 않으면 렌더링하면서 (생명&소멸) 서로 다른 공간에 보여짐 */
