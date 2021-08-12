@@ -66,13 +66,14 @@ export default {
     const scrollbar = ref('');
     onMounted(() => {
       scrollbar.value.setScrollTop(999999999999999999999);
+      connect();
     });
     let connected = false;
     let stompClient = '';
 
-    watch(sessionId, () => {
-      connect();
-    });
+    // watch(sessionId, () => {
+    //   connect();
+    // });
 
     const connect = () => {
       // console.log(sessionId.value);
@@ -88,23 +89,25 @@ export default {
           // 구독 == 채팅방 입장.
           stompClient.subscribe('/send/' + sessionId.value, (res) => {
             // console.log('receive from server:', JSON.parse(res.body).type);
-            switch (JSON.parse(res.body).type) {
+            const msg = JSON.parse(res.body);
+            switch (msg.type) {
               case 'MSG':
+                if (msg.fk_session_id != sessionId.value) break;
                 console.log(chatStatus.value);
-                if (chatStatus.value == 'OPEN') store.dispatch('enterRoom', JSON.parse(res.body));
-                else {
-                  console.log(chatStatus.value);
-                  store.commit('MESSAGE_PUSH', JSON.parse(res.body)); // 수신받은 메세지 표시하기
-                }
+                if (chatStatus.value == 'OPEN') store.dispatch('enterRoom', msg);
+                else store.commit('MESSAGE_PUSH', msg); // 수신받은 메세지 표시하기
+
                 setTimeout(() => {
                   scrollbar.value.setScrollTop(999999999999999999999);
                 }, 150);
                 break;
               case 'JOIN':
+                console.log('누군가 대기 중입니다...');
                 store.dispatch('getChatRooms');
                 // 방을 생성할 때 백엔드단에서 처리하므로 신경 x
                 break;
-              case 'QUIT':
+              case 'END':
+                store.dispatch('chatClose');
                 // 만약 둘 중 하나가 나가면 더 이상 채팅을 못치는 프론트구현
                 break;
               case 'VID':

@@ -13,8 +13,11 @@
         class="list-menu-item"
         :class="{ activeMenu: status == 'OPEN' }"
         :span="8"
-        >대기중</el-col
       >
+        <el-badge :value="waitingCnt" class="item">
+          <span>대기중</span>
+        </el-badge>
+      </el-col>
       <el-col
         @click="listMenuSelect('END')"
         class="list-menu-item"
@@ -53,6 +56,7 @@ export default {
     const listStatus = computed(() => store.getters.get_room_list);
     const status = computed(() => store.state.list_status);
     const selectedSession = ref('');
+    const waitingCnt = computed(() => store.getters['waitingGetter']);
 
     const listMenuSelect = (key) => {
       store.commit('STATUS_CHANGE', key);
@@ -75,6 +79,7 @@ export default {
       listStatus,
       listMenuSelect,
       status,
+      waitingCnt,
       selectedSession,
     };
   },

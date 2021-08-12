@@ -65,6 +65,7 @@ export const userQna = {
       state.realChat = true;
     },
     CHANGE_STATE: (state) => {
+      console.log(state.hidden)
       state.hidden = !state.hidden;
     }
   },
