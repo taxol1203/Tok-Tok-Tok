@@ -1,7 +1,7 @@
 <template>
   <el-row :gutter="20">
     <div id="UserMain">
-      <div class="videoContainer" v-if="videoStatus.value == !'CLOSE'">
+      <div class="videoContainer" v-if="videoStatus != 'CLOSE'">
         <VideoChatDetail />
       </div>
       <div class="fab-container">
@@ -193,7 +193,7 @@ export default {
 }
 .videoContainer {
   position: sticky;
-  left: 35%;
+  left: 25%;
   width: 50rem;
   height: 40rem;
   background-color: lightgrey;

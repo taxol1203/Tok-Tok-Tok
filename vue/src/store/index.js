@@ -71,9 +71,13 @@ export default createStore({
     },
     OPEN_VIDEO(state) {
       state.video_status = "OPEN";
+      console.log(state.video_status);
     },
     CLOSE_VIDEO(state) {
       state.video_status = "CLOSE";
+    },
+    LIVE_VIDEO(state) {
+      state.video_status = "LIVE";
     }
   },
   actions: {
@@ -170,7 +174,7 @@ export default createStore({
       return state.rooms[`${state.selected_room}`].session.status;
     },
     is_user: (state) => {
-      if (state.auth.user.pk_idx == state.rooms[`${state.selected_room}`].client.pk_idx) {
+      if (state.auth.user.pk_idx == state.session_key.fk_client_idx) {
         return true;
       } else return false;
     }

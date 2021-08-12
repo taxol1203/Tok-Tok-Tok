@@ -5,20 +5,26 @@
     <button type="button" @click="connect">establish connection</button> -->
     <button @click="closeVideoWindow">창닫기</button>
     <br />
-    <div>
-      <video
-        ref="videoElement"
-        autoplay
-        class="myVideo"
-        :class="{ myVideoLive: videoStatus == 'LIVE' }"
-      ></video>
-      <video
-        ref="remoteVideo"
-        autoplay
-        v-if="videoStatus == 'LIVE'"
-        class="remoteVideo"
-      ></video>
-    </div>
+    <el-main>
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <video
+            ref="videoElement"
+            autoplay
+            class="myVideo"
+            :class="{ myVideoLive: videoStatus == 'LIVE' }"
+          ></video>
+        </el-col>
+        <el-col :span="12">
+          <video
+            ref="remoteVideo"
+            autoplay
+            v-if="videoStatus == 'LIVE'"
+            class="remoteVideo"
+          ></video>
+        </el-col>
+      </el-row>
+    </el-main>
     <el-footer>
       <el-row class="videoOptions">
         <div class="select">
@@ -88,7 +94,7 @@
           >버튼자리</el-button
         >
         <el-button
-          v-if="videoStatus == 'OPEN' && isUser"
+          v-if="isUser && videoStatus == 'OPEN'"
           @click="connect"
           class="enterBtn"
           plain
@@ -115,7 +121,7 @@ export default {
     const sessionId = computed(() => store.getters['get_selected_idx']);
     const screenShare = ref(true);
     const isUser = computed(() => store.getters.is_user); // 유저일때만 상담시작 버튼 보이게
-
+    console.log(isUser.value);
 
     const mediaOptions = reactive({
       audioinput: [],
@@ -318,6 +324,8 @@ export default {
           alert('Already peer have started.');
         }
       }
+      store.commit('LIVE_VIDEO');
+      console.log(videoStatus.value);
     };
 
     const sendOffer = () => {
@@ -617,10 +625,12 @@ export default {
 .myVideoLive {
   border: 1px solid black;
   /* 사이즈 작게 왼쪽 아래 라든가? */
+  width: 50%;
 }
 .remoteVideo {
   border: 1px solid black;
   /* 꽉찬화면? */
+  width: 50%;
 }
 .select {
   margin: 0.2rem;
