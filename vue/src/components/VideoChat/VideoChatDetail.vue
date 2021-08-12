@@ -19,7 +19,7 @@
           <video
             ref="remoteVideo"
             autoplay
-            v-if="videoStatus == 'LIVE'"
+            v-show="videoStatus == 'LIVE'"
             class="remoteVideo"
           ></video>
         </el-col>
