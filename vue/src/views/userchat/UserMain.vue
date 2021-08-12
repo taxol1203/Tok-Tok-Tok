@@ -58,23 +58,21 @@ export default {
     const isHidden = computed(() => store.getters['userQna/showUserChat']);
     const user_pk_idx = computed(() => store.state.auth.user.pk_idx);
     const sessionId = computed(() => store.getters['get_selected_idx']);
+    let stompClient = computed(() => store.getters['stompGetter']);
     const sendEnd = () => {
       send('END');
       store.commit('userQna/CHANGE_STATE');
+      store.commit('changeSessionkeyStatus', 'END');
       DialogVisible.value = false;
     };
     let changeCondition = () => {
       //+ 버튼 눌러서 상담 시작해야하는 경우
+      store.commit('changeSessionkeyStatus', '');
       store.dispatch('userQna/init');
       store.commit('userQna/CHANGE_STATE');
       DialogVisible.value = false;
     };
-    // 유저의 채팅방 개설요청
-    let createChatRoom = () => {
-      store.dispatch('createChatRooms', user_pk_idx.value);
-    };
     let connected = false;
-    let stompClient = computed(() => store.getters['stompGetter']);
 
     const send = (type) => {
       console.log(sessionId.value);
@@ -102,7 +100,6 @@ export default {
       connected,
       stompClient,
       changeCondition,
-      createChatRoom,
       sendEnd,
       send,
     };
