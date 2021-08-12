@@ -1,29 +1,27 @@
-<template lang="">
+<template>
   <div>
     <el-container>
       <el-aside><ChatList /></el-aside>
       <el-container>
-        <!-- <el-header v-if="store.state.selected_room"><UserTitle /></el-header> -->
-        <!-- <el-main> -->
-        <!-- <el-container> -->
         <transition name="chat-change" mode="out-in">
           <div v-if="sessionId"><ChatDetail /></div>
+          <div v-else>
+            <img class="clear-img" src="@/assets/HiphopLogo.png" alt="hiphop" />
+          </div>
         </transition>
-        <transition name="chat-change" mode="out-in">
-          <el-aside v-if="sessionId"><UserInfo /></el-aside>
-        </transition>
-        <!-- </el-container> -->
-        <!-- </el-main> -->
+        <!-- <transition name="chat-change" mode="out-in"> -->
+        <el-aside v-if="sessionId"><UserInfo /></el-aside>
+        <!-- </transition> -->
       </el-container>
     </el-container>
   </div>
 </template>
 <script>
-import ChatList from '../../components/chat/ChatList.vue';
-import ChatDetail from '../../components/chat/ChatDetail.vue';
-import UserInfo from '../../components/chat/UserInfo.vue';
-import { useStore } from 'vuex';
-import { computed } from 'vue';
+import ChatList from "../../components/chat/ChatList.vue";
+import ChatDetail from "../../components/chat/ChatDetail.vue";
+import UserInfo from "../../components/chat/UserInfo.vue";
+import { useStore } from "vuex";
+import { computed } from "vue";
 
 export default {
   components: {
@@ -33,7 +31,7 @@ export default {
   },
   setup() {
     const store = useStore();
-    const sessionId = computed(() => store.getters['get_selected_idx']);
+    const sessionId = computed(() => store.getters["get_selected_idx"]);
 
     return {
       sessionId,
@@ -46,6 +44,12 @@ export default {
   padding: 0;
   margin: 0;
 }
+
+.clear-img {
+  align-content: center;
+  opacity: 0.7;
+}
+
 /* 생성 부분 */
 .chat-change-enter-from {
   opacity: 0;
