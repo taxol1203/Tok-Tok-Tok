@@ -75,6 +75,7 @@
 import { reactive, ref, computed } from "vue";
 import { useStore } from "vuex";
 import Footer from "@/components/footer.vue";
+import router from "@/router";
 
 export default {
   components: {
@@ -91,9 +92,14 @@ export default {
       };
       ruleForm.value.validate((valid) => {
         if (valid) {
-          store.dispatch("auth/signup", payload);
+          store.dispatch("auth/signup", payload).then(() => {
+            router.push("/login");
+          });
         }
       });
+      // .then(() => {
+      //   router.push("/login");
+      // });
     };
     const refEmail = ref("");
     const refPasswd = ref("");
