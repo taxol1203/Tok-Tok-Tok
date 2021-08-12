@@ -1,6 +1,4 @@
 <template>
-  <!-- <div v-loading="loading">상담 연결 중입니다.</div> -->
-  {{ loading }}
   <el-row justify="center" v-loading="loading">
     <el-col :span="12">
       <el-card shadow="always">

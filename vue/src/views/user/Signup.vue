@@ -1,71 +1,69 @@
 <template>
-  <el-row justify="center">
+  <el-row justify="center" v-loading="loading">
     <el-col :span="12">
-      <div>
-        <el-card shadow="always">
-          <el-form
-            :model="user"
-            :rules="rules"
-            label-position="top"
-            ref="ruleForm"
-            class="demo-ruleForm"
-          >
-            <el-form-item label="닉네임" prop="username">
-              <el-input
-                type="text"
-                v-model="user.username"
-                autocomplete="off"
-                placeholder="닉네임을 입력해 주세요"
-                @keyup.enter="nextEmail"
-              ></el-input>
-            </el-form-item>
-            <el-form-item label="이메일" prop="email">
-              <el-input
-                type="email"
-                v-model="user.email"
-                autocomplete="off"
-                placeholder="이메일을 입력해 주세요"
-                @keyup.enter="nextPasswd"
-                ref="refEmail"
-              >
-                <template #append>
-                  <el-button
-                    class="green-color-btn"
-                    id="green-btn"
-                    @click="duplicate"
-                    :disabled="!isEmailFormValid"
-                    >중복확인</el-button
-                  >
-                </template>
-              </el-input>
-            </el-form-item>
-            <el-form-item label="비밀번호" prop="passwd">
-              <el-input
-                type="password"
-                v-model="user.passwd"
-                autocomplete="off"
-                placeholder="9~16자, 영문, 숫자, 특수문자(~,!,@,#,$,%,^,&,*,(,),+,|,=)를 최소 1개씩 포함시켜 주세요)"
-                @keyup.enter="nextCheck"
-                ref="refPasswd"
-              ></el-input>
-            </el-form-item>
-            <el-form-item label="비밀번호 확인" prop="check">
-              <el-input
-                type="password"
-                v-model="user.check"
-                autocomplete="off"
-                placeholder="비밀번호 확인"
-                ref="refCheck"
-                @keyup.enter="onSubmit()"
-              ></el-input>
-            </el-form-item>
-            <el-button class="green-color-btn" @click="onSubmit()" :disabled="!isValid"
-              >회원가입</el-button
+      <el-card shadow="always">
+        <el-form
+          :model="user"
+          :rules="rules"
+          label-position="top"
+          ref="ruleForm"
+          class="demo-ruleForm"
+        >
+          <el-form-item label="닉네임" prop="username">
+            <el-input
+              type="text"
+              v-model="user.username"
+              autocomplete="off"
+              placeholder="닉네임을 입력해 주세요"
+              @keyup.enter="nextEmail"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="이메일" prop="email">
+            <el-input
+              type="email"
+              v-model="user.email"
+              autocomplete="off"
+              placeholder="이메일을 입력해 주세요"
+              @keyup.enter="nextPasswd"
+              ref="refEmail"
             >
-            <el-button @click="resetForm()">다시쓰기</el-button>
-          </el-form>
-        </el-card>
-      </div>
+              <template #append>
+                <el-button
+                  class="green-color-btn"
+                  id="green-btn"
+                  @click="duplicate"
+                  :disabled="!isEmailFormValid"
+                  >중복확인</el-button
+                >
+              </template>
+            </el-input>
+          </el-form-item>
+          <el-form-item label="비밀번호" prop="passwd">
+            <el-input
+              type="password"
+              v-model="user.passwd"
+              autocomplete="off"
+              placeholder="9~16자, 영문, 숫자, 특수문자(~,!,@,#,$,%,^,&,*,(,),+,|,=)를 최소 1개씩 포함시켜 주세요)"
+              @keyup.enter="nextCheck"
+              ref="refPasswd"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="비밀번호 확인" prop="check">
+            <el-input
+              type="password"
+              v-model="user.check"
+              autocomplete="off"
+              placeholder="비밀번호 확인"
+              ref="refCheck"
+              @keyup.enter="onSubmit()"
+            ></el-input>
+          </el-form-item>
+          <el-button class="green-color-btn" @click="onSubmit()" :disabled="!isValid"
+            >회원가입</el-button
+          >
+          <el-button @click="resetForm()">다시쓰기</el-button>
+        </el-form>
+      </el-card>
     </el-col>
   </el-row>
   <Footer />
@@ -84,6 +82,7 @@ export default {
   setup() {
     const store = useStore();
     const ruleForm = ref(null);
+    const loading = ref(false);
     const onSubmit = () => {
       let payload = {
         username: user.username,
@@ -97,9 +96,6 @@ export default {
           });
         }
       });
-      // .then(() => {
-      //   router.push("/login");
-      // });
     };
     const refEmail = ref("");
     const refPasswd = ref("");
@@ -113,6 +109,15 @@ export default {
     const isEmailValid = computed(() => store.state.auth.emailValid);
     //형식이 맞는지 검사용
     const isEmailFormValid = ref(false);
+
+    const load = () => {
+      loading.value = true;
+      onSubmit();
+      setTimeout(loadFinsh, 1000);
+    };
+    const loadFinsh = () => {
+      loading.value = false;
+    };
 
     const duplicate = () => {
       let emailInfo = {
@@ -217,6 +222,9 @@ export default {
       nextCheck,
       isEmailValid,
       isEmailFormValid,
+      loading,
+      load,
+      loadFinsh,
     };
   },
 };
