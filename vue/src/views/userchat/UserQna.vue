@@ -22,9 +22,10 @@
         </el-row>
       </div>
       <user-chat-detail v-if="sessionId" />
+      <p>{{ closeMsg }}</p>
     </el-scrollbar>
     <!-- 입력창시작 -->
-    <el-row id="bottomInput" v-if="sessionId">
+    <el-row id="bottomInput" v-if="realChat == 'LIVE'">
       <el-col :span="5">
         <el-button icon="el-icon-video-camera" class="green-color-btn"></el-button>
       </el-col>
@@ -55,7 +56,7 @@
 import Stomp from 'webstomp-client';
 import SockJS from 'sockjs-client';
 import { useStore } from 'vuex';
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 import UserChatDetail from './UserChatDetail.vue';
 
 export default {
@@ -64,6 +65,8 @@ export default {
   setup() {
     const store = useStore();
     const userMsg = ref('');
+    const closeMsg = computed(() => store.getters['closeMsgGetter']);
+    const scrollbar = ref('');
     store.commit('userQna/CHANGE_SELECT', 1);
     store.commit('userQna/SET_CURRENT');
     const log = computed(() => store.getters['userQna/logGetter']);
@@ -73,38 +76,51 @@ export default {
       else history += '|' + value;
       store.commit('userQna/CHANGE_SELECT', next_idx);
       store.commit('userQna/ADD_LOG');
+      scrollbar.value.setScrollTop(999999999999999999999);
     };
+
+    onMounted(() => {
+      scrollbar.value.setScrollTop(999999999999999999999);
+    });
     const user_pk_idx = computed(() => store.state.auth.user.pk_idx);
-    const realChat = computed(() => store.state.userQna.realChat);
-    const sessionId = computed(() => store.state.selected_room);
+    const realChat = computed(() => store.getters['get_user_room_status']);
+    const sessionId = computed(() => store.getters['get_selected_idx']);
+    const isHidden = computed(() => store.getters['userQna/showUserChat']);
+    let stompClient = computed(() => store.getters['stompGetter']);
+    let connected = ref(false);
+
     const createChatRoom = () => {
       console.log(user_pk_idx.value);
-      send('JOIN');
       store.dispatch('createChatRooms', history);
       console.log(sessionId.value);
     };
     watch(sessionId, () => {
       connect();
     });
-
-    let connected = false;
-    let stompClient = '';
+    watch(connected, () => {
+      console.log('join');
+      send('JOIN');
+    });
 
     const connect = () => {
       const serverURL = 'https://i5d204.p.ssafy.io/api/chat'; // 서버 채팅 주소
       let socket = new SockJS(serverURL);
-      stompClient = Stomp.over(socket);
-      stompClient.connect(
+      store.commit('stompSetter', Stomp.over(socket));
+      // stompClient = Stomp.over(socket);
+      stompClient.value.connect(
         {},
         (frame) => {
-          connected = true;
+          connected.value = true;
           console.log('CONNECT SUCCESS ++ status : established', frame);
           // 구독 == 채팅방 입장.
-          stompClient.subscribe('/send/' + sessionId.value, (res) => {
+          stompClient.value.subscribe('/send/' + sessionId.value, (res) => {
             console.log('receive from server:', res.body);
             switch (JSON.parse(res.body).type) {
               case 'MSG':
                 store.commit('USER_MSG_PUSH', JSON.parse(res.body)); // 수신받은 메세지 표시하기
+                setTimeout(() => {
+                  scrollbar.value.setScrollTop(999999999999999999999);
+                }, 150);
                 break;
               case 'JOIN':
                 // 방을 생성할 때 백엔드단에서 처리하므로 신경 x
@@ -125,7 +141,7 @@ export default {
         (error) => {
           // 소켓 연결 실패
           console.log('status : failed, STOMP CLIENT 연결 실패', error);
-          connected = false;
+          connected.value = false;
         }
       );
     };
@@ -140,11 +156,12 @@ export default {
 
     const send = (type) => {
       console.log('Send message:' + userMsg.value);
+      console.log(sessionId.value);
       if (user_pk_idx.value <= 0) {
         console.log('0이하면 안됨) fk_author_idx: ' + user_pk_idx.value);
       }
       //DB에 없는 유저 idx(0같은 것)가 들어가면 안된다.
-      if (stompClient && stompClient.connected && user_pk_idx.value > 0) {
+      if (stompClient.value && stompClient.value.connected && user_pk_idx.value > 0) {
         console.log('IN SOCKET');
         const msg = {
           message: userMsg.value, // 메세지 내용. type이 MSG인 경우를 제외하곤 비워두고 프론트단에서만 처리.
@@ -155,7 +172,7 @@ export default {
           // 주의할 점은, 방 세션 id가 아닌, 방 정보의 pk_idx를 첨부한다. created 라이프사이클 메서드 참조.
           type: type, // 메세지 타입.
         };
-        stompClient.send('/receive/' + sessionId.value, JSON.stringify(msg), {});
+        stompClient.value.send('/receive/' + sessionId.value, JSON.stringify(msg), {});
       }
     };
     return {
@@ -165,8 +182,12 @@ export default {
       user_pk_idx,
       realChat,
       history,
+      connect,
       connected,
       stompClient,
+      closeMsg,
+      isHidden,
+      scrollbar,
       createChatRoom,
       chooseAnswer,
       sendMessage,

@@ -2,7 +2,7 @@
   <div id="nav">
     <router-link to="/signup">Sign Up</router-link> |
     <router-link to="/login">Log in</router-link> | <router-link to="/admin">Admin</router-link> |
-    <router-link to="/userchat">User Page</router-link>
+    <router-link to="/userchat">User Page</router-link> Noto Sans && KR-bold
   </div>
   <div class="inner">
     <transition name="page-change" mode="out-in">
@@ -19,8 +19,8 @@ export default {
 <style>
 /* 전체 프로젝트 폰트 변경(상속, cascading) */
 * {
-  font-family: BMJUA;
-  text-decoration: none;
+  font-family: "Noto Sans", "맑은 고딕", sans-serif;
+  font-weight: bold;
 }
 .el-main {
   overflow: hidden;
@@ -50,19 +50,6 @@ export default {
   background-color: #006f3e;
   color: #fff;
   border: 0;
-}
-
-/* .inner {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-} */
-@font-face {
-  font-family: "BMJUA";
-  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/BMJUA.woff") format("woff");
-  font-weight: normal;
-  font-style: normal;
 }
 
 /* 생성 부분 */

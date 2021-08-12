@@ -19,7 +19,8 @@ export default createStore({
     session_key: {},
     //qnahistory를 아마 넣을 예정
     list_status: "LIVE",
-    closeMsg: ""
+    closeMsg: "",
+    stompClient: '',
   },
   mutations: {
     GET_ROOMS(state, payload) {
@@ -65,7 +66,12 @@ export default createStore({
       // console.log("close")
     },
     CLOSE_MSG(state) {
+      state.selected_room = ""
       state.closeMsg = "상담이 종료되었습니다."
+    },
+    stompSetter(state, payload) {
+      console.log(payload)
+      state.stompClient = payload;
     }
   },
   actions: {
@@ -160,6 +166,22 @@ export default createStore({
     },
     statusGetter: (state) => {
       return state.rooms[`${state.selected_room}`].session.status;
+    },
+    closeMsgGetter: (state) => {
+      return state.closeMsg;
+    },
+    waitingGetter: (state) => {
+      let cnt = 0;
+      for (let i in state.rooms) {
+        let room = state.rooms[i];
+        if (room.session.status === 'OPEN') {
+          cnt++;
+        }
+      }
+      return cnt;
+    },
+    stompGetter: (state) => {
+      return state.stompClient;
     }
   },
 });
