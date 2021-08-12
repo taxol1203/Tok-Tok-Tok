@@ -12,19 +12,25 @@
             circle
           ></el-button>
         </transition>
+        <el-dialog title="상담을 종료하시겠습니까?" v-model="DialogVisible" width="30%" center>
+          <template #footer>
+            <span class="dialog-footer">
+              <el-button @click="DialogVisible = false">아니오</el-button>
+              <el-button type="primary" @click="sendEnd">네</el-button>
+            </span>
+          </template>
+        </el-dialog>
         <transition class="same-pos" name="fade" mode="out-in">
           <div id="chat-box" v-if="isHidden">
             <el-card :body-style="{ padding: '0px' }" id="chat-card">
               <div id="card-head" class="card-header">
-                <div>
-                  <!-- 이유는 모르겠지만 이 요소가 없으면 버튼이 우측 정렬이 안 됨 -->
-                </div>
+                <div></div>
                 <div style="float: right">
-                  <i @click="changeCondition" class="el-icon-close" id="close-btn"></i>
+                  <i @click="DialogVisible = true" class="el-icon-close" id="close-btn"></i>
                 </div>
               </div>
               <div class="full-box">
-                <UserQna />
+                <UserQna :close="isHidden" />
               </div>
             </el-card>
           </div>
@@ -34,11 +40,11 @@
   </el-row>
 </template>
 <script>
-import { useStore } from "vuex";
-import UserChatDetail from "./UserChatDetail.vue";
-import UserQna from "./UserQna.vue";
-import ChatDetail from "../../components/chat/ChatDetail.vue";
-import { computed, ref } from "vue";
+import { useStore } from 'vuex';
+import UserChatDetail from './UserChatDetail.vue';
+import UserQna from './UserQna.vue';
+import ChatDetail from '../../components/chat/ChatDetail.vue';
+import { computed, onMounted, ref } from 'vue';
 /* eslint-disable */
 export default {
   components: {
@@ -46,34 +52,59 @@ export default {
     UserChatDetail,
     ChatDetail,
   },
-
   setup() {
-    let isChatExist = ref(false);
-    let isHidden = ref(false);
     const store = useStore();
+    let DialogVisible = ref(false);
+    const isHidden = computed(() => store.getters['userQna/showUserChat']);
     const user_pk_idx = computed(() => store.state.auth.user.pk_idx);
-    const sessionId = computed(() => store.state.user_selected_room);
-    let changeCondition = () => {
-      store.dispatch("userQna/init"); //state.userQna.scenes에 pk_idx별로 예상질문정보+answers에 정답정보 저장
-      isHidden.value = !isHidden.value;
+    const sessionId = computed(() => store.getters['get_selected_idx']);
+    const sendEnd = () => {
+      send('END');
+      store.commit('userQna/CHANGE_STATE');
+      DialogVisible.value = false;
     };
-    let changeisChatExist = () => {
-      isChatExist.value = !isChatExist.value;
+    let changeCondition = () => {
+      //+ 버튼 눌러서 상담 시작해야하는 경우
+      store.dispatch('userQna/init');
+      store.commit('userQna/CHANGE_STATE');
+      DialogVisible.value = false;
     };
     // 유저의 채팅방 개설요청
     let createChatRoom = () => {
-      store.dispatch("createChatRooms", user_pk_idx.value);
-      isChatExist.value = true;
+      store.dispatch('createChatRooms', user_pk_idx.value);
+    };
+    let connected = false;
+    let stompClient = computed(() => store.getters['stompGetter']);
+
+    const send = (type) => {
+      console.log(sessionId.value);
+      if (
+        sessionId.value &&
+        stompClient.value &&
+        stompClient.value.connected &&
+        user_pk_idx.value > 0
+      ) {
+        console.log('IN SOCKET');
+        const msg = {
+          message: '',
+          fk_author_idx: user_pk_idx.value, // 작성자의 회원 idx
+          fk_session_id: sessionId.value, // 현재 채팅세션의 id.
+          type: type, // 메세지 타입.
+        };
+        stompClient.value.send('/receive/' + sessionId.value, JSON.stringify(msg), {});
+      }
     };
     return {
-      store,
+      DialogVisible,
       sessionId,
       user_pk_idx,
-      isChatExist,
       isHidden,
-      changeisChatExist,
+      connected,
+      stompClient,
       changeCondition,
       createChatRoom,
+      sendEnd,
+      send,
     };
   },
 };
@@ -83,7 +114,7 @@ export default {
   position: fixed;
   width: 100%;
   height: 100%;
-  background-image: url("../../assets/Microsoft.png");
+  background-image: url('../../assets/Microsoft.png');
   background-repeat: no-repeat;
   background-position: center;
 }

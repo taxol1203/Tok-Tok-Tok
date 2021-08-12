@@ -1,7 +1,7 @@
 <template>
   <div v-if="isOpen == 'OPEN'">
     <!-- <p>현재 모든 상담사가 상담 중입니다. 잠시만 기다려주세요.</p> -->
-    <div v-loading="loading"></div>
+    <div v-loading="loading">상담 연결 중입니다.</div>
     <i class="el-icon-loading" style="margin-right: 3px"></i>
     <!-- <i class="el-icon-loading"></i>
     <p>이거 기다리는거 디자인 물어보기</p> -->
@@ -20,7 +20,6 @@
       </el-col>
     </el-row>
   </div>
-  <p>{{ closeMsg }}</p>
   <!-- 실시간채팅 끝 -->
 </template>
 <script>
@@ -32,11 +31,10 @@ export default {
   components: {},
   setup() {
     const store = useStore();
-    const sessionId = computed(() => store.getters['get_selected_idx']); //user가 생성한 방 id
     const userPkidx = computed(() => store.state.auth.user.pk_idx);
+    const sessionId = computed(() => store.getters['get_selected_idx']); //user가 생성한 방 id
     const messages = computed(() => store.getters['get_user_messages']);
     const isOpen = computed(() => store.getters['get_user_room_status']);
-    const closeMsg = computed(() => store.getters['clostMsgGetter']);
     const loading = true;
 
     return {
@@ -46,7 +44,6 @@ export default {
       messages,
       isOpen,
       loading,
-      closeMsg,
     };
   },
 };
