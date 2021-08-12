@@ -185,7 +185,7 @@ public class QnAController {
         }
     }
 
-    @ApiOperation(value = "답변 번호에 해당하는 답변의 정보를 수정한다. (content, fk_next_idx) 여기서 이전 질문(fk_previous_idx)는 변경하지 않는다.", response = String.class)
+    @ApiOperation(value = "답변 번호에 해당하는 답변의 정보를 수정한다 . (content, fk_next_idx) 여기서 이전 질문(fk_previous_idx)는 변경하지 않는다.", response = String.class)
     @PutMapping("/answer/{idx}")
     public ResponseEntity<?> updateAnswer(@RequestBody Answer content) {
         logger.debug("updateAnswer - 호출");
