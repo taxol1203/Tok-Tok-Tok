@@ -1,10 +1,15 @@
 package com.ssafy.d204.api.controller;
 
+import com.ssafy.d204.api.response.UserLoginPostRes;
 import com.ssafy.d204.api.service.AnswerService;
 import com.ssafy.d204.api.service.QuestionService;
 import com.ssafy.d204.db.entity.Answer;
 import com.ssafy.d204.db.entity.Question;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -155,8 +160,20 @@ public class QnAController {
               HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-    @ApiOperation(value = "새로운 답변 정보를 입력한다. title, content, fk_next_idx를 입력하여 전송 할 수 있다. \"fk_next_idx\": 0 를 지우고 execute를 하면 연결되는 다음 질문의 기본 값(fk_next_idx)는 2(상담종료)이다. (0으로 실행하면 오류)", response = String.class)
+    
+    @ApiOperation(value = "새로운 답변 정보를 입력한다.", response = String.class)
+    /*
+    @ApiImplicitParams({  
+      @ApiImplicitParam(name = "content", dataType = "varchar", value = "포스트 대상 PK"),
+      @ApiImplicitParam(name = "fk_next_idx", dataType = "int4", value = "포스트를 등록한 유저 PK"),
+      @ApiImplicitParam(name = "fk_previous_idx", dataType = "int4", value = "포스트를 등록한 유저 PK"),
+      })
+      */
+    @ApiImplicitParam(name = "content", dataType = "varchar", value = "content, fk_next_idx를 입력하여 전송 할 수 있다. \\\"fk_next_idx\\\": 0 를 지우고 execute를 하면 연결되는 다음 질문의 기본 값(fk_next_idx)는 2(상담종료)이다. (0으로 실행하면 오류)\"")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "로그인 성공, 토큰과 유저정보 반환",response = UserLoginPostRes.class),
+        @ApiResponse(code = 401, message = "아이디 혹은 비밀번호 일치하지 않음", response = Void.class)
+    })
     @PostMapping("/answer")
     public ResponseEntity<?> writeAnswer(@RequestBody Answer content) {
         logger.debug("writeAnswer - 호출");
