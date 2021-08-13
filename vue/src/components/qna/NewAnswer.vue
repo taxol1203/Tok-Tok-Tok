@@ -11,7 +11,7 @@
           <el-input
             class="ans"
             type="textarea"
-            placeholder="내용을 입력해주세요."
+            placeholder="예상 '답변'을 입력해주세요."
             v-if="show"
             v-model="oa.content"
             clearable
@@ -28,7 +28,7 @@
           <!-- 다음 시나리오 select style="border: 1px solid #dcdfe6; border-radius: 5px 5px 5px 5px"-->
           <el-select
             v-model="selectValue[index]"
-            placeholder="next scene"
+            placeholder="이어질 시나리오"
             @change="setNextIdx(index)"
           >
             <el-option
@@ -43,9 +43,9 @@
         <el-col :span="2">
           <el-button
             type="danger"
-            icon="el-icon-delete"
+            icon="el-icon-delete-solid"
             circle
-            style="border: 0px solid; background-color: transparent; color: #000"
+            style="border: 0px solid; background-color: transparent; color: #006f3e"
             @click="removeAnswer(index)"
           ></el-button>
         </el-col>

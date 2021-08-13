@@ -217,6 +217,9 @@ export default createStore({
     },
     scrollbarGetter: (state) => {
       return state.scrollbar
+    },
+    listStatusGetter: (state) => {
+      return state.list_status;
     }
   },
 });

@@ -11,16 +11,17 @@
             type="success"
             @click="savaAnsData"
             circle
-            style="border: 0px solid; background-color: transparent; color: #000"
-            >저장</el-button
+            style="border: 0px solid; background-color: transparent; color: #006f3e"
+            ><i class="el-icon-success" style="color: #006f3e">&nbsp;저장</i></el-button
           >
+
           <el-button
             type="danger"
             circle
             v-if="selectKey > 2"
             @click="removeQna"
-            style="border: 0px solid; background-color: transparent; color: #000"
-            >삭제</el-button
+            style="border: 0px solid; background-color: transparent; color: #006f3e"
+            ><i class="el-icon-delete-solid" style="color: #006f3e">&nbsp;삭제</i></el-button
           >
         </el-col>
       </el-row>
@@ -50,6 +51,7 @@ export default {
 
     const selectKey = computed(() => store.getters['moduleQna/getKey']);
     const savaAnsData = () => {
+      store.dispatch('moduleQna/editContent', select.value);
       store.dispatch('moduleQna/updateAnswer');
       if (new_answer.value.length > 0) store.dispatch('moduleQna/addAnswer');
     };
