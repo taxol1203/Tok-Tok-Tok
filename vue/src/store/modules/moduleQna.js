@@ -58,11 +58,15 @@ export const moduleQna = {
     //새 답변 저장하기
     addAnswer: (state) => {
       let tmp = state.old_answer
+      let tmp_scene = state.next_scene;
       state.new_answer.forEach(item => {
         tmp.push(item)
+        tmp_scene.push(item.fk_next_idx)
       })
       state.old_answer = tmp
+      state.next_scene = tmp_scene
       state.new_answer = []
+      
     },
     //title, content 수정하기(등록 버튼으로)
     editContent: (state, payload) => {
@@ -72,7 +76,7 @@ export const moduleQna = {
       state.select = payload
       ElMessage({
         showClose: true,
-        message: '시나리오가 수정되었습니다.',
+        message: '시나리오의 질문이 수정되었습니다.',
         type: 'success',
       });
     },
