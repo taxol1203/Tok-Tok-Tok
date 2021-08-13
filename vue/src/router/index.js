@@ -4,6 +4,8 @@ import Signup from "../views/user/Signup.vue";
 import ChatArea from "../views/chat/ChatArea.vue";
 import QnaArea from "../views/qna/QnaArea.vue";
 import UserChat from "../views/userchat/UserMain.vue";
+import UserSignup from "../views/userchat/UserSignup.vue";
+import UserLogin from "../views/userchat/UserLogin.vue";
 import NotFound from "../views/NotFound.vue";
 import { ElMessage } from "element-plus";
 
@@ -67,6 +69,22 @@ const routes = [
     },
   },
   {
+    path: "/usersignup",
+    name: "UserSignup",
+    component: UserSignup,
+    meta: {
+      authRequired: false,
+    },
+  },
+  {
+    path: "/userlogin",
+    name: "UserLogin",
+    component: UserLogin,
+    meta: {
+      authRequired: false,
+    },
+  },
+  {
     path: "/:catchAll(.*)",
     component: NotFound,
   },
@@ -78,23 +96,23 @@ const router = createRouter({
 });
 
 // 로그인 권한 부분. 잠시 꺼둠
-router.beforeEach(async (to, from, next) => {
-  if (
-    to.matched.some((routeInfo) => {
-      return routeInfo.meta.authRequired;
-    })
-  ) {
-    return next();
-  }
-  if (localStorage.getItem("jwt") === null) {
-    ElMessage({
-      showClose: true,
-      message: "로그인이 필요합니다.",
-      type: "error",
-    });
-    return next({ name: "Login" });
-  }
-  return next();
-});
+// router.beforeEach(async (to, from, next) => {
+//   if (
+//     to.matched.some((routeInfo) => {
+//       return routeInfo.meta.authRequired;
+//     })
+//   ) {
+//     return next();
+//   }
+//   if (localStorage.getItem("jwt") === null) {
+//     ElMessage({
+//       showClose: true,
+//       message: "로그인이 필요합니다.",
+//       type: "error",
+//     });
+//     return next({ name: "Login" });
+//   }
+//   return next();
+// });
 
 export default router;

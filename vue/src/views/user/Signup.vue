@@ -1,84 +1,98 @@
 <template>
-  <el-row justify="center" v-loading="loading">
-    <el-col :span="12">
-      <el-card shadow="always">
-        <el-form
-          :model="user"
-          :rules="rules"
-          label-position="top"
-          ref="ruleForm"
-          class="demo-ruleForm"
-        >
-          <el-form-item label="닉네임" prop="username">
-            <el-input
-              type="text"
-              v-model="user.username"
-              autocomplete="off"
-              placeholder="닉네임을 입력해 주세요"
-              @keyup.enter="nextEmail"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="이메일" prop="email">
-            <el-input
-              type="email"
-              v-model="user.email"
-              autocomplete="off"
-              placeholder="이메일을 입력해 주세요"
-              @keyup.enter="nextPasswd"
-              ref="refEmail"
+  <div class="container" id="SignupMain">
+    <div id="LeftPosition">
+      <el-row justify="center" v-loading="loading">
+        <el-col :span="24">
+          <el-card shadow="always">
+            <div style="position: static">
+              <h1>
+                <img src="@/assets/MainLogo.png" alt="MainLogo" id="MiniLogo" />
+              </h1>
+            </div>
+            <el-form
+              :model="user"
+              :rules="rules"
+              label-position="top"
+              ref="ruleForm"
+              class="demo-ruleForm"
             >
-              <template #append>
-                <el-button
-                  class="green-color-btn"
-                  id="green-btn"
-                  @click="duplicate"
-                  :disabled="!isEmailFormValid"
-                  >중복확인</el-button
+              <el-form-item label="닉네임" prop="username">
+                <el-input
+                  type="text"
+                  v-model="user.username"
+                  autocomplete="off"
+                  placeholder="닉네임을 입력해 주세요"
+                  @keyup.enter="nextEmail"
+                ></el-input>
+              </el-form-item>
+              <el-form-item label="이메일" prop="email">
+                <el-input
+                  type="email"
+                  v-model="user.email"
+                  autocomplete="off"
+                  placeholder="이메일을 입력해 주세요"
+                  @keyup.enter="nextPasswd"
+                  ref="refEmail"
                 >
-              </template>
-            </el-input>
-          </el-form-item>
-          <el-form-item label="비밀번호" prop="passwd">
-            <el-input
-              type="password"
-              v-model="user.passwd"
-              autocomplete="off"
-              placeholder="9~16자, 영문, 숫자, 특수문자(~,!,@,#,$,%,^,&,*,(,),+,|,=)를 최소 1개씩 포함시켜 주세요)"
-              @keyup.enter="nextCheck"
-              ref="refPasswd"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="비밀번호 확인" prop="check">
-            <el-input
-              type="password"
-              v-model="user.check"
-              autocomplete="off"
-              placeholder="비밀번호 확인"
-              ref="refCheck"
-              @keyup.enter="onSubmit()"
-            ></el-input>
-          </el-form-item>
-          <el-button class="green-color-btn" @click="onSubmit()" :disabled="!isValid"
-            >회원가입</el-button
-          >
-          <el-button @click="resetForm()">다시쓰기</el-button>
-        </el-form>
-      </el-card>
-    </el-col>
-  </el-row>
-  <Footer />
+                  <template #append>
+                    <el-button
+                      class="green-color-btn"
+                      id="green-btn"
+                      @click="duplicate"
+                      :disabled="!isEmailFormValid"
+                      >중복확인</el-button
+                    >
+                  </template>
+                </el-input>
+              </el-form-item>
+              <el-form-item label="비밀번호" prop="passwd">
+                <el-input
+                  type="password"
+                  v-model="user.passwd"
+                  autocomplete="off"
+                  placeholder="9~16자, 영문, 숫자, 특수문자(~,!,@,#,$,%,^,&,*,(,),+,|,=)를 최소 1개씩 포함시켜 주세요)"
+                  @keyup.enter="nextCheck"
+                  ref="refPasswd"
+                ></el-input>
+              </el-form-item>
+              <el-form-item label="비밀번호 확인" prop="check">
+                <el-input
+                  type="password"
+                  v-model="user.check"
+                  autocomplete="off"
+                  placeholder="비밀번호 확인"
+                  ref="refCheck"
+                  @keyup.enter="onSubmit()"
+                ></el-input>
+              </el-form-item>
+              <el-button class="green-color-btn" @click="onSubmit()" :disabled="!isValid"
+                >회원가입</el-button
+              >
+              <el-button @click="resetForm()">다시쓰기</el-button>
+            </el-form>
+          </el-card>
+        </el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="24" :offset="0" id="footer">
+          <strong>Help Desk </strong>
+          <em>
+            <a href="tel:02-3429-5041">02-3429-5041</a>
+          </em>
+          <br />
+          <span>평일 상담시간: 09:00 ~ 19:00</span>
+        </el-col>
+      </el-row>
+    </div>
+  </div>
 </template>
 
 <script>
 import { reactive, ref, computed } from "vue";
 import { useStore } from "vuex";
-import Footer from "@/components/footer.vue";
 import router from "@/router";
 
 export default {
-  components: {
-    Footer,
-  },
   setup() {
     const store = useStore();
     const ruleForm = ref(null);
@@ -230,7 +244,39 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+#SignupMain {
+  height: 98%;
+  background-image: url("../../assets/signup_back.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+#SignupMain::before {
+  content: "";
+  opacity: 0.5;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  background-color: #ffffff;
+}
+
+#LeftPosition {
+  position: absolute;
+  top: 20%;
+  left: 10%;
+}
+
+#MiniLogo {
+  width: 30%;
+  height: 30%;
+  display: block;
+  position: static;
+}
+
 /* 왜 인지 class가 안 먹어서 따로 지정함 */
 #green-btn {
   background-color: #006f3e;
