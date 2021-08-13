@@ -31,6 +31,6 @@ sub {
   color: gray;
 }
 .lastmsg {
-  color: black;
+  color: #2c3e50;
 }
 </style>
