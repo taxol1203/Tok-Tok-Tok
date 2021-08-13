@@ -156,7 +156,7 @@ export default {
     // 리스트에 있는데 미디어 디바이스에 접근이 불가능한 경우임.
     function handleError(error) {
       // 여기서 에러문구 띄워주면 좋을 것 같습니다.
-      alert('다른 디바이스에서 사용중인지는 않은지 확인해주시기 바랍니다 ');
+      alert('디바이스를 다른 곳에서 사용 중인지 확인해주시기 바랍니다 ');
       console.log('navigator.MediaDevices.getUserMedia error: ', error.message, error.name);
     }
 
@@ -209,9 +209,14 @@ export default {
       //       sendReconnectRequest(); // 만약 소켓이 연결되어있다면 재접속
       //     }
       //   });
-      const userMedia = await navigator.mediaDevices.getUserMedia(constraints);
-      const devices = await gotStream(userMedia);
-      gotDevicesList(devices);
+      try {
+        const userMedia = await navigator.mediaDevices.getUserMedia(constraints);
+        const devices = await gotStream(userMedia);
+        gotDevicesList(devices);
+      } catch (err) {
+        console.log(err);
+        alert('디바이스가 없습니다. 다시 확인해주세요.');
+      }
       if (socketRead) {
         sendReconnectRequest();
       }
@@ -443,6 +448,7 @@ export default {
       peerConnection = null;
       peerStarted = false;
       // 소켓 연결 종료 및 피어커넥션 다 종료
+      store.commit("CLOSE_VIDEO");
     };
     // 오디오 출력을 변경하는 코드입니다. 로컬에서 이뤄지는 작업이므로
     // 재접속이 필요하지 않습니다.
