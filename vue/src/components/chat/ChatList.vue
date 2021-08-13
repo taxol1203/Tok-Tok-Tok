@@ -7,8 +7,8 @@
         :class="{ activeMenu: status == 'LIVE' }"
         :span="8"
       >
-        <el-badge :value="count[0]" class="item">
-          <span>진행중</span>
+        <el-badge :value="count[0]" class="badge">
+          <span>진행</span>
         </el-badge>
       </el-col>
       <el-col
@@ -18,7 +18,7 @@
         :span="8"
       >
         <el-badge :value="count[1]" class="badge">
-          <span>대기중</span>
+          <span>대기</span>
         </el-badge>
       </el-col>
       <el-col
@@ -26,7 +26,7 @@
         class="list-menu-item"
         :class="{ activeMenu: status == 'END' }"
         :span="8"
-        ><el-badge :value="count[2]" class="item">
+        ><el-badge :value="count[2]" class="badge">
           <span>종료</span>
         </el-badge></el-col
       >
@@ -180,6 +180,7 @@ export default {
 .list-menu-item:hover {
   /* filter: brightness(150%); */
   background-color: #f7f4f0;
+  border-radius: 15px 15px 0px 0px;
 }
 .list-menu-item {
   height: 100%;
@@ -189,8 +190,15 @@ export default {
   text-align: center;
   justify-content: center;
   align-items: center;
+  border-radius: 15px 15px 0px 0px;
 }
 .activeMenu {
   background-color: #f7f4f0;
+}
+.badge sup {
+  background-color: #006f3e;
+}
+.badge {
+  padding: 3px;
 }
 </style>
