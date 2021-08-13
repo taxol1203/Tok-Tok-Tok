@@ -94,7 +94,7 @@
           >버튼자리</el-button
         >
         <el-button
-          v-if="isUser && videoStatus == 'OPEN'"
+          v-if="isUser && socketRead && localVidReady && videoStatus == 'OPEN'"
           @click="connect"
           class="enterBtn"
           plain
@@ -107,7 +107,7 @@
 </template>
 
 <script>
-import { ref, onMounted, reactive, computed } from 'vue';
+import { ref, onMounted, reactive, computed, onBeforeUnmount } from 'vue';
 import { useStore } from 'vuex';
 export default {
   setup() {
@@ -121,7 +121,7 @@ export default {
     const sessionId = computed(() => store.getters['get_selected_idx']);
     const screenShare = ref(true);
     const isUser = computed(() => store.getters.is_user); // 유저일때만 상담시작 버튼 보이게
-    console.log(isUser.value);
+    const localVidReady = ref(false);
 
     const mediaOptions = reactive({
       audioinput: [],
@@ -143,7 +143,6 @@ export default {
         videoElement.value.volume = 0; // 하울링 방지
         start(); // 기본 장치로 stream 바인딩하기
         socketInit(sessionId.value); // 세션아이디로 소켓열기
-
       } catch (err) {
         handleError(err);
         // enumerateDevices()에 .then으로 해당 함수의 실행을 마치고 난 뒤에 로딩을 해야
@@ -213,11 +212,14 @@ export default {
         const userMedia = await navigator.mediaDevices.getUserMedia(constraints);
         const devices = await gotStream(userMedia);
         gotDevicesList(devices);
+        setTimeout(() => {
+          localVidReady.value = true;
+        }, 1000);
       } catch (err) {
         console.log(err);
         alert('디바이스가 없습니다. 다시 확인해주세요.');
       }
-      if (socketRead) {
+      if (socketRead.value) {
         sendReconnectRequest();
       }
     };
@@ -243,7 +245,7 @@ export default {
     const socketUrl = 'wss://i5d204.p.ssafy.io/api/msgServer/'; // 메세지 시그널링 서버 주소
     // var socketUrl = "wss://59.151.220.195:8088/api/msgServer/"; // 메세지 시그널링 서버 주소
     let socket = null;
-    let socketRead = false; // socket이 열려있는지 flag. 소켓 통신이 이벤트 기반 처리기 때문에 flag값 없이는 코딩이 불가능함
+    const socketRead = ref(false); // socket이 열려있는지 flag. 소켓 통신이 이벤트 기반 처리기 때문에 flag값 없이는 코딩이 불가능함
     const socketInit = (roomId) => {
       // console.log(socketUrl, roomId);
       console.log(socketUrl);
@@ -256,15 +258,19 @@ export default {
       };
       socket.onopen = function () {
         console.log('Successfully connected to the server...');
-        socketRead = true;
+        socketRead.value = true;
         // 소켓 연결 성공
       };
       socket.onclose = function (e) {
         console.log(e);
         console.log('The connection to the server is closed:' + e.code);
         alert('상담이 종료되었습니다.');
-        socketRead = false;
+        socketRead.value = false;
         peerStarted = false;
+        // localStream 초기값
+        // trackstop 써봐
+        store.commit("CLOSE_VIDEO");
+
         if (peerConnection != null) {
           peerConnection.close();
           peerConnection = null;
@@ -304,7 +310,7 @@ export default {
           socket.send(JSON.stringify(res));
 
           // connect();
-        } else if (evt.type === 'reconnectResponse' && socketRead) {
+        } else if (evt.type === 'reconnectResponse' && socketRead.value) {
           peerStarted = false;
           // localStream = null;
           remoteVideo.value.src = '';
@@ -321,14 +327,14 @@ export default {
     };
 
     const connect = () => {
-      if (!peerStarted && localStream && socketRead) {
+      if (!peerStarted && localStream && socketRead.value) {
         sendOffer(); // offer 시작
         peerStarted = true;
       } else {
         if (!localStream) {
           alert('Please capture local video data first.');
         }
-        if (!socketRead) {
+        if (!socketRead.value) {
           alert('Please open socket before connect.');
         }
         if (peerStarted) {
@@ -442,6 +448,8 @@ export default {
       stop();
     };
     const stop = () => {
+      // localstream 초기값으로 바꾸
+      // track stop 위치 조정해서 넣어보기
       socket.close();
       peerConnection.removeStream(localStream);
       peerConnection.close();
@@ -587,7 +595,7 @@ export default {
           }
           localStream.addTrack(stream.getVideoTracks()[0]);
 
-          if (socketRead) {
+          if (socketRead.value) {
             sendReconnectRequest();
           }
           // return navigator.mediaDevices.enumerateDevices();
@@ -611,6 +619,8 @@ export default {
       screenShare,
       videoStatus,
       isUser,
+      socketRead,
+      localVidReady,
       gotDevicesList,
       handleError,
       start,
