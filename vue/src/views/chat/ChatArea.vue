@@ -1,7 +1,10 @@
 <template>
   <div>
     <el-container>
-      <el-aside><ChatList /></el-aside>
+      <el-aside v-if="videoStatus == 'CLOSE'"><ChatList /></el-aside>
+      <el-main v-else>
+        <VideoChatDetail />
+      </el-main>
       <el-container>
         <transition name="chat-change" mode="out-in">
           <div v-if="sessionId"><ChatDetail /></div>
@@ -17,24 +20,28 @@
   </div>
 </template>
 <script>
-import ChatList from "../../components/chat/ChatList.vue";
-import ChatDetail from "../../components/chat/ChatDetail.vue";
-import UserInfo from "../../components/chat/UserInfo.vue";
-import { useStore } from "vuex";
-import { computed } from "vue";
+import ChatList from '../../components/chat/ChatList.vue';
+import ChatDetail from '../../components/chat/ChatDetail.vue';
+import UserInfo from '../../components/chat/UserInfo.vue';
+import VideoChatDetail from "@/components/VideoChat/VideoChatDetail.vue";
+import { useStore } from 'vuex';
+import { computed } from 'vue';
 
 export default {
   components: {
     ChatList,
     ChatDetail,
     UserInfo,
+    VideoChatDetail,
   },
   setup() {
     const store = useStore();
-    const sessionId = computed(() => store.getters["get_selected_idx"]);
-
+    const sessionId = computed(() => store.getters['get_selected_idx']);
+    const videoStatus = computed(() => store.state.video_status);
     return {
+      store,
       sessionId,
+      videoStatus,
     };
   },
 };

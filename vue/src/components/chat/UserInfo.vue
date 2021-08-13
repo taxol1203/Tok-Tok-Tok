@@ -19,7 +19,11 @@
         <i class="el-icon-s-opportunity" style="margin-right: 3px"></i>
         고객 채팅봇 기록
       </el-row>
-      <el-row v-for="(item, index) in qna" :key="index" class="rowitem message-me">
+      <el-row
+        v-for="(item, index) in qna"
+        :key="index"
+        class="rowitem message-me"
+      >
         {{ item }}
       </el-row>
       <!-- <el-row class="rowitem message-me"> 기기 고장 </el-row>

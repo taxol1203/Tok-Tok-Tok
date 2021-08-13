@@ -12,7 +12,9 @@
             </div>
           </el-col>
           <el-col v-else>
-            <div class="message-other" v-if="msg.type == 'MSG'">{{ msg.message }}</div>
+            <div class="message-other" v-if="msg.type == 'MSG'">
+              {{ msg.message }}
+            </div>
           </el-col>
         </el-row>
       </div>
@@ -21,7 +23,11 @@
       <el-row id="bottomInput">
         <!-- 입력창 -->
         <el-col :span="2">
-          <el-button icon="el-icon-video-camera" class="icon-m-p green-color-btn"></el-button>
+          <el-button
+            icon="el-icon-video-camera"
+            class="icon-m-p green-color-btn"
+            @click="openVideo"
+          ></el-button>
         </el-col>
         <el-col :span="20">
           <div>
@@ -67,6 +73,11 @@ export default {
     onMounted(() => {
       scrollbar.value.setScrollTop(999999999999999999999);
     });
+    const openVideo = () => {
+      store.commit("OPEN_VIDEO");
+      // 사용자에게 초대 메세지 보내기 메세지타입 VID
+      send("VID");
+    };
 
     const sendMessage = () => {
       if (userPkidx.value && message.value) {
@@ -84,20 +95,31 @@ export default {
     };
 
     const send = (type) => {
-      console.log('Send message:' + message.value);
-      if (stompClient.value && stompClient.value.connected) {
-        console.log('IN SOCKET');
-        const msg = {
-          message: message.value, // 메세지 내용. type이 MSG인 경우를 제외하곤 비워두고 프론트단에서만 처리.
-          fk_author_idx: userPkidx.value, // 작성자의 회원 idx
-          created: '', // 작성시간, 공란으로 비워서 메세지 보내기. response에는 담겨옵니다.
-          deleted: false, // 삭제된 메세지 여부. default = false
-          fk_session_id: sessionId.value, // 현재 채팅세션의 id.
-          // 주의할 점은, 방 세션 id가 아닌, 방 정보의 pk_idx를 첨부한다. created 라이프사이클 메서드 참조.
-          type: type, // 메세지 타입.
-        };
-        console.log(sessionId.value);
-        stompClient.value.send('/receive/' + sessionId.value, JSON.stringify(msg), {});
+      // console.log('Send message:' + message.value);
+      if (stompClient && stompClient.connected) {
+        // console.log('IN SOCKET');
+        let msg;
+        if (type === "VID") {
+          msg = {
+            message: "화상상담을 요청합니다.",
+            fk_author_idx: userPkidx.value,
+            created: "",
+            deleted: false,
+            fk_session_id: sessionId.value,
+            type: type,
+          };
+        } else {
+          msg = {
+            message: message.value, // 메세지 내용. type이 MSG인 경우를 제외하곤 비워두고 프론트단에서만 처리.
+            fk_author_idx: userPkidx.value, // 작성자의 회원 idx
+            created: "", // 작성시간, 공란으로 비워서 메세지 보내기. response에는 담겨옵니다.
+            deleted: false, // 삭제된 메세지 여부. default = false
+            fk_session_id: sessionId.value, // 현재 채팅세션의 id.
+            // 주의할 점은, 방 세션 id가 아닌, 방 정보의 pk_idx를 첨부한다. created 라이프사이클 메서드 참조.
+            type: type, // 메세지 타입.
+          };
+        }
+        stompClient.send('/receive/' + sessionId.value, JSON.stringify(msg), {});
       }
     };
 
@@ -120,6 +142,7 @@ export default {
       stompClient,
       userPkidx,
       closeRoom,
+      openVideo,
     };
   },
 };

@@ -32,11 +32,6 @@ const routes = [
     },
   },
   {
-    path: "/secret",
-    name: "Secret",
-    component: () => import(/* webpackChunkName: "about" */ "../views/Secret.vue"),
-  },
-  {
     path: "/admin",
     name: "Admin",
     component: () => import("../views/Admin.vue"),

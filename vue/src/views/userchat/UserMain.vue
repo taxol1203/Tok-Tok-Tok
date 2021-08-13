@@ -1,6 +1,9 @@
 <template>
   <el-row :gutter="20">
     <div id="UserMain">
+      <div class="videoContainer" v-if="videoStatus != 'CLOSE'">
+        <VideoChatDetail />
+      </div>
       <div class="fab-container">
         <transition class="same-pos" name="fade" mode="out-in">
           <el-button
@@ -12,7 +15,12 @@
             circle
           ></el-button>
         </transition>
-        <el-dialog title="상담을 종료하시겠습니까?" v-model="DialogVisible" width="30%" center>
+        <el-dialog
+          title="상담을 종료하시겠습니까?"
+          v-model="DialogVisible"
+          width="30%"
+          center
+        >
           <template #footer>
             <span class="dialog-footer">
               <el-button @click="DialogVisible = false">아니오</el-button>
@@ -26,7 +34,11 @@
               <el-col :span="20" :offset="0"></el-col>
               <el-col :span="4" :offset="0">
                 <div style="float: right">
-                  <i @click="DialogVisible = true" class="el-icon-error" id="close-btn"></i>
+                  <i
+                    @click="DialogVisible = true"
+                    class="el-icon-error"
+                    id="close-btn"
+                  ></i>
                   <!-- <i @click="DialogVisible = true" class="el-icon-close" id="close-btn"></i> -->
                 </div>
               </el-col>
@@ -44,17 +56,19 @@
   </el-row>
 </template>
 <script>
-import { useStore } from 'vuex';
-import UserChatDetail from './UserChatDetail.vue';
-import UserQna from './UserQna.vue';
-import ChatDetail from '../../components/chat/ChatDetail.vue';
-import { computed, onMounted, ref } from 'vue';
+import { useStore } from "vuex";
+import UserChatDetail from "./UserChatDetail.vue";
+import UserQna from "./UserQna.vue";
+import ChatDetail from "../../components/chat/ChatDetail.vue";
+import VideoChatDetail from "@/components/VideoChat/VideoChatDetail.vue";
+import { computed, ref } from "vue";
 /* eslint-disable */
 export default {
   components: {
     UserQna,
     UserChatDetail,
     ChatDetail,
+    VideoChatDetail,
   },
   setup() {
     const store = useStore();
@@ -69,6 +83,8 @@ export default {
       store.commit('changeSessionkeyStatus', 'END');
       DialogVisible.value = false;
     };
+    const videoStatus = computed(() => store.state.video_status);
+
     let changeCondition = () => {
       //+ 버튼 눌러서 상담 시작해야하는 경우
       store.commit('changeSessionkeyStatus', '');
@@ -103,6 +119,8 @@ export default {
       isHidden,
       connected,
       stompClient,
+      videoStatus,
+      changeisChatExist,
       changeCondition,
       sendEnd,
       send,
@@ -115,7 +133,7 @@ export default {
   position: fixed;
   width: 100%;
   height: 100%;
-  background-image: url('../../assets/Microsoft.png');
+  background-image: url("../../assets/Microsoft.png");
   background-repeat: no-repeat;
   background-position: center;
 }
@@ -211,5 +229,12 @@ export default {
 }
 .fade-leave-active {
   transition: all 0.5s ease-out;
+}
+.videoContainer {
+  position: absolute;
+  width: 65rem;
+  height: 50rem;
+  background-color: lightgrey;
+  margin: 5rem;
 }
 </style>

@@ -52,7 +52,7 @@ import Stomp from 'webstomp-client';
 import SockJS from 'sockjs-client';
 import ChatItem from './ChatItem.vue';
 import { useStore } from 'vuex';
-import { computed, onMounted, ref } from 'vue';
+import { computed, ref, onMounted } from 'vue';
 
 export default {
   components: {
