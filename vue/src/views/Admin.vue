@@ -15,18 +15,19 @@
               <i class="el-icon-d-arrow-right" v-if="isCollapse===true"></i>
               <i class="el-icon-d-arrow-left"  v-if="isCollapse===false"></i>
             </el-menu-item>
-            <router-link to="/admin/chat">
-            <el-menu-item index="chat">
+            <router-link to="/admin/chat" style="text-decoration:none">
+            <el-menu-item index="chat" >
               <i class="el-icon-menu"></i>
               <template #title>상담</template>
-            </el-menu-item></router-link>
-            <router-link  to="/admin/qna">
+            </el-menu-item>
+            </router-link>
+            <router-link  to="/admin/qna" style="text-decoration:none">
             <el-menu-item index="qna">
               <i class="el-icon-document"></i>
               <template #title>예상 시나리오 작성</template>
             </el-menu-item></router-link>
-            <router-link  to="/admin/user">
-            <el-menu-item index="3">
+            <router-link  to="/admin/user" style="text-decoration:none">
+            <el-menu-item index="user">
               <i class="el-icon-setting"></i>
               <template #title>설정</template>
             </el-menu-item>
