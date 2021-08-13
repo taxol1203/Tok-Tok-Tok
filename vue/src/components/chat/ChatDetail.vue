@@ -70,6 +70,9 @@ export default {
     const stompClient = computed(() => store.getters['stompGetter']);
     const message = ref('');
     const scrollbar = ref('');
+    watch(scrollbar, () => {
+      store.commit('scrollbarSetter', scrollbar.value);
+    });
     onMounted(() => {
       scrollbar.value.setScrollTop(999999999999999999999);
     });

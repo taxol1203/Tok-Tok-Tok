@@ -67,6 +67,7 @@ export default {
     const stompClient = computed(() => store.getters['stompGetter']);
     const sessionId = computed(() => store.getters['get_selected_idx']);
     const chatStatus = computed(() => store.getters['statusGetter']);
+    const scrollbar = computed(() => store.getters['scrollbarGetter']);
     let connected = false;
 
     const listMenuSelect = (key) => {
@@ -104,17 +105,18 @@ export default {
                 if (msg.fk_session_id != sessionId.value) break;
                 if (chatStatus.value == 'OPEN') store.dispatch('enterRoom', msg);
                 else store.commit('MESSAGE_PUSH', msg); // 수신받은 메세지 표시하기
+                setTimeout(() => {
+                  scrollbar.value.setScrollTop(999999999999999999999);
+                }, 150);
                 break;
               case 'JOIN':
-                console.log('누군가 대기 중입니다...');
                 store.dispatch('getChatRooms');
-                // 방을 생성할 때 백엔드단에서 처리하므로 신경 x
                 break;
               case 'END':
                 store.dispatch('chatClose', msg.fk_session_id);
-                // 만약 둘 중 하나가 나가면 더 이상 채팅을 못치는 프론트구현
                 break;
               case 'VID':
+                store.commit('MESSAGE_PUSH', msg);
                 // vid 시작시 -> 화상채팅 시작하기 버튼만 딸랑 띄우기
                 break;
               default:
@@ -142,6 +144,7 @@ export default {
       listMenuSelect,
       connect,
       connected,
+      scrollbar,
     };
   },
 };

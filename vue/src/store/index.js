@@ -22,7 +22,7 @@ export default createStore({
     closeMsg: "",
     stompClient: '',
     video_status: "CLOSE",
-
+    scrollbar: '',
   },
   mutations: {
     GET_ROOMS(state, payload) {
@@ -88,6 +88,9 @@ export default createStore({
     },
     LIVE_VIDEO(state) {
       state.video_status = "LIVE";
+    },
+    scrollbarSetter(state, payload) {
+      state.scrollbar = payload;
     }
   },
   actions: {
@@ -212,5 +215,8 @@ export default createStore({
         return true;
       } else return false;
     },
+    scrollbarGetter: (state) => {
+      return state.scrollbar
+    }
   },
 });
