@@ -4,8 +4,8 @@ import Signup from "../views/user/Signup.vue";
 import ChatArea from "../views/chat/ChatArea.vue";
 import QnaArea from "../views/qna/QnaArea.vue";
 import UserChat from "../views/userchat/UserMain.vue";
-import { ElMessage } from 'element-plus';
-
+import NotFound from "../views/NotFound.vue";
+import { ElMessage } from "element-plus";
 
 const routes = [
   {
@@ -71,6 +71,10 @@ const routes = [
       authRequired: false,
     },
   },
+  {
+    path: "/:catchAll(.*)",
+    component: NotFound,
+  },
 ];
 
 const router = createRouter({
@@ -90,11 +94,11 @@ router.beforeEach(async (to, from, next) => {
   if (localStorage.getItem("jwt") === null) {
     ElMessage({
       showClose: true,
-      message: '로그인이 필요합니다.',
-      type: 'error',
+      message: "로그인이 필요합니다.",
+      type: "error",
     });
     return next({ name: "Login" });
-  } 
+  }
   return next();
 });
 

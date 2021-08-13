@@ -22,13 +22,17 @@
         </el-dialog>
         <transition class="same-pos" name="fade" mode="out-in">
           <div id="chat-box" v-if="isHidden">
-            <el-card :body-style="{ padding: '0px' }" id="chat-card">
-              <div id="card-head" class="card-header">
-                <div></div>
+            <el-row :gutter="40">
+              <el-col :span="20" :offset="0"></el-col>
+              <el-col :span="4" :offset="0">
                 <div style="float: right">
-                  <i @click="DialogVisible = true" class="el-icon-close" id="close-btn"></i>
+                  <i @click="DialogVisible = true" class="el-icon-error" id="close-btn"></i>
+                  <!-- <i @click="DialogVisible = true" class="el-icon-close" id="close-btn"></i> -->
                 </div>
-              </div>
+              </el-col>
+            </el-row>
+            <el-card :body-style="{ padding: '0px' }" id="chat-card">
+              <div id="card-head" class="card-header"></div>
               <div class="full-box">
                 <UserQna :close="isHidden" />
               </div>
@@ -58,23 +62,21 @@ export default {
     const isHidden = computed(() => store.getters['userQna/showUserChat']);
     const user_pk_idx = computed(() => store.state.auth.user.pk_idx);
     const sessionId = computed(() => store.getters['get_selected_idx']);
+    let stompClient = computed(() => store.getters['stompGetter']);
     const sendEnd = () => {
       send('END');
       store.commit('userQna/CHANGE_STATE');
+      store.commit('changeSessionkeyStatus', 'END');
       DialogVisible.value = false;
     };
     let changeCondition = () => {
       //+ 버튼 눌러서 상담 시작해야하는 경우
+      store.commit('changeSessionkeyStatus', '');
       store.dispatch('userQna/init');
       store.commit('userQna/CHANGE_STATE');
       DialogVisible.value = false;
     };
-    // 유저의 채팅방 개설요청
-    let createChatRoom = () => {
-      store.dispatch('createChatRooms', user_pk_idx.value);
-    };
     let connected = false;
-    let stompClient = computed(() => store.getters['stompGetter']);
 
     const send = (type) => {
       console.log(sessionId.value);
@@ -102,7 +104,6 @@ export default {
       connected,
       stompClient,
       changeCondition,
-      createChatRoom,
       sendEnd,
       send,
     };
@@ -149,10 +150,10 @@ export default {
 }
 
 #close-btn {
-  font-size: 3rem;
+  font-size: 2rem;
   color: white;
   font-style: bold;
-  color: #006f3e;
+  margin-bottom: 10px;
 }
 
 /* 위치 고정을 시키지 않으면 렌더링하면서 (생명&소멸) 서로 다른 공간에 보여짐 */

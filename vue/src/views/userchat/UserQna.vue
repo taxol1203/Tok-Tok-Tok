@@ -22,7 +22,7 @@
         </el-row>
       </div>
       <user-chat-detail v-if="sessionId" />
-      <p>{{ closeMsg }}</p>
+      <p v-if="realChat == 'END'">상담이 종료되었습니다.</p>
     </el-scrollbar>
     <!-- 입력창시작 -->
     <el-row id="bottomInput" v-if="realChat == 'LIVE'">
@@ -65,12 +65,13 @@ export default {
   setup() {
     const store = useStore();
     const userMsg = ref('');
-    const closeMsg = computed(() => store.getters['closeMsgGetter']);
     const scrollbar = ref('');
+    const closeMsg = computed(() => store.getters['closeMsgGetter']);
+    const log = computed(() => store.getters['userQna/logGetter']);
     store.commit('userQna/CHANGE_SELECT', 1);
     store.commit('userQna/SET_CURRENT');
-    const log = computed(() => store.getters['userQna/logGetter']);
     let history = '';
+
     const chooseAnswer = (next_idx, value) => {
       if (history == '') history += value;
       else history += '|' + value;
@@ -182,12 +183,12 @@ export default {
       user_pk_idx,
       realChat,
       history,
-      connect,
       connected,
       stompClient,
       closeMsg,
       isHidden,
       scrollbar,
+      connect,
       createChatRoom,
       chooseAnswer,
       sendMessage,
