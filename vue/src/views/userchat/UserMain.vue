@@ -1,20 +1,22 @@
 <template>
   <el-row :gutter="20">
     <div id="UserMain">
+      <el-button class="green-color-btn" @click="goSignUp()">회원가입</el-button>
+      <el-button class="green-color-btn" @click="goLogin()">로그인</el-button>
       <div class="videoContainer" v-if="videoStatus != 'CLOSE'">
         <VideoChatDetail />
       </div>
       <div class="fab-container">
-        <transition class="same-pos" name="fade" mode="out-in">
-          <el-button
-            class="big-btn"
-            type="primary"
-            icon="el-icon-plus"
-            @click="changeCondition"
-            v-if="!isHidden"
-            circle
-          ></el-button>
-        </transition>
+        <!-- <transition class="same-pos" name="fade" mode="out-in"> -->
+        <el-button
+          class="big-btn"
+          type="primary"
+          icon="el-icon-plus"
+          @click="changeCondition"
+          v-if="!isHidden"
+          circle
+        ></el-button>
+        <!-- </transition> -->
         <el-dialog title="상담을 종료하시겠습니까?" v-model="DialogVisible" width="30%" center>
           <template #footer>
             <span class="dialog-footer">
@@ -47,12 +49,13 @@
   </el-row>
 </template>
 <script>
-import { useStore } from 'vuex';
-import UserChatDetail from './UserChatDetail.vue';
-import UserQna from './UserQna.vue';
-import ChatDetail from '../../components/chat/ChatDetail.vue';
-import VideoChatDetail from '@/components/VideoChat/VideoChatDetail.vue';
-import { computed, ref } from 'vue';
+import { useStore } from "vuex";
+import UserChatDetail from "./UserChatDetail.vue";
+import UserQna from "./UserQna.vue";
+import ChatDetail from "../../components/chat/ChatDetail.vue";
+import VideoChatDetail from "@/components/VideoChat/VideoChatDetail.vue";
+import { computed, ref } from "vue";
+import router from "@/router";
 /* eslint-disable */
 export default {
   components: {
@@ -64,23 +67,23 @@ export default {
   setup() {
     const store = useStore();
     let DialogVisible = ref(false);
-    const isHidden = computed(() => store.getters['userQna/showUserChat']);
+    const isHidden = computed(() => store.getters["userQna/showUserChat"]);
     const user_pk_idx = computed(() => store.state.auth.user.pk_idx);
-    const sessionId = computed(() => store.getters['get_selected_idx']);
-    let stompClient = computed(() => store.getters['stompGetter']);
+    const sessionId = computed(() => store.getters["get_selected_idx"]);
+    let stompClient = computed(() => store.getters["stompGetter"]);
     const sendEnd = () => {
-      send('END');
-      store.commit('userQna/CHANGE_STATE');
-      store.commit('changeSessionkeyStatus', 'END');
+      send("END");
+      store.commit("userQna/CHANGE_STATE");
+      store.commit("changeSessionkeyStatus", "END");
       DialogVisible.value = false;
     };
     const videoStatus = computed(() => store.state.video_status);
 
     let changeCondition = () => {
       //+ 버튼 눌러서 상담 시작해야하는 경우
-      store.commit('changeSessionkeyStatus', '');
-      store.dispatch('userQna/init');
-      store.commit('userQna/CHANGE_STATE');
+      store.commit("changeSessionkeyStatus", "");
+      store.dispatch("userQna/init");
+      store.commit("userQna/CHANGE_STATE");
       DialogVisible.value = false;
     };
     let connected = false;
@@ -93,15 +96,22 @@ export default {
         stompClient.value.connected &&
         user_pk_idx.value > 0
       ) {
-        console.log('IN SOCKET');
+        console.log("IN SOCKET");
         const msg = {
-          message: '',
+          message: "",
           fk_author_idx: user_pk_idx.value, // 작성자의 회원 idx
           fk_session_id: sessionId.value, // 현재 채팅세션의 id.
           type: type, // 메세지 타입.
         };
-        stompClient.value.send('/receive/' + sessionId.value, JSON.stringify(msg), {});
+        stompClient.value.send("/receive/" + sessionId.value, JSON.stringify(msg), {});
       }
+    };
+
+    const goSignUp = () => {
+      router.push("/usersignup");
+    };
+    const goLogin = () => {
+      router.push("/userlogin");
     };
     return {
       DialogVisible,
@@ -114,6 +124,8 @@ export default {
       changeCondition,
       sendEnd,
       send,
+      goSignUp,
+      goLogin,
     };
   },
 };
@@ -123,7 +135,7 @@ export default {
   position: fixed;
   width: 100%;
   height: 100%;
-  background-image: url('../../assets/Microsoft.png');
+  background-image: url("../../assets/Microsoft.png");
   background-repeat: no-repeat;
   background-position: center;
 }
@@ -201,7 +213,8 @@ export default {
 }
 
 /* 생성 부분 */
-.fade-enter-from {
+/* 소멸 부분 */
+/* .fade-enter-from {
   opacity: 0;
 }
 .fade-enter-to {
@@ -210,7 +223,6 @@ export default {
 .fade-enter-active {
   transition: all 0.3s ease-out;
 }
-/* 소멸 부분 */
 .fade-leave-from {
   opacity: 1;
 }
@@ -219,7 +231,7 @@ export default {
 }
 .fade-leave-active {
   transition: all 0.5s ease-out;
-}
+} */
 .videoContainer {
   position: absolute;
   width: 65rem;

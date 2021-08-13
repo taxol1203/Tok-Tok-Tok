@@ -26,10 +26,6 @@
       >
         {{ item }}
       </el-row>
-      <!-- <el-row class="rowitem message-me"> 기기 고장 </el-row>
-      <el-row class="rowitem message-me"> surface laptop 3 </el-row>
-      <el-row class="rowitem message-me"> 전원이 안 들어옵니다. </el-row>
-      <el-row class="rowitem message-me"> 해결 되지 않았습니다. </el-row> -->
     </el-col>
     <hr style="border: 2px solid whitesmoke; margin-top: 40px" width="90%" />
     <el-col>

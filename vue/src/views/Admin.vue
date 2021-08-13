@@ -34,9 +34,9 @@
           </el-menu>
       <!-- NavBar 끝 -->
     <el-main>
-      <transition name="list-change" mode="out-in">
+      <!-- <transition name="list-change" mode="out-in"> -->
         <router-view />
-      </transition>
+      <!-- </transition> -->
     </el-main>
     </el-container>
     
@@ -58,7 +58,7 @@ export default {
 </script>
 <style scoped>
 /* 생성 부분 */
-.list-change-enter-from {
+/* .list-change-enter-from {
   opacity: 0;
 }
 .list-change-enter-to {
@@ -67,7 +67,6 @@ export default {
 .list-change-enter-active {
   transition: all 0.5s ease-out;
 }
-/* 소멸 부분 */
 .list-change-leave-from {
   opacity: 1;
 }
@@ -76,5 +75,5 @@ export default {
 }
 .list-change-leave-active {
   transition: all 0.7s ease-out;
-}
+} */
 </style>
