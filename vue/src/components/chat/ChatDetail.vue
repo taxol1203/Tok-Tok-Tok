@@ -74,9 +74,9 @@ export default {
       scrollbar.value.setScrollTop(999999999999999999999);
     });
     const openVideo = () => {
-      store.commit("OPEN_VIDEO");
+      store.commit('OPEN_VIDEO');
       // 사용자에게 초대 메세지 보내기 메세지타입 VID
-      send("VID");
+      send('VID');
     };
 
     const sendMessage = () => {
@@ -96,14 +96,14 @@ export default {
 
     const send = (type) => {
       // console.log('Send message:' + message.value);
-      if (stompClient && stompClient.connected) {
-        // console.log('IN SOCKET');
+      if (stompClient.value && stompClient.value.connected) {
+        console.log('IN SOCKET');
         let msg;
-        if (type === "VID") {
+        if (type === 'VID') {
           msg = {
-            message: "화상상담을 요청합니다.",
+            message: '화상상담을 요청합니다.',
             fk_author_idx: userPkidx.value,
-            created: "",
+            created: '',
             deleted: false,
             fk_session_id: sessionId.value,
             type: type,
@@ -112,14 +112,14 @@ export default {
           msg = {
             message: message.value, // 메세지 내용. type이 MSG인 경우를 제외하곤 비워두고 프론트단에서만 처리.
             fk_author_idx: userPkidx.value, // 작성자의 회원 idx
-            created: "", // 작성시간, 공란으로 비워서 메세지 보내기. response에는 담겨옵니다.
+            created: '', // 작성시간, 공란으로 비워서 메세지 보내기. response에는 담겨옵니다.
             deleted: false, // 삭제된 메세지 여부. default = false
             fk_session_id: sessionId.value, // 현재 채팅세션의 id.
             // 주의할 점은, 방 세션 id가 아닌, 방 정보의 pk_idx를 첨부한다. created 라이프사이클 메서드 참조.
             type: type, // 메세지 타입.
           };
         }
-        stompClient.send('/receive/' + sessionId.value, JSON.stringify(msg), {});
+        stompClient.value.send('/receive/' + sessionId.value, JSON.stringify(msg), {});
       }
     };
 
