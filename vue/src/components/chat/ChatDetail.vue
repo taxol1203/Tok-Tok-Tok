@@ -7,12 +7,12 @@
       <div v-for="(msg, index) in messages" :key="index">
         <el-row>
           <el-col v-if="msg.fk_author_idx == userPkidx">
-            <div class="message-me" v-if="msg.type == 'MSG'">
+            <div class="message-me" v-if="msg.type == 'MSG' || msg.type == 'VID'">
               {{ msg.message }}
             </div>
           </el-col>
           <el-col v-else>
-            <div class="message-other" v-if="msg.type == 'MSG'">
+            <div class="message-other" v-if="msg.type == 'MSG' || msg.type == 'VID'">
               {{ msg.message }}
             </div>
           </el-col>
