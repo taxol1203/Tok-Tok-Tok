@@ -3,7 +3,7 @@ import axios from "@/axios";
 import createPersistedState from "vuex-persistedstate";
 import { moduleQna } from "@/store/modules/moduleQna";
 import { auth } from "@/store/modules/auth";
-import { userQna } from "@/store/modules/userQna"
+import { userQna } from "@/store/modules/userQna";
 
 export default createStore({
   plugins: [
@@ -21,6 +21,8 @@ export default createStore({
     list_status: "LIVE",
     closeMsg: "",
     stompClient: '',
+    video_status: "CLOSE",
+    scrollbar: '',
   },
   mutations: {
     GET_ROOMS(state, payload) {
@@ -61,20 +63,34 @@ export default createStore({
       state.list_status = payload;
     },
     CHAT_CLOSE(state) {
-      state.rooms[`${state.selected_room}`].session.status = "END"
+      state.rooms[`${state.selected_room}`].session.status = "END";
       state.selected_room = '';
       // console.log("close")
     },
     CLOSE_MSG(state) {
-      state.selected_room = ""
-      state.closeMsg = "상담이 종료되었습니다."
+      state.selected_room = "";
+      state.closeMsg = "상담이 종료되었습니다.";
     },
     stompSetter(state, payload) {
-      console.log(payload)
+      console.log(payload);
       state.stompClient = payload;
     },
     closeSessionkeyStatus(state, payload) {
       state.session_key.status = payload;
+      state.closeMsg = "상담이 종료되었습니다.";
+    },
+    OPEN_VIDEO(state) {
+      state.video_status = "OPEN";
+      console.log(state.video_status);
+    },
+    CLOSE_VIDEO(state) {
+      state.video_status = "CLOSE";
+    },
+    LIVE_VIDEO(state) {
+      state.video_status = "LIVE";
+    },
+    scrollbarSetter(state, payload) {
+      state.scrollbar = payload;
     }
   },
   actions: {
@@ -82,7 +98,7 @@ export default createStore({
       try {
         const res = await axios.get(`api/api/chat/admin/init/${state.auth.user.pk_idx}`);
         for (var p in res.data) {
-          const client = await axios.get(`api/auth/user/${res.data[p].session.fk_client_idx}`) //해당 방에 관련된 유저정보 담기
+          const client = await axios.get(`api/auth/user/${res.data[p].session.fk_client_idx}`); //해당 방에 관련된 유저정보 담기
           res.data[p].client = client.data;
         }
         commit("GET_ROOMS", res.data);
@@ -115,7 +131,7 @@ export default createStore({
           admin_pk_idx: state.auth.user.pk_idx,
         });
         // console.log(payload)
-        if(res.status == 200) commit("MESSAGE_PUSH", payload);
+        if (res.status == 200) commit("MESSAGE_PUSH", payload);
       } catch (err) {
         console.log(err);
       }
@@ -127,9 +143,9 @@ export default createStore({
             admin_pk_idx: state.auth.user.pk_idx,
           }
         }).then(() => {
-          commit('CHAT_CLOSE')
+          commit('CHAT_CLOSE');
         }).catch(err => {
-          console.log(err)
+          console.log(err);
         });
     }
 
@@ -162,10 +178,10 @@ export default createStore({
       return state.rooms[`${state.selected_room}`].client;
     },
     qnaGetter: (state) => {
-      return state.rooms[`${state.selected_room}`].session.qna_history.split('|')
+      return state.rooms[`${state.selected_room}`].session.qna_history.split('|');
     },
     get_selected_idx: (state) => {
-      return state.selected_room
+      return state.selected_room;
     },
     statusGetter: (state) => {
       return state.rooms[`${state.selected_room}`].session.status;
@@ -179,10 +195,10 @@ export default createStore({
         let room = state.rooms[i];
         switch (room.session.status) {
           case 'OPEN':
-            cnt[0]++;
+            cnt[1]++;
             break;
           case 'LIVE':
-            cnt[1]++;
+            cnt[0]++;
             break;
           case 'END':
             cnt[2]++;
@@ -193,6 +209,17 @@ export default createStore({
     },
     stompGetter: (state) => {
       return state.stompClient;
+    },
+    is_user: (state) => {
+      if (state.auth.user.pk_idx == state.session_key.fk_client_idx) {
+        return true;
+      } else return false;
+    },
+    scrollbarGetter: (state) => {
+      return state.scrollbar
+    },
+    listStatusGetter: (state) => {
+      return state.list_status;
     }
   },
 });

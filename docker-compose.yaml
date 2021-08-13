@@ -64,7 +64,6 @@ services:
         - spring
 #      volumes:
 #        - ./nginx/:/usr/share/nginx/
-#        - /home/ubuntu/cert/:/usr/share/nginx/
 
 #    redis:
 #      container_name: redis
@@ -72,7 +71,7 @@ services:
 #      ports:
 #        - "6379:6379"
 #      environment:
-#        - TZ=Asia/Seoul
+#        TZ: Asia/Seoul
     jenkins:
 #      build: ./jenkins
       container_name: jenkins

@@ -43,9 +43,9 @@
         <el-col :span="2">
           <el-button
             type="danger"
-            icon="el-icon-delete"
+            icon="el-icon-delete-solid"
             circle
-            style="border: 0px solid; background-color: transparent; color: #000"
+            style="border: 0px solid; background-color: transparent; color: #006f3e"
             @click="removeAnswer(index)"
           ></el-button>
         </el-col>

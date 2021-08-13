@@ -17,9 +17,17 @@
       </el-col>
       <el-col v-else>
         <div class="message-other">{{ msg.message }}</div>
+        <div
+          class="message-other vr"
+          v-if="msg.type == 'VID'"
+          @click="openVideo"
+        >
+          메세지를 클릭해 주세요.
+        </div>
       </el-col>
     </el-row>
   </div>
+  <p>{{ closeMsg }}</p>
   <!-- 실시간채팅 끝 -->
 </template>
 <script>
@@ -35,7 +43,11 @@ export default {
     const sessionId = computed(() => store.getters['get_selected_idx']); //user가 생성한 방 id
     const messages = computed(() => store.getters['get_user_messages']);
     const isOpen = computed(() => store.getters['get_user_room_status']);
+    const closeMsg = computed(() => store.getters['clostMsgGetter']);
     const loading = true;
+    const openVideo = () => {
+      store.commit("OPEN_VIDEO");
+    };
 
     return {
       store,
@@ -44,6 +56,8 @@ export default {
       messages,
       isOpen,
       loading,
+      closeMsg,
+      openVideo,
     };
   },
 };
@@ -86,6 +100,9 @@ export default {
   height: 100%;
   background-color: transparent;
   border: 0px solid #eee;
+}
+.vr:hover {
+  background-color: white;
 }
 /* hover로 버튼 색 변하게 하기: 추가기능 */
 </style>

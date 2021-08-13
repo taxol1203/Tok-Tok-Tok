@@ -1,65 +1,83 @@
 <template>
-  <el-row justify="center" v-loading="loading">
-    <el-col :span="12">
-      <el-card shadow="always">
-        <el-form
-          v-if="Object.keys(token).length === 0"
-          label-position="top"
-          label-width="100px"
-          :model="user"
-          :rules="rules"
-          ref="formLabelAlign"
-          status-icon
-        >
-          <el-form-item label="이메일" prop="email">
-            <el-input
-              type="email"
-              v-model="user.email"
-              autocomplete="off"
-              placeholder="이메일을 입력해 주세요"
-              @keyup.enter="nextPasswd"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="비밀번호" prop="passwd">
-            <el-input
-              type="password"
-              v-model="user.passwd"
-              autocomplete="off"
-              placeholder="비밀번호를 입력해 주세요"
-              @keyup.enter="onSubmit('formLabelAlign')"
-              ref="refPasswd"
-            ></el-input>
-          </el-form-item>
-          <el-form-item>
-            <transition name="slide-fade">
-              <el-button type="button" class="green-color-btn" @click="load()" :disabled="!isValid"
-                >로그인</el-button
-              >
-            </transition>
-            <el-button @click="resetForm('formLabelAlign')">다시쓰기</el-button>
-            <el-button class="green-color-btn" @click="goSignUp()">회원가입</el-button>
-          </el-form-item>
-        </el-form>
-        <div v-else>
-          <h2>환영합니다.</h2>
-          <el-button @click="logout">로그아웃</el-button>
-        </div>
-      </el-card>
-    </el-col>
-  </el-row>
-  <Footer />
+  <div class="container" id="LoginMain">
+    <div id="LeftPosition">
+      <el-row justify="" v-loading="loading">
+        <el-col :span="24">
+          <el-card shadow="always">
+            <div style="position: static">
+              <h1>
+                <img src="@/assets/MainLogo.png" alt="MainLogo" id="MiniLogo" />
+              </h1>
+            </div>
+            <el-form
+              v-if="Object.keys(token).length === 0"
+              label-position="top"
+              label-width="100px"
+              :model="user"
+              :rules="rules"
+              ref="formLabelAlign"
+              status-icon
+            >
+              <el-form-item label="이메일" prop="email">
+                <el-input
+                  type="email"
+                  v-model="user.email"
+                  autocomplete="off"
+                  placeholder="이메일을 입력해 주세요"
+                  @keyup.enter="nextPasswd"
+                ></el-input>
+              </el-form-item>
+              <el-form-item label="비밀번호" prop="passwd">
+                <el-input
+                  type="password"
+                  v-model="user.passwd"
+                  autocomplete="off"
+                  placeholder="비밀번호를 입력해 주세요"
+                  @keyup.enter="onSubmit('formLabelAlign')"
+                  ref="refPasswd"
+                ></el-input>
+              </el-form-item>
+              <el-form-item>
+                <!-- <transition name="slide-fade"> -->
+                <el-button
+                  type="button"
+                  class="green-color-btn"
+                  @click="load()"
+                  :disabled="!isValid"
+                  >로그인</el-button
+                >
+                <!-- </transition> -->
+                <el-button @click="resetForm('formLabelAlign')">다시쓰기</el-button>
+                <el-button class="green-color-btn" @click="goSignUp()">회원가입</el-button>
+              </el-form-item>
+            </el-form>
+            <div v-else>
+              <h2>환영합니다.</h2>
+              <el-button @click="logout">로그아웃</el-button>
+            </div>
+          </el-card>
+        </el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="24" :offset="0" id="footer">
+          <strong>Help Desk </strong>
+          <em>
+            <a href="tel:02-3429-5041">02-3429-5041</a>
+          </em>
+          <br />
+          <span>평일 상담시간: 09:00 ~ 19:00</span>
+        </el-col>
+      </el-row>
+    </div>
+  </div>
 </template>
 
 <script>
 import { reactive, ref, computed } from "vue";
 import { useStore } from "vuex";
-import Footer from "@/components/footer.vue";
 import router from "@/router";
 
 export default {
-  components: {
-    Footer,
-  },
   setup() {
     const store = useStore();
     const token = computed(() => store.state.auth.user);
@@ -73,6 +91,7 @@ export default {
       formLabelAlign.value.validate((valid) => {
         if (valid) {
           store.dispatch("auth/login", payload);
+          router.push("/admin");
         }
       });
     };
@@ -155,4 +174,40 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+#LoginMain {
+  height: 98%;
+  background-image: url("../../assets/work3.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+#LoginMain::before {
+  content: "";
+  opacity: 0.5;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  background-color: #ffffff;
+}
+
+#LeftPosition {
+  position: absolute;
+  top: 30%;
+  left: 10%;
+}
+
+#MiniLogo {
+  width: 30%;
+  height: 30%;
+  display: block;
+  position: static;
+}
+
+el-form {
+  display: block;
+}
+</style>

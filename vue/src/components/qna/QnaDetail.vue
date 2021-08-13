@@ -1,35 +1,23 @@
 <template lang="">
   <div style="height: 100%">
+    <!-- 질문 작성 칸 시작 -->
     <div id="questionBox">
-      <!-- <el-inputborder: 1px solid #eee; 
-        v-if="!show"
+      <el-input
         type="textarea"
         autosize
         v-model="select.content"
-        id="question"
-        style="margin: 10px; width: 500px"
-        @click="changeShow"
-      ></el-input> -->
-      <el-row v-if="show" align="middle">
-        <el-col :span="20">
-          <el-input
-            type="textarea"
-            autosize
-            v-model="select.content"
-            id="inputBox"
-            placeholder="예상 질문을 입력해주세요."
-          >
-          </el-input>
-        </el-col>
-        <el-col :span="4"><el-button @click="sendContent()">등록</el-button></el-col>
-      </el-row>
+        id="inputBox"
+        placeholder="예상 시나리오의 '질문'을 입력해주세요."
+      >
+      </el-input>
     </div>
-    <!-- Question -->
+    <!-- 질문 작성 칸 끝 -->
+    <!-- 답변 작성 칸 시작 -->
     <div style="float: right; width: 100%">
-      <!-- {{ answers }} -->
       <OldAnswer />
       <NewAnswer />
     </div>
+    <!-- 답변 작성 칸 끝 -->
   </div>
 </template>
 
