@@ -47,10 +47,11 @@ export default {
     const user = computed(() => store.getters["clientGetter"]);
     const qna = computed(() => store.getters["qnaGetter"]);
     // const user = computed(() => store.getters['get_client_info']);
-    let temp = store.state.auth.user.photo;
-    console.log(temp);
+    //최댓값은 제외, 최솟값은 포함
+    let max = 10;
+    let min = 0;
+    let temp = Math.floor(Math.random() * (max - min)) + min;
     const imgUrl = ref(require("@/assets/Profile/profile" + temp + ".jpg"));
-    console.log(imgUrl);
     return {
       store,
       user,

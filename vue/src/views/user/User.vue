@@ -41,9 +41,10 @@ export default {
   setup() {
     const store = useStore();
     const user = store.state.auth.user;
-    let temp = user.photo;
+    let max = 10;
+    let min = 0;
+    let temp = Math.floor(Math.random() * (max - min)) + min;
     const imgUrl = ref(require("@/assets/Profile/profile" + temp + ".jpg"));
-    console.log(imgUrl);
     const logout = () => {
       localStorage.clear();
       store.commit("auth/logout");
