@@ -2,11 +2,7 @@
   <el-row>
     <el-col>
       <div class="avatar-flip">
-        <img
-          src="http://media.idownloadblog.com/wp-content/uploads/2012/04/Phil-Schiller-headshot-e1362692403868.jpg"
-          height="80"
-          width="80"
-        />
+        <img :src="imgUrl" height="80" width="80" />
         <h3 style="margin: 10px">
           {{ user.username }}
         </h3>
@@ -38,17 +34,26 @@
 </template>
 <script>
 import { useStore } from "vuex";
+import router from "@/router";
+import { ref } from "vue";
+
 export default {
   setup() {
     const store = useStore();
     const user = store.state.auth.user;
+    let temp = user.photo;
+    const imgUrl = ref(require("@/assets/Profile/profile" + temp + ".jpg"));
+    console.log(imgUrl);
     const logout = () => {
       localStorage.clear();
       store.commit("auth/logout");
+      router.push("/login");
     };
     return {
       logout,
       user,
+      router,
+      imgUrl,
     };
   },
 };

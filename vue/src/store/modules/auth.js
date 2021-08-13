@@ -11,6 +11,11 @@ export const auth = {
   mutations: {
     login(state, payload) {
       state.user = payload;
+      //최댓값은 제외, 최솟값은 포함
+      let max = 10;
+      let min = 0;
+      state.user.photo = Math.floor(Math.random() * (max - min)) + min;
+      console.log(state.user.photo);
     },
     logout(state) {
       state.user = {};
