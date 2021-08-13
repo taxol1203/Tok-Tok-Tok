@@ -32,17 +32,12 @@
           </el-form-item>
           <el-form-item>
             <transition name="slide-fade">
-              <el-button
-                type="button"
-                class="green-color-btn"
-                @click="onSubmit('formLabelAlign')"
-                :disabled="!isValid"
+              <el-button type="button" class="green-color-btn" @click="load()" :disabled="!isValid"
                 >로그인</el-button
               >
             </transition>
             <el-button @click="resetForm('formLabelAlign')">다시쓰기</el-button>
             <el-button class="green-color-btn" @click="goSignUp()">회원가입</el-button>
-            <el-button class="green-color-btn" @click="load()">로딩</el-button>
           </el-form-item>
         </el-form>
         <div v-else>
