@@ -184,4 +184,5 @@ values ('daebalprime@gmail.com', '1a2a3a4a5a!!', 'daebalprime'),
 ('user11@naver.com', 'asdf555!@#', 'frontadmin');
 GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA "SSAFY_PJT1" TO padmin;
 GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA "SSAFY_PJT1" TO padmin;
+GRANT USAGE ON SCHEMA "SSAFY_PJT1" TO padmin;
 END;
