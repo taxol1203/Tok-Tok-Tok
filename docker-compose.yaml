@@ -11,7 +11,7 @@ services:
         - net
       environment:
         - TZ=Asia/Seoul
-        - POSTGRES_DB=gpjt
+        - POSTGRES_DB=SSAFY_PJT1
         - POSTGRES_USERNAME=padmin
         - POSTGRES_PASSWORD=padmin
       volumes:
