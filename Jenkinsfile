@@ -18,7 +18,7 @@ pipeline {
 			agent any
 			steps {
 				sh 'docker build -t frontend:latest ./vue'
-				sh 'docker build -t spring:latest ./spring'
+				sh 'docker build -t spring:latest ./backend_source'
 			}
 		}
 		stage('Docker run') {

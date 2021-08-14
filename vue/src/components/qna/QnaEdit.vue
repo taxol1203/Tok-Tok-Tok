@@ -5,22 +5,24 @@
       <el-row>
         <el-col :span="20"><QnaTitle /></el-col>
         <el-col :span="4">
-          <!-- <el-button type="primary" icon="el-icon-edit" circle></el-button> -->
+          <!-- <el-button type="primary" icon="el-icon-edit" circle></el-button> icon="el-icon-goods icon="el-icon-delete""
+            circle-->
           <el-button
             type="success"
-            icon="el-icon-check"
-            circle
             @click="savaAnsData"
-            style="border: 0px solid; background-color: transparent; color: #000"
-          ></el-button>
+            circle
+            style="border: 0px solid; background-color: transparent; color: #006f3e"
+            ><i class="el-icon-success" style="color: #006f3e">&nbsp;저장</i></el-button
+          >
+
           <el-button
             type="danger"
-            icon="el-icon-delete"
             circle
             v-if="selectKey > 2"
             @click="removeQna"
-            style="border: 0px solid; background-color: transparent; color: #000"
-          ></el-button>
+            style="border: 0px solid; background-color: transparent; color: #006f3e"
+            ><i class="el-icon-delete-solid" style="color: #006f3e">&nbsp;삭제</i></el-button
+          >
         </el-col>
       </el-row>
     </el-header>
@@ -49,6 +51,7 @@ export default {
 
     const selectKey = computed(() => store.getters['moduleQna/getKey']);
     const savaAnsData = () => {
+      store.dispatch('moduleQna/editContent', select.value);
       store.dispatch('moduleQna/updateAnswer');
       if (new_answer.value.length > 0) store.dispatch('moduleQna/addAnswer');
     };

@@ -1,13 +1,9 @@
 <template>
-  <div id="nav">
-    <router-link to="/signup">Sign Up</router-link> |
-    <router-link to="/login">Log in</router-link> | <router-link to="/admin">Admin</router-link> |
-    <router-link to="/userchat">User Page</router-link>
-  </div>
   <div class="inner">
-    <transition name="page-change" mode="out-in">
-      <router-view />
-    </transition>
+    <!-- transition 문제 이거 지우면 높은 확률로 해결됨 -->
+    <!-- <transition name="page-change" mode="out-in"> -->
+    <router-view />
+    <!-- </transition> -->
   </div>
 </template>
 <script>
@@ -19,8 +15,15 @@ export default {
 <style>
 /* 전체 프로젝트 폰트 변경(상속, cascading) */
 * {
-  font-family: BMJUA;
-  text-decoration: none;
+  font-family: "Noto Sans", "맑은 고딕", sans-serif;
+  font-weight: bold;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
 }
 .el-main {
   overflow: hidden;
@@ -31,20 +34,16 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  width: 95vw;
+  height: 95vh;
+  margin: 0;
+  padding: 0;
 }
 
-#nav {
-  padding: 30px;
+.inner {
+  height: 94%;
 }
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #006f3e;
-}
 /* 258c60  */
 .green-color-btn {
   background-color: #006f3e;
@@ -52,21 +51,8 @@ export default {
   border: 0;
 }
 
-/* .inner {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-} */
-@font-face {
-  font-family: "BMJUA";
-  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/BMJUA.woff") format("woff");
-  font-weight: normal;
-  font-style: normal;
-}
-
 /* 생성 부분 */
-.page-change-enter-from {
+/* .page-change-enter-from {
   opacity: 0;
 }
 .page-change-enter-to {
@@ -75,7 +61,6 @@ export default {
 .page-change-enter-active {
   transition: all 0.5s ease-out;
 }
-/* 소멸 부분 */
 .page-change-leave-from {
   opacity: 1;
 }
@@ -84,5 +69,5 @@ export default {
 }
 .page-change-leave-active {
   transition: all 1s ease-out;
-}
+} */
 </style>

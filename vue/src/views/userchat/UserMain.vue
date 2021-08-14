@@ -1,27 +1,45 @@
 <template>
   <el-row :gutter="20">
     <div id="UserMain">
+      <el-button class="green-color-btn" @click="goSignUp()">회원가입</el-button>
+      <el-button class="green-color-btn" @click="goLogin()">로그인</el-button>
+      <div class="videoContainer" v-if="videoStatus != 'CLOSE'">
+        <VideoChatDetail />
+      </div>
       <div class="fab-container">
-        <transition class="same-pos" name="fade" mode="out-in">
-          <el-button
-            class="big-btn"
-            type="primary"
-            icon="el-icon-plus"
-            @click="changeCondition"
-            v-if="!isHidden"
-            circle
-          ></el-button>
-        </transition>
+        <!-- <transition class="same-pos" name="fade" mode="out-in"> -->
+        <el-button
+          class="big-btn"
+          type="primary"
+          icon="el-icon-plus"
+          @click="changeCondition"
+          v-if="!isHidden"
+          circle
+        ></el-button>
+        <!-- </transition> -->
+        <el-dialog title="상담을 종료하시겠습니까?" v-model="DialogVisible" width="30%" center>
+          <template #footer>
+            <span class="dialog-footer">
+              <el-button @click="DialogVisible = false">아니오</el-button>
+              <el-button type="primary" @click="sendEnd">네</el-button>
+            </span>
+          </template>
+        </el-dialog>
         <transition class="same-pos" name="fade" mode="out-in">
           <div id="chat-box" v-if="isHidden">
-            <el-card :body-style="{ padding: '0px' }">
-              <div id="card-head" class="card-header">
-                <el-button @click="changeCondition" type="danger" icon="el-icon-close"
-                  >닫기</el-button
-                >
-              </div>
+            <el-row :gutter="40">
+              <el-col :span="20" :offset="0"></el-col>
+              <el-col :span="4" :offset="0">
+                <div style="float: right">
+                  <i @click="DialogVisible = true" class="el-icon-error" id="close-btn"></i>
+                  <!-- <i @click="DialogVisible = true" class="el-icon-close" id="close-btn"></i> -->
+                </div>
+              </el-col>
+            </el-row>
+            <el-card :body-style="{ padding: '0px' }" id="chat-card">
+              <div id="card-head" class="card-header"></div>
               <div class="full-box">
-                <UserQna />
+                <UserQna :close="isHidden" />
               </div>
             </el-card>
           </div>
@@ -31,46 +49,83 @@
   </el-row>
 </template>
 <script>
-import { useStore } from 'vuex';
-import UserChatDetail from './UserChatDetail.vue';
-import UserQna from './UserQna.vue';
-import ChatDetail from '../../components/chat/ChatDetail.vue';
-import { computed, ref } from 'vue';
+import { useStore } from "vuex";
+import UserChatDetail from "./UserChatDetail.vue";
+import UserQna from "./UserQna.vue";
+import ChatDetail from "../../components/chat/ChatDetail.vue";
+import VideoChatDetail from "@/components/VideoChat/VideoChatDetail.vue";
+import { computed, ref } from "vue";
+import router from "@/router";
 /* eslint-disable */
 export default {
   components: {
     UserQna,
     UserChatDetail,
     ChatDetail,
+    VideoChatDetail,
   },
-
   setup() {
-    let isChatExist = ref(false);
-    let isHidden = ref(false);
     const store = useStore();
+    let DialogVisible = ref(false);
+    const isHidden = computed(() => store.getters["userQna/showUserChat"]);
     const user_pk_idx = computed(() => store.state.auth.user.pk_idx);
-    const sessionId = computed(() => store.state.user_selected_room);
+    const sessionId = computed(() => store.getters["get_selected_idx"]);
+    let stompClient = computed(() => store.getters["stompGetter"]);
+    const sendEnd = () => {
+      send("END");
+      store.commit("userQna/CHANGE_STATE");
+      store.commit("changeSessionkeyStatus", "END");
+      DialogVisible.value = false;
+    };
+    const videoStatus = computed(() => store.state.video_status);
+
     let changeCondition = () => {
-      store.dispatch('userQna/init'); //state.userQna.scenes에 pk_idx별로 예상질문정보+answers에 정답정보 저장
-      isHidden.value = !isHidden.value;
+      //+ 버튼 눌러서 상담 시작해야하는 경우
+      store.commit("changeSessionkeyStatus", "");
+      store.dispatch("userQna/init");
+      store.commit("userQna/CHANGE_STATE");
+      DialogVisible.value = false;
     };
-    let changeisChatExist = () => {
-      isChatExist.value = !isChatExist.value;
+    let connected = false;
+
+    const send = (type) => {
+      console.log(sessionId.value);
+      if (
+        sessionId.value &&
+        stompClient.value &&
+        stompClient.value.connected &&
+        user_pk_idx.value > 0
+      ) {
+        console.log("IN SOCKET");
+        const msg = {
+          message: "",
+          fk_author_idx: user_pk_idx.value, // 작성자의 회원 idx
+          fk_session_id: sessionId.value, // 현재 채팅세션의 id.
+          type: type, // 메세지 타입.
+        };
+        stompClient.value.send("/receive/" + sessionId.value, JSON.stringify(msg), {});
+      }
     };
-    // 유저의 채팅방 개설요청
-    let createChatRoom = () => {
-      store.dispatch('createChatRooms', user_pk_idx.value);
-      isChatExist.value = true;
+
+    const goSignUp = () => {
+      router.push("/usersignup");
+    };
+    const goLogin = () => {
+      router.push("/userlogin");
     };
     return {
-      store,
+      DialogVisible,
       sessionId,
       user_pk_idx,
-      isChatExist,
       isHidden,
-      changeisChatExist,
+      connected,
+      stompClient,
+      videoStatus,
       changeCondition,
-      createChatRoom,
+      sendEnd,
+      send,
+      goSignUp,
+      goLogin,
     };
   },
 };
@@ -80,7 +135,7 @@ export default {
   position: fixed;
   width: 100%;
   height: 100%;
-  background-image: url('../../assets/Microsoft.png');
+  background-image: url("../../assets/Microsoft.png");
   background-repeat: no-repeat;
   background-position: center;
 }
@@ -98,10 +153,10 @@ export default {
   height: 45rem; /* 720px */
   padding: 10px;
   position: sticky;
-  background-color: gray;
-  border-radius: 4px;
-  /* box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1); */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
+  background-color: #09c7fb;
+  background-image: linear-gradient(315deg, #09c7fb 0%, #93fb9d 74%);
+  border-radius: 2rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.24), 0 0 6px rgba(0, 0, 0, 0.08);
 }
 
 .big-btn {
@@ -109,28 +164,16 @@ export default {
   height: 80px;
   /* icon 사이즈 키우는 법 */
   font-size: 2rem;
-  background-color: #006f3e;
+  background-color: #09c7fb;
+  background-image: linear-gradient(315deg, #09c7fb 0%, #93fb9d 74%);
+  border: none;
 }
 
-/* 생성 부분 */
-.fade-enter-from {
-  opacity: 0;
-}
-.fade-enter-to {
-  opacity: 1;
-}
-.fade-enter-active {
-  transition: all 0.3s ease-out;
-}
-/* 소멸 부분 */
-.fade-leave-from {
-  opacity: 1;
-}
-.fade-leave-to {
-  opacity: 0;
-}
-.fade-leave-active {
-  transition: all 0.5s ease-out;
+#close-btn {
+  font-size: 2rem;
+  color: white;
+  font-style: bold;
+  margin-bottom: 10px;
 }
 
 /* 위치 고정을 시키지 않으면 렌더링하면서 (생명&소멸) 서로 다른 공간에 보여짐 */
@@ -148,14 +191,17 @@ export default {
   position: relative;
 }
 
+#chat-card {
+  border-radius: 1rem;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.5);
+  border: none;
+}
+
 .card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #006f3e;
-  /* background: linear-gradient(103deg, #258c60 0%, #006f3e 50%, #9ec8ac) */
-  /* background: linear-gradient(103deg, rgb(74, 38, 255) 0%, rgb(74, 38, 255) 50%, rgb(125, 38, 255)) */
-  /* 100% center; */
+  /* background-color: #006f3e; */
 }
 
 .text {
@@ -164,5 +210,33 @@ export default {
 
 .item {
   margin-bottom: 18px;
+}
+
+/* 생성 부분 */
+/* 소멸 부분 */
+/* .fade-enter-from {
+  opacity: 0;
+}
+.fade-enter-to {
+  opacity: 1;
+}
+.fade-enter-active {
+  transition: all 0.3s ease-out;
+}
+.fade-leave-from {
+  opacity: 1;
+}
+.fade-leave-to {
+  opacity: 0;
+}
+.fade-leave-active {
+  transition: all 0.5s ease-out;
+} */
+.videoContainer {
+  position: absolute;
+  width: 65rem;
+  height: 50rem;
+  background-color: lightgrey;
+  margin: 5rem;
 }
 </style>
