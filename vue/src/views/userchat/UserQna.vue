@@ -26,9 +26,6 @@
     </el-scrollbar>
     <!-- 입력창시작 -->
     <el-row id="bottomInput" v-if="realChat == 'LIVE'">
-      <el-col :span="5">
-        <el-button icon="el-icon-video-camera" class="green-color-btn"></el-button>
-      </el-col>
       <el-col :span="14">
         <div>
           <el-input

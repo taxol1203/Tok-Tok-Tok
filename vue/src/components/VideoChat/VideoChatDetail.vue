@@ -1,10 +1,5 @@
 <template>
   <el-container>
-    <!-- <button type="button" @click="socketInit('a')">Socket Init ROOM 1</button>
-    <button type="button" @click="socketInit('b')">Socket Init ROOM 2</button>
-    <button type="button" @click="connect">establish connection</button> -->
-    <button @click="closeVideoWindow">창닫기</button>
-    <br />
     <el-main>
       <el-row :gutter="20" justify="space-around">
         <el-col :span="12">
@@ -94,7 +89,7 @@
           >버튼자리</el-button
         >
         <el-button
-          v-if="isUser && videoStatus == 'OPEN'"
+          v-if="isUser && socketRead && localVidReady && videoStatus == 'OPEN'"
           @click="connect"
           class="enterBtn"
           plain
@@ -121,7 +116,7 @@ export default {
     const sessionId = computed(() => store.getters['get_selected_idx']);
     const screenShare = ref(true);
     const isUser = computed(() => store.getters.is_user); // 유저일때만 상담시작 버튼 보이게
-    console.log(isUser.value);
+    const localVidReady = ref(false);
 
     const mediaOptions = reactive({
       audioinput: [],
@@ -143,7 +138,6 @@ export default {
         videoElement.value.volume = 0; // 하울링 방지
         start(); // 기본 장치로 stream 바인딩하기
         socketInit(sessionId.value); // 세션아이디로 소켓열기
-
       } catch (err) {
         handleError(err);
         // enumerateDevices()에 .then으로 해당 함수의 실행을 마치고 난 뒤에 로딩을 해야
@@ -156,7 +150,7 @@ export default {
     // 리스트에 있는데 미디어 디바이스에 접근이 불가능한 경우임.
     function handleError(error) {
       // 여기서 에러문구 띄워주면 좋을 것 같습니다.
-      alert('다른 디바이스에서 사용중인지는 않은지 확인해주시기 바랍니다 ');
+      alert('디바이스를 다른 곳에서 사용 중인지 확인해주시기 바랍니다 ');
       console.log('navigator.MediaDevices.getUserMedia error: ', error.message, error.name);
     }
 
@@ -193,26 +187,23 @@ export default {
       const constraints = {
         audio: {
           deviceId: audioSource ? { exact: audioSource } : undefined,
-          // 현재 option에서 선택된 id를 보유한 오디오 소스를 붙인다
         },
         video: {
           deviceId: videoSource ? { exact: videoSource } : undefined,
         },
       };
-      // console.log(constraints);
-      // navigator.mediaDevices
-      //   .getUserMedia(constraints) //constraints에 대한 사용권한 요청
-      //   .then(gotStream) // html element와 video/audio를 부착한다
-      //   .then(gotDevicesList) // 디바이스 목록을 최신화한다.
-      //   .then(() => {
-      //     if (socketRead) {
-      //       sendReconnectRequest(); // 만약 소켓이 연결되어있다면 재접속
-      //     }
-      //   });
-      const userMedia = await navigator.mediaDevices.getUserMedia(constraints);
-      const devices = await gotStream(userMedia);
-      gotDevicesList(devices);
-      if (socketRead) {
+      try {
+        const userMedia = await navigator.mediaDevices.getUserMedia(constraints);
+        const devices = await gotStream(userMedia);
+        gotDevicesList(devices);
+        setTimeout(() => {
+          localVidReady.value = true;
+        }, 1000);
+      } catch (err) {
+        console.log(err);
+        alert('디바이스가 없습니다. 다시 확인해주세요.');
+      }
+      if (socketRead.value) {
         sendReconnectRequest();
       }
     };
@@ -238,7 +229,7 @@ export default {
     const socketUrl = 'wss://i5d204.p.ssafy.io/api/msgServer/'; // 메세지 시그널링 서버 주소
     // var socketUrl = "wss://59.151.220.195:8088/api/msgServer/"; // 메세지 시그널링 서버 주소
     let socket = null;
-    let socketRead = false; // socket이 열려있는지 flag. 소켓 통신이 이벤트 기반 처리기 때문에 flag값 없이는 코딩이 불가능함
+    const socketRead = ref(false); // socket이 열려있는지 flag. 소켓 통신이 이벤트 기반 처리기 때문에 flag값 없이는 코딩이 불가능함
     const socketInit = (roomId) => {
       // console.log(socketUrl, roomId);
       console.log(socketUrl);
@@ -251,15 +242,24 @@ export default {
       };
       socket.onopen = function () {
         console.log('Successfully connected to the server...');
-        socketRead = true;
+        socketRead.value = true;
         // 소켓 연결 성공
       };
       socket.onclose = function (e) {
         console.log(e);
         console.log('The connection to the server is closed:' + e.code);
         alert('상담이 종료되었습니다.');
-        socketRead = false;
+        socketRead.value = false;
         peerStarted = false;
+        // 스트림 모든 트랙 불러와서 사용 중지
+        const stream = videoElement.value.srcObject;
+        const tracks = stream.getTracks();
+        tracks.forEach(function (track) {
+          track.stop();
+        });
+        videoElement.value.srcObject = null;
+        store.commit("CLOSE_VIDEO");
+
         if (peerConnection != null) {
           peerConnection.close();
           peerConnection = null;
@@ -299,7 +299,7 @@ export default {
           socket.send(JSON.stringify(res));
 
           // connect();
-        } else if (evt.type === 'reconnectResponse' && socketRead) {
+        } else if (evt.type === 'reconnectResponse' && socketRead.value) {
           peerStarted = false;
           // localStream = null;
           remoteVideo.value.src = '';
@@ -316,14 +316,14 @@ export default {
     };
 
     const connect = () => {
-      if (!peerStarted && localStream && socketRead) {
+      if (!peerStarted && localStream && socketRead.value) {
         sendOffer(); // offer 시작
         peerStarted = true;
       } else {
         if (!localStream) {
           alert('Please capture local video data first.');
         }
-        if (!socketRead) {
+        if (!socketRead.value) {
           alert('Please open socket before connect.');
         }
         if (peerStarted) {
@@ -437,12 +437,15 @@ export default {
       stop();
     };
     const stop = () => {
+      // localstream 초기값으로 바꾸
+      // track stop 위치 조정해서 넣어보기
       socket.close();
       peerConnection.removeStream(localStream);
       peerConnection.close();
       peerConnection = null;
       peerStarted = false;
       // 소켓 연결 종료 및 피어커넥션 다 종료
+      store.commit("CLOSE_VIDEO");
     };
     // 오디오 출력을 변경하는 코드입니다. 로컬에서 이뤄지는 작업이므로
     // 재접속이 필요하지 않습니다.
@@ -581,7 +584,7 @@ export default {
           }
           localStream.addTrack(stream.getVideoTracks()[0]);
 
-          if (socketRead) {
+          if (socketRead.value) {
             sendReconnectRequest();
           }
           // return navigator.mediaDevices.enumerateDevices();
@@ -605,6 +608,8 @@ export default {
       screenShare,
       videoStatus,
       isUser,
+      socketRead,
+      localVidReady,
       gotDevicesList,
       handleError,
       start,

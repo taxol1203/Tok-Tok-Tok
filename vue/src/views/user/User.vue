@@ -1,8 +1,10 @@
-<template lang="">
+<template>
   <el-row>
     <el-col>
       <div class="avatar-flip">
-        <img :src="imgUrl" height="80" width="80" />
+        <div class="imgBox">
+          <img :src="imgUrl" class="profileImg" />
+        </div>
         <h3 style="margin: 10px">
           {{ user.username }}
         </h3>
@@ -23,11 +25,6 @@
       <el-col :span="24" :offset="0">email: {{ user.email }}</el-col>
       <el-col :span="24" :offset="0">phone: 010-1234-5678</el-col>
     </el-row>
-
-    <!-- <el-row class="rowitem2"> username: {{ user.username }} <br /></el-row>
-
-    <el-row class="rowitem2"> email: {{ user.email }} </el-row>
-    <el-row class="rowitem2"> phone: 010-1234-5678 </el-row> -->
     <hr style="border: 2px solid whitesmoke; margin-top: 40px" width="90%" />
   </el-row>
   <el-button @click="logout">로그아웃</el-button>
@@ -64,5 +61,16 @@ export default {
   color: gray;
   margin-left: 20px;
   margin-bottom: 10px;
+}
+.imgBox {
+  width: 150px;
+  height: 150px;
+  border-radius: 70%;
+  overflow: hidden;
+}
+.profileImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 </style>

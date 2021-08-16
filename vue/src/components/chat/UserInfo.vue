@@ -2,7 +2,9 @@
   <el-row>
     <el-col>
       <div class="avatar-flip">
-        <img :src="imgUrl" height="80" width="80" />
+        <div class="imgBox">
+          <img :src="imgUrl" class="profileImg" />
+        </div>
         <h3 style="margin: 10px">
           {{ user.username }}
         </h3>
@@ -98,5 +100,16 @@ export default {
   padding: 10px;
   margin: 5px 10px 5px 5px;
   max-width: 300px;
+}
+.imgBox {
+  width: 150px;
+  height: 150px;
+  border-radius: 70%;
+  overflow: hidden;
+}
+.profileImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 </style>
