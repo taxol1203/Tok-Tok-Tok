@@ -1,7 +1,5 @@
 <template>
   <el-container>
-    <button @click="closeVideoWindow">창닫기</button>
-    <br />
     <el-main>
       <el-row :gutter="20" justify="space-around">
         <el-col :span="12">
@@ -104,7 +102,7 @@
 </template>
 
 <script>
-import { ref, onMounted, reactive, computed, onBeforeUnmount } from 'vue';
+import { ref, onMounted, reactive, computed } from 'vue';
 import { useStore } from 'vuex';
 export default {
   setup() {
@@ -189,22 +187,11 @@ export default {
       const constraints = {
         audio: {
           deviceId: audioSource ? { exact: audioSource } : undefined,
-          // 현재 option에서 선택된 id를 보유한 오디오 소스를 붙인다
         },
         video: {
           deviceId: videoSource ? { exact: videoSource } : undefined,
         },
       };
-      // console.log(constraints);
-      // navigator.mediaDevices
-      //   .getUserMedia(constraints) //constraints에 대한 사용권한 요청
-      //   .then(gotStream) // html element와 video/audio를 부착한다
-      //   .then(gotDevicesList) // 디바이스 목록을 최신화한다.
-      //   .then(() => {
-      //     if (socketRead) {
-      //       sendReconnectRequest(); // 만약 소켓이 연결되어있다면 재접속
-      //     }
-      //   });
       try {
         const userMedia = await navigator.mediaDevices.getUserMedia(constraints);
         const devices = await gotStream(userMedia);
