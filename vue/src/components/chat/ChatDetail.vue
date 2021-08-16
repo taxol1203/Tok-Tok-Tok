@@ -11,18 +11,12 @@
       <div v-for="(msg, index) in messages" :key="index">
         <el-row>
           <el-col v-if="msg.fk_author_idx == userPkidx">
-            <div
-              class="message-me"
-              v-if="msg.type == 'MSG' || msg.type == 'VID'"
-            >
+            <div class="message-me" v-if="msg.type == 'MSG' || msg.type == 'VID'">
               {{ msg.message }}
             </div>
           </el-col>
           <el-col v-else>
-            <div
-              class="message-other"
-              v-if="msg.type == 'MSG' || msg.type == 'VID'"
-            >
+            <div class="message-other" v-if="msg.type == 'MSG' || msg.type == 'VID'">
               {{ msg.message }}
             </div>
           </el-col>
@@ -80,21 +74,15 @@ export default {
     const scrollbar = ref('');
     watch(sessionId, () => {
       setTimeout(() => {
-        scrollbar.value.setScrollTop(scrollbar.value.scrollHeight);
-      }, 150);
+        scrollbar.value.setScrollTop(Number.MAX_SAFE_INTEGER);
+      }, 100);
     });
     watch(scrollbar, () => {
       store.commit('scrollbarSetter', scrollbar.value);
     });
-    // onUpdated로 써도됨
-    // onUpdated(() => {
-    // scrollbar.value.scrollTo({
-    //   top: scrollbar.vlaue.scrollHeight
-    // })
-    // })
 
     onMounted(() => {
-      scrollbar.value.setScrollTop(scrollbar.value.scrollHeight);
+      scrollbar.value.setScrollTop(Number.MAX_SAFE_INTEGER);
     });
     const openVideo = () => {
       store.commit('OPEN_VIDEO');

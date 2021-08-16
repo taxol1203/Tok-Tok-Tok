@@ -43,16 +43,20 @@
     
 </template>
 <script>
+import {useStore} from 'vuex'
 export default {
-  data() {
-    return {
-      isCollapse: true,
-      mode:'1',
-    };
-  },
-  methods:{
-    handleNav(){
+  setup(){
+    const store = useStore();
+    store.dispatch('loginCheck')
+    let isCollapse = true;
+    let mode = '1';
+    const handleNav = () => {
       this.isCollapse = !this.isCollapse;
+    }
+    return{
+      isCollapse,
+      mode,
+      handleNav,
     }
   }
 };

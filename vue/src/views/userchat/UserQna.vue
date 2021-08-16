@@ -75,12 +75,12 @@ export default {
       store.commit('userQna/CHANGE_SELECT', next_idx);
       store.commit('userQna/ADD_LOG');
       setTimeout(() => {
-        scrollbar.value.setScrollTop(scrollbar.value.scrollHeight);
-      }, 150);
+        scrollbar.value.setScrollTop(Number.MAX_SAFE_INTEGER);
+      }, 100);
     };
 
     onMounted(() => {
-      scrollbar.value.setScrollTop(scrollbar.value.scrollHeight);
+      scrollbar.value.setScrollTop(Number.MAX_SAFE_INTEGER);
     });
     const user_pk_idx = computed(() => store.state.auth.user.pk_idx);
     const realChat = computed(() => store.getters['get_user_room_status']);
@@ -120,7 +120,7 @@ export default {
               case 'MSG':
                 store.commit('USER_MSG_PUSH', JSON.parse(res.body)); // 수신받은 메세지 표시하기
                 setTimeout(() => {
-                  scrollbar.value.setScrollTop(scrollbar.value.scrollHeight);
+                  scrollbar.value.setScrollTop(Number.MAX_SAFE_INTEGER);
                 }, 150);
                 break;
               case 'JOIN':

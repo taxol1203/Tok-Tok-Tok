@@ -7,11 +7,12 @@ import UserChat from "../views/userchat/UserMain.vue";
 import UserSignup from "../views/userchat/UserSignup.vue";
 import UserLogin from "../views/userchat/UserLogin.vue";
 import NotFound from "../views/NotFound.vue";
+import Admin from '../views/Admin.vue'
 
 const routes = [
   {
     path: "/",
-    component: Login,
+    component: Admin,
     meta: {
       authRequired: true,
     },
@@ -35,7 +36,7 @@ const routes = [
   {
     path: "/admin",
     name: "Admin",
-    component: () => import("../views/Admin.vue"),
+    component: Admin,
     children: [
       {
         path: "",

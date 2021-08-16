@@ -149,6 +149,17 @@ export default createStore({
           console.log(err);
         });
     },
+    loginCheck() {
+      if (localStorage.getItem('jwt')) {
+        router.push({
+          name: 'chat'
+        }).catch(error => { })
+      } else {
+        router.push({
+          name: 'Login'
+        }).catch(error => { })
+      }
+    }
   },
   getters: {
     get_messages: (state) => {
