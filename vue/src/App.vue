@@ -1,21 +1,21 @@
 <template>
-  <div class="inner">
-    <!-- transition 문제 이거 지우면 높은 확률로 해결됨 -->
-    <!-- <transition name="page-change" mode="out-in"> -->
-    <router-view />
-    <!-- </transition> -->
-  </div>
+  <!-- <div class="inner"> -->
+  <!-- transition 문제 이거 지우면 높은 확률로 해결됨 -->
+  <!-- <transition name="page-change" mode="out-in"> -->
+  <router-view />
+  <!-- </transition> -->
+  <!-- </div> -->
 </template>
 <script>
 export default {
-  name: "App",
+  name: 'App',
 };
 </script>
 
 <style>
 /* 전체 프로젝트 폰트 변경(상속, cascading) */
 * {
-  font-family: "Noto Sans", "맑은 고딕", sans-serif;
+  font-family: 'Noto Sans', '맑은 고딕', sans-serif;
   font-weight: bold;
 }
 
@@ -28,16 +28,19 @@ body {
 .el-main {
   overflow: hidden;
 }
+.el-container {
+  width: calc(100%-260px);
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  width: 95vw;
-  height: 95vh;
-  margin: 0;
-  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  margin: 0px;
+  padding: 0px;
 }
 
 .inner {
@@ -50,7 +53,34 @@ body {
   color: #fff;
   border: 0;
 }
-
+.el-menu-vertical-demo {
+  position: relative;
+  height: 100vh;
+  max-height: 100vh;
+  min-height: 100%;
+  overflow: auto;
+  width: 260px;
+  text-align: left;
+}
+#container {
+  background: #f7f4f0;
+  position: relative;
+  height: 100vh;
+  max-height: 100vh;
+  min-height: 100%;
+  width: 300px;
+  overflow-x: hidden;
+  margin: 0;
+}
+.navbar {
+  border: 0;
+  font-size: 16px;
+  border-radius: 0;
+  min-height: 50px;
+  background-color: hsla(0, 0%, 100%, 0.96);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 5px 15px;
+}
 /* 생성 부분 */
 /* .page-change-enter-from {
   opacity: 0;

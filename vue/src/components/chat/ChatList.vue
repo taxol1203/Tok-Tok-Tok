@@ -1,5 +1,5 @@
 <template lang="">
-  <el-tabs type="card" v-model="status" @tab-click="handleClick">
+  <el-tabs type="card" v-model="status" @tab-click="handleClick" style="margin-top: 10px;">
     <el-tab-pane label="진행" name="LIVE">
       <template #label>진행<el-badge :value="count[0]" class="badge"/></template>
     </el-tab-pane>
@@ -10,7 +10,7 @@
       <template #label>종료<el-badge :value="count[2]" class="badge"/></template>
     </el-tab-pane>
   </el-tabs>
-  <el-scrollbar height="700px">
+  <el-scrollbar height="100vh">
     <div v-for="room in listStatus" :key="room.session.session_id" class="noborder">
       <div
         @click="pickRoom(room.session.session_id)"

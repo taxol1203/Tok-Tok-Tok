@@ -148,7 +148,7 @@ export default {
 #topMessages {
   display: block;
   top: 0px;
-  height: 700px;
+  height: calc(100vh-50px);
   width: 100%;
 }
 #bottomInput {

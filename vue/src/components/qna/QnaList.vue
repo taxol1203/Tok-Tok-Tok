@@ -60,16 +60,13 @@ export default {
   height: 700px;
   width: 100%;
 }
-#container {
-  position: relative;
-  height: 750px;
-  background: #f7f4f0;
-}
+
 .el-scroll {
   overflow: visible;
 }
 #addButton {
+  position: fixed;
   bottom: 0px;
-  width: 100%;
+  width: 300px;
 }
 </style>

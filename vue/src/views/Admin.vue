@@ -7,11 +7,10 @@
             background-color="#006f3e"
             text-color= "#999999"
             active-text-color="#fff" 
-            style="height: 750px; text-align:left"
             :collapse="isCollapse"
           >
-          <!-- ffd04b -->
-            <el-menu-item index="comein" @click="handleNav()">
+          <!-- ffd04b style="height: 750px; text-align:left"-->
+            <el-menu-item index="comein" @click="handleNav">
               <i class="el-icon-d-arrow-right" v-if="isCollapse===true"></i>
               <i class="el-icon-d-arrow-left"  v-if="isCollapse===false"></i>
             </el-menu-item>
@@ -35,6 +34,18 @@
           </el-menu>
       <!-- NavBar 끝 -->
     <el-main>
+      <el-menu
+        :default-active="activeIndex2"
+        class="el-menu-demo navbar"
+        mode="horizontal"
+        @select="handleSelect"
+        background-color="#fff"
+        text-color="#000"
+        active-text-color="#006f3e">
+        <el-menu-item index="0" disabled>톡톡톡</el-menu-item>
+        <el-menu-item index="1" style="float: right">내 계정</el-menu-item>
+        <el-menu-item index="2" style="float: right">로그아웃</el-menu-item>
+      </el-menu>
       <!-- <transition name="list-change" mode="out-in"> -->
         <router-view />
       <!-- </transition> -->
@@ -48,20 +59,22 @@ export default {
   setup(){
     const store = useStore();
     store.dispatch('loginCheck')
-    let isCollapse = true;
-    let mode = '1';
-    const handleNav = () => {
-      this.isCollapse = !this.isCollapse;
-    }
+  },
+  data(){
     return{
-      isCollapse,
-      mode,
-      handleNav,
+      isCollapse : false,
+      mode : '1'
+    }
+  },
+  methods:{
+    handleNav(){
+      this.isCollapse = !this.isCollapse
     }
   }
 };
 </script>
-<style scoped>
+<style>
+
 /* 생성 부분 */
 /* .list-change-enter-from {
   opacity: 0;
