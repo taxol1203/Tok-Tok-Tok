@@ -11,12 +11,18 @@
       <div v-for="(msg, index) in messages" :key="index">
         <el-row>
           <el-col v-if="msg.fk_author_idx == userPkidx">
-            <div class="message-me" v-if="msg.type == 'MSG' || msg.type == 'VID'">
+            <div
+              class="message-me"
+              v-if="msg.type == 'MSG' || msg.type == 'VID'"
+            >
               {{ msg.message }}
             </div>
           </el-col>
           <el-col v-else>
-            <div class="message-other" v-if="msg.type == 'MSG' || msg.type == 'VID'">
+            <div
+              class="message-other"
+              v-if="msg.type == 'MSG' || msg.type == 'VID'"
+            >
               {{ msg.message }}
             </div>
           </el-col>
@@ -80,8 +86,15 @@ export default {
     watch(scrollbar, () => {
       store.commit('scrollbarSetter', scrollbar.value);
     });
+    // onUpdated로 써도됨
+    // onUpdated(() => {
+    // scrollbar.value.scrollTo({
+    //   top: scrollbar.vlaue.scrollHeight
+    // })
+    // })
+
     onMounted(() => {
-      scrollbar.value.setScrollTop(999999999999999999999);
+      scrollbar.value.setScrollTop(scrollbar.value.scrollHeight);
     });
     const openVideo = () => {
       store.commit('OPEN_VIDEO');
