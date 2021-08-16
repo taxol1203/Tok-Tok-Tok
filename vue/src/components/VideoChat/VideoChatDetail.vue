@@ -267,8 +267,13 @@ export default {
         alert('상담이 종료되었습니다.');
         socketRead.value = false;
         peerStarted = false;
-        // localStream 초기값
-        // trackstop 써봐
+        // 스트림 모든 트랙 불러와서 사용 중지
+        const stream = videoElement.value.srcObject;
+        const tracks = stream.getTracks();
+        tracks.forEach(function (track) {
+          track.stop();
+        });
+        videoElement.value.srcObject = null;
         store.commit("CLOSE_VIDEO");
 
         if (peerConnection != null) {
