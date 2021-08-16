@@ -1,8 +1,5 @@
 <template>
   <el-container>
-    <!-- <button type="button" @click="socketInit('a')">Socket Init ROOM 1</button>
-    <button type="button" @click="socketInit('b')">Socket Init ROOM 2</button>
-    <button type="button" @click="connect">establish connection</button> -->
     <button @click="closeVideoWindow">창닫기</button>
     <br />
     <el-main>
