@@ -23,11 +23,7 @@
     <el-footer>
       <el-row class="videoOptions">
         <div class="select">
-          <el-select
-            v-model="audioInputSelect"
-            placeholder="마이크 선택"
-            @change="start()"
-          >
+          <el-select v-model="audioInputSelect" placeholder="마이크 선택" @change="start()">
             <el-option
               v-for="(option, index) in mediaOptions.audioinput"
               :key="index"
@@ -54,11 +50,7 @@
         </div>
 
         <div class="select">
-          <el-select
-            v-model="videoSelect"
-            placeholder="카메라 선택"
-            @change="start()"
-          >
+          <el-select v-model="videoSelect" placeholder="카메라 선택" @change="start()">
             <el-option
               v-for="(option, index) in mediaOptions.videoinput"
               :key="index"
@@ -68,26 +60,14 @@
             </el-option>
           </el-select>
         </div>
-        <el-button
-          icon="el-icon-monitor"
-          @click="startScreenStream"
-          v-if="screenShare"
-          plain
-        >
+        <el-button icon="el-icon-monitor" @click="startScreenStream" v-if="screenShare" plain>
           화면공유
         </el-button>
-        <el-button
-          icon="el-icon-video-pause"
-          type="button"
-          @click="start"
-          v-else
-          plain
-        >
+        <el-button icon="el-icon-video-pause" type="button" @click="start" v-else plain>
           공유중단
         </el-button>
-        <el-button v-if="videoStatus == 'CLOSE'" class="enterBtn" plain
-          >버튼자리</el-button
-        >
+        <el-button v-if="videoStatus == 'CLOSE'" class="enterBtn" plain>버튼자리</el-button
+        ><br /><br />
         <el-button
           v-if="isUser && socketRead && localVidReady && videoStatus == 'OPEN'"
           @click="connect"
@@ -128,7 +108,7 @@ export default {
     var peerConnection = null;
     var peerStarted = false;
     const closeVideoWindow = () => {
-      store.commit("CLOSE_VIDEO");
+      store.commit('CLOSE_VIDEO');
     };
     // 카메라 / 마이크 목록 가져오기
     onMounted(async () => {
@@ -144,8 +124,6 @@ export default {
         // 모든 장치를 가져와서 표시가 가능합니다.
       }
     });
-
-
 
     // 리스트에 있는데 미디어 디바이스에 접근이 불가능한 경우임.
     function handleError(error) {
@@ -258,7 +236,7 @@ export default {
           track.stop();
         });
         videoElement.value.srcObject = null;
-        store.commit("CLOSE_VIDEO");
+        store.commit('CLOSE_VIDEO');
 
         if (peerConnection != null) {
           peerConnection.close();
@@ -398,7 +376,7 @@ export default {
         switch (peer.connectionState) {
           case 'connected':
             // alert("peer connected");
-            store.commit("LIVE_VIDEO");
+            store.commit('LIVE_VIDEO');
             break;
           case 'disconnected':
             alert('peer disconnected');
@@ -445,7 +423,7 @@ export default {
       peerConnection = null;
       peerStarted = false;
       // 소켓 연결 종료 및 피어커넥션 다 종료
-      store.commit("CLOSE_VIDEO");
+      store.commit('CLOSE_VIDEO');
     };
     // 오디오 출력을 변경하는 코드입니다. 로컬에서 이뤄지는 작업이므로
     // 재접속이 필요하지 않습니다.

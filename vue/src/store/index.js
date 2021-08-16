@@ -76,9 +76,10 @@ export default createStore({
       console.log(payload);
       state.stompClient = payload;
     },
-    closeSessionkeyStatus(state, payload) {
+    changeSessionkeyStatus(state, payload) {
       state.session_key.status = payload;
-      state.closeMsg = "상담이 종료되었습니다.";
+      if (payload == 'END') state.closeMsg = "상담이 종료되었습니다.";
+      else state.closeMsg = "";
     },
     OPEN_VIDEO(state) {
       state.video_status = "OPEN";
@@ -92,6 +93,10 @@ export default createStore({
     },
     scrollbarSetter(state, payload) {
       state.scrollbar = payload;
+    },
+    userChatInit(state) {
+      state.closeMsg = ""
+      state.session_key = {}
     }
   },
   actions: {
@@ -159,7 +164,7 @@ export default createStore({
           name: 'Login'
         }).catch(error => { })
       }
-    }
+    },
   },
   getters: {
     get_messages: (state) => {
@@ -189,7 +194,9 @@ export default createStore({
       return state.rooms[`${state.selected_room}`].client;
     },
     qnaGetter: (state) => {
-      return state.rooms[`${state.selected_room}`].session.qna_history.split('|');
+      let tmp = state.rooms[`${state.selected_room}`].session.qna_history.split('|');
+      if (tmp[0] == '') return ['즉시 상담']
+      else return tmp;
     },
     get_selected_idx: (state) => {
       return state.selected_room;

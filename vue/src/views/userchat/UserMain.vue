@@ -49,13 +49,13 @@
   </el-row>
 </template>
 <script>
-import { useStore } from "vuex";
-import UserChatDetail from "./UserChatDetail.vue";
-import UserQna from "./UserQna.vue";
-import ChatDetail from "../../components/chat/ChatDetail.vue";
-import VideoChatDetail from "@/components/VideoChat/VideoChatDetail.vue";
-import { computed, ref } from "vue";
-import router from "@/router";
+import { useStore } from 'vuex';
+import UserChatDetail from './UserChatDetail.vue';
+import UserQna from './UserQna.vue';
+import ChatDetail from '../../components/chat/ChatDetail.vue';
+import VideoChatDetail from '@/components/VideoChat/VideoChatDetail.vue';
+import { computed, ref } from 'vue';
+import router from '@/router';
 /* eslint-disable */
 export default {
   components: {
@@ -67,23 +67,24 @@ export default {
   setup() {
     const store = useStore();
     let DialogVisible = ref(false);
-    const isHidden = computed(() => store.getters["userQna/showUserChat"]);
+    const isHidden = computed(() => store.getters['userQna/showUserChat']);
     const user_pk_idx = computed(() => store.state.auth.user.pk_idx);
-    const sessionId = computed(() => store.getters["get_selected_idx"]);
-    let stompClient = computed(() => store.getters["stompGetter"]);
+    const sessionId = computed(() => store.getters['get_selected_idx']);
+    let stompClient = computed(() => store.getters['stompGetter']);
     const sendEnd = () => {
-      send("END");
-      store.commit("userQna/CHANGE_STATE");
-      store.commit("changeSessionkeyStatus", "END");
+      send('END');
+      store.commit('userQna/CHANGE_STATE');
+      // store.commit('changeSessionkeyStatus', 'END');
       DialogVisible.value = false;
     };
     const videoStatus = computed(() => store.state.video_status);
 
     let changeCondition = () => {
       //+ 버튼 눌러서 상담 시작해야하는 경우
-      store.commit("changeSessionkeyStatus", "");
-      store.dispatch("userQna/init");
-      store.commit("userQna/CHANGE_STATE");
+      // store.commit('changeSessionkeyStatus', 'LIVE');
+      store.commit('userChatInit');
+      store.dispatch('userQna/init');
+      store.commit('userQna/CHANGE_STATE');
       DialogVisible.value = false;
     };
     let connected = false;
@@ -96,22 +97,22 @@ export default {
         stompClient.value.connected &&
         user_pk_idx.value > 0
       ) {
-        console.log("IN SOCKET");
+        console.log('IN SOCKET');
         const msg = {
-          message: "",
+          message: '',
           fk_author_idx: user_pk_idx.value, // 작성자의 회원 idx
           fk_session_id: sessionId.value, // 현재 채팅세션의 id.
           type: type, // 메세지 타입.
         };
-        stompClient.value.send("/receive/" + sessionId.value, JSON.stringify(msg), {});
+        stompClient.value.send('/receive/' + sessionId.value, JSON.stringify(msg), {});
       }
     };
 
     const goSignUp = () => {
-      router.push("/usersignup");
+      router.push('/usersignup');
     };
     const goLogin = () => {
-      router.push("/userlogin");
+      router.push('/userlogin');
     };
     return {
       DialogVisible,
@@ -135,7 +136,7 @@ export default {
   position: fixed;
   width: 100%;
   height: 100%;
-  background-image: url("../../assets/Microsoft.png");
+  background-image: url('../../assets/Microsoft.png');
   background-repeat: no-repeat;
   background-position: center;
 }

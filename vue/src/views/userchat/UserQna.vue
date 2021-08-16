@@ -26,13 +26,13 @@
     </el-scrollbar>
     <!-- 입력창시작 -->
     <el-row id="bottomInput" v-if="realChat == 'LIVE'">
-      <el-col :span="14">
+      <el-col :span="19">
         <div>
           <el-input
             type="text"
             @keyup.enter="sendMessage"
             v-model="userMsg"
-            placeholder="Please input"
+            placeholder="메시지를 입력해주세요:)"
             clearable
           >
           </el-input>
@@ -127,7 +127,7 @@ export default {
                 // 방을 생성할 때 백엔드단에서 처리하므로 신경 x
                 break;
               case 'END':
-                store.commit('CLOSE_MSG');
+                store.commit('changeSessionkeyStatus', 'END');
                 // 만약 둘 중 하나가 나가면 더 이상 채팅을 못치는 프론트구현
                 break;
               case 'VID':

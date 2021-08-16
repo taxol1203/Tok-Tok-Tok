@@ -74,7 +74,7 @@ export const userQna = {
       state.scenes = {}
       state.select= ''
       state.log= []
-      state.realChat= false
+      state.realChat = false
       try {
         const que = await axios.get(`/api/qna/question`)
         if(que.status === 200) commit('INIT_QUES', que.data);

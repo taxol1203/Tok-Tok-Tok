@@ -6,7 +6,7 @@
     <!-- <i class="el-icon-loading"></i>
     <p>이거 기다리는거 디자인 물어보기</p> -->
   </div>
-  <div v-if="isOpen == 'LIVE'">LIVE</div>
+  <div v-if="isOpen == 'LIVE'">상담이 시작되었습니다.</div>
   <!-- 실시간채팅 시작 -->
   <div v-for="(msg, index) in messages" :key="index">
     <el-row>
@@ -17,11 +17,7 @@
       </el-col>
       <el-col v-else>
         <div class="message-other">{{ msg.message }}</div>
-        <div
-          class="message-other vr"
-          v-if="msg.type == 'VID'"
-          @click="openVideo"
-        >
+        <div class="message-other vr" v-if="msg.type == 'VID'" @click="openVideo">
           메세지를 클릭해 주세요.
         </div>
       </el-col>
@@ -46,7 +42,7 @@ export default {
     const closeMsg = computed(() => store.getters['clostMsgGetter']);
     const loading = true;
     const openVideo = () => {
-      store.commit("OPEN_VIDEO");
+      store.commit('OPEN_VIDEO');
     };
 
     return {
