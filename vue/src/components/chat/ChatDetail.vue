@@ -74,14 +74,14 @@ export default {
     const scrollbar = ref('');
     watch(sessionId, () => {
       setTimeout(() => {
-        scrollbar.value.setScrollTop(999999999999999999999);
+        scrollbar.value.setScrollTop(scrollbar.value.scrollHeight);
       }, 150);
     });
     watch(scrollbar, () => {
       store.commit('scrollbarSetter', scrollbar.value);
     });
     onMounted(() => {
-      scrollbar.value.setScrollTop(999999999999999999999);
+      scrollbar.value.setScrollTop(scrollbar.value.scrollHeight);
     });
     const openVideo = () => {
       store.commit('OPEN_VIDEO');

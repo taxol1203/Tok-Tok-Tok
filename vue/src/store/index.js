@@ -4,6 +4,7 @@ import createPersistedState from "vuex-persistedstate";
 import { moduleQna } from "@/store/modules/moduleQna";
 import { auth } from "@/store/modules/auth";
 import { userQna } from "@/store/modules/userQna";
+import router from '@/router';
 
 export default createStore({
   plugins: [
@@ -147,8 +148,7 @@ export default createStore({
         }).catch(err => {
           console.log(err);
         });
-    }
-
+    },
   },
   getters: {
     get_messages: (state) => {

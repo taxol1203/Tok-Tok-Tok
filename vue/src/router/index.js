@@ -7,7 +7,6 @@ import UserChat from "../views/userchat/UserMain.vue";
 import UserSignup from "../views/userchat/UserSignup.vue";
 import UserLogin from "../views/userchat/UserLogin.vue";
 import NotFound from "../views/NotFound.vue";
-import { ElMessage } from "element-plus";
 
 const routes = [
   {
@@ -73,7 +72,7 @@ const routes = [
     name: "UserSignup",
     component: UserSignup,
     meta: {
-      authRequired: false,
+      authRequired: true,
     },
   },
   {
@@ -105,13 +104,8 @@ const router = createRouter({
 //     return next();
 //   }
 //   if (localStorage.getItem("jwt") === null) {
-//     ElMessage({
-//       showClose: true,
-//       message: "로그인이 필요합니다.",
-//       type: "error",
-//     });
 //     return next({ name: "Login" });
-//   }
+//   } 
 //   return next();
 // });
 

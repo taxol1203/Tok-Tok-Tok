@@ -1,5 +1,6 @@
 import axios from "@/axios";
 import { ElMessage } from "element-plus";
+import router from '@/router';
 
 export const auth = {
   namespaced: true,
@@ -37,6 +38,9 @@ export const auth = {
           message: "로그인이 완료되었습니다.",
           type: "success",
         });
+        router.push({
+          name: 'chat'
+        })
       } catch (res) {
         console.log(res);
         console.log("login error");

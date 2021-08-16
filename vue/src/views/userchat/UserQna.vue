@@ -10,10 +10,7 @@
         </el-row>
         <el-row v-for="ans in item.answers" :key="ans.pk_idx">
           <el-col>
-            <div
-              class="message-me"
-              @click="chooseAnswer(ans.fk_next_idx, ans.content)"
-            >
+            <div class="message-me" @click="chooseAnswer(ans.fk_next_idx, ans.content)">
               {{ ans.content }}
             </div>
           </el-col>
@@ -30,10 +27,7 @@
     <!-- 입력창시작 -->
     <el-row id="bottomInput" v-if="realChat == 'LIVE'">
       <el-col :span="5">
-        <el-button
-          icon="el-icon-video-camera"
-          class="green-color-btn"
-        ></el-button>
+        <el-button icon="el-icon-video-camera" class="green-color-btn"></el-button>
       </el-col>
       <el-col :span="14">
         <div>
@@ -83,11 +77,13 @@ export default {
       else history += '|' + value;
       store.commit('userQna/CHANGE_SELECT', next_idx);
       store.commit('userQna/ADD_LOG');
-      scrollbar.value.setScrollTop(999999999999999999999);
+      setTimeout(() => {
+        scrollbar.value.setScrollTop(scrollbar.value.scrollHeight);
+      }, 150);
     };
 
     onMounted(() => {
-      scrollbar.value.setScrollTop(999999999999999999999);
+      scrollbar.value.setScrollTop(scrollbar.value.scrollHeight);
     });
     const user_pk_idx = computed(() => store.state.auth.user.pk_idx);
     const realChat = computed(() => store.getters['get_user_room_status']);
@@ -127,7 +123,7 @@ export default {
               case 'MSG':
                 store.commit('USER_MSG_PUSH', JSON.parse(res.body)); // 수신받은 메세지 표시하기
                 setTimeout(() => {
-                  scrollbar.value.setScrollTop(999999999999999999999);
+                  scrollbar.value.setScrollTop(scrollbar.value.scrollHeight);
                 }, 150);
                 break;
               case 'JOIN':
