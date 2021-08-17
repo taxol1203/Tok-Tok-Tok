@@ -35,14 +35,14 @@
       <!-- NavBar 끝 -->
     <el-main>
       <el-menu
-        :default-active="activeIndex2"
+        :default-active="activeIndex"
         class="el-menu-demo navbar"
         mode="horizontal"
         @select="handleSelect"
         background-color="#fff"
         text-color="#000"
         active-text-color="#006f3e">
-        <el-menu-item index="0" disabled>톡톡톡</el-menu-item>
+        <el-menu-item index="0" active>언제든지 어디서나 간편하게</el-menu-item>
         <el-menu-item index="1" style="float: right">내 계정</el-menu-item>
         <el-menu-item index="2" style="float: right">로그아웃</el-menu-item>
       </el-menu>
@@ -58,12 +58,16 @@ import {useStore} from 'vuex'
 export default {
   setup(){
     const store = useStore();
+    const activeIndex = '0'
     store.dispatch('loginCheck')
+    return{
+      activeIndex,
+    }
   },
   data(){
     return{
       isCollapse : false,
-      mode : '1'
+      mode : '1',
     }
   },
   methods:{

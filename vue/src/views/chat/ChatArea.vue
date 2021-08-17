@@ -5,9 +5,9 @@
       <el-main v-else>
         <VideoChatDetail />
       </el-main>
-      <el-container>
+      <el-container style="height: 87vh">
         <!-- <transition name="chat-change" mode="out-in"> -->
-        <div v-if="sessionId" style="width: 50vw; margin-top: 10px; display: block">
+        <div v-if="sessionId" style="width: 45vw; margin-top: 10px; display: block">
           <ChatDetail />
         </div>
         <div v-else class="center-content">
@@ -15,7 +15,7 @@
         </div>
         <!-- </transition> -->
         <!-- <transition name="chat-change" mode="out-in"> -->
-        <div v-if="sessionId" style="width: 20vw; right: 10px; margin: 20px"><UserInfo /></div>
+        <div v-if="sessionId" style="width: 25vw; right: 10px; margin: 20px"><UserInfo /></div>
         <!-- </transition> -->
       </el-container>
     </el-container>

@@ -143,13 +143,13 @@ export default {
 <style scoped>
 #topMessages {
   top: 0px;
-  width: 50vw;
+  width: 45vw;
   height: 82vh;
 }
 #bottomInput {
   position: fixed;
   bottom: 10px;
-  width: 50vw;
+  width: 45vw;
 }
 .el-scroll {
   overflow-x: hidden;

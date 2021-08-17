@@ -58,6 +58,7 @@ body {
   min-height: 100%;
   overflow: auto;
   /* width: 260px; */
+  min-width: 250px;
   text-align: left;
 }
 .navbar {
