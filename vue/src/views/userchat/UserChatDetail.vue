@@ -34,22 +34,22 @@
   <!-- 실시간채팅 끝 -->
 </template>
 <script>
-import { useStore } from "vuex";
-import { computed } from "vue";
+import { useStore } from 'vuex';
+import { computed } from 'vue';
 
 export default {
-  name: "Chat",
+  name: 'Chat',
   components: {},
   setup() {
     const store = useStore();
     const userPkidx = computed(() => store.state.auth.user.pk_idx);
-    const sessionId = computed(() => store.getters["get_selected_idx"]); //user가 생성한 방 id
-    const messages = computed(() => store.getters["get_user_messages"]);
-    const isOpen = computed(() => store.getters["get_user_room_status"]);
-    const closeMsg = computed(() => store.getters["clostMsgGetter"]);
+    const sessionId = computed(() => store.getters['get_selected_idx']); //user가 생성한 방 id
+    const messages = computed(() => store.getters['get_user_messages']);
+    const isOpen = computed(() => store.getters['get_user_room_status']);
+    const closeMsg = computed(() => store.getters['clostMsgGetter']);
     const loading = true;
     const openVideo = () => {
-      store.commit("OPEN_VIDEO");
+      store.commit('OPEN_VIDEO');
     };
 
     return {
@@ -88,7 +88,7 @@ export default {
   overflow-x: hidden;
 }
 .message-me {
-  border: 0.1px solid #004226;
+  /* border: 0.1px solid #004226; */
   border-radius: 10px 10px 0px 10px;
   color: white;
   background: #006f3e;
@@ -98,10 +98,11 @@ export default {
   max-width: 300px;
 }
 .message-other {
-  border: 0.1px solid #e4e2df;
+  /* border: 0.1px solid #e4e2df; */
   border-radius: 10px 10px 10px 0px;
   /* color: #fff; */
-  background: whitesmoke;
+  /* background: whitesmoke; */
+  background-color: #f7f4f0;
   float: left;
   padding: 10px;
   margin: 5px 10px 5px 5px;
