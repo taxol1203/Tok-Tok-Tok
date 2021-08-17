@@ -11,11 +11,7 @@
       <el-row>
         <el-col :span="2">
           <el-menu-item index="1">
-            <img
-              src="@/assets/mslogo.png"
-              alt=""
-              style="margin-bottom: 0.35rem"
-            />
+            <img src="@/assets/mslogo.png" alt="" style="margin-bottom: 0.35rem" />
           </el-menu-item>
         </el-col>
         <el-col :span="2">
@@ -35,16 +31,10 @@
           </el-submenu>
         </el-col>
         <el-col :span="3" :offset="15">
-          <el-menu-item
-            v-if="user_pk_idx"
-            index="10"
-            id="loginbtn"
-            @click="logout"
+          <el-menu-item v-if="user_pk_idx" index="10" id="loginbtn" @click="logout"
             >로그아웃</el-menu-item
           >
-          <el-menu-item v-else index="10" id="loginbtn" @click="popUpLogin"
-            >로그인</el-menu-item
-          >
+          <el-menu-item v-else index="10" id="loginbtn" @click="popUpLogin">로그인</el-menu-item>
         </el-col>
       </el-row>
     </el-menu>
@@ -65,16 +55,12 @@
         circle
       ></el-button>
       <!-- </transition> -->
-      <el-dialog
-        title="상담을 종료하시겠습니까?"
-        v-model="DialogVisible"
-        width="30%"
-        center
-      >
+      <el-dialog title="" v-model="DialogVisible" width="30%" center>
+        <div style="font-size: 18px; text-align: center">상담을 종료하시겠습니까?</div>
         <template #footer>
           <span class="dialog-footer">
-            <el-button @click="DialogVisible = false">아니오</el-button>
-            <el-button type="primary" @click="sendEnd">네</el-button>
+            <el-button @click="sendEnd" class="green-color-btn" style="width: 80px">네</el-button>
+            <el-button @click="DialogVisible = false" style="width: 80px">아니오</el-button>
           </span>
         </template>
       </el-dialog>
@@ -84,11 +70,7 @@
             <el-col :span="20" :offset="0"></el-col>
             <el-col :span="4" :offset="0">
               <div style="float: right">
-                <i
-                  @click="DialogVisible = true"
-                  class="el-icon-error"
-                  id="close-btn"
-                ></i>
+                <i @click="DialogVisible = true" class="el-icon-error" id="close-btn"></i>
                 <!-- <i @click="DialogVisible = true" class="el-icon-close" id="close-btn"></i> -->
               </div>
             </el-col>
@@ -103,7 +85,12 @@
       </transition>
     </div>
   </div>
-  <UserLogin v-if="showModal && !user_pk_idx" />
+
+  <el-dialog v-model="showModal" width="30%" :before-close="handleClose">
+    <UserLogin />
+  </el-dialog>
+
+  <!-- <UserLogin v-if="showModal && !user_pk_idx" /> -->
 </template>
 <script>
 import { useStore } from 'vuex';
@@ -132,12 +119,11 @@ export default {
     let stompClient = computed(() => store.getters['stompGetter']);
     const showModal = ref(false);
     const popUpLogin = () => {
-      console.log('hi');
       showModal.value = !showModal.value;
     };
     const logout = () => {
       localStorage.clear();
-      store.commit("auth/logout");
+      store.commit('auth/logout');
     };
     const sendEnd = () => {
       send('END');
@@ -290,6 +276,7 @@ el-menu {
 }
 #loginbtn {
   right: 0;
+  color: #000 !important;
 }
 /* 생성 부분 */
 /* 소멸 부분 */
