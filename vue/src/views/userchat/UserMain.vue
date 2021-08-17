@@ -20,18 +20,18 @@
         </el-col>
         <el-col :span="2">
           <el-submenu index="2">
-            <template #title>제품</template>
-            <el-menu-item index="2-1">item one</el-menu-item>
-            <el-menu-item index="2-2">item two</el-menu-item>
-            <el-menu-item index="2-3">item three</el-menu-item>
+            <template #title>소프트웨어</template>
+            <el-menu-item index="2-1">Windows 앱</el-menu-item>
+            <el-menu-item index="2-2">OneDrive</el-menu-item>
+            <el-menu-item index="2-3">OutLook</el-menu-item>
           </el-submenu>
         </el-col>
         <el-col :span="2">
           <el-submenu index="3">
-            <template #title>서비스</template>
-            <el-menu-item index="3-1">item one</el-menu-item>
-            <el-menu-item index="3-2">item two</el-menu-item>
-            <el-menu-item index="3-3">item three</el-menu-item>
+            <template #title>Developer & IT</template>
+            <el-menu-item index="3-1">.NET</el-menu-item>
+            <el-menu-item index="3-2">Visual Studio</el-menu-item>
+            <el-menu-item index="3-3">Windows Server</el-menu-item>
           </el-submenu>
         </el-col>
         <el-col :span="3" :offset="15">
@@ -51,9 +51,6 @@
     <img id="bg" src="@/assets/userBG.png" alt="" />
   </div>
   <div id="UserMain">
-    <div class="videoContainer" v-if="videoStatus != 'CLOSE'">
-      <VideoChatDetail />
-    </div>
     <div class="fab-container">
       <el-button
         class="big-btn"
@@ -83,24 +80,22 @@
       </el-dialog>
       <transition class="same-pos" name="fade" mode="out-in">
         <div id="chat-box" v-if="isHidden">
-          <el-row :gutter="40">
-            <el-col :span="20" :offset="0"></el-col>
-            <el-col :span="4" :offset="0">
-              <div style="float: right">
-                <i
-                  @click="DialogVisible = true"
-                  class="el-icon-error"
-                  id="close-btn"
-                ></i>
-              </div>
-            </el-col>
-          </el-row>
-          <el-card :body-style="{ padding: '0px' }" id="chat-card">
-            <div id="card-head" class="card-header"></div>
-            <div class="full-box">
+          <div style="width: 100%; text-align: right">
+            <i
+              @click="DialogVisible = true"
+              class="el-icon-error"
+              id="close-btn"
+            ></i>
+            <!-- <i @click="DialogVisible = true" class="el-icon-close" id="close-btn"></i> -->
+          </div>
+          <div>
+            <el-card class="videoContainer" v-if="videoStatus != 'CLOSE'">
+              <VideoChatDetail />
+            </el-card>
+            <el-card id="chat-card">
               <UserQna :close="isHidden" />
-            </div>
-          </el-card>
+            </el-card>
+          </div>
         </div>
       </transition>
     </div>
@@ -115,7 +110,7 @@ import UserChatDetail from './UserChatDetail.vue';
 import UserQna from './UserQna.vue';
 import ChatDetail from '../../components/chat/ChatDetail.vue';
 import VideoChatDetail from '@/components/VideoChat/VideoChatDetail.vue';
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import router from '@/router';
 import UserLogin from './UserLogin';
 export default {
@@ -134,8 +129,18 @@ export default {
     const sessionId = computed(() => store.getters['get_selected_idx']);
     let stompClient = computed(() => store.getters['stompGetter']);
     const showModal = ref(false);
+    const videoStatus = computed(() => store.state.video_status);
+    const temp = ref(localStorage.getItem('jwt'));
+
+    // modal창 자동으로 꺼지게 하는 부분
+    watch(user_pk_idx, () => {
+      if (user_pk_idx) {
+        showModal.value = false;
+      }
+    });
+
     const popUpLogin = () => {
-      showModal.value = !showModal.value;
+      showModal.value = true;
     };
     const logout = () => {
       localStorage.clear();
@@ -146,7 +151,6 @@ export default {
       store.commit('userQna/CHANGE_STATE');
       DialogVisible.value = false;
     };
-    const videoStatus = computed(() => store.state.video_status);
 
     let changeCondition = () => {
       store.commit('userChatInit');
@@ -195,17 +199,15 @@ export default {
       goLogin,
       popUpLogin,
       logout,
+      temp,
     };
   },
 };
 </script>
 <style scoped>
-el-menu {
-}
 #bg {
   z-index: 1;
 }
-
 .fab-container {
   position: fixed;
   bottom: 50px;
@@ -213,10 +215,10 @@ el-menu {
   z-index: 999;
   cursor: pointer;
 }
-
 #chat-box {
-  width: 25rem;
-  height: 45rem;
+  /* width: 25rem; 1rem = 16px */
+  height: 52.5rem; /* 45rem 720px 52rem;*/
+  width: auto;
   padding: 10px;
   position: sticky;
   background-color: #09c7fb;
@@ -224,7 +226,6 @@ el-menu {
   border-radius: 2rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.24), 0 0 6px rgba(0, 0, 0, 0.08);
 }
-
 .big-btn {
   width: 80px;
   height: 80px;
@@ -233,7 +234,6 @@ el-menu {
   background-image: linear-gradient(315deg, #09c7fb 0%, #93fb9d 74%);
   border: none;
 }
-
 #close-btn {
   font-size: 2rem;
   color: white;
@@ -247,43 +247,35 @@ el-menu {
   right: 100px;
 }
 
-.full-box {
-  box-sizing: border-box;
-  width: 100%;
-  height: auto;
-  padding: 14px;
-  position: relative;
-}
-
 #chat-card {
   border-radius: 1rem;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.5);
   border: none;
+  height: 45rem;
+  display: inline-block !important;
+  width: 25rem;
 }
-
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.videoContainer {
+  border-radius: 1rem;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.5);
+  background-color: #fff;
+  border: none;
+  height: 50rem;
+  /* padding: 10px; */
+  margin-right: 10px;
+  width: 26rem;
+  display: inline-block !important;
+  /* justify-content: space-between; */
+  /* align-items: center; */
 }
-
 .text {
   font-size: 14px;
 }
-
 .item {
   margin-bottom: 18px;
 }
 #loginbtn {
   right: 0;
   color: #000 !important;
-}
-
-.videoContainer {
-  position: absolute;
-  width: 65rem;
-  height: 50rem;
-  background-color: lightgrey;
-  margin: 5rem;
 }
 </style>

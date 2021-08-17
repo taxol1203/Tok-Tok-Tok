@@ -185,14 +185,14 @@ export default {
 #topMessages {
   display: block;
   top: 0px;
-  height: 550px;
+  height: 40rem;
   width: 100%;
 }
 .el-scroll {
   overflow-x: hidden;
 }
 .message-me {
-  border: 0.1px solid #004226;
+  /* border: 0.1px solid #004226; */
   border-radius: 10px 10px 0px 10px;
   color: white;
   background: #006f3e;
@@ -200,15 +200,19 @@ export default {
   padding: 10px;
   margin: 5px 10px 5px 5px;
   max-width: 300px;
+  text-align: right;
 }
 .message-other {
-  border: 0.1px solid #e4e2df;
+  /* border: 0.1px solid #e4e2df; */
   border-radius: 10px 10px 10px 0px;
-  background: whitesmoke;
+  /* color: #fff; */
+  /* background: whitesmoke; */
+  background-color: #f7f4f0;
   float: left;
   padding: 10px;
   margin: 5px 10px 5px 5px;
   max-width: 300px;
+  text-align: left;
 }
 #inputBox {
   width: 90%;

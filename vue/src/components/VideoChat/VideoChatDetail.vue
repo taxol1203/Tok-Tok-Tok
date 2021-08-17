@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 100vh">
+  <div style="height: 100%">
     <el-row class="videoStyle centerOptions">
       <video
         ref="videoElement"
@@ -104,18 +104,18 @@
 </template>
 
 <script>
-import { ref, onMounted, reactive, computed } from "vue";
-import { useStore } from "vuex";
+import { ref, onMounted, reactive, computed } from 'vue';
+import { useStore } from 'vuex';
 export default {
   setup() {
     const store = useStore();
-    const videoElement = ref("");
-    const audioInputSelect = ref("");
-    const audioOutputSelect = ref("");
-    const videoSelect = ref("");
-    const remoteVideo = ref("");
+    const videoElement = ref('');
+    const audioInputSelect = ref('');
+    const audioOutputSelect = ref('');
+    const videoSelect = ref('');
+    const remoteVideo = ref('');
     const videoStatus = computed(() => store.state.video_status);
-    const sessionId = computed(() => store.getters["get_selected_idx"]);
+    const sessionId = computed(() => store.getters['get_selected_idx']);
     const screenShare = ref(true);
     const isUser = computed(() => store.getters.is_user);
     const localVidReady = ref(false);
@@ -130,7 +130,7 @@ export default {
     var peerConnection = null;
     var peerStarted = false;
     const closeVideoWindow = () => {
-      store.commit("CLOSE_VIDEO");
+      store.commit('CLOSE_VIDEO');
     };
     onMounted(async () => {
       try {
@@ -155,11 +155,11 @@ export default {
       mediaOptions.videoinput = [];
       for (let i = 0; i < deviceInfos.length; i++) {
         const deviceInfo = deviceInfos[i];
-        if (deviceInfo.kind === "audioinput") {
+        if (deviceInfo.kind === 'audioinput') {
           mediaOptions.audioinput.push(deviceInfo);
-        } else if (deviceInfo.kind === "audiooutput") {
+        } else if (deviceInfo.kind === 'audiooutput') {
           mediaOptions.audiooutput.push(deviceInfo);
-        } else if (deviceInfo.kind === "videoinput") {
+        } else if (deviceInfo.kind === 'videoinput') {
           mediaOptions.videoinput.push(deviceInfo);
         }
       }
@@ -191,7 +191,7 @@ export default {
         }, 1000);
       } catch (err) {
         console.log(err);
-        alert("디바이스가 없습니다. 다시 확인해주세요.");
+        alert('디바이스가 없습니다. 다시 확인해주세요.');
       }
       if (socketRead.value) {
         sendReconnectRequest();
@@ -206,7 +206,7 @@ export default {
     };
 
     function sendReconnectRequest() {
-      let req = { type: "reconnectRequest" };
+      let req = { type: 'reconnectRequest' };
       socket.send(JSON.stringify(req));
     }
 
@@ -221,7 +221,7 @@ export default {
         localStream = null;
       };
       socket.onopen = function () {
-        console.log("Successfully connected to the server...");
+        console.log('Successfully connected to the server...');
         socketRead.value = true;
       };
       socket.onclose = function (e) {
@@ -235,7 +235,7 @@ export default {
           track.stop();
         });
         videoElement.value.srcObject = null;
-        store.commit("CLOSE_VIDEO");
+        store.commit('CLOSE_VIDEO');
 
         if (peerConnection != null) {
           peerConnection.close();
@@ -253,8 +253,8 @@ export default {
           onAnswer(evt);
         } else if (evt.type === "candidate" && peerStarted) {
           onCandidate(evt);
-        } else if (evt.type === "bye" && peerStarted) {
-          console.log("WebRTC communication disconnected");
+        } else if (evt.type === 'bye' && peerStarted) {
+          console.log('WebRTC communication disconnected');
           stop();
         } else if (evt.type === "reconnectRequest" && peerStarted) {
           let res = { type: "reconnectResponse" };
@@ -284,13 +284,13 @@ export default {
         peerStarted = true;
       } else {
         if (!localStream) {
-          alert("Please capture local video data first.");
+          alert('Please capture local video data first.');
         }
         if (!socketRead.value) {
-          alert("Please open socket before connect.");
+          alert('Please open socket before connect.');
         }
         if (peerStarted) {
-          alert("Already peer have started.");
+          alert('Already peer have started.');
         }
       }
       store.commit("LIVE_VIDEO");
@@ -314,9 +314,9 @@ export default {
       var pc_config = {
         iceServers: [
           {
-            url: "stun:13.124.49.8:3478",
-            username: "test",
-            credential: "test",
+            url: 'stun:13.124.49.8:3478',
+            username: 'test',
+            credential: 'test',
           },
         ],
       };
@@ -324,12 +324,12 @@ export default {
       try {
         peer = new webkitRTCPeerConnection(pc_config);
       } catch (e) {
-        console.log("Failed to establish connection, error:" + e.message);
+        console.log('Failed to establish connection, error:' + e.message);
       }
       peer.onicecandidate = function (evt) {
         if (evt.candidate) {
           sendCandidate({
-            type: "candidate",
+            type: 'candidate',
             sdpMLineIndex: evt.candidate.sdpMLineIndex,
             sdpMid: evt.candidate.sdpMid,
             candidate: evt.candidate.candidate,
@@ -345,8 +345,8 @@ export default {
           case "connected":
             store.commit("LIVE_VIDEO");
             break;
-          case "disconnected":
-            alert("peer disconnected");
+          case 'disconnected':
+            alert('peer disconnected');
             break;
           case "failed":
             alert("peer failed");
@@ -362,8 +362,8 @@ export default {
       }
 
       function onRemoteStreamRemoved(event) {
-        console.log("Remove remote video stream");
-        remoteVideo.value.src = "";
+        console.log('Remove remote video stream');
+        remoteVideo.value.src = '';
       }
 
       return peer;
@@ -395,7 +395,7 @@ export default {
         })
         .catch((error) => {
           let errorMessage = error;
-          if (error.name === "SecurityError") {
+          if (error.name === 'SecurityError') {
             errorMessage = `You need to use HTTPS for selecting audio output device: ${error}`;
           }
           console.error(errorMessage);
@@ -441,7 +441,7 @@ export default {
 
     function setOffer(evt) {
       if (peerConnection) {
-        console.error("peerConnection already exists!");
+        console.error('peerConnection already exists!');
         return;
       }
       peerConnection = prepareNewConnection();
@@ -450,7 +450,7 @@ export default {
 
     function sendAnswer(evt) {
       if (!peerConnection) {
-        console.error("peerConnection does not exist!");
+        console.error('peerConnection does not exist!');
         return;
       }
 
@@ -468,7 +468,7 @@ export default {
 
     function setAnswer(evt) {
       if (!peerConnection) {
-        console.error("peerConnection does not exist!");
+        console.error('peerConnection does not exist!');
         return;
       }
       peerConnection.setRemoteDescription(new RTCSessionDescription(evt));
@@ -480,7 +480,7 @@ export default {
         .then((stream) => {
           for (let i = 0; i < localStream.getTracks().length; i++) {
             let track = localStream.getTracks()[i];
-            if (track.kind === "video") {
+            if (track.kind === 'video') {
               localStream.removeTrack(track);
             }
           }
@@ -569,19 +569,19 @@ export default {
 .enterBtn {
   background-color: #006f3e;
   color: white;
-  font-size: 1rem;
+  font-size: 12px;
   border: 0;
 }
 .stopBtn {
   background-color: #ffbd44;
   color: #fff;
-  font-size: 1rem;
+  font-size: 12px;
   border: 0;
 }
 .closeBtn {
   background-color: #ff605c;
   color: #fff;
-  font-size: 1rem;
+  font-size: 12px;
   border: 0;
 }
 
