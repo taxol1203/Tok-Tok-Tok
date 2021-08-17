@@ -10,7 +10,7 @@
       <template #label>종료<el-badge :value="count[2]" class="badge"/></template>
     </el-tab-pane>
   </el-tabs>
-  <el-scrollbar height="100vh">
+  <el-scrollbar height="100vh-50px">
     <div v-for="room in listStatus" :key="room.session.session_id" class="noborder">
       <div
         @click="pickRoom(room.session.session_id)"
@@ -128,6 +128,9 @@ export default {
 };
 </script>
 <style>
+.el-tabs{
+  width: 400px;
+}
 .noborder {
   border: 0px solid;
 }
@@ -148,11 +151,6 @@ export default {
   filter: brightness(95%);
   /* background-color: #fff; */
   border-right: 0px;
-}
-#container {
-  background: #f7f4f0;
-  cursor: pointer;
-  /* border: 2px solid purple; */
 }
 .list-menu {
   /* background-color: #eee; */

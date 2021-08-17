@@ -198,7 +198,7 @@ export default {
   },
 };
 </script>
-<style>
+<style scoped>
 #bottomInput {
   bottom: 0px;
   width: 100%;

@@ -1,6 +1,6 @@
 <template lang="">
   <el-container>
-    <el-header>
+    <el-header style="margin-top: 20px">
       <!-- <h1>All cards({{ this.$store.getters.allQnaCount }})</h1> -->
       <el-row>
         <el-col :span="20"><QnaTitle /></el-col>

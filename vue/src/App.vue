@@ -17,6 +17,7 @@ export default {
 * {
   font-family: 'Noto Sans', '맑은 고딕', sans-serif;
   font-weight: bold;
+  /* font-size: 18px; */
 }
 
 html,
@@ -27,9 +28,6 @@ body {
 }
 .el-main {
   overflow: hidden;
-}
-.el-container {
-  width: calc(100%-260px);
 }
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -59,18 +57,8 @@ body {
   max-height: 100vh;
   min-height: 100%;
   overflow: auto;
-  width: 260px;
+  /* width: 260px; */
   text-align: left;
-}
-#container {
-  background: #f7f4f0;
-  position: relative;
-  height: 100vh;
-  max-height: 100vh;
-  min-height: 100%;
-  width: 300px;
-  overflow-x: hidden;
-  margin: 0;
 }
 .navbar {
   border: 0;
@@ -81,6 +69,9 @@ body {
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   padding: 5px 15px;
 }
+/* .el-scrollbar {
+  height: 87vh;
+} */
 /* 생성 부분 */
 /* .page-change-enter-from {
   opacity: 0;

@@ -29,9 +29,9 @@
         고객 정보
       </el-row>
     </el-col>
-    <el-row class="rowitem2"> 닉네임: {{ user.username }} </el-row>
-    <el-row class="rowitem2"> 이메일: {{ user.email }} </el-row>
-    <el-row class="rowitem2"> 전화번호: 010-1234-5678 </el-row>
+    <div class="rowitem2">닉네임: {{ user.username }}</div>
+    <div class="rowitem2">이메일: {{ user.email }}</div>
+    <div class="rowitem2">전화번호: 010-1234-5678</div>
     <hr style="border: 2px solid whitesmoke; margin-top: 40px" width="90%" />
   </el-row>
 </template>
@@ -92,6 +92,8 @@ export default {
   color: gray;
   margin-left: 20px;
   margin-bottom: 10px;
+  width: 100%;
+  text-align: left;
 }
 .message-me {
   border: 1px solid #f7f4f0;

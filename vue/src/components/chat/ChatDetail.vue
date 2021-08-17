@@ -1,60 +1,56 @@
 <template>
-  <div style="position: relative; width: 650px; height: 750px; padding: 10px">
-    <i
-      v-if="chatStatus == 'LIVE'"
-      class="el-icon-error"
-      @click="closeRoom"
-      style="color: #006f3e"
-    ></i>
-    <!-- 상대방 -->
-    <el-scrollbar ref="scrollbar" id="topMessages">
-      <div v-for="(msg, index) in messages" :key="index">
-        <el-row>
-          <el-col v-if="msg.fk_author_idx == userPkidx">
-            <div class="message-me" v-if="msg.type == 'MSG' || msg.type == 'VID'">
-              {{ msg.message }}
-            </div>
-          </el-col>
-          <el-col v-else>
-            <div class="message-other" v-if="msg.type == 'MSG' || msg.type == 'VID'">
-              {{ msg.message }}
-            </div>
-          </el-col>
-        </el-row>
-      </div>
-    </el-scrollbar>
-    <div v-if="chatStatus != 'END'">
-      <el-row id="bottomInput" gutter="2">
-        <!-- 입력창 -->
-        <el-col :span="2">
-          <el-button
-            icon="el-icon-video-camera"
-            class="icon-m-p green-color-btn"
-            @click="openVideo"
-          ></el-button>
-        </el-col>
-        <el-col :span="20">
-          <div>
-            <el-input
-              type="text"
-              @keyup.enter="sendMessage"
-              v-model="message"
-              placeholder="메시지를 입력해주세요:)"
-              clearable
-            >
-            </el-input>
+  <i
+    v-if="chatStatus == 'LIVE'"
+    class="el-icon-error"
+    @click="closeRoom"
+    style="color: #006f3e"
+  ></i>
+  <!-- 상대방  height: 750px; -->
+  <el-scrollbar ref="scrollbar" id="topMessages">
+    <div v-for="(msg, index) in messages" :key="index">
+      <el-row>
+        <el-col v-if="msg.fk_author_idx == userPkidx">
+          <div class="message-me" v-if="msg.type == 'MSG' || msg.type == 'VID'">
+            {{ msg.message }}
           </div>
         </el-col>
-        <el-col :span="2">
-          <el-button
-            @click="sendMessage"
-            icon="el-icon-s-promotion"
-            class="icon-m-p green-color-btn"
-          ></el-button>
+        <el-col v-else>
+          <div class="message-other" v-if="msg.type == 'MSG' || msg.type == 'VID'">
+            {{ msg.message }}
+          </div>
         </el-col>
       </el-row>
     </div>
-  </div>
+  </el-scrollbar>
+  <el-row v-if="chatStatus != 'END'" id="bottomInput" gutter="2">
+    <!-- 입력창 -->
+    <el-col :span="2">
+      <el-button
+        icon="el-icon-video-camera"
+        class="icon-m-p green-color-btn"
+        @click="openVideo"
+      ></el-button>
+    </el-col>
+    <el-col :span="20">
+      <div>
+        <el-input
+          type="text"
+          @keyup.enter="sendMessage"
+          v-model="message"
+          placeholder="메시지를 입력해주세요:)"
+          clearable
+        >
+        </el-input>
+      </div>
+    </el-col>
+    <el-col :span="2">
+      <el-button
+        @click="sendMessage"
+        icon="el-icon-s-promotion"
+        class="icon-m-p green-color-btn"
+      ></el-button>
+    </el-col>
+  </el-row>
 </template>
 <script>
 import { useStore } from 'vuex';
@@ -146,14 +142,14 @@ export default {
 </script>
 <style scoped>
 #topMessages {
-  display: block;
   top: 0px;
-  height: calc(100vh-50px);
-  width: 100%;
+  width: 50vw;
+  height: 82vh;
 }
 #bottomInput {
-  bottom: 0px;
-  width: 100%;
+  position: fixed;
+  bottom: 10px;
+  width: 50vw;
 }
 .el-scroll {
   overflow-x: hidden;

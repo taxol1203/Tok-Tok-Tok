@@ -1,18 +1,18 @@
 <template lang="">
-  <div id="container">
-    <el-scrollbar id="qcards">
-      <div v-for="q in cards" :key="q.pk_idx" class="text item">
-        <el-card class="box-card" @click="showDetail(q.pk_idx)">
-          <span style="color: #606266">{{ q.title }}</span>
-          <span v-if="q.title == undefined">시나리오 제목을 입력해주세요.</span>
-        </el-card>
-      </div>
-    </el-scrollbar>
-    <el-card class="box-card" @click="addScene" id="addButton">
-      <i class="el-icon-circle-plus" style="color: #006f3e">&nbsp;<b>예상 시나리오 추가</b></i>
-      <!-- el-icon-plus -->
-    </el-card>
-  </div>
+  <!-- <div id="container"> -->
+  <el-scrollbar id="qcards" height="100vh-50px">
+    <div v-for="q in cards" :key="q.pk_idx" class="text item">
+      <el-card class="box-card" @click="showDetail(q.pk_idx)">
+        <span style="color: #606266">{{ q.title }}</span>
+        <span v-if="q.title == undefined">시나리오 제목을 입력해주세요.</span>
+      </el-card>
+    </div>
+  </el-scrollbar>
+  <el-card class="box-card" @click="addScene" id="addButton">
+    <i class="el-icon-circle-plus" style="color: #006f3e">&nbsp;<b>예상 시나리오 추가</b></i>
+    <!-- el-icon-plus -->
+  </el-card>
+  <!-- </div> -->
 </template>
 <script>
 import { computed } from 'vue';
@@ -57,7 +57,6 @@ export default {
 #qcards {
   display: block;
   top: 0px;
-  height: 700px;
   width: 100%;
 }
 
