@@ -117,14 +117,10 @@ export default {
     const refEmail = ref("");
     const refPasswd = ref("");
     const refCheck = ref("");
-    // const isValid = ref(false);
-    //일단은 입력만 다하면 켜지도록
     const isValid = computed(
       () => user.username && user.email && user.passwd && user.check && isEmailValid.value
     );
-    //중복확인 검사용
     const isEmailValid = computed(() => store.state.auth.emailValid);
-    //형식이 맞는지 검사용
     const isEmailFormValid = ref(false);
 
     const load = () => {
@@ -140,10 +136,7 @@ export default {
       let emailInfo = {
         email: user.email,
       };
-      console.log(store.dispatch("auth/duplicateEmail", emailInfo));
-      if (user.email == "") {
-        console.log("can check");
-      }
+      store.dispatch("auth/duplicateEmail", emailInfo);
     };
 
     const resetForm = () => {
@@ -280,7 +273,6 @@ export default {
   position: static;
 }
 
-/* 왜 인지 class가 안 먹어서 따로 지정함 */
 #green-btn {
   background-color: #006f3e;
   color: #fff;

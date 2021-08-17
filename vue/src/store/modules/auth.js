@@ -1,6 +1,5 @@
 import axios from "@/axios";
 import { ElMessage } from "element-plus";
-import router from '@/router';
 
 export const auth = {
   namespaced: true,
@@ -19,11 +18,9 @@ export const auth = {
     },
     EMAIL_VALID(state) {
       state.emailValid = true;
-      console.log(state.emailValid);
     },
     EMAIL_UNVALID(state) {
       state.emailValid = false;
-      console.log(state.emailValid);
     },
   },
   actions: {
@@ -38,11 +35,8 @@ export const auth = {
           message: "로그인이 완료되었습니다.",
           type: "success",
         });
-        // router.push({
-        //   name: 'chat'
-        // })
-      } catch (res) {
-        console.log(res);
+      } catch (err) {
+        console.log(err);
         console.log("login error");
         ElMessage({
           showClose: true,
@@ -61,8 +55,8 @@ export const auth = {
             type: "success",
           });
         })
-        .catch((res) => {
-          console.log(res);
+        .catch((err) => {
+          console.log(err);
           ElMessage({
             showClose: true,
             message: "회원가입에 문제가 발생했습니다.",
@@ -82,7 +76,6 @@ export const auth = {
           });
         })
         .catch((e) => {
-          // db에 이런 email이 없더라
           if (e.response.status == 404) {
             commit("EMAIL_VALID");
             ElMessage({

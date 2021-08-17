@@ -11,7 +11,11 @@
       <el-row>
         <el-col :span="2">
           <el-menu-item index="1">
-            <img src="@/assets/mslogo.png" alt="" style="margin-bottom: 0.35rem" />
+            <img
+              src="@/assets/mslogo.png"
+              alt=""
+              style="margin-bottom: 0.35rem"
+            />
           </el-menu-item>
         </el-col>
         <el-col :span="2">
@@ -31,10 +35,16 @@
           </el-submenu>
         </el-col>
         <el-col :span="3" :offset="15">
-          <el-menu-item v-if="user_pk_idx" index="10" id="loginbtn" @click="logout"
+          <el-menu-item
+            v-if="user_pk_idx"
+            index="10"
+            id="loginbtn"
+            @click="logout"
             >로그아웃</el-menu-item
           >
-          <el-menu-item v-else index="10" id="loginbtn" @click="popUpLogin">로그인</el-menu-item>
+          <el-menu-item v-else index="10" id="loginbtn" @click="popUpLogin"
+            >로그인</el-menu-item
+          >
         </el-col>
       </el-row>
     </el-menu>
@@ -45,7 +55,6 @@
       <VideoChatDetail />
     </div>
     <div class="fab-container">
-      <!-- <transition class="same-pos" name="fade" mode="out-in"> -->
       <el-button
         class="big-btn"
         type="primary"
@@ -54,13 +63,21 @@
         v-if="!isHidden"
         circle
       ></el-button>
-      <!-- </transition> -->
       <el-dialog title="" v-model="DialogVisible" width="30%" center>
-        <div style="font-size: 18px; text-align: center">상담을 종료하시겠습니까?</div>
+        <div style="font-size: 18px; text-align: center">
+          상담을 종료하시겠습니까?
+        </div>
         <template #footer>
           <span class="dialog-footer">
-            <el-button @click="sendEnd" class="green-color-btn" style="width: 80px">네</el-button>
-            <el-button @click="DialogVisible = false" style="width: 80px">아니오</el-button>
+            <el-button
+              @click="sendEnd"
+              class="green-color-btn"
+              style="width: 80px"
+              >네</el-button
+            >
+            <el-button @click="DialogVisible = false" style="width: 80px"
+              >아니오</el-button
+            >
           </span>
         </template>
       </el-dialog>
@@ -70,8 +87,11 @@
             <el-col :span="20" :offset="0"></el-col>
             <el-col :span="4" :offset="0">
               <div style="float: right">
-                <i @click="DialogVisible = true" class="el-icon-error" id="close-btn"></i>
-                <!-- <i @click="DialogVisible = true" class="el-icon-close" id="close-btn"></i> -->
+                <i
+                  @click="DialogVisible = true"
+                  class="el-icon-error"
+                  id="close-btn"
+                ></i>
               </div>
             </el-col>
           </el-row>
@@ -85,12 +105,9 @@
       </transition>
     </div>
   </div>
-
   <el-dialog v-model="showModal" width="30%" :before-close="handleClose">
     <UserLogin />
   </el-dialog>
-
-  <!-- <UserLogin v-if="showModal && !user_pk_idx" /> -->
 </template>
 <script>
 import { useStore } from 'vuex';
@@ -101,7 +118,6 @@ import VideoChatDetail from '@/components/VideoChat/VideoChatDetail.vue';
 import { computed, ref } from 'vue';
 import router from '@/router';
 import UserLogin from './UserLogin';
-/* eslint-disable */
 export default {
   components: {
     UserQna,
@@ -128,14 +144,11 @@ export default {
     const sendEnd = () => {
       send('END');
       store.commit('userQna/CHANGE_STATE');
-      // store.commit('changeSessionkeyStatus', 'END');
       DialogVisible.value = false;
     };
     const videoStatus = computed(() => store.state.video_status);
 
     let changeCondition = () => {
-      //+ 버튼 눌러서 상담 시작해야하는 경우
-      // store.commit('changeSessionkeyStatus', 'LIVE');
       store.commit('userChatInit');
       store.dispatch('userQna/init');
       store.commit('userQna/CHANGE_STATE');
@@ -144,19 +157,17 @@ export default {
     let connected = false;
 
     const send = (type) => {
-      console.log(sessionId.value);
       if (
         sessionId.value &&
         stompClient.value &&
         stompClient.value.connected &&
         user_pk_idx.value > 0
       ) {
-        console.log('IN SOCKET');
         const msg = {
           message: '',
-          fk_author_idx: user_pk_idx.value, // 작성자의 회원 idx
-          fk_session_id: sessionId.value, // 현재 채팅세션의 id.
-          type: type, // 메세지 타입.
+          fk_author_idx: user_pk_idx.value,
+          fk_session_id: sessionId.value,
+          type: type,
         };
         stompClient.value.send('/receive/' + sessionId.value, JSON.stringify(msg), {});
       }
@@ -192,17 +203,9 @@ export default {
 el-menu {
 }
 #bg {
-  /* position: absolute; */
   z-index: 1;
 }
 
-/* #loginBtn {
-  position: absolute;
-  z-index: 2;
-  top: 0;
-  right: 0;
-  background-color: teal;
-} */
 .fab-container {
   position: fixed;
   bottom: 50px;
@@ -212,8 +215,8 @@ el-menu {
 }
 
 #chat-box {
-  width: 25rem; /* 1rem = 16px */
-  height: 45rem; /* 720px */
+  width: 25rem;
+  height: 45rem;
   padding: 10px;
   position: sticky;
   background-color: #09c7fb;
@@ -225,7 +228,6 @@ el-menu {
 .big-btn {
   width: 80px;
   height: 80px;
-  /* icon 사이즈 키우는 법 */
   font-size: 2rem;
   background-color: #09c7fb;
   background-image: linear-gradient(315deg, #09c7fb 0%, #93fb9d 74%);
@@ -239,7 +241,6 @@ el-menu {
   margin-bottom: 10px;
 }
 
-/* 위치 고정을 시키지 않으면 렌더링하면서 (생명&소멸) 서로 다른 공간에 보여짐 */
 .same-pos {
   position: fixed;
   bottom: 100px;
@@ -264,7 +265,6 @@ el-menu {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  /* background-color: #006f3e; */
 }
 
 .text {
@@ -278,26 +278,7 @@ el-menu {
   right: 0;
   color: #000 !important;
 }
-/* 생성 부분 */
-/* 소멸 부분 */
-/* .fade-enter-from {
-  opacity: 0;
-}
-.fade-enter-to {
-  opacity: 1;
-}
-.fade-enter-active {
-  transition: all 0.3s ease-out;
-}
-.fade-leave-from {
-  opacity: 1;
-}
-.fade-leave-to {
-  opacity: 0;
-}
-.fade-leave-active {
-  transition: all 0.5s ease-out;
-} */
+
 .videoContainer {
   position: absolute;
   width: 65rem;

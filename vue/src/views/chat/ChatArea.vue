@@ -1,6 +1,5 @@
 <template>
   <div style="height: 100vh">
-    <!-- 비디오가 없을 때 -->
     <div v-if="videoStatus == 'CLOSE'">
       <div style="width: 25%; float: left; height: 100vh">
         <ChatList />
@@ -8,7 +7,12 @@
       <el-container style="width: 75%; height: 87vh">
         <div
           v-if="sessionId"
-          style="width: 66%; margin-top: 10px; margin-left: 20px; display: relative"
+          style="
+            width: 66%;
+            margin-top: 10px;
+            margin-left: 20px;
+            display: relative;
+          "
         >
           <ChatDetail />
         </div>
@@ -20,7 +24,6 @@
         </div>
       </el-container>
     </div>
-    <!-- 비디오가 있을 때 -->
     <div v-else>
       <el-row>
         <el-col :span="12">
@@ -30,7 +33,10 @@
         </el-col>
         <el-col :span="12">
           <div style="height: 100%">
-            <div v-if="sessionId" style="margin-top: 10px; margin-left: 20px; display: relative">
+            <div
+              v-if="sessionId"
+              style="margin-top: 10px; margin-left: 20px; display: relative"
+            >
               <ChatDetail />
             </div>
           </div>

@@ -3,7 +3,6 @@
     <div id="LeftPosition">
       <el-row justify="" v-loading="loading">
         <el-col :span="24">
-          <!-- <el-card shadow="always"> -->
           <div style="position: static">
             <div>
               <img src="@/assets/mslogo.png" alt="MainLogo" id="MiniLogo" />
@@ -38,19 +37,24 @@
               ></el-input>
             </el-form-item>
             <el-form-item>
-              <!-- <transition name="slide-fade"> -->
-              <el-button type="button" class="green-color-btn" @click="load()" :disabled="!isValid"
+              <el-button
+                type="button"
+                class="green-color-btn"
+                @click="load()"
+                :disabled="!isValid"
                 >로그인</el-button
               >
-              <!-- </transition> -->
-              <el-button @click="resetForm('formLabelAlign')">다시쓰기</el-button>
-              <el-button class="green-color-btn" @click="goSignUp()">회원가입</el-button>
+              <el-button @click="resetForm('formLabelAlign')"
+                >다시쓰기</el-button
+              >
+              <el-button class="green-color-btn" @click="goSignUp()"
+                >회원가입</el-button
+              >
             </el-form-item>
           </el-form>
           <div v-else>
             <el-button @click="logout">로그아웃</el-button>
           </div>
-          <!-- </el-card> -->
         </el-col>
       </el-row>
     </div>
@@ -163,30 +167,4 @@ export default {
 </script>
 
 <style scoped>
-/* #LoginMain {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 100;
-}
-
-#LeftPosition {
-  position: absolute;
-  top: 10%;
-  left: 70%;
-}
-
-#MiniLogo {
-  width: 30%;
-  height: 30%;
-  display: block;
-  position: static;
-}
-
-el-form {
-  display: block;
-} */
 </style>

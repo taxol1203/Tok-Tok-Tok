@@ -1,10 +1,8 @@
 <template>
   <div v-if="isOpen == 'OPEN'">
     <div v-loading="loading">상담 연결 중입니다. 잠시만 기다려주세요.</div>
-    <!-- <i class="el-icon-loading" style="margin-right: 3px"></i> -->
   </div>
   <div v-if="isOpen == 'LIVE'">상담이 시작되었습니다.</div>
-  <!-- 실시간채팅 시작 -->
   <div v-for="(msg, index) in messages" :key="index">
     <el-row>
       <el-col v-if="msg.fk_author_idx == userPkidx">
@@ -16,22 +14,18 @@
         <div class="message-other">
           {{ msg.message }}
           <br v-if="msg.type == 'VID'" />
-          <el-button class="accept-btn" v-if="msg.type == 'VID'" @click="openVideo">
+          <el-button
+            class="accept-btn"
+            v-if="msg.type == 'VID'"
+            @click="openVideo"
+          >
             수락하기
           </el-button>
         </div>
-        <!-- <div
-          class="message-other vr"
-          v-if="msg.type == 'VID'"
-          @click="openVideo"
-        >
-          메세지를 클릭해 주세요.
-        </div> -->
       </el-col>
     </el-row>
   </div>
   <p>{{ closeMsg }}</p>
-  <!-- 실시간채팅 끝 -->
 </template>
 <script>
 import { useStore } from "vuex";
@@ -67,11 +61,7 @@ export default {
 </script>
 <style scoped>
 .accept-btn {
-  /* border-radius: 10%; */
   cursor: pointer;
-  /* border: 0.1px solid #999999;
-  background-color: #b7b8b8; */
-  /* background-image: linear-gradient(315deg, #ffffff 0%, rgb(179, 177, 177) 50%); */
   margin-top: 0.5rem;
 }
 #topMessages {
@@ -100,7 +90,6 @@ export default {
 .message-other {
   border: 0.1px solid #e4e2df;
   border-radius: 10px 10px 10px 0px;
-  /* color: #fff; */
   background: whitesmoke;
   float: left;
   padding: 10px;
@@ -116,5 +105,4 @@ export default {
 .vr:hover {
   background-color: white;
 }
-/* hover로 버튼 색 변하게 하기: 추가기능 */
 </style>

@@ -1,6 +1,5 @@
 <template lang="">
   <div>
-    <!-- key 13 입력/ 버튼 : 질문 fix  -->
     <el-input
       v-if="check"
       type="text"
@@ -8,8 +7,6 @@
       v-model="select.title"
       style="font-size: 17px"
     ></el-input>
-    <!-- <h1 v-if="check" style="text-align: left">{{ input }}</h1>  :span="23" :offset="0"-->
-    <!-- <h1 v-if="check" class="qna-title" @click="hiddenInput">{{ select.title }}</h1> -->
   </div>
 </template>
 

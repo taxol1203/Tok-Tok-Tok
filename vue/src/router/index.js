@@ -7,7 +7,7 @@ import UserChat from "../views/userchat/UserMain.vue";
 import UserSignup from "../views/userchat/UserSignup.vue";
 import UserLogin from "../views/userchat/UserLogin.vue";
 import NotFound from "../views/NotFound.vue";
-import Admin from '../views/Admin.vue'
+import Admin from '../views/Admin.vue';
 
 const routes = [
   {
@@ -94,20 +94,4 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
 });
-
-// 로그인 권한 부분. 잠시 꺼둠
-// router.beforeEach(async (to, from, next) => {
-//   if (
-//     to.matched.some((routeInfo) => {
-//       return routeInfo.meta.authRequired;
-//     })
-//   ) {
-//     return next();
-//   }
-//   if (localStorage.getItem("jwt") === null) {
-//     return next({ name: "Login" });
-//   } 
-//   return next();
-// });
-
 export default router;
