@@ -16,10 +16,24 @@
         </div>
       </el-col>
       <el-col v-else>
-        <div class="message-other">{{ msg.message }}</div>
-        <div class="message-other vr" v-if="msg.type == 'VID'" @click="openVideo">
-          메세지를 클릭해 주세요.
+        <div class="message-other">
+          {{ msg.message }}
+          <br v-if="msg.type == 'VID'" />
+          <el-button
+            class="accept-btn"
+            v-if="msg.type == 'VID'"
+            @click="openVideo"
+          >
+            수락하기
+          </el-button>
         </div>
+        <!-- <div
+          class="message-other vr"
+          v-if="msg.type == 'VID'"
+          @click="openVideo"
+        >
+          메세지를 클릭해 주세요.
+        </div> -->
       </el-col>
     </el-row>
   </div>
@@ -59,6 +73,12 @@ export default {
 };
 </script>
 <style scoped>
+.accept-btn {
+  border-radius: 10%;
+  cursor: pointer;
+  background-color: #27251f;
+  color: #fff;
+}
 #topMessages {
   display: block;
   top: 0px;
@@ -82,10 +102,10 @@ export default {
   max-width: 300px;
 }
 .message-other {
-  border: 1px solid #27251f;
+  border: 1px solid #006f3e;
   border-radius: 10px 10px 10px 0px;
   color: #fff;
-  background: #27251f;
+  background: #006f3e;
   float: left;
   padding: 10px;
   margin: 5px 10px 5px 5px;
