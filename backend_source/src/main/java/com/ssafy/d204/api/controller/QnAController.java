@@ -42,6 +42,9 @@ public class QnAController {
     private AnswerService answerService;
 
     @ApiOperation(value = "모든 질문의 정보를 반환한다.", response = Question.class)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "모든 질문 반환", response = Question.class),
+    })
     @GetMapping("/question")
     public ResponseEntity<?> retrieveQuestion() throws Exception {
         logger.debug("retrieveQuestion - 호출");
@@ -49,11 +52,17 @@ public class QnAController {
           return questionService.retrieveQuestion();
         }catch (Exception e) {
           return new ResponseEntity<String>("Exception: " + e.getMessage(),
-              HttpStatus.INTERNAL_SERVER_ERROR);
+                  HttpStatus.INTERNAL_SERVER_ERROR);
+             
         }
     }
 
     @ApiOperation(value = "질문 번호에 해당하는 질문의 정보를 반환한다.", response = Question.class)
+    @ApiImplicitParam(name = "pk_idx", dataType = "int", value = "pk_idx에 질문 번호를 입력")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "질문 ", response = Question.class),
+        @ApiResponse(code = 204, message = "해당하는 번호에 따른 질문이 존재하지 않습니다. ", response = Void.class),
+    })
     @GetMapping("/question/{pk_idx}")
     public ResponseEntity<?> detailQuestion(@PathVariable int pk_idx) {
         logger.debug("detailQuestion - 호출");
@@ -66,6 +75,10 @@ public class QnAController {
     }
 
     @ApiOperation(value = "새로운 질문 정보를 입력한다.", response = String.class)
+    @ApiImplicitParam(name = "content", dataType = "varchar", value = "content, title를 입력하여 새로운 질문 정보를 입력한다")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "질문 입력 성공", response = Void.class),
+    })
     @PostMapping("/question")
     public ResponseEntity<?> writeQuestion(@RequestBody Question content) {
         logger.debug("writeQuestion - 호출");
@@ -173,8 +186,7 @@ public class QnAController {
       */
     @ApiImplicitParam(name = "content", dataType = "varchar", value = "content, fk_next_idx를 입력하여 전송 할 수 있다. \\\"fk_next_idx\\\": 0 를 지우고 execute를 하면 연결되는 다음 질문의 기본 값(fk_next_idx)는 2(상담종료)이다. (0으로 실행하면 오류)\"")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "로그인 성공, 토큰과 유저정보 반환",response = UserLoginPostRes.class),
-        @ApiResponse(code = 401, message = "아이디 혹은 비밀번호 일치하지 않음", response = Void.class)
+        @ApiResponse(code = 200, message = "답변 입력 성공", response = Void.class),
     })
     @PostMapping("/answer")
     public ResponseEntity<?> writeAnswer(@RequestBody Answer content) {

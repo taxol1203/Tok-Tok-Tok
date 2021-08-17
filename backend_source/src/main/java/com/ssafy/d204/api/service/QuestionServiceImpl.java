@@ -22,7 +22,11 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public ResponseEntity<?> detailQuestion(int pk_idx) {
-        return new ResponseEntity<Question>(questionDao.detailQuestion(pk_idx), HttpStatus.OK);
+        Question result = questionDao.detailQuestion(pk_idx);
+        if(result == null) {
+            return new ResponseEntity<Question>(result, HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<Question>(result, HttpStatus.OK);
     }
 
     @Override
