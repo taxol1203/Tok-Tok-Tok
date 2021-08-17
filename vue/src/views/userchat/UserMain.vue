@@ -113,7 +113,6 @@ import ChatDetail from '../../components/chat/ChatDetail.vue';
 import VideoChatDetail from '@/components/VideoChat/VideoChatDetail.vue';
 import { computed, ref } from 'vue';
 import router from '@/router';
-import NavBar from '../NavBar.vue';
 import UserLogin from './UserLogin';
 /* eslint-disable */
 export default {
@@ -122,7 +121,6 @@ export default {
     UserChatDetail,
     ChatDetail,
     VideoChatDetail,
-    NavBar,
     UserLogin,
   },
   setup() {
