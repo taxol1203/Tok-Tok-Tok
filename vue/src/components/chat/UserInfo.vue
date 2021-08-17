@@ -3,7 +3,10 @@
     <el-col>
       <div class="avatar-flip">
         <div class="imgBox">
-          <img :src="imgUrl" class="profileImg" />
+          <img
+            :src="require('@/assets/Profile/profile' + user.imgidx + '.jpg')"
+            class="profileImg"
+          />
         </div>
         <h3 style="margin: 10px">
           {{ user.username }}
@@ -49,24 +52,10 @@ export default {
     const store = useStore();
     const user = computed(() => store.getters['clientGetter']);
     const qna = computed(() => store.getters['qnaGetter']);
-    // const user = computed(() => store.getters['get_client_info']);
-    //최댓값은 제외, 최솟값은 포함
-    let max = 10;
-    let min = 0;
-    let idx = user.value.imgidx;
-    console.log(idx);
-    let imgUrl = ref(require('@/assets/Profile/profile' + user.value.imgidx + '.jpg'));
-    watch(user, () => {
-      console.log('here is watch');
-      console.log(user.value.imgidx);
-      imgUrl = ref(require('@/assets/Profile/profile' + user.value.imgidx + '.jpg'));
-    });
-
     return {
       store,
       user,
       qna,
-      imgUrl,
     };
   },
 };

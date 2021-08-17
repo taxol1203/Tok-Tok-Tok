@@ -17,7 +17,7 @@ export default {
 * {
   font-family: 'Noto Sans', '맑은 고딕', sans-serif;
   font-weight: bold;
-  font-size: 17px;
+  /* font-size: 17px; */
 }
 
 html,

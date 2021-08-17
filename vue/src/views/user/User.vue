@@ -1,6 +1,6 @@
 <template>
   <el-container>
-    <el-aside width="25rem" class="myInfo">
+    <div class="myInfo" style="height: 87vh; position: relative">
       <div class="avatar-flip">
         <div class="imgBox">
           <img :src="imgUrl" class="profileImg" />
@@ -42,10 +42,10 @@
       <el-row>
         <span class="myinfo">종료된 상담: {{ count[2] }}개</span>
       </el-row>
-      <el-button class="green-color-btn" style="margin-top: 1rem" @click="logout"
-        >로그아웃</el-button
-      >
-    </el-aside>
+      <div style="position: absolute; bottom: 10px; margin: auto; width: 100%; float: center">
+        <el-button class="green-color-btn" @click="logout">로그아웃</el-button>
+      </div>
+    </div>
     <el-main>
       <div class="white-space">
         <img class="clear-img" src="@/assets/FixLogo.png" alt="logo" />
@@ -62,9 +62,7 @@ export default {
   setup() {
     const store = useStore();
     const user = store.state.auth.user;
-    let max = 10;
-    let min = 0;
-    let temp = Math.floor(Math.random() * (max - min)) + min;
+    let temp = user.pk_idx % 11;
     const imgUrl = ref(require('@/assets/Profile/profile' + temp + '.jpg'));
     const count = computed(() => store.getters['countGetter']);
     const logout = () => {
@@ -89,7 +87,9 @@ export default {
 .myinfo {
   margin-left: 2.5rem;
   margin-bottom: 0.2rem;
+  width: 25rem;
   color: #808080;
+  text-align: left;
 }
 i {
   margin-top: 3px;
