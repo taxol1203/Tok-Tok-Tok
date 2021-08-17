@@ -1,13 +1,14 @@
 <template>
-  <div class="container" id="LoginMain">
+  <div class="container" id="LoginMain" @click="onClose">
     <div id="LeftPosition">
       <el-row justify="" v-loading="loading">
         <el-col :span="24">
           <el-card shadow="always">
             <div style="position: static">
-              <h1>
-                <img src="@/assets/MainLogo.png" alt="MainLogo" id="MiniLogo" />
-              </h1>
+              <div>
+                <img src="@/assets/mslogo.png" alt="MainLogo" id="MiniLogo" />
+                <button @click="onClose()">x</button>
+              </div>
             </div>
             <el-form
               v-if="Object.keys(token).length === 0"
@@ -47,25 +48,18 @@
                   >로그인</el-button
                 >
                 <!-- </transition> -->
-                <el-button @click="resetForm('formLabelAlign')">다시쓰기</el-button>
-                <el-button class="green-color-btn" @click="goSignUp()">회원가입</el-button>
+                <el-button @click="resetForm('formLabelAlign')"
+                  >다시쓰기</el-button
+                >
+                <el-button class="green-color-btn" @click="goSignUp()"
+                  >회원가입</el-button
+                >
               </el-form-item>
             </el-form>
             <div v-else>
-              <h2>환영합니다.</h2>
               <el-button @click="logout">로그아웃</el-button>
             </div>
           </el-card>
-        </el-col>
-      </el-row>
-      <el-row :gutter="20">
-        <el-col :span="24" :offset="0" id="footer">
-          <strong>Help Desk </strong>
-          <em>
-            <a href="tel:02-3429-5041">02-3429-5041</a>
-          </em>
-          <br />
-          <span>평일 상담시간: 09:00 ~ 19:00</span>
         </el-col>
       </el-row>
     </div>
@@ -78,7 +72,7 @@ import { useStore } from "vuex";
 import router from "@/router";
 
 export default {
-  setup() {
+  setup(context) {
     const store = useStore();
     const token = computed(() => store.state.auth.user);
     const formLabelAlign = ref(null);
@@ -107,7 +101,9 @@ export default {
     const loadFinsh = () => {
       loading.value = false;
     };
-
+    const onClose = () => {
+      context.emit('onClose');
+    };
     const checkEmail = (rule, value, callback) => {
       if (!value) {
         return callback(new Error("이메일을 입력해 주세요"));
@@ -169,6 +165,7 @@ export default {
       loading,
       load,
       loadFinsh,
+      onClose,
     };
   },
 };
@@ -176,28 +173,19 @@ export default {
 
 <style scoped>
 #LoginMain {
-  height: 98%;
-  background-image: url("../../assets/work3.png");
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-}
-
-#LoginMain::before {
-  content: "";
-  opacity: 0.5;
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  right: 0px;
-  bottom: 0px;
-  background-color: #ffffff;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 100;
 }
 
 #LeftPosition {
   position: absolute;
-  top: 30%;
-  left: 10%;
+  top: 10%;
+  left: 70%;
 }
 
 #MiniLogo {

@@ -65,7 +65,10 @@
                   @keyup.enter="onSubmit()"
                 ></el-input>
               </el-form-item>
-              <el-button class="green-color-btn" @click="onSubmit()" :disabled="!isValid"
+              <el-button
+                class="green-color-btn"
+                @click="onSubmit()"
+                :disabled="!isValid"
                 >회원가입</el-button
               >
               <el-button @click="resetForm()">다시쓰기</el-button>
@@ -106,7 +109,7 @@ export default {
       ruleForm.value.validate((valid) => {
         if (valid) {
           store.dispatch("auth/signup", payload).then(() => {
-            router.push("/userlogin");
+            router.push("/userchat");
           });
         }
       });

@@ -10,7 +10,10 @@
         </el-row>
         <el-row v-for="ans in item.answers" :key="ans.pk_idx">
           <el-col>
-            <div class="message-me" @click="chooseAnswer(ans.fk_next_idx, ans.content)">
+            <div
+              class="message-me"
+              @click="chooseAnswer(ans.fk_next_idx, ans.content)"
+            >
               {{ ans.content }}
             </div>
           </el-col>
@@ -213,19 +216,20 @@ export default {
   overflow-x: hidden;
 }
 .message-me {
-  border: 1px solid #f7f4f0;
+  border: 0.1px solid #004226;
   border-radius: 10px 10px 0px 10px;
-  background: #f7f4f0;
+  color: white;
+  background: #006f3e;
   float: right;
   padding: 10px;
   margin: 5px 10px 5px 5px;
   max-width: 300px;
 }
 .message-other {
-  border: 1px solid #27251f;
+  border: 0.1px solid #e4e2df;
   border-radius: 10px 10px 10px 0px;
-  color: #fff;
-  background: #27251f;
+  /* color: #fff; */
+  background: whitesmoke;
   float: left;
   padding: 10px;
   margin: 5px 10px 5px 5px;
