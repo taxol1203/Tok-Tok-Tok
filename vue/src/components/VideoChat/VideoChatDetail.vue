@@ -1,100 +1,94 @@
 <template>
-  <el-container>
-    <el-main>
-      <el-row class="centerOptions">
-        <el-col :span="12">
-          <video
-            ref="videoElement"
-            autoplay
-            class="myVideo radiusRectangular"
-            :class="{ myVideoLive: videoStatus == 'LIVE' }"
-          ></video>
-        </el-col>
-      </el-row>
-      <el-row class="centerOptions">
-        <el-col :span="12">
-          <video
-            ref="remoteVideo"
-            autoplay
-            v-show="videoStatus == 'LIVE'"
-            class="remoteVideo radiusRectangular"
-          ></video>
-          <div v-show="videoStatus != 'LIVE'">
-            <div class="centerImg">
-              <img class="clear-img" src="@/assets/HiphopLogo.png" alt="logo" />
-              <p style="font-size: 18pt">상대방과의 연결 중입니다. 잠시만 기다려주세요.</p>
-            </div>
-          </div>
-        </el-col>
-      </el-row>
-    </el-main>
-    <el-footer>
-      <el-row class="centerOptions">
-        <div class="select">
-          <el-select v-model="audioInputSelect" placeholder="마이크 선택" @change="start()">
-            <el-option
-              v-for="(option, index) in mediaOptions.audioinput"
-              :key="index"
-              :label="`${index + 1}. ${option.label}`"
-              :value="option.deviceId"
-            >
-            </el-option>
-          </el-select>
+  <div style="height: 100vh">
+    <el-row class="videoStyle centerOptions">
+      <video
+        ref="videoElement"
+        autoplay
+        class="myVideo radiusRectangular commonVideo"
+        :class="{ myVideoLive: videoStatus == 'LIVE' }"
+      ></video>
+    </el-row>
+    <el-row class="videoStyle centerOptions">
+      <video
+        ref="remoteVideo"
+        autoplay
+        v-show="videoStatus == 'LIVE'"
+        class="remoteVideo radiusRectangular commonVideo"
+      ></video>
+      <div v-show="videoStatus != 'LIVE'">
+        <div>
+          <img class="clear-img" src="@/assets/HiphopLogo.png" alt="logo" />
+          <p id="connectingMsg">
+            상대방과의 연결 중입니다. <br />
+            잠시만 기다려주세요.
+          </p>
         </div>
-      </el-row>
-      <el-row class="centerOptions">
-        <div class="select">
-          <el-select
-            v-model="audioOutputSelect"
-            placeholder="스피커 선택"
-            @change="changeAudioDestination"
+      </div>
+    </el-row>
+    <el-row class="centerOptions">
+      <div class="select">
+        <el-select v-model="audioInputSelect" placeholder="마이크 선택" @change="start()">
+          <el-option
+            v-for="(option, index) in mediaOptions.audioinput"
+            :key="index"
+            :label="`${index + 1}. ${option.label}`"
+            :value="option.deviceId"
           >
-            <el-option
-              v-for="(option, index) in mediaOptions.audiooutput"
-              :key="index"
-              :label="`${index + 1}. ${option.label}`"
-              :value="option.deviceId"
-            >
-            </el-option>
-          </el-select>
-        </div>
-      </el-row>
-      <el-row class="centerOptions">
-        <div class="select">
-          <el-select v-model="videoSelect" placeholder="카메라 선택" @change="start()">
-            <el-option
-              v-for="(option, index) in mediaOptions.videoinput"
-              :key="index"
-              :label="`${index + 1}. ${option.label}`"
-              :value="option.deviceId"
-            >
-            </el-option>
-          </el-select>
-        </div>
-      </el-row>
-      <el-row class="centerOptions">
-        <el-button
-          icon="el-icon-monitor"
-          @click="startScreenStream"
-          class="enterBtn"
-          v-if="screenShare"
+          </el-option>
+        </el-select>
+      </div>
+      <!-- </el-row>
+    <el-row class="centerOptions"> -->
+      <div class="select">
+        <el-select
+          v-model="audioOutputSelect"
+          placeholder="스피커 선택"
+          @change="changeAudioDestination"
         >
-          화면공유
-        </el-button>
-        <el-button icon="el-icon-video-pause" type="button" @click="start" class="stopBtn" v-else>
-          공유중단
-        </el-button>
-        <el-button
-          v-if="isUser && socketRead && localVidReady && videoStatus == 'OPEN'"
-          @click="connect"
-          class="enterBtn"
-          >상담시작</el-button
-        >
-        <el-button icon="el-icon-phone" @click="leave" class="closeBtn">상담종료</el-button>
-      </el-row>
-      <br /><br />
-    </el-footer>
-  </el-container>
+          <el-option
+            v-for="(option, index) in mediaOptions.audiooutput"
+            :key="index"
+            :label="`${index + 1}. ${option.label}`"
+            :value="option.deviceId"
+          >
+          </el-option>
+        </el-select>
+      </div>
+      <!-- </el-row>
+    <el-row class="centerOptions"> -->
+      <div class="select">
+        <el-select v-model="videoSelect" placeholder="카메라 선택" @change="start()">
+          <el-option
+            v-for="(option, index) in mediaOptions.videoinput"
+            :key="index"
+            :label="`${index + 1}. ${option.label}`"
+            :value="option.deviceId"
+          >
+          </el-option>
+        </el-select>
+      </div>
+    </el-row>
+    <el-row class="centerOptions">
+      <el-button
+        icon="el-icon-monitor"
+        @click="startScreenStream"
+        class="enterBtn"
+        v-if="screenShare"
+      >
+        화면공유
+      </el-button>
+      <el-button icon="el-icon-video-pause" type="button" @click="start" class="stopBtn" v-else>
+        공유중단
+      </el-button>
+      <el-button
+        v-if="isUser && socketRead && localVidReady && videoStatus == 'OPEN'"
+        @click="connect"
+        class="enterBtn"
+        >상담시작</el-button
+      >
+      <el-button icon="el-icon-phone" @click="leave" class="closeBtn">상담종료</el-button>
+    </el-row>
+  </div>
 </template>
 
 <script>
@@ -623,35 +617,63 @@ export default {
 };
 </script>
 <style scoped>
-.myVideo {
-  border: 1px solid black;
-  width: 140%;
+/* 비디오 공간 */
+.videoStyle {
+  height: 35%;
+  padding-bottom: 30px;
+  overflow: hidden;
+  /* border: 2px solid black; */
+}
+/* 실제 비디오 출력되는 부분 */
+.commonVideo {
+  width: auto;
+  height: 100%;
+  overflow: hidden;
+}
+
+.clear-img {
+  width: auto;
+  height: auto;
+  max-width: 80%;
+  opacity: 0.3;
+}
+
+.centerOptions {
+  justify-content: center;
+  padding-bottom: 10px;
+}
+
+#connectingMsg {
+  position: absolute;
+  text-align: center;
+  top: 40%;
+  left: 20%;
+  right: 20%;
+  font-size: 18pt;
+  margin-bottom: 0;
+}
+
+/* .myVideo {
+  width: auto;
   height: auto;
   overflow: hidden;
 }
 .myVideoLive {
-  border: 1px solid black;
-  width: 140%;
-  height: 100%;
-  /* 사이즈 작게 왼쪽 아래 라든가? */
-}
-.remoteVideo {
-  width: 140%;
+  width: auto;
   height: auto;
   overflow: hidden;
-  border: 1px solid black;
-  /* 꽉찬화면? */
 }
+.remoteVideo {
+  width: auto;
+  height: auto;
+  overflow: hidden;
+} */
 .select {
   margin: 0.2rem;
 }
-.centerOptions {
-  justify-content: center;
-  /* margin: 0; */
-  /* padding: auto; */
-}
+
 .videoElement {
-  width: 500px;
+  /* width: 500px; */
 }
 .enterBtn {
   background-color: #006f3e;
@@ -672,10 +694,6 @@ export default {
   border: 0;
 }
 
-.clear-img {
-  width: 100%;
-  height: auto;
-}
 .radiusRectangular {
   border-radius: 30px;
   border: none;
