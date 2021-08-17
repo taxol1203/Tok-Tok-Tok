@@ -97,6 +97,8 @@ export default {
   border: 0;
   resize: none;
   border: none;
+  background: transparent;
+  color: #fff;
 }
 
 .answerBox {
@@ -105,5 +107,7 @@ export default {
   text-align: right;
   padding: 10px;
   float: right;
+  width: 30%;
+  background: #006f3e;
 }
 </style>

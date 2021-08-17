@@ -1,10 +1,10 @@
 <template lang="">
   <el-container>
-    <el-header>
+    <el-header style="margin-top: 20px">
       <!-- <h1>All cards({{ this.$store.getters.allQnaCount }})</h1> -->
       <el-row>
-        <el-col :span="20"><QnaTitle /></el-col>
-        <el-col :span="4">
+        <el-col :span="18"><QnaTitle /></el-col>
+        <el-col :span="6">
           <!-- <el-button type="primary" icon="el-icon-edit" circle></el-button> icon="el-icon-goods icon="el-icon-delete""
             circle-->
           <el-button
@@ -74,4 +74,8 @@ export default {
   },
 };
 </script>
-<style lang=""></style>
+<style scoped>
+i {
+  font-size: 14px;
+}
+</style>

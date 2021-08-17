@@ -1,5 +1,5 @@
 <template lang="">
-  <div style="height: 100%">
+  <div>
     <!-- 질문 작성 칸 시작 -->
     <div id="questionBox">
       <el-input

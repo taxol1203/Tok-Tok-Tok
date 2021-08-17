@@ -2,7 +2,12 @@
   <el-row>
     <el-col>
       <div class="avatar-flip">
-        <img :src="imgUrl" height="80" width="80" />
+        <div class="imgBox">
+          <img
+            :src="require('@/assets/Profile/profile' + user.imgidx + '.jpg')"
+            class="profileImg"
+          />
+        </div>
         <h3 style="margin: 10px">
           {{ user.username }}
         </h3>
@@ -15,6 +20,7 @@
         <i class="el-icon-s-opportunity" style="margin-right: 3px"></i>
         고객 채팅봇 기록
       </el-row>
+
       <el-row v-for="(item, index) in qna" :key="index" class="rowitem message-me">
         {{ item }}
       </el-row>
@@ -26,37 +32,30 @@
         고객 정보
       </el-row>
     </el-col>
-    <el-row class="rowitem2"> username: {{ user.username }} </el-row>
-    <el-row class="rowitem2"> email: {{ user.email }} </el-row>
-    <el-row class="rowitem2"> phone: 010-1234-5678 </el-row>
+    <div class="rowitem2">닉네임: {{ user.username }}</div>
+    <div class="rowitem2">이메일: {{ user.email }}</div>
+    <div class="rowitem2">전화번호: 010-1234-5678</div>
     <hr style="border: 2px solid whitesmoke; margin-top: 40px" width="90%" />
   </el-row>
 </template>
 <script>
-import { useStore } from "vuex";
-import { computed, watch, ref } from "vue";
+import { useStore } from 'vuex';
+import { computed, watch, ref } from 'vue';
 
 export default {
   data() {
     return {
-      url: "@/assets/profile.jpg",
+      url: '@/assets/profile.jpg',
     };
   },
   setup() {
     const store = useStore();
-    const user = computed(() => store.getters["clientGetter"]);
-    const qna = computed(() => store.getters["qnaGetter"]);
-    // const user = computed(() => store.getters['get_client_info']);
-    //최댓값은 제외, 최솟값은 포함
-    let max = 10;
-    let min = 0;
-    let temp = Math.floor(Math.random() * (max - min)) + min;
-    const imgUrl = ref(require("@/assets/Profile/profile" + temp + ".jpg"));
+    const user = computed(() => store.getters['clientGetter']);
+    const qna = computed(() => store.getters['qnaGetter']);
     return {
       store,
       user,
       qna,
-      imgUrl,
     };
   },
 };
@@ -89,6 +88,8 @@ export default {
   color: gray;
   margin-left: 20px;
   margin-bottom: 10px;
+  width: 100%;
+  text-align: left;
 }
 .message-me {
   border: 1px solid #f7f4f0;
@@ -98,5 +99,17 @@ export default {
   padding: 10px;
   margin: 5px 10px 5px 5px;
   max-width: 300px;
+}
+.imgBox {
+  width: 150px;
+  height: 150px;
+  border-radius: 70%;
+  overflow: hidden;
+  margin: 0 auto;
+}
+.profileImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 </style>

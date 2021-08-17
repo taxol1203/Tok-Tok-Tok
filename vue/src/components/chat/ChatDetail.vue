@@ -1,111 +1,108 @@
 <template>
-  <div style="position: relative; width: 650px; height: 750px; padding: 10px">
-    <i
-      v-if="chatStatus == 'LIVE'"
-      class="el-icon-error"
-      @click="closeRoom"
-      style="color: #006f3e"
-    ></i>
-    <!-- 상대방 -->
-    <el-scrollbar ref="scrollbar" id="topMessages">
-      <div v-for="(msg, index) in messages" :key="index">
-        <el-row>
-          <el-col v-if="msg.fk_author_idx == userPkidx">
-            <div class="message-me" v-if="msg.type == 'MSG' || msg.type == 'VID'">
-              {{ msg.message }}
-            </div>
-          </el-col>
-          <el-col v-else>
-            <div class="message-other" v-if="msg.type == 'MSG' || msg.type == 'VID'">
-              {{ msg.message }}
-            </div>
-          </el-col>
-        </el-row>
-      </div>
-    </el-scrollbar>
-    <div v-if="chatStatus != 'END'">
-      <el-row id="bottomInput" gutter="2">
-        <!-- 입력창 -->
-        <el-col :span="2">
-          <el-button
-            icon="el-icon-video-camera"
-            class="icon-m-p green-color-btn"
-            @click="openVideo"
-          ></el-button>
-        </el-col>
-        <el-col :span="20">
-          <div>
-            <el-input
-              type="text"
-              @keyup.enter="sendMessage"
-              v-model="message"
-              placeholder="메시지를 입력해주세요:)"
-              clearable
-            >
-            </el-input>
+  <i
+    v-if="chatStatus == 'LIVE'"
+    class="el-icon-error"
+    @click="closeRoom"
+    style="color: #006f3e"
+  ></i>
+  <!-- 상대방  height: 750px; -->
+  <el-scrollbar ref="scrollbar" id="topMessages">
+    <div v-for="(msg, index) in messages" :key="index">
+      <el-row>
+        <el-col v-if="msg.fk_author_idx == userPkidx">
+          <div class="message-me" v-if="msg.type == 'MSG' || msg.type == 'VID'">
+            {{ msg.message }}
           </div>
         </el-col>
-        <el-col :span="2">
-          <el-button
-            @click="sendMessage"
-            icon="el-icon-s-promotion"
-            class="icon-m-p green-color-btn"
-          ></el-button>
+        <el-col v-else>
+          <div class="message-other" v-if="msg.type == 'MSG' || msg.type == 'VID'">
+            {{ msg.message }}
+          </div>
         </el-col>
       </el-row>
     </div>
-  </div>
+  </el-scrollbar>
+  <el-row v-if="chatStatus != 'END'" id="bottomInput" gutter="2">
+    <!-- 입력창 -->
+    <el-col :span="2">
+      <el-button
+        icon="el-icon-video-camera"
+        class="icon-m-p green-color-btn"
+        @click="openVideo"
+      ></el-button>
+    </el-col>
+    <el-col :span="20">
+      <div>
+        <el-input
+          type="text"
+          @keyup.enter="sendMessage"
+          v-model="message"
+          placeholder="메시지를 입력해주세요:)"
+          clearable
+        >
+        </el-input>
+      </div>
+    </el-col>
+    <el-col :span="2">
+      <el-button
+        @click="sendMessage"
+        icon="el-icon-s-promotion"
+        class="icon-m-p green-color-btn"
+      ></el-button>
+    </el-col>
+  </el-row>
 </template>
 <script>
-import { useStore } from 'vuex';
-import { ref, computed, watch, onMounted } from 'vue';
+import { useStore } from "vuex";
+import { ref, computed, watch, onMounted } from "vue";
 
 export default {
-  name: 'Chat',
+  name: "Chat",
   components: {},
   setup() {
     const store = useStore();
-    const sessionId = computed(() => store.getters['get_selected_idx']);
+    const sessionId = computed(() => store.getters["get_selected_idx"]);
     const messages = computed(() => store.getters.get_messages);
     const userPkidx = computed(() => store.state.auth.user.pk_idx);
-    const chatStatus = computed(() => store.getters['statusGetter']);
-    const stompClient = computed(() => store.getters['stompGetter']);
-    const message = ref('');
-    const scrollbar = ref('');
+    const chatStatus = computed(() => store.getters["statusGetter"]);
+    const stompClient = computed(() => store.getters["stompGetter"]);
+    const message = ref("");
+    const scrollbar = ref("");
     watch(sessionId, () => {
       setTimeout(() => {
-        scrollbar.value.setScrollTop(999999999999999999999);
-      }, 150);
+        scrollbar.value.setScrollTop(Number.MAX_SAFE_INTEGER);
+      }, 100);
     });
     watch(scrollbar, () => {
-      store.commit('scrollbarSetter', scrollbar.value);
+      store.commit("scrollbarSetter", scrollbar.value);
     });
+
     onMounted(() => {
-      scrollbar.value.setScrollTop(999999999999999999999);
+      scrollbar.value.setScrollTop(Number.MAX_SAFE_INTEGER);
     });
     const openVideo = () => {
-      store.commit('OPEN_VIDEO');
+      store.commit("OPEN_VIDEO");
       // 사용자에게 초대 메세지 보내기 메세지타입 VID
-      send('VID');
+      send("VID");
     };
 
     const sendMessage = () => {
       if (userPkidx.value && message.value) {
-        send('MSG');
+        send("MSG");
       }
-      message.value = '';
+      message.value = "";
     };
 
     const send = (type) => {
       // console.log('Send message:' + message.value);
       if (stompClient.value && stompClient.value.connected) {
-        console.log('IN SOCKET');
+        console.log("IN SOCKET");
         let msg;
-        if (type === 'VID') {
+        if (type === "VID") {
           msg = {
-            message: '화상상담을 요청합니다.',
+            message: "화상상담을 요청합니다.",
             fk_author_idx: userPkidx.value,
-            created: '',
+            created: "",
             deleted: false,
             fk_session_id: sessionId.value,
             type: type,
@@ -118,13 +115,13 @@ export default {
             type: type,
           };
         }
-        stompClient.value.send('/receive/' + sessionId.value, JSON.stringify(msg), {});
+        stompClient.value.send("/receive/" + sessionId.value, JSON.stringify(msg), {});
       }
     };
 
     const closeRoom = () => {
-      send('END');
-      store.dispatch('chatClose', sessionId.value);
+      send("END");
+      store.dispatch("chatClose", sessionId.value);
     };
 
     return {
@@ -145,14 +142,19 @@ export default {
 </script>
 <style scoped>
 #topMessages {
-  display: block;
   top: 0px;
-  height: 700px;
-  width: 100%;
+  /* width: 45vw; */
+  /* width: 40%; */
+  height: 82vh;
+  /* position: absolute; */
+  margin-bottom: 20px;
 }
 #bottomInput {
-  bottom: 0px;
-  width: 100%;
+  /* position: absolute; */
+  bottom: 10px;
+  /* width: 45vw; */
+  /* width: 40%; */
+  margin-left: 20px;
 }
 .el-scroll {
   overflow-x: hidden;

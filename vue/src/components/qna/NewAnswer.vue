@@ -112,5 +112,6 @@ export default {
   text-align: right;
   padding: 10px;
   float: right;
+  width: 30%;
 }
 </style>
