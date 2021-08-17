@@ -5,35 +5,49 @@
         <div class="imgBox">
           <img :src="imgUrl" class="profileImg" />
         </div>
-        <h3 id="username">
+        <h2 id="username" style="margin-bottom: 0">
           {{ user.username }}
-        </h3>
+        </h2>
         <div style="color: gray; margin-bottom: 10px">
           {{ user.email }}
         </div>
       </div>
       <hr style="border: 2px solid whitesmoke" width="90%" />
       <el-row class="row">
-        <i class="el-icon-info" style="margin-right: 3px"></i>
+        <i class="el-icon-user" style="margin-right: 3px"></i>
         내 정보
       </el-row>
-      <el-row :gutter="20">
-        <el-col :span="24" :offset="0">username: {{ user.username }}</el-col>
-        <el-col :span="24" :offset="0">email: {{ user.email }}</el-col>
-        <el-col :span="24" :offset="0">phone: 010-1234-5678</el-col>
+      <br />
+      <el-row>
+        <span class="myinfo">닉네임: {{ user.username }}</span>
       </el-row>
-      <hr style="border: 2px solid whitesmoke; margin-top: 40px" width="90%" />
+      <el-row>
+        <span class="myinfo">이메일: {{ user.email }}</span>
+      </el-row>
+      <el-row>
+        <span class="myinfo">전화번호: 010-1234-5678</span>
+      </el-row>
+      <hr style="border: 2px solid whitesmoke; margin-top: 2rem" width="90%" />
       <el-row class="row">
         <i class="el-icon-data-analysis" style="margin-right: 3px"></i>
         상담 정보
       </el-row>
-      <el-row :gutter="20">
-        <el-col :span="24" :offset="0">진행중인 상담: {{ count[0] }}개</el-col>
-        <el-col :span="24" :offset="0">대기중인 상담: {{ count[1] }}개</el-col>
-        <el-col :span="24" :offset="0">종료된 상담: {{ count[2] }}개</el-col>
+      <br />
+      <el-row>
+        <span class="myinfo">진행중인 상담: {{ count[0] }}개</span>
       </el-row>
-      <hr style="border: 2px solid whitesmoke; margin-top: 40px" width="90%" />
-      <el-button @click="logout">로그아웃</el-button>
+      <el-row>
+        <span class="myinfo">대기중인 상담: {{ count[1] }}개</span>
+      </el-row>
+      <el-row>
+        <span class="myinfo">종료된 상담: {{ count[2] }}개</span>
+      </el-row>
+      <el-button
+        class="green-color-btn"
+        style="margin-top: 1rem"
+        @click="logout"
+        >로그아웃</el-button
+      >
     </el-aside>
     <el-main>
       <div class="white-space">
@@ -75,6 +89,10 @@ export default {
 };
 </script>
 <style scoped>
+.myinfo {
+  margin-left: 2.5rem;
+  margin-bottom: 0.2rem;
+}
 i {
   margin-top: 3px;
 }
@@ -84,6 +102,8 @@ i {
 }
 .row {
   margin-left: 2rem;
+  font-size: 18px;
+  font-weight: bold;
 }
 .rowitem2 {
   color: gray;
