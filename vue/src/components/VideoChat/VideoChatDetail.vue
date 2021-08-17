@@ -14,20 +14,20 @@
           <video
             ref="remoteVideo"
             autoplay
-            v-if="videoStatus == 'LIVE'"
+            v-show="videoStatus == 'LIVE'"
             class="remoteVideo radiusRectangular"
           ></video>
-          <div v-else>
+          <div v-show="videoStatus != 'LIVE'">
             <div class="centerImg">
               <img class="clear-img" src="@/assets/HiphopLogo.png" alt="logo" />
-              <p>상대방과의 연결 중입니다. 잠시만 기다려주세요.</p>
+              <p style="font-size: 18pt">상대방과의 연결 중입니다. 잠시만 기다려주세요.</p>
             </div>
           </div>
         </el-col>
       </el-row>
     </el-main>
     <el-footer>
-      <el-row class="videoOptions">
+      <el-row class="centerOptions">
         <div class="select">
           <el-select v-model="audioInputSelect" placeholder="마이크 선택" @change="start()">
             <el-option
@@ -65,6 +65,8 @@
             </el-option>
           </el-select>
         </div>
+      </el-row>
+      <el-row class="centerOptions">
         <el-button
           icon="el-icon-monitor"
           @click="startScreenStream"
@@ -83,9 +85,8 @@
           >상담시작</el-button
         >
         <el-button icon="el-icon-phone" @click="leave" class="closeBtn">상담종료</el-button>
-
-        <br /><br />
       </el-row>
+      <br /><br />
     </el-footer>
   </el-container>
 </template>
@@ -618,24 +619,27 @@ export default {
 <style scoped>
 .myVideo {
   border: 1px solid black;
-  height: 30rem;
+  width: 100%;
+  height: auto;
+  overflow: hidden;
 }
 .myVideoLive {
   border: 1px solid black;
-  width: 25rem;
-  height: 25rem;
+  width: 100%;
+  height: 100%;
   /* 사이즈 작게 왼쪽 아래 라든가? */
 }
 .remoteVideo {
-  width: 25rem;
-  height: 25rem;
+  width: 100%;
+  height: auto;
+  overflow: hidden;
   border: 1px solid black;
   /* 꽉찬화면? */
 }
 .select {
   margin: 0.2rem;
 }
-.videoOptions {
+.centerOptions {
   justify-content: center;
 }
 .videoElement {
@@ -661,9 +665,8 @@ export default {
 }
 
 .clear-img {
-  height: 80%;
-  width: 80%;
-  margin: auto;
+  width: 100%;
+  height: auto;
 }
 .radiusRectangular {
   border-radius: 30px;
