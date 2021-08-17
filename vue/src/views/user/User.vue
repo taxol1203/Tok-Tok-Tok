@@ -42,10 +42,7 @@
       <el-row>
         <span class="myinfo">종료된 상담: {{ count[2] }}개</span>
       </el-row>
-      <el-button
-        class="green-color-btn"
-        style="margin-top: 1rem"
-        @click="logout"
+      <el-button class="green-color-btn" style="margin-top: 1rem" @click="logout"
         >로그아웃</el-button
       >
     </el-aside>
@@ -57,9 +54,9 @@
   </el-container>
 </template>
 <script>
-import { useStore } from "vuex";
-import router from "@/router";
-import { ref, computed, onMounted } from "vue";
+import { useStore } from 'vuex';
+import router from '@/router';
+import { ref, computed, onMounted } from 'vue';
 
 export default {
   setup() {
@@ -68,12 +65,12 @@ export default {
     let max = 10;
     let min = 0;
     let temp = Math.floor(Math.random() * (max - min)) + min;
-    const imgUrl = ref(require("@/assets/Profile/profile" + temp + ".jpg"));
+    const imgUrl = ref(require('@/assets/Profile/profile' + temp + '.jpg'));
     const count = computed(() => store.getters['countGetter']);
     const logout = () => {
       localStorage.clear();
-      store.commit("auth/logout");
-      router.push("/login");
+      store.commit('auth/logout');
+      router.push('/login');
     };
     onMounted(() => {
       store.dispatch('getChatRooms');
@@ -92,6 +89,7 @@ export default {
 .myinfo {
   margin-left: 2.5rem;
   margin-bottom: 0.2rem;
+  color: #808080;
 }
 i {
   margin-top: 3px;

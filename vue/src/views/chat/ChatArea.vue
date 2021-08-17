@@ -1,13 +1,16 @@
 <template>
   <div>
-    <el-container>
+    <el-container style="height: 87vh">
       <div v-if="videoStatus == 'CLOSE'"><ChatList /></div>
       <el-main v-else>
         <VideoChatDetail />
       </el-main>
       <el-container style="height: 87vh">
         <!-- <transition name="chat-change" mode="out-in"> -->
-        <div v-if="sessionId" style="width: 45vw; margin-top: 10px; display: block">
+        <div
+          v-if="sessionId"
+          style="width: 45vw; margin-top: 10px; margin-left: 20px; display: block"
+        >
           <ChatDetail />
         </div>
         <div v-else class="center-content">

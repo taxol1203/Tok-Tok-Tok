@@ -10,7 +10,7 @@
       <template #label>종료<el-badge :value="count[2]" class="badge"/></template>
     </el-tab-pane>
   </el-tabs>
-  <el-scrollbar height="100vh-50px">
+  <el-scrollbar style="height: 100%;">
     <div v-for="room in listStatus" :key="room.session.session_id" class="noborder">
       <div
         @click="pickRoom(room.session.session_id)"

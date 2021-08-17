@@ -38,13 +38,12 @@
         :default-active="activeIndex"
         class="el-menu-demo navbar"
         mode="horizontal"
-        @select="handleSelect"
         background-color="#fff"
         text-color="#000"
         active-text-color="#006f3e">
-        <el-menu-item index="0" active>언제든지 어디서나 간편하게</el-menu-item>
-        <el-menu-item index="1" style="float: right">내 계정</el-menu-item>
-        <el-menu-item index="2" style="float: right">로그아웃</el-menu-item>
+        <el-menu-item index="0" @click="moveToMain">언제든지 어디서나 간편하게</el-menu-item>
+        <el-menu-item index="2" style="float: right" @click="logout">로그아웃</el-menu-item>
+        <el-menu-item index="1" style="float: right" @click="moveToUser">내 계정</el-menu-item>
       </el-menu>
       <!-- <transition name="list-change" mode="out-in"> -->
         <router-view />
@@ -55,13 +54,20 @@
 </template>
 <script>
 import {useStore} from 'vuex'
+import router from '@/router'
 export default {
   setup(){
     const store = useStore();
     const activeIndex = '0'
     store.dispatch('loginCheck')
+    const logout = () => {
+      localStorage.clear();
+      store.commit("auth/logout");
+      router.push("/login");
+    };
     return{
       activeIndex,
+      logout
     }
   },
   data(){
@@ -73,12 +79,26 @@ export default {
   methods:{
     handleNav(){
       this.isCollapse = !this.isCollapse
+    },
+    moveToUser(){
+      router.push("/admin/user")
+    },
+    moveToMain(){
+      router.push("/admin/chat")
+    },
+    handleSelect(key, keyPath){
+      console.log(key, keyPath)
+      // localStorage.clear();
+      // store.commit("auth/logout");
+      // router.push("/login");
     }
   }
 };
 </script>
 <style>
-
+li.el-menu-item{
+  font-size: 16px;
+}
 /* 생성 부분 */
 /* .list-change-enter-from {
   opacity: 0;

@@ -66,6 +66,6 @@ export default {
 #addButton {
   position: fixed;
   bottom: 0px;
-  width: 300px;
+  width: 350px;
 }
 </style>

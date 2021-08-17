@@ -17,7 +17,7 @@ export default {
 * {
   font-family: 'Noto Sans', '맑은 고딕', sans-serif;
   font-weight: bold;
-  /* font-size: 18px; */
+  font-size: 17px;
 }
 
 html,
@@ -29,6 +29,7 @@ body {
 .el-main {
   overflow: hidden;
 }
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -58,7 +59,7 @@ body {
   min-height: 100%;
   overflow: auto;
   /* width: 260px; */
-  min-width: 250px;
+  min-width: 230px;
   text-align: left;
 }
 .navbar {

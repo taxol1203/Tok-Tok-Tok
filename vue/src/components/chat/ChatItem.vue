@@ -29,6 +29,7 @@ sub {
   float: right;
   bottom: 0px;
   color: gray;
+  font-size: 16px;
 }
 .lastmsg {
   color: #2c3e50;

@@ -1,9 +1,9 @@
 <template lang="">
   <el-container>
-    <el-aside>
+    <div style="width: 350px">
       <!-- <QnaList  /> -->
       <QnaList />
-    </el-aside>
+    </div>
     <el-main>
       <QnaEdit v-if="key > 0" />
     </el-main>

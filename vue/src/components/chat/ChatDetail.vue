@@ -150,6 +150,7 @@ export default {
   position: fixed;
   bottom: 10px;
   width: 45vw;
+  margin-left: 20px;
 }
 .el-scroll {
   overflow-x: hidden;

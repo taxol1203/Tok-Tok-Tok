@@ -53,8 +53,15 @@ export default {
     //최댓값은 제외, 최솟값은 포함
     let max = 10;
     let min = 0;
-    let temp = Math.floor(Math.random() * (max - min)) + min;
-    const imgUrl = ref(require('@/assets/Profile/profile' + temp + '.jpg'));
+    let idx = user.value.imgidx;
+    console.log(idx);
+    let imgUrl = ref(require('@/assets/Profile/profile' + user.value.imgidx + '.jpg'));
+    watch(user, () => {
+      console.log('here is watch');
+      console.log(user.value.imgidx);
+      imgUrl = ref(require('@/assets/Profile/profile' + user.value.imgidx + '.jpg'));
+    });
+
     return {
       store,
       user,
