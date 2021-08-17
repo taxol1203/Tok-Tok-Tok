@@ -1,7 +1,7 @@
 <template>
   <el-container>
     <el-main>
-      <el-row :gutter="20" justify="space-around">
+      <el-row class="centerOptions">
         <el-col :span="12">
           <video
             ref="videoElement"
@@ -10,6 +10,8 @@
             :class="{ myVideoLive: videoStatus == 'LIVE' }"
           ></video>
         </el-col>
+      </el-row>
+      <el-row class="centerOptions">
         <el-col :span="12">
           <video
             ref="remoteVideo"
@@ -39,6 +41,8 @@
             </el-option>
           </el-select>
         </div>
+      </el-row>
+      <el-row class="centerOptions">
         <div class="select">
           <el-select
             v-model="audioOutputSelect"
@@ -54,6 +58,8 @@
             </el-option>
           </el-select>
         </div>
+      </el-row>
+      <el-row class="centerOptions">
         <div class="select">
           <el-select v-model="videoSelect" placeholder="카메라 선택" @change="start()">
             <el-option
@@ -619,18 +625,18 @@ export default {
 <style scoped>
 .myVideo {
   border: 1px solid black;
-  width: 100%;
+  width: 140%;
   height: auto;
   overflow: hidden;
 }
 .myVideoLive {
   border: 1px solid black;
-  width: 100%;
+  width: 140%;
   height: 100%;
   /* 사이즈 작게 왼쪽 아래 라든가? */
 }
 .remoteVideo {
-  width: 100%;
+  width: 140%;
   height: auto;
   overflow: hidden;
   border: 1px solid black;
@@ -641,6 +647,8 @@ export default {
 }
 .centerOptions {
   justify-content: center;
+  /* margin: 0; */
+  /* padding: auto; */
 }
 .videoElement {
   width: 500px;
@@ -671,7 +679,5 @@ export default {
 .radiusRectangular {
   border-radius: 30px;
   border: none;
-}
-.centerImg {
 }
 </style>
