@@ -128,9 +128,9 @@ export default {
 };
 </script>
 <style>
-.el-tabs{
+/* .el-tabs{
   width: 400px;
-}
+} */
 .noborder {
   border: 0px solid;
 }

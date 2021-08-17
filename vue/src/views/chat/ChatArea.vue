@@ -1,27 +1,29 @@
 <template>
-  <div>
-    <el-container style="height: 87vh">
-      <div v-if="videoStatus == 'CLOSE'"><ChatList /></div>
-      <el-main v-else>
-        <VideoChatDetail />
-      </el-main>
-      <el-container style="height: 87vh">
-        <!-- <transition name="chat-change" mode="out-in"> -->
-        <div
-          v-if="sessionId"
-          style="width: 45vw; margin-top: 10px; margin-left: 20px; display: block"
-        >
-          <ChatDetail />
-        </div>
-        <div v-else class="center-content">
-          <img class="clear-img" src="@/assets/FixLogo.png" alt="logo" />
-        </div>
-        <!-- </transition> -->
-        <!-- <transition name="chat-change" mode="out-in"> -->
-        <div v-if="sessionId" style="width: 25vw; right: 10px; margin: 20px"><UserInfo /></div>
-        <!-- </transition> -->
-      </el-container>
+  <div style="height: 100vh">
+    <!-- <el-container style="height: 100%"> -->
+    <div v-if="videoStatus == 'CLOSE'" style="width: 25%; float: left">
+      <ChatList />
+    </div>
+    <el-main v-else>
+      <VideoChatDetail />
+    </el-main>
+    <el-container style="height: 100%">
+      <!-- <transition name="chat-change" mode="out-in"> border-right: solid 1px -->
+      <div
+        v-if="sessionId"
+        style="width: 60%; margin-top: 10px; margin-left: 20px; display: relative"
+      >
+        <ChatDetail />
+      </div>
+      <div v-else class="center-content">
+        <img class="clear-img" src="@/assets/FixLogo.png" alt="logo" />
+      </div>
+      <!-- </transition> -->
+      <!-- <transition name="chat-change" mode="out-in"> -->
+      <div v-if="sessionId" style="width: 30%; right: 10px; margin: 20px"><UserInfo /></div>
+      <!-- </transition> -->
     </el-container>
+    <!-- </el-container> -->
   </div>
 </template>
 <script>

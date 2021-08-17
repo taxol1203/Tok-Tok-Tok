@@ -33,7 +33,7 @@
             </router-link>
           </el-menu>
       <!-- NavBar 끝 -->
-    <el-main>
+    <el-main style="height:100vh">
       <el-menu
         :default-active="activeIndex"
         class="el-menu-demo navbar"

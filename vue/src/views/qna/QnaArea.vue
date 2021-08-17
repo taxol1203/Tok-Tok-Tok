@@ -1,7 +1,6 @@
 <template lang="">
   <el-container>
-    <div style="width: 350px">
-      <!-- <QnaList  /> -->
+    <div style="width: 20%; height: 100vh; float: left">
       <QnaList />
     </div>
     <el-main>
