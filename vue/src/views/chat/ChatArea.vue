@@ -2,10 +2,10 @@
   <div style="height: 100vh">
     <!-- 비디오가 없을 때 -->
     <div v-if="videoStatus == 'CLOSE'">
-      <div style="width: 25%; float: left">
+      <div style="width: 25%; float: left; height: 100vh">
         <ChatList />
       </div>
-      <el-container style="width: 75%; height: 100%">
+      <el-container style="width: 75%; height: 87vh">
         <div
           v-if="sessionId"
           style="width: 66%; margin-top: 10px; margin-left: 20px; display: relative"
@@ -40,12 +40,12 @@
   </div>
 </template>
 <script>
-import ChatList from "../../components/chat/ChatList.vue";
-import ChatDetail from "../../components/chat/ChatDetail.vue";
-import UserInfo from "../../components/chat/UserInfo.vue";
-import VideoChatDetail from "@/components/VideoChat/VideoChatDetail.vue";
-import { useStore } from "vuex";
-import { computed } from "vue";
+import ChatList from '../../components/chat/ChatList.vue';
+import ChatDetail from '../../components/chat/ChatDetail.vue';
+import UserInfo from '../../components/chat/UserInfo.vue';
+import VideoChatDetail from '@/components/VideoChat/VideoChatDetail.vue';
+import { useStore } from 'vuex';
+import { computed } from 'vue';
 
 export default {
   components: {
@@ -56,7 +56,7 @@ export default {
   },
   setup() {
     const store = useStore();
-    const sessionId = computed(() => store.getters["get_selected_idx"]);
+    const sessionId = computed(() => store.getters['get_selected_idx']);
     const videoStatus = computed(() => store.state.video_status);
     return {
       store,

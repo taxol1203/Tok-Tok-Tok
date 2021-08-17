@@ -1,7 +1,11 @@
 <template>
   <!-- <i class="el-icon-user-solid"></i> -->
-  <span>{{ client.username }}</span>
-  <br />
+  <el-row>
+    <el-col :span="4" class="imgBox">
+      <img :src="require('@/assets/Profile/profile' + client.imgidx + '.jpg')" class="profileImg" />
+    </el-col>
+    <el-col :span="4" style="display: inline-block">{{ client.username }}</el-col>
+  </el-row>
   <sub class="lastmsg" v-if="lastmsg.length > 1">{{ lastmsg[lastmsg.length - 1].message }}</sub>
   <br />
   <sub>{{ time }}</sub>
@@ -33,5 +37,16 @@ sub {
 }
 .lastmsg {
   color: #2c3e50;
+}
+.imgBox {
+  width: 50px;
+  height: 40px;
+  display: inline-block;
+}
+.imgBox > img {
+  width: 40px;
+  height: 40px;
+  border-radius: 70%;
+  object-fit: cover;
 }
 </style>

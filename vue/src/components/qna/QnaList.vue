@@ -1,10 +1,6 @@
 <template lang="">
   <!-- <div id="container"> -->
   <div style="position: relative">
-    <el-card class="box-card" @click="addScene" id="addButton">
-      <i class="el-icon-circle-plus" style="color: #006f3e">&nbsp;<b>예상 시나리오 추가</b></i>
-      <!-- el-icon-plus -->
-    </el-card>
     <el-scrollbar id="qcards">
       <div v-for="q in cards" :key="q.pk_idx" class="text item">
         <el-card class="box-card" @click="showDetail(q.pk_idx)">
@@ -13,6 +9,10 @@
         </el-card>
       </div>
     </el-scrollbar>
+    <el-card class="box-card" @click="addScene" id="addButton">
+      <i class="el-icon-circle-plus">&nbsp;<b>예상 시나리오 추가</b></i>
+      <!-- el-icon-plus -->
+    </el-card>
   </div>
 </template>
 <script>
@@ -58,9 +58,14 @@ export default {
 #qcards {
   top: 0px;
   width: 100%;
+  height: 87vh;
 }
 
 #addButton {
   width: 100%;
+  color: #006f3e;
+  /* border: 1px solid #006f3e; */
+  /* background-color: #27251f; */
+  /* margin: auto; */
 }
 </style>
