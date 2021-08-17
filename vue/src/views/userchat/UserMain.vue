@@ -1,52 +1,109 @@
 <template>
-  <el-row :gutter="20">
-    <div id="UserMain">
-      <el-button class="green-color-btn" @click="goSignUp()">회원가입</el-button>
-      <el-button class="green-color-btn" @click="goLogin()">로그인</el-button>
-      <div class="videoContainer" v-if="videoStatus != 'CLOSE'">
-        <VideoChatDetail />
-      </div>
-      <div class="fab-container">
-        <!-- <transition class="same-pos" name="fade" mode="out-in"> -->
-        <el-button
-          class="big-btn"
-          type="primary"
-          icon="el-icon-plus"
-          @click="changeCondition"
-          v-if="!isHidden"
-          circle
-        ></el-button>
-        <!-- </transition> -->
-        <el-dialog title="상담을 종료하시겠습니까?" v-model="DialogVisible" width="30%" center>
-          <template #footer>
-            <span class="dialog-footer">
-              <el-button @click="DialogVisible = false">아니오</el-button>
-              <el-button type="primary" @click="sendEnd">네</el-button>
-            </span>
-          </template>
-        </el-dialog>
-        <transition class="same-pos" name="fade" mode="out-in">
-          <div id="chat-box" v-if="isHidden">
-            <el-row :gutter="40">
-              <el-col :span="20" :offset="0"></el-col>
-              <el-col :span="4" :offset="0">
-                <div style="float: right">
-                  <i @click="DialogVisible = true" class="el-icon-error" id="close-btn"></i>
-                  <!-- <i @click="DialogVisible = true" class="el-icon-close" id="close-btn"></i> -->
-                </div>
-              </el-col>
-            </el-row>
-            <el-card :body-style="{ padding: '0px' }" id="chat-card">
-              <div id="card-head" class="card-header"></div>
-              <div class="full-box">
-                <UserQna :close="isHidden" />
-              </div>
-            </el-card>
-          </div>
-        </transition>
-      </div>
+  <div>
+    <el-menu
+      :default-active="activeIndex2"
+      class="el-menu-demo"
+      mode="horizontal"
+      background-color="#fff"
+      text-color="black"
+      active-text-color="#ffd04b"
+    >
+      <el-row>
+        <el-col :span="2">
+          <el-menu-item index="1">
+            <img
+              src="@/assets/mslogo.png"
+              alt=""
+              style="margin-bottom: 0.35rem"
+            />
+          </el-menu-item>
+        </el-col>
+        <el-col :span="2">
+          <el-submenu index="2">
+            <template #title>제품</template>
+            <el-menu-item index="2-1">item one</el-menu-item>
+            <el-menu-item index="2-2">item two</el-menu-item>
+            <el-menu-item index="2-3">item three</el-menu-item>
+          </el-submenu>
+        </el-col>
+        <el-col :span="2">
+          <el-submenu index="3">
+            <template #title>서비스</template>
+            <el-menu-item index="3-1">item one</el-menu-item>
+            <el-menu-item index="3-2">item two</el-menu-item>
+            <el-menu-item index="3-3">item three</el-menu-item>
+          </el-submenu>
+        </el-col>
+        <el-col :span="3" :offset="15">
+          <el-menu-item
+            v-if="user_pk_idx"
+            index="10"
+            id="loginbtn"
+            @click="logout"
+            >로그아웃</el-menu-item
+          >
+          <el-menu-item v-else index="10" id="loginbtn" @click="popUpLogin"
+            >로그인</el-menu-item
+          >
+        </el-col>
+      </el-row>
+    </el-menu>
+    <img id="bg" src="@/assets/userBG.png" alt="" />
+  </div>
+  <div id="UserMain">
+    <div class="videoContainer" v-if="videoStatus != 'CLOSE'">
+      <VideoChatDetail />
     </div>
-  </el-row>
+    <div class="fab-container">
+      <!-- <transition class="same-pos" name="fade" mode="out-in"> -->
+      <el-button
+        class="big-btn"
+        type="primary"
+        icon="el-icon-plus"
+        @click="changeCondition"
+        v-if="!isHidden"
+        circle
+      ></el-button>
+      <!-- </transition> -->
+      <el-dialog
+        title="상담을 종료하시겠습니까?"
+        v-model="DialogVisible"
+        width="30%"
+        center
+      >
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button @click="DialogVisible = false">아니오</el-button>
+            <el-button type="primary" @click="sendEnd">네</el-button>
+          </span>
+        </template>
+      </el-dialog>
+      <transition class="same-pos" name="fade" mode="out-in">
+        <div id="chat-box" v-if="isHidden">
+          <el-row :gutter="40">
+            <el-col :span="20" :offset="0"></el-col>
+            <el-col :span="4" :offset="0">
+              <div style="float: right">
+                <i
+                  @click="DialogVisible = true"
+                  class="el-icon-error"
+                  id="close-btn"
+                ></i>
+                <!-- <i @click="DialogVisible = true" class="el-icon-close" id="close-btn"></i> -->
+              </div>
+            </el-col>
+          </el-row>
+          <el-card :body-style="{ padding: '0px' }" id="chat-card">
+            <div id="card-head" class="card-header"></div>
+            <div class="full-box">
+              <UserQna :close="isHidden" />
+            </div>
+          </el-card>
+        </div>
+      </transition>
+    </div>
+  </div>
+  <UserLogin v-if="showModal && !user_pk_idx" />
 </template>
 <script>
 import { useStore } from 'vuex';
@@ -56,6 +113,8 @@ import ChatDetail from '../../components/chat/ChatDetail.vue';
 import VideoChatDetail from '@/components/VideoChat/VideoChatDetail.vue';
 import { computed, ref } from 'vue';
 import router from '@/router';
+import NavBar from '../NavBar.vue';
+import UserLogin from './UserLogin';
 /* eslint-disable */
 export default {
   components: {
@@ -63,6 +122,8 @@ export default {
     UserChatDetail,
     ChatDetail,
     VideoChatDetail,
+    NavBar,
+    UserLogin,
   },
   setup() {
     const store = useStore();
@@ -71,6 +132,15 @@ export default {
     const user_pk_idx = computed(() => store.state.auth.user.pk_idx);
     const sessionId = computed(() => store.getters['get_selected_idx']);
     let stompClient = computed(() => store.getters['stompGetter']);
+    const showModal = ref(false);
+    const popUpLogin = () => {
+      console.log('hi');
+      showModal.value = !showModal.value;
+    };
+    const logout = () => {
+      localStorage.clear();
+      store.commit("auth/logout");
+    };
     const sendEnd = () => {
       send('END');
       store.commit('userQna/CHANGE_STATE');
@@ -122,25 +192,33 @@ export default {
       connected,
       stompClient,
       videoStatus,
+      showModal,
       changeCondition,
       sendEnd,
       send,
       goSignUp,
       goLogin,
+      popUpLogin,
+      logout,
     };
   },
 };
 </script>
 <style scoped>
-#UserMain {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  background-image: url('../../assets/Microsoft.png');
-  background-repeat: no-repeat;
-  background-position: center;
+el-menu {
+}
+#bg {
+  /* position: absolute; */
+  z-index: 1;
 }
 
+/* #loginBtn {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  right: 0;
+  background-color: teal;
+} */
 .fab-container {
   position: fixed;
   bottom: 50px;
@@ -212,7 +290,9 @@ export default {
 .item {
   margin-bottom: 18px;
 }
-
+#loginbtn {
+  right: 0;
+}
 /* 생성 부분 */
 /* 소멸 부분 */
 /* .fade-enter-from {

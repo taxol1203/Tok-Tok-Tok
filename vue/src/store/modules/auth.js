@@ -38,9 +38,9 @@ export const auth = {
           message: "로그인이 완료되었습니다.",
           type: "success",
         });
-        router.push({
-          name: 'chat'
-        })
+        // router.push({
+        //   name: 'chat'
+        // })
       } catch (res) {
         console.log(res);
         console.log("login error");
@@ -51,7 +51,7 @@ export const auth = {
         });
       }
     },
-    signup: ({}, payload) => {
+    signup: ({ }, payload) => {
       axios
         .post("api/auth/register", payload)
         .then(() => {

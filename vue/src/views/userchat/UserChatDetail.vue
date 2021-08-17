@@ -67,10 +67,12 @@ export default {
 </script>
 <style scoped>
 .accept-btn {
-  border-radius: 10%;
+  /* border-radius: 10%; */
   cursor: pointer;
-  background-color: #27251f;
-  color: #fff;
+  /* border: 0.1px solid #999999;
+  background-color: #b7b8b8; */
+  /* background-image: linear-gradient(315deg, #ffffff 0%, rgb(179, 177, 177) 50%); */
+  margin-top: 0.5rem;
 }
 #topMessages {
   display: block;
@@ -86,19 +88,20 @@ export default {
   overflow-x: hidden;
 }
 .message-me {
-  border: 1px solid #f7f4f0;
+  border: 0.1px solid #004226;
   border-radius: 10px 10px 0px 10px;
-  background: #f7f4f0;
+  color: white;
+  background: #006f3e;
   float: right;
   padding: 10px;
   margin: 5px 10px 5px 5px;
   max-width: 300px;
 }
 .message-other {
-  border: 1px solid #006f3e;
+  border: 0.1px solid #e4e2df;
   border-radius: 10px 10px 10px 0px;
-  color: #fff;
-  background: #006f3e;
+  /* color: #fff; */
+  background: whitesmoke;
   float: left;
   padding: 10px;
   margin: 5px 10px 5px 5px;
