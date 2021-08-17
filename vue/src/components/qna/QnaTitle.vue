@@ -6,6 +6,7 @@
       type="text"
       placeholder="예상 시나리오의 '제목'을 입력해주세요."
       v-model="select.title"
+      style="font-size: 17px"
     ></el-input>
     <!-- <h1 v-if="check" style="text-align: left">{{ input }}</h1>  :span="23" :offset="0"-->
     <!-- <h1 v-if="check" class="qna-title" @click="hiddenInput">{{ select.title }}</h1> -->

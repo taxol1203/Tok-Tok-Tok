@@ -4,12 +4,12 @@
           <el-menu 
             :default-active="$route.name"
             class="el-menu-vertical-demo"
-            background-color="#006f3e"
+            background-color="transparent"
             text-color= "#999999"
             active-text-color="#fff" 
             :collapse="isCollapse"
           >
-          <!-- ffd04b style="height: 750px; text-align:left"-->
+          <!-- 006f3e ffd04b style="height: 750px; text-align:left"-->
             <el-menu-item index="comein" @click="handleNav">
               <i class="el-icon-d-arrow-right" v-if="isCollapse===true"></i>
               <i class="el-icon-d-arrow-left"  v-if="isCollapse===false"></i>
@@ -95,9 +95,12 @@ export default {
   }
 };
 </script>
-<style>
+<style scoped>
 li.el-menu-item{
   font-size: 16px;
+}
+.el-menu-item:hover{
+  filter: brightness(105%) !important;
 }
 /* 생성 부분 */
 /* .list-change-enter-from {

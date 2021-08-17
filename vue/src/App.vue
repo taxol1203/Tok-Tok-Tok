@@ -59,8 +59,9 @@ body {
   min-height: 100%;
   overflow: auto;
   /* width: 260px; */
-  min-width: 230px;
+  min-width: 260px;
   text-align: left;
+  background-image: url('./assets/green-background.jpg');
 }
 .navbar {
   border: 0;
