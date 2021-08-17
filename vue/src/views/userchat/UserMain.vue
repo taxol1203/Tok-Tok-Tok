@@ -16,18 +16,18 @@
         </el-col>
         <el-col :span="2">
           <el-submenu index="2">
-            <template #title>제품</template>
-            <el-menu-item index="2-1">item one</el-menu-item>
-            <el-menu-item index="2-2">item two</el-menu-item>
-            <el-menu-item index="2-3">item three</el-menu-item>
+            <template #title>소프트웨어</template>
+            <el-menu-item index="2-1">Windows 앱</el-menu-item>
+            <el-menu-item index="2-2">OneDrive</el-menu-item>
+            <el-menu-item index="2-3">OutLook</el-menu-item>
           </el-submenu>
         </el-col>
         <el-col :span="2">
           <el-submenu index="3">
-            <template #title>서비스</template>
-            <el-menu-item index="3-1">item one</el-menu-item>
-            <el-menu-item index="3-2">item two</el-menu-item>
-            <el-menu-item index="3-3">item three</el-menu-item>
+            <template #title>Developer & IT</template>
+            <el-menu-item index="3-1">.NET</el-menu-item>
+            <el-menu-item index="3-2">Visual Studio</el-menu-item>
+            <el-menu-item index="3-3">Windows Server</el-menu-item>
           </el-submenu>
         </el-col>
         <el-col :span="3" :offset="15">
@@ -92,7 +92,7 @@ import UserChatDetail from './UserChatDetail.vue';
 import UserQna from './UserQna.vue';
 import ChatDetail from '../../components/chat/ChatDetail.vue';
 import VideoChatDetail from '@/components/VideoChat/VideoChatDetail.vue';
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import router from '@/router';
 import UserLogin from './UserLogin';
 /* eslint-disable */
@@ -113,8 +113,17 @@ export default {
     let stompClient = computed(() => store.getters['stompGetter']);
     const showModal = ref(false);
     const videoStatus = computed(() => store.state.video_status);
+    const temp = ref(localStorage.getItem('jwt'));
+
+    // modal창 자동으로 꺼지게 하는 부분
+    watch(user_pk_idx, () => {
+      if (user_pk_idx) {
+        showModal.value = false;
+      }
+    });
+
     const popUpLogin = () => {
-      showModal.value = !showModal.value;
+      showModal.value = true;
     };
     const logout = () => {
       localStorage.clear();
@@ -178,6 +187,7 @@ export default {
       goLogin,
       popUpLogin,
       logout,
+      temp,
     };
   },
 };
