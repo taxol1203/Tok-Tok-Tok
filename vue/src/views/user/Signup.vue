@@ -65,16 +65,11 @@
                   @keyup.enter="onSubmit()"
                 ></el-input>
               </el-form-item>
-              <el-button
-                class="green-color-btn"
-                @click="onSubmit()"
-                :disabled="!isValid"
+              <el-button class="green-color-btn" @click="onSubmit()" :disabled="!isValid"
                 >회원가입</el-button
               >
-              <el-button @click="resetForm()">다시쓰기</el-button><br /><br />
-              <el-button class="green-color-btn" @click="goToLogin()"
-                >로그인</el-button
-              >
+              <el-button @click="resetForm()">다시쓰기</el-button>
+              <el-button class="green-color-btn" @click="goToLogin()">로그인</el-button>
             </el-form>
           </el-card>
         </el-col>
@@ -94,9 +89,9 @@
 </template>
 
 <script>
-import { reactive, ref, computed } from 'vue';
-import { useStore } from 'vuex';
-import router from '@/router';
+import { reactive, ref, computed } from "vue";
+import { useStore } from "vuex";
+import router from "@/router";
 
 export default {
   setup() {
@@ -111,15 +106,15 @@ export default {
       };
       ruleForm.value.validate((valid) => {
         if (valid) {
-          store.dispatch('auth/signup', payload).then(() => {
-            router.push('/login');
+          store.dispatch("auth/signup", payload).then(() => {
+            router.push("/login");
           });
         }
       });
     };
-    const refEmail = ref('');
-    const refPasswd = ref('');
-    const refCheck = ref('');
+    const refEmail = ref("");
+    const refPasswd = ref("");
+    const refCheck = ref("");
     const isValid = computed(
       () => user.username && user.email && user.passwd && user.check && isEmailValid.value
     );
@@ -139,7 +134,7 @@ export default {
       let emailInfo = {
         email: user.email,
       };
-      store.dispatch('auth/duplicateEmail', emailInfo);
+      store.dispatch("auth/duplicateEmail", emailInfo);
     };
 
     const resetForm = () => {
@@ -147,8 +142,8 @@ export default {
     };
 
     var validateName = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('닉네임을 입력해 주세요'));
+      if (value === "") {
+        callback(new Error("닉네임을 입력해 주세요"));
       } else {
         callback();
       }
@@ -156,13 +151,13 @@ export default {
     var checkEmail = (rule, value, callback) => {
       if (!value) {
         isEmailFormValid.value = false;
-        return callback(new Error('이메일을 입력해 주세요'));
+        return callback(new Error("이메일을 입력해 주세요"));
       } else {
         let pattern =
           /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
         if (value.match(pattern) == null) {
           isEmailFormValid.value = false;
-          callback(new Error('이메일 형식을 맞춰 주세요'));
+          callback(new Error("이메일 형식을 맞춰 주세요"));
         } else {
           isEmailFormValid.value = true;
           callback();
@@ -172,40 +167,40 @@ export default {
     var validatePass = (rule, value, callback) => {
       let specialPattern =
         /^(?=.*[A-Za-z])(?=.*\d)(?=.*[~!@#$%^&*()+|=])[A-Za-z\d~!@#$%^&*()+|=]{9,16}$/i;
-      if (value === '') {
-        callback(new Error('비밀번호를 입력해 주세요'));
+      if (value === "") {
+        callback(new Error("비밀번호를 입력해 주세요"));
       } else {
         if (9 > value.length) {
-          callback(new Error('아직 9자리가 아니에요'));
+          callback(new Error("아직 9자리가 아니에요"));
         } else if (16 < value.length) {
-          callback(new Error('16자리를 초과했습니다 :('));
+          callback(new Error("16자리를 초과했습니다 :("));
         } else if (value.match(specialPattern) == null) {
-          callback(new Error('영문자, 숫자, 특수문자를 최소 1개씩 포함시켜 주세요'));
+          callback(new Error("영문자, 숫자, 특수문자를 최소 1개씩 포함시켜 주세요"));
         } else {
           callback();
         }
       }
     };
     var validateCheck = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('비밀번호를 다시 입력해주세요'));
+      if (value === "") {
+        callback(new Error("비밀번호를 다시 입력해주세요"));
       } else if (value !== user.passwd) {
-        callback(new Error('두 비밀번호가 달라요! 확인해 보시겠어요?'));
+        callback(new Error("두 비밀번호가 달라요! 확인해 보시겠어요?"));
       } else {
         callback();
       }
     };
     const user = reactive({
-      username: '',
-      email: '',
-      passwd: '',
-      check: '',
+      username: "",
+      email: "",
+      passwd: "",
+      check: "",
     });
     const rules = {
-      username: [{ validator: validateName, trigger: 'blur' }],
-      passwd: [{ validator: validatePass, trigger: 'blur' }],
-      check: [{ validator: validateCheck, trigger: 'blur' }],
-      email: [{ validator: checkEmail, trigger: 'blur' }],
+      username: [{ validator: validateName, trigger: "blur" }],
+      passwd: [{ validator: validatePass, trigger: "blur" }],
+      check: [{ validator: validateCheck, trigger: "blur" }],
+      email: [{ validator: checkEmail, trigger: "blur" }],
     };
 
     const nextEmail = () => {
@@ -218,7 +213,7 @@ export default {
       refCheck.value.focus();
     };
     const goToLogin = () => {
-      router.push('Login');
+      router.push("Login");
     };
     return {
       store,
@@ -268,7 +263,7 @@ export default {
 
 #LeftPosition {
   position: absolute;
-  top: 20%;
+  top: 3%;
   left: 10%;
 }
 
@@ -283,5 +278,9 @@ export default {
   background-color: #006f3e;
   color: #fff;
   border: 0;
+}
+
+#footer {
+  margin-top: 15px;
 }
 </style>
