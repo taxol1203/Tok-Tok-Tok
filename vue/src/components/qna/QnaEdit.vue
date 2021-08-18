@@ -1,12 +1,9 @@
 <template lang="">
   <el-container>
-    <el-header>
-      <!-- <h1>All cards({{ this.$store.getters.allQnaCount }})</h1> -->
+    <el-header style="margin-top: 20px">
       <el-row>
-        <el-col :span="20"><QnaTitle /></el-col>
-        <el-col :span="4">
-          <!-- <el-button type="primary" icon="el-icon-edit" circle></el-button> icon="el-icon-goods icon="el-icon-delete""
-            circle-->
+        <el-col :span="18"><QnaTitle /></el-col>
+        <el-col :span="6">
           <el-button
             type="success"
             @click="savaAnsData"
@@ -46,7 +43,6 @@ export default {
   setup() {
     const store = useStore();
     const select = computed(() => store.state.moduleQna.select);
-    // const old_answer = computed(() => store.state.moduleQna.old_answer);
     const new_answer = computed(() => store.state.moduleQna.new_answer);
 
     const selectKey = computed(() => store.getters['moduleQna/getKey']);
@@ -66,7 +62,6 @@ export default {
     return {
       store,
       select,
-      // old_answer,
       selectKey,
       savaAnsData,
       removeQna,
@@ -74,4 +69,8 @@ export default {
   },
 };
 </script>
-<style lang=""></style>
+<style scoped>
+i {
+  font-size: 14px;
+}
+</style>

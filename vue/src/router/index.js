@@ -7,12 +7,12 @@ import UserChat from "../views/userchat/UserMain.vue";
 import UserSignup from "../views/userchat/UserSignup.vue";
 import UserLogin from "../views/userchat/UserLogin.vue";
 import NotFound from "../views/NotFound.vue";
-import { ElMessage } from "element-plus";
+import Admin from '../views/Admin.vue';
 
 const routes = [
   {
     path: "/",
-    component: Login,
+    component: Admin,
     meta: {
       authRequired: true,
     },
@@ -36,7 +36,7 @@ const routes = [
   {
     path: "/admin",
     name: "Admin",
-    component: () => import("../views/Admin.vue"),
+    component: Admin,
     children: [
       {
         path: "",
@@ -73,7 +73,7 @@ const routes = [
     name: "UserSignup",
     component: UserSignup,
     meta: {
-      authRequired: false,
+      authRequired: true,
     },
   },
   {
@@ -94,25 +94,4 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
 });
-
-// 로그인 권한 부분. 잠시 꺼둠
-// router.beforeEach(async (to, from, next) => {
-//   if (
-//     to.matched.some((routeInfo) => {
-//       return routeInfo.meta.authRequired;
-//     })
-//   ) {
-//     return next();
-//   }
-//   if (localStorage.getItem("jwt") === null) {
-//     ElMessage({
-//       showClose: true,
-//       message: "로그인이 필요합니다.",
-//       type: "error",
-//     });
-//     return next({ name: "Login" });
-//   }
-//   return next();
-// });
-
 export default router;

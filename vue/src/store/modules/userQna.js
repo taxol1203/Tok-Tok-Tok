@@ -11,12 +11,10 @@ export const userQna = {
   getters: {
     getQuestion: (state) => {
       for (let key in state.scenes) {
-        console.log(key)
         if (key == state.select) {
-          return state.scenes[key].content.replace('\n', '<br/>')
+          return state.scenes[key].content.replace('\n', '<br/>');
         }
       }
-      // return state.scenes[state.select].content
     },
     getAnswers: (state) => {
       for (let key in state.scenes) {
@@ -26,11 +24,10 @@ export const userQna = {
       }
     },
     logGetter: (state) => {
-      console.log(state.log)
       return state.log;
     },
     showUserChat: (state) => {
-      return state.hidden
+      return state.hidden;
     }
   },
   mutations: {
@@ -44,46 +41,45 @@ export const userQna = {
     },
     INIT_ANS: (state, payload) => {
       payload.forEach(item => {
-        state.scenes[item.fk_previous_idx].answers.push(item)
-      })
+        state.scenes[item.fk_previous_idx].answers.push(item);
+      });
     },
     CHANGE_SELECT: (state, payload) => {
       state.select = payload;
     },
     SET_CURRENT: (state) => {
-      state.current = state.scenes[`${state.select}`]
+      state.current = state.scenes[`${state.select}`];
     },
     INIT_log: (state) => {
       state.log.push(state.scenes[1]);
     },
     ADD_LOG: (state) => {
       let tmp = state.log;
-      tmp.push(state.scenes[`${state.select}`])
+      tmp.push(state.scenes[`${state.select}`]);
       state.log = tmp;
     },
     START_REAL_CHAT: (state) => {
       state.realChat = true;
     },
     CHANGE_STATE: (state) => {
-      console.log(state.hidden)
       state.hidden = !state.hidden;
     }
   },
   actions: {
     async init({ state, commit }) {
-      state.scenes = {}
-      state.select= ''
-      state.log= []
-      state.realChat= false
+      state.scenes = {};
+      state.select = '';
+      state.log = [];
+      state.realChat = false;
       try {
-        const que = await axios.get(`/api/qna/question`)
-        if(que.status === 200) commit('INIT_QUES', que.data);
-        const ans = await axios.get(`/api/qna/answer`)
+        const que = await axios.get(`/api/qna/question`);
+        if (que.status === 200) commit('INIT_QUES', que.data);
+        const ans = await axios.get(`/api/qna/answer`);
         if (ans.status === 200) commit('INIT_ANS', ans.data);
         commit('INIT_log');
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
     }
   },
-}
+};
