@@ -34,7 +34,6 @@ export default {
   },
   setup() {
     const store = useStore();
-    // const select = computed(() => store.state.moduleQna.qnaList);
     const select = computed(() => store.state.moduleQna.select);
     let show = ref(true);
     let changeShow = () => {
@@ -42,7 +41,6 @@ export default {
     };
     const sendContent = () => {
       store.dispatch('moduleQna/editContent', select.value);
-      // show.value = !show.value;
     };
     return {
       store,
@@ -56,7 +54,6 @@ export default {
 </script>
 <style>
 #inputBox {
-  /* background-color: transparent; */
   border: 0;
   resize: none;
 }

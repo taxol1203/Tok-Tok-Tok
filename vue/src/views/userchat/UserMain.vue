@@ -216,8 +216,7 @@ export default {
   cursor: pointer;
 }
 #chat-box {
-  /* width: 25rem; 1rem = 16px */
-  height: 52.5rem; /* 45rem 720px 52rem;*/
+  height: 52.5rem;
   width: auto;
   padding: 10px;
   position: sticky;
@@ -261,12 +260,9 @@ export default {
   background-color: #fff;
   border: none;
   height: 50rem;
-  /* padding: 10px; */
   margin-right: 10px;
   width: 26rem;
   display: inline-block !important;
-  /* justify-content: space-between; */
-  /* align-items: center; */
 }
 .text {
   font-size: 14px;
