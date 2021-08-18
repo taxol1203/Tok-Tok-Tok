@@ -45,7 +45,6 @@ export default {
     let connected = false;
 
     const listMenuSelect = (key) => {
-      console.log(key);
       store.commit('STATUS_CHANGE', key);
     };
     onMounted(() => {
@@ -101,8 +100,6 @@ export default {
       );
     };
     const handleClick = (tab, event) => {
-      console.log(tab, event);
-      console.log(tab.props.name);
       listMenuSelect(tab.props.name);
     };
     return {

@@ -27,11 +27,7 @@
     </el-row>
     <el-row class="centerOptions">
       <div class="select">
-        <el-select
-          v-model="audioInputSelect"
-          placeholder="마이크 선택"
-          @change="start()"
-        >
+        <el-select v-model="audioInputSelect" placeholder="마이크 선택" @change="start()">
           <el-option
             v-for="(option, index) in mediaOptions.audioinput"
             :key="index"
@@ -57,11 +53,7 @@
         </el-select>
       </div>
       <div class="select">
-        <el-select
-          v-model="videoSelect"
-          placeholder="카메라 선택"
-          @change="start()"
-        >
+        <el-select v-model="videoSelect" placeholder="카메라 선택" @change="start()">
           <el-option
             v-for="(option, index) in mediaOptions.videoinput"
             :key="index"
@@ -81,13 +73,7 @@
       >
         화면공유
       </el-button>
-      <el-button
-        icon="el-icon-video-pause"
-        type="button"
-        @click="start"
-        class="stopBtn"
-        v-else
-      >
+      <el-button icon="el-icon-video-pause" type="button" @click="start" class="stopBtn" v-else>
         공유중단
       </el-button>
       <el-button
@@ -96,26 +82,24 @@
         class="enterBtn"
         >상담시작</el-button
       >
-      <el-button icon="el-icon-phone" @click="leave" class="closeBtn"
-        >상담종료</el-button
-      >
+      <el-button icon="el-icon-phone" @click="leave" class="closeBtn">상담종료</el-button>
     </el-row>
   </div>
 </template>
 
 <script>
-import { ref, onMounted, reactive, computed } from 'vue';
-import { useStore } from 'vuex';
+import { ref, onMounted, reactive, computed } from "vue";
+import { useStore } from "vuex";
 export default {
   setup() {
     const store = useStore();
-    const videoElement = ref('');
-    const audioInputSelect = ref('');
-    const audioOutputSelect = ref('');
-    const videoSelect = ref('');
-    const remoteVideo = ref('');
+    const videoElement = ref("");
+    const audioInputSelect = ref("");
+    const audioOutputSelect = ref("");
+    const videoSelect = ref("");
+    const remoteVideo = ref("");
     const videoStatus = computed(() => store.state.video_status);
-    const sessionId = computed(() => store.getters['get_selected_idx']);
+    const sessionId = computed(() => store.getters["get_selected_idx"]);
     const screenShare = ref(true);
     const isUser = computed(() => store.getters.is_user);
     const localVidReady = ref(false);
@@ -130,7 +114,7 @@ export default {
     var peerConnection = null;
     var peerStarted = false;
     const closeVideoWindow = () => {
-      store.commit('CLOSE_VIDEO');
+      store.commit("CLOSE_VIDEO");
     };
     onMounted(async () => {
       try {
@@ -146,7 +130,7 @@ export default {
 
     function handleError(error) {
       alert("디바이스를 다른 곳에서 사용 중인지 확인해주시기 바랍니다 ");
-      console.log("navigator.MediaDevices.getUserMedia error: ", error.message, error.name);
+      console.log("error: ", error.message, error.name);
     }
 
     const gotDevicesList = (deviceInfos) => {
@@ -155,11 +139,11 @@ export default {
       mediaOptions.videoinput = [];
       for (let i = 0; i < deviceInfos.length; i++) {
         const deviceInfo = deviceInfos[i];
-        if (deviceInfo.kind === 'audioinput') {
+        if (deviceInfo.kind === "audioinput") {
           mediaOptions.audioinput.push(deviceInfo);
-        } else if (deviceInfo.kind === 'audiooutput') {
+        } else if (deviceInfo.kind === "audiooutput") {
           mediaOptions.audiooutput.push(deviceInfo);
-        } else if (deviceInfo.kind === 'videoinput') {
+        } else if (deviceInfo.kind === "videoinput") {
           mediaOptions.videoinput.push(deviceInfo);
         }
       }
@@ -191,7 +175,7 @@ export default {
         }, 1000);
       } catch (err) {
         console.log(err);
-        alert('디바이스가 없습니다. 다시 확인해주세요.');
+        alert("디바이스가 없습니다. 다시 확인해주세요.");
       }
       if (socketRead.value) {
         sendReconnectRequest();
@@ -206,7 +190,7 @@ export default {
     };
 
     function sendReconnectRequest() {
-      let req = { type: 'reconnectRequest' };
+      let req = { type: "reconnectRequest" };
       socket.send(JSON.stringify(req));
     }
 
@@ -221,11 +205,9 @@ export default {
         localStream = null;
       };
       socket.onopen = function () {
-        console.log('Successfully connected to the server...');
         socketRead.value = true;
       };
       socket.onclose = function (e) {
-        console.log("The connection to the server is closed:" + e.code);
         alert("상담이 종료되었습니다.");
         socketRead.value = false;
         peerStarted = false;
@@ -235,7 +217,7 @@ export default {
           track.stop();
         });
         videoElement.value.srcObject = null;
-        store.commit('CLOSE_VIDEO');
+        store.commit("CLOSE_VIDEO");
 
         if (peerConnection != null) {
           peerConnection.close();
@@ -253,8 +235,7 @@ export default {
           onAnswer(evt);
         } else if (evt.type === "candidate" && peerStarted) {
           onCandidate(evt);
-        } else if (evt.type === 'bye' && peerStarted) {
-          console.log('WebRTC communication disconnected');
+        } else if (evt.type === "bye" && peerStarted) {
           stop();
         } else if (evt.type === "reconnectRequest" && peerStarted) {
           let res = { type: "reconnectResponse" };
@@ -284,13 +265,13 @@ export default {
         peerStarted = true;
       } else {
         if (!localStream) {
-          alert('Please capture local video data first.');
+          alert("Please capture local video data first.");
         }
         if (!socketRead.value) {
-          alert('Please open socket before connect.');
+          alert("Please open socket before connect.");
         }
         if (peerStarted) {
-          alert('Already peer have started.');
+          alert("Already peer have started.");
         }
       }
       store.commit("LIVE_VIDEO");
@@ -304,7 +285,7 @@ export default {
           sendSDP(sessionDescription);
         },
         function (err) {
-          console.log("Failed to create offer" + err);
+          console.log("error:" + err);
         },
         mediaConstraints
       );
@@ -314,9 +295,9 @@ export default {
       var pc_config = {
         iceServers: [
           {
-            url: 'stun:13.124.49.8:3478',
-            username: 'test',
-            credential: 'test',
+            url: "stun:13.124.49.8:3478",
+            username: "test",
+            credential: "test",
           },
         ],
       };
@@ -324,12 +305,12 @@ export default {
       try {
         peer = new webkitRTCPeerConnection(pc_config);
       } catch (e) {
-        console.log('Failed to establish connection, error:' + e.message);
+        console.log("error:" + e.message);
       }
       peer.onicecandidate = function (evt) {
         if (evt.candidate) {
           sendCandidate({
-            type: 'candidate',
+            type: "candidate",
             sdpMLineIndex: evt.candidate.sdpMLineIndex,
             sdpMid: evt.candidate.sdpMid,
             candidate: evt.candidate.candidate,
@@ -345,8 +326,8 @@ export default {
           case "connected":
             store.commit("LIVE_VIDEO");
             break;
-          case 'disconnected':
-            alert('peer disconnected');
+          case "disconnected":
+            alert("peer disconnected");
             break;
           case "failed":
             alert("peer failed");
@@ -362,8 +343,7 @@ export default {
       }
 
       function onRemoteStreamRemoved(event) {
-        console.log('Remove remote video stream');
-        remoteVideo.value.src = '';
+        remoteVideo.value.src = "";
       }
 
       return peer;
@@ -386,16 +366,13 @@ export default {
       attachSinkId(remoteVideo.value, audioDestination);
     };
 
-
     const attachSinkId = (element, sinkId) => {
       element
         .setSinkId(sinkId)
-        .then(() => {
-          console.log(`Success, audio output device attached: ${sinkId}`);
-        })
+        .then(() => {})
         .catch((error) => {
           let errorMessage = error;
-          if (error.name === 'SecurityError') {
+          if (error.name === "SecurityError") {
             errorMessage = `You need to use HTTPS for selecting audio output device: ${error}`;
           }
           console.error(errorMessage);
@@ -441,7 +418,7 @@ export default {
 
     function setOffer(evt) {
       if (peerConnection) {
-        console.error('peerConnection already exists!');
+        console.error("peerConnection already exists!");
         return;
       }
       peerConnection = prepareNewConnection();
@@ -450,7 +427,7 @@ export default {
 
     function sendAnswer(evt) {
       if (!peerConnection) {
-        console.error('peerConnection does not exist!');
+        console.error("peerConnection does not exist!");
         return;
       }
 
@@ -460,7 +437,7 @@ export default {
           sendSDP(sessionDescription);
         },
         function () {
-          console.log("Failed to create Answer");
+          console.log("error");
         },
         mediaConstraints
       );
@@ -468,7 +445,7 @@ export default {
 
     function setAnswer(evt) {
       if (!peerConnection) {
-        console.error('peerConnection does not exist!');
+        console.error("error");
         return;
       }
       peerConnection.setRemoteDescription(new RTCSessionDescription(evt));
@@ -480,7 +457,7 @@ export default {
         .then((stream) => {
           for (let i = 0; i < localStream.getTracks().length; i++) {
             let track = localStream.getTracks()[i];
-            if (track.kind === 'video') {
+            if (track.kind === "video") {
               localStream.removeTrack(track);
             }
           }

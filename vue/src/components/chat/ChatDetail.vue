@@ -93,9 +93,7 @@ export default {
     };
 
     const send = (type) => {
-      // console.log('Send message:' + message.value);
       if (stompClient.value && stompClient.value.connected) {
-        console.log("IN SOCKET");
         let msg;
         if (type === "VID") {
           msg = {

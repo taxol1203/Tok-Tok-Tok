@@ -69,7 +69,6 @@ export default {
     };
     const setNextIdx = (index) => {
       old_answer.value[index].fk_next_idx = selectValue.value[index];
-      console.log(old_answer.value[index]);
     };
     const removeAnswer = (idx) => {
       store.dispatch('moduleQna/removeOldAns', idx);
