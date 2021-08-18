@@ -1,41 +1,4 @@
 <template>
-<<<<<<< HEAD
-  <div style="position: relative; width: 650px; height: 750px; padding: 10px">
-    <i class="el-icon-error" @click="closeRoom"></i>
-    <i class="el-icon-close"></i>
-    <!-- 상대방 -->
-    <el-scrollbar ref="scrollbar" id="topMessages">
-      <div v-for="(msg, index) in messages" :key="index">
-        <el-row>
-          <el-col v-if="msg.fk_author_idx == userPkidx">
-            <div class="message-me">
-              {{ msg.message }}
-            </div>
-          </el-col>
-          <el-col v-else>
-            <div class="message-other">{{ msg.message }}</div>
-          </el-col>
-        </el-row>
-      </div>
-    </el-scrollbar>
-    <button v-if="isPopupToBottom">최근 메세지로 jump!</button>
-    <div>
-      <el-row id="bottomInput">
-        <!-- 입력창 -->
-        <el-col :span="2">
-          <el-button icon="el-icon-video-camera" class="icon-m-p green-color-btn"></el-button>
-        </el-col>
-        <el-col :span="20">
-          <div>
-            <el-input
-              type="text"
-              @keyup.enter="sendMessage"
-              v-model="message"
-              placeholder="Please input"
-              clearable
-            >
-            </el-input>
-=======
   <i
     v-if="chatStatus == 'LIVE'"
     class="el-icon-error"
@@ -48,7 +11,6 @@
         <el-col v-if="msg.fk_author_idx == userPkidx">
           <div class="message-me" v-if="msg.type == 'MSG' || msg.type == 'VID'">
             {{ msg.message }}
->>>>>>> 48c5ddb41d61321105314f37e804a05e01335f07
           </div>
         </el-col>
         <el-col v-else>
@@ -101,27 +63,10 @@ export default {
     const sessionId = computed(() => store.getters["get_selected_idx"]);
     const messages = computed(() => store.getters.get_messages);
     const userPkidx = computed(() => store.state.auth.user.pk_idx);
-<<<<<<< HEAD
-    const message = ref('');
-    let connected = false;
-    let stompClient = '';
-    const scrollbar = ref('');
-    let isScrollbarAtBottom = true;
-    let isPopupToBottom = false;
-    // 스크롤바 움직였고 현재 하이트랑 비교해서 \
-    // 차이가 있다면 isScrollbarAtBottom = false;
-    // 이 상태에서 메세지 도착시 isPopupToBottom = true->버튼 표시
-    watch(messages, ()=>{
-      console.log("new message!")
-      console.log(scrollbar);
-      
-    });
-=======
     const chatStatus = computed(() => store.getters["statusGetter"]);
     const stompClient = computed(() => store.getters["stompGetter"]);
     const message = ref("");
     const scrollbar = ref("");
->>>>>>> 48c5ddb41d61321105314f37e804a05e01335f07
     watch(sessionId, () => {
       setTimeout(() => {
         scrollbar.value.setScrollTop(Number.MAX_SAFE_INTEGER);
