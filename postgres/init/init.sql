@@ -5,6 +5,7 @@ BEGIN;
 DROP SCHEMA IF EXISTS "SSAFY_PJT1"  CASCADE ;
 
 CREATE SCHEMA IF NOT EXISTS "SSAFY_PJT1";
+CREATE USER padmin ENCRYPTED PASSWORD 'padmin';
 
 CREATE TABLE "SSAFY_PJT1".account
 (
@@ -180,5 +181,9 @@ values ('상담 종료');
 
 INSERT INTO "SSAFY_PJT1".account (email, passwd, username)
 values ('daebalprime@gmail.com', '1a2a3a4a5a!!', 'daebalprime'),
-('user11@naver.com', 'asdf555!@#', 'frontadmin');
+('user11@naver.com', 'asdf555!@#', 'frontadmin'),
+('admin@naver.com', 'admin12!!', 'compadmin');
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA "SSAFY_PJT1" TO padmin;
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA "SSAFY_PJT1" TO padmin;
+GRANT USAGE ON SCHEMA "SSAFY_PJT1" TO padmin;
 END;

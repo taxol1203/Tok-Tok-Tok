@@ -1,26 +1,25 @@
 <template lang="">
   <el-container>
-    <el-header>
-      <!-- <h1>All cards({{ this.$store.getters.allQnaCount }})</h1> -->
+    <el-header style="margin-top: 20px">
       <el-row>
-        <el-col :span="20"><QnaTitle /></el-col>
-        <el-col :span="4">
-          <!-- <el-button type="primary" icon="el-icon-edit" circle></el-button> -->
+        <el-col :span="18"><QnaTitle /></el-col>
+        <el-col :span="6">
           <el-button
             type="success"
-            icon="el-icon-check"
-            circle
             @click="savaAnsData"
-            style="border: 0px solid; background-color: transparent; color: #000"
-          ></el-button>
+            circle
+            style="border: 0px solid; background-color: transparent; color: #006f3e"
+            ><i class="el-icon-success" style="color: #006f3e">&nbsp;저장</i></el-button
+          >
+
           <el-button
             type="danger"
-            icon="el-icon-delete"
             circle
             v-if="selectKey > 2"
             @click="removeQna"
-            style="border: 0px solid; background-color: transparent; color: #000"
-          ></el-button>
+            style="border: 0px solid; background-color: transparent; color: #006f3e"
+            ><i class="el-icon-delete-solid" style="color: #006f3e">&nbsp;삭제</i></el-button
+          >
         </el-col>
       </el-row>
     </el-header>
@@ -44,11 +43,11 @@ export default {
   setup() {
     const store = useStore();
     const select = computed(() => store.state.moduleQna.select);
-    // const old_answer = computed(() => store.state.moduleQna.old_answer);
     const new_answer = computed(() => store.state.moduleQna.new_answer);
 
     const selectKey = computed(() => store.getters['moduleQna/getKey']);
     const savaAnsData = () => {
+      store.dispatch('moduleQna/editContent', select.value);
       store.dispatch('moduleQna/updateAnswer');
       if (new_answer.value.length > 0) store.dispatch('moduleQna/addAnswer');
     };
@@ -63,7 +62,6 @@ export default {
     return {
       store,
       select,
-      // old_answer,
       selectKey,
       savaAnsData,
       removeQna,
@@ -71,4 +69,8 @@ export default {
   },
 };
 </script>
-<style lang=""></style>
+<style scoped>
+i {
+  font-size: 14px;
+}
+</style>

@@ -1,13 +1,8 @@
 <template>
   <div v-if="isOpen == 'OPEN'">
-    <!-- <p>현재 모든 상담사가 상담 중입니다. 잠시만 기다려주세요.</p> -->
-    <div v-loading="loading"></div>
-    <i class="el-icon-loading" style="margin-right: 3px"></i>
-    <!-- <i class="el-icon-loading"></i>
-    <p>이거 기다리는거 디자인 물어보기</p> -->
+    <div v-loading="loading">상담 연결 중입니다. 잠시만 기다려주세요.</div>
   </div>
-  <div v-if="isOpen == 'LIVE'">LIVE</div>
-  <!-- 실시간채팅 시작 -->
+  <div v-if="isOpen == 'LIVE'">상담이 시작되었습니다.</div>
   <div v-for="(msg, index) in messages" :key="index">
     <el-row>
       <el-col v-if="msg.fk_author_idx == userPkidx">
@@ -16,11 +11,21 @@
         </div>
       </el-col>
       <el-col v-else>
-        <div class="message-other">{{ msg.message }}</div>
+        <div class="message-other">
+          {{ msg.message }}
+          <br v-if="msg.type == 'VID'" />
+          <el-button
+            class="accept-btn"
+            v-if="msg.type == 'VID'"
+            @click="openVideo"
+          >
+            수락하기
+          </el-button>
+        </div>
       </el-col>
     </el-row>
   </div>
-  <!-- 실시간채팅 끝 -->
+  <p>{{ closeMsg }}</p>
 </template>
 <script>
 import { useStore } from 'vuex';
@@ -31,11 +36,15 @@ export default {
   components: {},
   setup() {
     const store = useStore();
-    const sessionId = computed(() => store.getters['get_selected_idx']); //user가 생성한 방 id
     const userPkidx = computed(() => store.state.auth.user.pk_idx);
+    const sessionId = computed(() => store.getters['get_selected_idx']);
     const messages = computed(() => store.getters['get_user_messages']);
     const isOpen = computed(() => store.getters['get_user_room_status']);
+    const closeMsg = computed(() => store.getters['clostMsgGetter']);
     const loading = true;
+    const openVideo = () => {
+      store.commit('OPEN_VIDEO');
+    };
 
     return {
       store,
@@ -44,11 +53,17 @@ export default {
       messages,
       isOpen,
       loading,
+      closeMsg,
+      openVideo,
     };
   },
 };
 </script>
 <style scoped>
+.accept-btn {
+  cursor: pointer;
+  margin-top: 0.5rem;
+}
 #topMessages {
   display: block;
   top: 0px;
@@ -63,19 +78,18 @@ export default {
   overflow-x: hidden;
 }
 .message-me {
-  border: 1px solid #f7f4f0;
+  /* border: 0.1px solid #004226; */
   border-radius: 10px 10px 0px 10px;
-  background: #f7f4f0;
+  color: white;
+  background: #006f3e;
   float: right;
   padding: 10px;
   margin: 5px 10px 5px 5px;
   max-width: 300px;
 }
 .message-other {
-  border: 1px solid #27251f;
   border-radius: 10px 10px 10px 0px;
-  color: #fff;
-  background: #27251f;
+  background-color: #f7f4f0;
   float: left;
   padding: 10px;
   margin: 5px 10px 5px 5px;
@@ -87,5 +101,7 @@ export default {
   background-color: transparent;
   border: 0px solid #eee;
 }
-/* hover로 버튼 색 변하게 하기: 추가기능 */
+.vr:hover {
+  background-color: white;
+}
 </style>

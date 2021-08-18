@@ -1,14 +1,15 @@
 <template lang="">
-  <div id="container">
+  <div style="position: relative">
     <el-scrollbar id="qcards">
       <div v-for="q in cards" :key="q.pk_idx" class="text item">
         <el-card class="box-card" @click="showDetail(q.pk_idx)">
-          {{ q.title }}
+          <span style="color: #606266">{{ q.title }}</span>
+          <span v-if="q.title == undefined">시나리오 제목을 입력해주세요.</span>
         </el-card>
       </div>
     </el-scrollbar>
     <el-card class="box-card" @click="addScene" id="addButton">
-      <i class="el-icon-plus"></i>
+      <i class="el-icon-circle-plus">&nbsp;<b>예상 시나리오 추가</b></i>
     </el-card>
   </div>
 </template>
@@ -35,9 +36,7 @@ export default {
         answers: [],
       };
       console.log(tmp);
-      // if (count.value <= 10)
       store.dispatch('moduleQna/addQna', tmp);
-      // else alert('시나리오는 최대 10개 추가할 수 있습니다.');
     };
     return {
       store,
@@ -53,21 +52,13 @@ export default {
 </script>
 <style scoped>
 #qcards {
-  display: block;
   top: 0px;
-  height: 700px;
   width: 100%;
+  height: 87vh;
 }
-#container {
-  position: relative;
-  height: 750px;
-  background: #f7f4f0;
-}
-.el-scroll {
-  overflow: visible;
-}
+
 #addButton {
-  bottom: 0px;
   width: 100%;
+  color: #006f3e;
 }
 </style>

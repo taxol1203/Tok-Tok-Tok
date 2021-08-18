@@ -4,16 +4,16 @@ services:
     postgres:
       build: ./postgres
       container_name: postgres
-      image: "postgres:13.3"
+#      image: "postgres:13.3"
       ports:
         - 5432:5432
       networks:
         - net
       environment:
         - TZ=Asia/Seoul
-        - POSTGRES_DB=postgres
-        - POSTGRES_USERNAME=postgres
-        - POSTGRES_PASSWORD=root
+        - POSTGRES_DB=SSAFY_PJT1
+        - POSTGRES_USERNAME=padmin
+        - POSTGRES_PASSWORD=padmin
       volumes:
         - postgres:/var/lib/postgresql/data
         - ./postgres/init/:/docker-entrypoint-initdb.d/
@@ -91,7 +91,7 @@ services:
 
 volumes:
   postgres: {}
-  frontend: {}
+#  frontend: {}
   jenkins: {}
 #  redis: {}
 

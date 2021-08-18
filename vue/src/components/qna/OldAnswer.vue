@@ -7,7 +7,6 @@
     <div style="width: 70%; display: inline-block">
       <div class="answerBox">
         <div>
-          <!-- @keyup.enter="changeShow()"<p v-if="!show" style="margin: 10px" @click="changeShow" v-bind="input.value"></p> -->
           <el-input
             class="ans"
             type="textarea"
@@ -25,7 +24,7 @@
     <div style="float: right">
       <el-row>
         <el-col :span="20">
-          <!-- 다음 시나리오 select style="border: 1px solid #dcdfe6; border-radius: 5px 5px 5px 5px"-->
+          <!-- 다음 시나리오 -->
           <el-select
             v-model="selectValue[index]"
             placeholder="next scene"
@@ -43,13 +42,12 @@
         <el-col :span="2">
           <el-button
             type="danger"
-            icon="el-icon-delete"
+            icon="el-icon-delete-solid"
             circle
-            style="border: 0px solid; background-color: transparent; color: #000"
+            style="border: 0px solid; background-color: transparent; color: #006f3e"
             @click="removeAnswer(index)"
           ></el-button>
         </el-col>
-        <!-- {{ oa.fk_next_idx }} el-icon-delete-->
       </el-row>
     </div>
   </div>
@@ -71,7 +69,6 @@ export default {
     };
     const setNextIdx = (index) => {
       old_answer.value[index].fk_next_idx = selectValue.value[index];
-      console.log(old_answer.value[index]);
     };
     const removeAnswer = (idx) => {
       store.dispatch('moduleQna/removeOldAns', idx);
@@ -92,11 +89,12 @@ export default {
 };
 </script>
 <style scoped>
-/* input 상자 테두리 없애기 */
 .ans >>> .el-textarea__inner {
   border: 0;
   resize: none;
   border: none;
+  background: transparent;
+  color: #fff;
 }
 
 .answerBox {
@@ -105,5 +103,7 @@ export default {
   text-align: right;
   padding: 10px;
   float: right;
+  width: 30%;
+  background: #006f3e;
 }
 </style>

@@ -1,10 +1,15 @@
 package com.ssafy.d204.api.controller;
 
+import com.ssafy.d204.api.response.UserLoginPostRes;
 import com.ssafy.d204.api.service.AnswerService;
 import com.ssafy.d204.api.service.QuestionService;
 import com.ssafy.d204.db.entity.Answer;
 import com.ssafy.d204.db.entity.Question;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +26,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+// jenkins test 3
+
 @CrossOrigin(origins = {"*"}, maxAge = 6000)
 @RestController
 @RequestMapping("/qna")
@@ -35,6 +42,9 @@ public class QnAController {
     private AnswerService answerService;
 
     @ApiOperation(value = "모든 질문의 정보를 반환한다.", response = Question.class)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "모든 질문 반환", response = Question.class),
+    })
     @GetMapping("/question")
     public ResponseEntity<?> retrieveQuestion() throws Exception {
         logger.debug("retrieveQuestion - 호출");
@@ -42,11 +52,17 @@ public class QnAController {
           return questionService.retrieveQuestion();
         }catch (Exception e) {
           return new ResponseEntity<String>("Exception: " + e.getMessage(),
-              HttpStatus.INTERNAL_SERVER_ERROR);
+                  HttpStatus.INTERNAL_SERVER_ERROR);
+             
         }
     }
 
     @ApiOperation(value = "질문 번호에 해당하는 질문의 정보를 반환한다.", response = Question.class)
+    @ApiImplicitParam(name = "pk_idx", dataType = "int", value = "pk_idx에 질문 번호를 입력")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "질문 ", response = Question.class),
+        @ApiResponse(code = 204, message = "해당하는 번호에 따른 질문이 존재하지 않습니다. ", response = Void.class),
+    })
     @GetMapping("/question/{pk_idx}")
     public ResponseEntity<?> detailQuestion(@PathVariable int pk_idx) {
         logger.debug("detailQuestion - 호출");
@@ -59,6 +75,10 @@ public class QnAController {
     }
 
     @ApiOperation(value = "새로운 질문 정보를 입력한다.", response = String.class)
+    @ApiImplicitParam(name = "content", dataType = "varchar", value = "content, title를 입력하여 새로운 질문 정보를 입력한다")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "질문 입력 성공", response = Void.class),
+    })
     @PostMapping("/question")
     public ResponseEntity<?> writeQuestion(@RequestBody Question content) {
         logger.debug("writeQuestion - 호출");
@@ -71,6 +91,11 @@ public class QnAController {
     }
 
     @ApiOperation(value = "질문 번호에 해당하는 질문의 정보를 수정한다.", response = String.class)
+    @ApiImplicitParam(name = "content", dataType = "varchar", value = "pk_idx를 입력하여 content, title를 수정한다")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "질문 수정 성공", response = Void.class),
+        @ApiResponse(code = 204, message = "해당하는 질문은 존재하지 않습니다.", response = Void.class),
+    })
     @PutMapping("/question/{idx}")
     public ResponseEntity<?> updateQuestion(@RequestBody Question content) {
         logger.debug("updateQuestion - 호출");
@@ -83,7 +108,12 @@ public class QnAController {
         }
     }
 
-    @ApiOperation(value = "질문 번호에 해당하는 질문의 정보를 삭제한다.  ", response = String.class)
+    @ApiOperation(value = "질문 번호에 해당하는 질문의 정보를 삭제한다. ", response = String.class)
+    @ApiImplicitParam(name = "pk_idx", dataType = "varchar", value = "pk_idx를 입력하여 질문을 삭제한다")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "질문 삭제 성공", response = Void.class),
+        @ApiResponse(code = 204, message = "해당하는 질문은 존재하지 않습니다.", response = Void.class),
+    })
     @DeleteMapping("/question/{pk_idx}")
     public ResponseEntity<?> deleteQuestion(@PathVariable int pk_idx) {
         logger.debug("deleteQuestion - 호출");
@@ -96,7 +126,7 @@ public class QnAController {
     }
     // response -> List.class는 아무 의미가 없지 않을까....
     // 대신 실질적으로 의미를 갖는 Answer 클래스를 넣자.
-    @ApiOperation(value = "현재 질문에 따른 다음 답변들의 정보를 전부 반환한다.", response = List.class)
+    @ApiOperation(value = "현재 질문에 따른 다음 답변들의 정보를 전부 반환한다. -> 사용 X", response = List.class)
     @GetMapping("/question/nextAnswers/{pk_idx}")
     public ResponseEntity<?> getNextAnswers(@PathVariable int pk_idx) throws Exception {
         try {
@@ -107,7 +137,7 @@ public class QnAController {
         }
     }
 
-    @ApiOperation(value = "현재 질문에 다음 답변을 추가한다. pk_idx에 연결할 답변, fk_previous_idx에 현재 질문의 인덱스를 넣는다.", response = String.class)
+    @ApiOperation(value = "현재 질문에 다음 답변을 추가한다. pk_idx에 연결할 답변, fk_previous_idx에 현재 질문의 인덱스를 넣는다. - 사용 X", response = String.class)
     @PutMapping("/question/nextAnswer/{idx}")
     public ResponseEntity<?> updateNextAnswer(@RequestBody Answer content) {
         try {
@@ -120,7 +150,7 @@ public class QnAController {
 
     // ----------------------------- 여기서 부터 답변 -------------------------------
 
-    @ApiOperation(value = "모든 답변의 정보를 반환한다.", response = List.class)
+    @ApiOperation(value = "모든 답변의 정보를 반환한다. - 사용 X", response = List.class)
     @GetMapping("/answer")
     public ResponseEntity<?> retrieveAnswer() throws Exception {
         logger.debug("retrieveAnswer - 호출");
@@ -132,7 +162,7 @@ public class QnAController {
         }
     }
 
-    @ApiOperation(value = "답변 번호에 해당하는 답변의 정보를 반환한다.", response = Answer.class)
+    @ApiOperation(value = "답변 번호에 해당하는 답변의 정보를 반환한다. - 사용 X", response = Answer.class)
     @GetMapping("/answer/{pk_idx}")
     public ResponseEntity<?> detailAnswer(@PathVariable int pk_idx) {
         logger.debug("detailAnswer - 호출");
@@ -144,7 +174,7 @@ public class QnAController {
         }
     }
 
-    @ApiOperation(value = "답변 번호에 해당하는 다음 질문의 인덱스를 반환한다.", response = Answer.class)
+    @ApiOperation(value = "답변 번호에 해당하는 다음 질문의 인덱스를 반환한다. - 사용 X", response = Answer.class)
     @GetMapping("/answer/nextQuestion/{pk_idx}")
     public ResponseEntity<?> getNextQuestion(@PathVariable int pk_idx) {
         logger.debug("detailAnswer - 호출");
@@ -155,8 +185,19 @@ public class QnAController {
               HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-    @ApiOperation(value = "새로운 답변 정보를 입력한다. title, content, fk_next_idx를 입력하여 전송 할 수 있다. \"fk_next_idx\": 0 를 지우고 execute를 하면 연결되는 다음 질문의 기본 값(fk_next_idx)는 2(상담종료)이다. (0으로 실행하면 오류)", response = String.class)
+    
+    @ApiOperation(value = "새로운 답변 정보를 입력한다.", response = String.class)
+    /*
+    @ApiImplicitParams({  
+      @ApiImplicitParam(name = "content", dataType = "varchar", value = "포스트 대상 PK"),
+      @ApiImplicitParam(name = "fk_next_idx", dataType = "int4", value = "포스트를 등록한 유저 PK"),
+      @ApiImplicitParam(name = "fk_previous_idx", dataType = "int4", value = "포스트를 등록한 유저 PK"),
+      })
+      */
+    @ApiImplicitParam(name = "content", dataType = "varchar", value = "content, fk_next_idx를 입력하여 전송 할 수 있다. \\\"fk_next_idx\\\": 0 를 지우고 execute를 하면 연결되는 다음 질문의 기본 값(fk_next_idx)는 2(상담종료)이다. (0으로 실행하면 오류)\"")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "답변 입력 성공", response = Void.class),
+    })
     @PostMapping("/answer")
     public ResponseEntity<?> writeAnswer(@RequestBody Answer content) {
         logger.debug("writeAnswer - 호출");
@@ -168,7 +209,12 @@ public class QnAController {
         }
     }
 
-    @ApiOperation(value = "답변 번호에 해당하는 답변의 정보를 수정한다. (content, fk_next_idx) 여기서 이전 질문(fk_previous_idx)는 변경하지 않는다.", response = String.class)
+    @ApiOperation(value = "답변 번호에 해당하는 답변의 정보를 수정한다 .", response = String.class)
+    @ApiImplicitParam(name = "content", dataType = "varchar", value = "(content, fk_next_idx) 여기서 이전 질문(fk_previous_idx)는 변경하지 않는다.")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "답변 수정 성공", response = Answer.class),
+        @ApiResponse(code = 204, message = "입력한 인덱스에 해당하는 답변은 존재하지 않습니다.", response = Void.class),
+    })
     @PutMapping("/answer/{idx}")
     public ResponseEntity<?> updateAnswer(@RequestBody Answer content) {
         logger.debug("updateAnswer - 호출");
@@ -182,6 +228,11 @@ public class QnAController {
     }
 
     @ApiOperation(value = "답변 번호에 해당하는 질문의 정보를 삭제한다.", response = String.class)
+    @ApiImplicitParam(name = "pk_idx", dataType = "int", value = "삭제할 답변의 인덱스")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "답변 삭제 성공", response = Answer.class),
+        @ApiResponse(code = 204, message = "입력한 인덱스에 해당하는 답변은 존재하지 않습니다.", response = Void.class),
+    })
     @DeleteMapping("/answer/{pk_idx}")
     public ResponseEntity<?> deleteAnswer(@PathVariable int pk_idx) {
         logger.debug("deleteAnswer - 호출");
@@ -193,7 +244,7 @@ public class QnAController {
         }
     }
 
-    @ApiOperation(value = "답변 번호에 해당하는 다음 질문의 번호를 수정한다. 다음 질문의 기본 값 중 1번은 (상담사 연결) 2번은 (상담 종료)이다.", response = String.class)
+    @ApiOperation(value = "답변 번호에 해당하는 다음 질문의 번호를 수정한다. 다음 질문의 기본 값 중 1번은 (상담사 연결) 2번은 (상담 종료)이다. - 사용 X", response = String.class)
     @PutMapping("/answer/nextIdx/{pk_idx}")
     public ResponseEntity<?> updateNextQuestion(@RequestBody Answer fk_next_idx) {
       try {
