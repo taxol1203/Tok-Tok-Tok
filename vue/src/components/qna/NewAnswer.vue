@@ -7,7 +7,6 @@
     <div style="width: 70%; display: inline-block">
       <div class="answerBox">
         <div>
-          <!-- @keyup.enter="changeShow()"<p v-if="!show" style="margin: 10px" @click="changeShow" v-bind="input.value"></p> -->
           <el-input
             class="ans"
             type="textarea"
@@ -25,7 +24,7 @@
     <div style="float: right">
       <el-row>
         <el-col :span="20">
-          <!-- 다음 시나리오 select style="border: 1px solid #dcdfe6; border-radius: 5px 5px 5px 5px"-->
+          <!-- 다음 시나리오 -->
           <el-select
             v-model="selectValue[index]"
             placeholder="이어질 시나리오"
@@ -49,7 +48,6 @@
             @click="removeAnswer(index)"
           ></el-button>
         </el-col>
-        <!-- {{ oa.fk_next_idx }} el-icon-delete-->
       </el-row>
     </div>
   </div>
@@ -61,27 +59,27 @@
   ></el-button>
 </template>
 <script>
-import { useStore } from 'vuex';
-import { computed, ref } from 'vue';
+import { useStore } from "vuex";
+import { computed, ref } from "vue";
 export default {
   setup() {
     const store = useStore();
     const qnaList = computed(() => store.state.moduleQna.qnaList);
     const new_answer = computed(() => store.state.moduleQna.new_answer);
-    const selectedKey = computed(() => store.getters['moduleQna/getKey']);
+    const selectedKey = computed(() => store.getters["moduleQna/getKey"]);
     const selectValue = ref([]);
     let show = ref(true);
     const changeShow = () => {
       show.value = !show.value;
     };
     const add = () => {
-      store.commit('moduleQna/addNewAnswer', selectedKey.value);
+      store.commit("moduleQna/addNewAnswer", selectedKey.value);
     };
     const setNextIdx = (index) => {
       new_answer.value[index].fk_next_idx = selectValue.value[index];
     };
     const removeAnswer = (idx) => {
-      store.commit('moduleQna/removeNewAns', idx);
+      store.commit("moduleQna/removeNewAns", idx);
       selectValue.value.splice(idx, 1);
     };
     return {

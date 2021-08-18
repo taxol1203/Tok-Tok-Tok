@@ -192,7 +192,6 @@ export default {
   overflow-x: hidden;
 }
 .message-me {
-  /* border: 0.1px solid #004226; */
   border-radius: 10px 10px 0px 10px;
   color: white;
   background: #006f3e;
@@ -203,10 +202,7 @@ export default {
   text-align: right;
 }
 .message-other {
-  /* border: 0.1px solid #e4e2df; */
   border-radius: 10px 10px 10px 0px;
-  /* color: #fff; */
-  /* background: whitesmoke; */
   background-color: #f7f4f0;
   float: left;
   padding: 10px;

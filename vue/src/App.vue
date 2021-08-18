@@ -50,7 +50,6 @@ body {
   max-height: 100vh;
   min-height: 100%;
   overflow: auto;
-  /* min-width: 260px; */
   text-align: left;
   background-image: url("./assets/green-background.jpg");
 }

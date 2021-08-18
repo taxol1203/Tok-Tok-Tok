@@ -7,7 +7,6 @@
     <div style="width: 70%; display: inline-block">
       <div class="answerBox">
         <div>
-          <!-- @keyup.enter="changeShow()"<p v-if="!show" style="margin: 10px" @click="changeShow" v-bind="input.value"></p> -->
           <el-input
             class="ans"
             type="textarea"
@@ -25,7 +24,7 @@
     <div style="float: right">
       <el-row>
         <el-col :span="20">
-          <!-- 다음 시나리오 select style="border: 1px solid #dcdfe6; border-radius: 5px 5px 5px 5px"-->
+          <!-- 다음 시나리오 -->
           <el-select
             v-model="selectValue[index]"
             placeholder="next scene"
@@ -49,7 +48,6 @@
             @click="removeAnswer(index)"
           ></el-button>
         </el-col>
-        <!-- {{ oa.fk_next_idx }} el-icon-delete-->
       </el-row>
     </div>
   </div>
@@ -92,7 +90,6 @@ export default {
 };
 </script>
 <style scoped>
-/* input 상자 테두리 없애기 */
 .ans >>> .el-textarea__inner {
   border: 0;
   resize: none;
