@@ -14,11 +14,7 @@
         <div class="message-other">
           {{ msg.message }}
           <br v-if="msg.type == 'VID'" />
-          <el-button
-            class="accept-btn"
-            v-if="msg.type == 'VID'"
-            @click="openVideo"
-          >
+          <el-button class="accept-btn" v-if="msg.type == 'VID'" @click="openVideo">
             수락하기
           </el-button>
         </div>
@@ -86,6 +82,7 @@ export default {
   padding: 10px;
   margin: 5px 10px 5px 5px;
   max-width: 300px;
+  text-align: right;
 }
 .message-other {
   border-radius: 10px 10px 10px 0px;
@@ -94,6 +91,7 @@ export default {
   padding: 10px;
   margin: 5px 10px 5px 5px;
   max-width: 300px;
+  text-align: left;
 }
 #inputBox {
   width: 90%;

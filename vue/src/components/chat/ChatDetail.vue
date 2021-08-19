@@ -1,41 +1,4 @@
 <template>
-<<<<<<< HEAD
-  <div style="position: relative; width: 650px; height: 750px; padding: 10px">
-    <i class="el-icon-error" @click="closeRoom"></i>
-    <i class="el-icon-close"></i>
-    <!-- 상대방 -->
-    <el-scrollbar ref="scrollbar" id="topMessages">
-      <div v-for="(msg, index) in messages" :key="index">
-        <el-row>
-          <el-col v-if="msg.fk_author_idx == userPkidx">
-            <div class="message-me">
-              {{ msg.message }}
-            </div>
-          </el-col>
-          <el-col v-else>
-            <div class="message-other">{{ msg.message }}</div>
-          </el-col>
-        </el-row>
-      </div>
-    </el-scrollbar>
-    <button v-if="isPopupToBottom">최근 메세지로 jump!</button>
-    <div>
-      <el-row id="bottomInput">
-        <!-- 입력창 -->
-        <el-col :span="2">
-          <el-button icon="el-icon-video-camera" class="icon-m-p green-color-btn"></el-button>
-        </el-col>
-        <el-col :span="20">
-          <div>
-            <el-input
-              type="text"
-              @keyup.enter="sendMessage"
-              v-model="message"
-              placeholder="Please input"
-              clearable
-            >
-            </el-input>
-=======
   <i
     v-if="chatStatus == 'LIVE'"
     class="el-icon-error"
@@ -48,7 +11,6 @@
         <el-col v-if="msg.fk_author_idx == userPkidx">
           <div class="message-me" v-if="msg.type == 'MSG' || msg.type == 'VID'">
             {{ msg.message }}
->>>>>>> 48c5ddb41d61321105314f37e804a05e01335f07
           </div>
         </el-col>
         <el-col v-else>
@@ -90,71 +52,54 @@
   </el-row>
 </template>
 <script>
-import { useStore } from "vuex";
-import { ref, computed, watch, onMounted } from "vue";
+import { useStore } from 'vuex';
+import { ref, computed, watch, onMounted } from 'vue';
 
 export default {
-  name: "Chat",
+  name: 'Chat',
   components: {},
   setup() {
     const store = useStore();
-    const sessionId = computed(() => store.getters["get_selected_idx"]);
+    const sessionId = computed(() => store.getters['get_selected_idx']);
     const messages = computed(() => store.getters.get_messages);
     const userPkidx = computed(() => store.state.auth.user.pk_idx);
-<<<<<<< HEAD
+    const chatStatus = computed(() => store.getters['statusGetter']);
+    const stompClient = computed(() => store.getters['stompGetter']);
     const message = ref('');
-    let connected = false;
-    let stompClient = '';
     const scrollbar = ref('');
-    let isScrollbarAtBottom = true;
-    let isPopupToBottom = false;
-    // 스크롤바 움직였고 현재 하이트랑 비교해서 \
-    // 차이가 있다면 isScrollbarAtBottom = false;
-    // 이 상태에서 메세지 도착시 isPopupToBottom = true->버튼 표시
-    watch(messages, ()=>{
-      console.log("new message!")
-      console.log(scrollbar);
-      
-    });
-=======
-    const chatStatus = computed(() => store.getters["statusGetter"]);
-    const stompClient = computed(() => store.getters["stompGetter"]);
-    const message = ref("");
-    const scrollbar = ref("");
->>>>>>> 48c5ddb41d61321105314f37e804a05e01335f07
     watch(sessionId, () => {
       setTimeout(() => {
         scrollbar.value.setScrollTop(Number.MAX_SAFE_INTEGER);
       }, 100);
     });
     watch(scrollbar, () => {
-      store.commit("scrollbarSetter", scrollbar.value);
+      store.commit('scrollbarSetter', scrollbar.value);
     });
 
     onMounted(() => {
       scrollbar.value.setScrollTop(Number.MAX_SAFE_INTEGER);
     });
     const openVideo = () => {
-      store.commit("OPEN_VIDEO");
+      store.commit('OPEN_VIDEO');
       // 사용자에게 초대 메세지 보내기 메세지타입 VID
-      send("VID");
+      send('VID');
     };
 
     const sendMessage = () => {
       if (userPkidx.value && message.value) {
-        send("MSG");
+        send('MSG');
       }
-      message.value = "";
+      message.value = '';
     };
 
     const send = (type) => {
       if (stompClient.value && stompClient.value.connected) {
         let msg;
-        if (type === "VID") {
+        if (type === 'VID') {
           msg = {
-            message: "화상상담을 요청합니다.",
+            message: '화상상담을 요청합니다.',
             fk_author_idx: userPkidx.value,
-            created: "",
+            created: '',
             deleted: false,
             fk_session_id: sessionId.value,
             type: type,
@@ -167,13 +112,13 @@ export default {
             type: type,
           };
         }
-        stompClient.value.send("/receive/" + sessionId.value, JSON.stringify(msg), {});
+        stompClient.value.send('/receive/' + sessionId.value, JSON.stringify(msg), {});
       }
     };
 
     const closeRoom = () => {
-      send("END");
-      store.dispatch("chatClose", sessionId.value);
+      send('END');
+      store.dispatch('chatClose', sessionId.value);
     };
 
     return {
@@ -213,6 +158,7 @@ export default {
   padding: 10px;
   margin: 5px 10px 5px 5px;
   max-width: 300px;
+  text-align: right;
 }
 .message-other {
   border: 1px solid #006f3e;
@@ -223,6 +169,7 @@ export default {
   padding: 10px;
   margin: 5px 10px 5px 5px;
   max-width: 300px;
+  text-align: left;
 }
 #inputBox {
   height: 100%;

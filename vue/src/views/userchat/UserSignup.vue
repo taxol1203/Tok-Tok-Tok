@@ -65,10 +65,7 @@
                   @keyup.enter="onSubmit()"
                 ></el-input>
               </el-form-item>
-              <el-button
-                class="green-color-btn"
-                @click="onSubmit()"
-                :disabled="!isValid"
+              <el-button class="green-color-btn" @click="onSubmit()" :disabled="!isValid"
                 >회원가입</el-button
               >
               <el-button @click="resetForm()">다시쓰기</el-button>
@@ -262,7 +259,7 @@ export default {
 
 #LeftPosition {
   position: absolute;
-  top: 20%;
+  top: 3%;
   left: 10%;
 }
 
@@ -277,5 +274,9 @@ export default {
   background-color: #006f3e;
   color: #fff;
   border: 0;
+}
+
+#footer {
+  margin-top: 15px;
 }
 </style>

@@ -88,18 +88,18 @@
 </template>
 
 <script>
-import { ref, onMounted, reactive, computed } from "vue";
-import { useStore } from "vuex";
+import { ref, onMounted, reactive, computed } from 'vue';
+import { useStore } from 'vuex';
 export default {
   setup() {
     const store = useStore();
-    const videoElement = ref("");
-    const audioInputSelect = ref("");
-    const audioOutputSelect = ref("");
-    const videoSelect = ref("");
-    const remoteVideo = ref("");
+    const videoElement = ref('');
+    const audioInputSelect = ref('');
+    const audioOutputSelect = ref('');
+    const videoSelect = ref('');
+    const remoteVideo = ref('');
     const videoStatus = computed(() => store.state.video_status);
-    const sessionId = computed(() => store.getters["get_selected_idx"]);
+    const sessionId = computed(() => store.getters['get_selected_idx']);
     const screenShare = ref(true);
     const isUser = computed(() => store.getters.is_user);
     const localVidReady = ref(false);
@@ -114,7 +114,7 @@ export default {
     var peerConnection = null;
     var peerStarted = false;
     const closeVideoWindow = () => {
-      store.commit("CLOSE_VIDEO");
+      store.commit('CLOSE_VIDEO');
     };
     onMounted(async () => {
       try {
@@ -129,8 +129,8 @@ export default {
     });
 
     function handleError(error) {
-      alert("디바이스를 다른 곳에서 사용 중인지 확인해주시기 바랍니다 ");
-      console.log("error: ", error.message, error.name);
+      alert('디바이스를 다른 곳에서 사용 중인지 확인해주시기 바랍니다 ');
+      console.log('error: ', error.message, error.name);
     }
 
     const gotDevicesList = (deviceInfos) => {
@@ -139,11 +139,11 @@ export default {
       mediaOptions.videoinput = [];
       for (let i = 0; i < deviceInfos.length; i++) {
         const deviceInfo = deviceInfos[i];
-        if (deviceInfo.kind === "audioinput") {
+        if (deviceInfo.kind === 'audioinput') {
           mediaOptions.audioinput.push(deviceInfo);
-        } else if (deviceInfo.kind === "audiooutput") {
+        } else if (deviceInfo.kind === 'audiooutput') {
           mediaOptions.audiooutput.push(deviceInfo);
-        } else if (deviceInfo.kind === "videoinput") {
+        } else if (deviceInfo.kind === 'videoinput') {
           mediaOptions.videoinput.push(deviceInfo);
         }
       }
@@ -175,7 +175,7 @@ export default {
         }, 1000);
       } catch (err) {
         console.log(err);
-        alert("디바이스가 없습니다. 다시 확인해주세요.");
+        alert('디바이스가 없습니다. 다시 확인해주세요.');
       }
       if (socketRead.value) {
         sendReconnectRequest();
@@ -190,11 +190,11 @@ export default {
     };
 
     function sendReconnectRequest() {
-      let req = { type: "reconnectRequest" };
+      let req = { type: 'reconnectRequest' };
       socket.send(JSON.stringify(req));
     }
 
-    const socketUrl = "wss://i5d204.p.ssafy.io/api/msgServer/";
+    const socketUrl = 'wss://i5d204.p.ssafy.io/api/msgServer/';
     let socket = null;
     const socketRead = ref(false);
     const socketInit = (roomId) => {
@@ -208,7 +208,7 @@ export default {
         socketRead.value = true;
       };
       socket.onclose = function (e) {
-        alert("상담이 종료되었습니다.");
+        alert('상담이 종료되었습니다.');
         socketRead.value = false;
         peerStarted = false;
         const stream = videoElement.value.srcObject;
@@ -217,7 +217,7 @@ export default {
           track.stop();
         });
         videoElement.value.srcObject = null;
-        store.commit("CLOSE_VIDEO");
+        store.commit('CLOSE_VIDEO');
 
         if (peerConnection != null) {
           peerConnection.close();
@@ -229,26 +229,26 @@ export default {
 
       socket.onmessage = function (res) {
         var evt = JSON.parse(res.data);
-        if (evt.type === "offer") {
+        if (evt.type === 'offer') {
           onOffer(evt);
-        } else if (evt.type === "answer" && peerStarted) {
+        } else if (evt.type === 'answer' && peerStarted) {
           onAnswer(evt);
-        } else if (evt.type === "candidate" && peerStarted) {
+        } else if (evt.type === 'candidate' && peerStarted) {
           onCandidate(evt);
-        } else if (evt.type === "bye" && peerStarted) {
+        } else if (evt.type === 'bye' && peerStarted) {
           stop();
-        } else if (evt.type === "reconnectRequest" && peerStarted) {
-          let res = { type: "reconnectResponse" };
+        } else if (evt.type === 'reconnectRequest' && peerStarted) {
+          let res = { type: 'reconnectResponse' };
           peerStarted = false;
-          remoteVideo.value.src = "";
+          remoteVideo.value.src = '';
           async () => {
             await peerConnection.close();
           };
           peerConnection = null;
           socket.send(JSON.stringify(res));
-        } else if (evt.type === "reconnectResponse" && socketRead.value) {
+        } else if (evt.type === 'reconnectResponse' && socketRead.value) {
           peerStarted = false;
-          remoteVideo.value.src = "";
+          remoteVideo.value.src = '';
           async () => {
             await peerConnection.close();
           };
@@ -265,16 +265,16 @@ export default {
         peerStarted = true;
       } else {
         if (!localStream) {
-          alert("Please capture local video data first.");
+          alert('Please capture local video data first.');
         }
         if (!socketRead.value) {
-          alert("Please open socket before connect.");
+          alert('Please open socket before connect.');
         }
         if (peerStarted) {
-          alert("Already peer have started.");
+          alert('Already peer have started.');
         }
       }
-      store.commit("LIVE_VIDEO");
+      store.commit('LIVE_VIDEO');
     };
 
     const sendOffer = () => {
@@ -285,7 +285,7 @@ export default {
           sendSDP(sessionDescription);
         },
         function (err) {
-          console.log("error:" + err);
+          console.log('error:' + err);
         },
         mediaConstraints
       );
@@ -295,9 +295,9 @@ export default {
       var pc_config = {
         iceServers: [
           {
-            url: "stun:13.124.49.8:3478",
-            username: "test",
-            credential: "test",
+            url: 'stun:13.124.49.8:3478',
+            username: 'test',
+            credential: 'test',
           },
         ],
       };
@@ -305,12 +305,12 @@ export default {
       try {
         peer = new webkitRTCPeerConnection(pc_config);
       } catch (e) {
-        console.log("error:" + e.message);
+        console.log('error:' + e.message);
       }
       peer.onicecandidate = function (evt) {
         if (evt.candidate) {
           sendCandidate({
-            type: "candidate",
+            type: 'candidate',
             sdpMLineIndex: evt.candidate.sdpMLineIndex,
             sdpMid: evt.candidate.sdpMid,
             candidate: evt.candidate.candidate,
@@ -318,22 +318,22 @@ export default {
         }
       };
       peer.addStream(localStream);
-      peer.addEventListener("addstream", onRemoteStreamAdded, false);
-      peer.addEventListener("removestream", onRemoteStreamRemoved, false);
+      peer.addEventListener('addstream', onRemoteStreamAdded, false);
+      peer.addEventListener('removestream', onRemoteStreamRemoved, false);
 
       peer.onconnectionstatechange = function (evt) {
         switch (peer.connectionState) {
-          case "connected":
-            store.commit("LIVE_VIDEO");
+          case 'connected':
+            store.commit('LIVE_VIDEO');
             break;
-          case "disconnected":
-            alert("peer disconnected");
+          case 'disconnected':
+            alert('peer disconnected');
             break;
-          case "failed":
-            alert("peer failed");
+          case 'failed':
+            alert('peer failed');
             break;
-          case "closed":
-            alert("peer closed");
+          case 'closed':
+            alert('peer closed');
             break;
         }
       };
@@ -343,7 +343,7 @@ export default {
       }
 
       function onRemoteStreamRemoved(event) {
-        remoteVideo.value.src = "";
+        remoteVideo.value.src = '';
       }
 
       return peer;
@@ -358,7 +358,7 @@ export default {
       peerConnection.close();
       peerConnection = null;
       peerStarted = false;
-      store.commit("CLOSE_VIDEO");
+      store.commit('CLOSE_VIDEO');
     };
 
     const changeAudioDestination = () => {
@@ -372,7 +372,7 @@ export default {
         .then(() => {})
         .catch((error) => {
           let errorMessage = error;
-          if (error.name === "SecurityError") {
+          if (error.name === 'SecurityError') {
             errorMessage = `You need to use HTTPS for selecting audio output device: ${error}`;
           }
           console.error(errorMessage);
@@ -418,7 +418,7 @@ export default {
 
     function setOffer(evt) {
       if (peerConnection) {
-        console.error("peerConnection already exists!");
+        console.error('peerConnection already exists!');
         return;
       }
       peerConnection = prepareNewConnection();
@@ -427,7 +427,7 @@ export default {
 
     function sendAnswer(evt) {
       if (!peerConnection) {
-        console.error("peerConnection does not exist!");
+        console.error('peerConnection does not exist!');
         return;
       }
 
@@ -437,7 +437,7 @@ export default {
           sendSDP(sessionDescription);
         },
         function () {
-          console.log("error");
+          console.log('error');
         },
         mediaConstraints
       );
@@ -445,7 +445,7 @@ export default {
 
     function setAnswer(evt) {
       if (!peerConnection) {
-        console.error("error");
+        console.error('error');
         return;
       }
       peerConnection.setRemoteDescription(new RTCSessionDescription(evt));
@@ -457,7 +457,7 @@ export default {
         .then((stream) => {
           for (let i = 0; i < localStream.getTracks().length; i++) {
             let track = localStream.getTracks()[i];
-            if (track.kind === "video") {
+            if (track.kind === 'video') {
               localStream.removeTrack(track);
             }
           }
@@ -470,7 +470,7 @@ export default {
         })
         .catch((err) => {
           console.log(err);
-          alert("화면이 선택되지 않았습니다. 다시 확인해주세요");
+          alert('화면이 선택되지 않았습니다. 다시 확인해주세요');
         });
     };
     return {
@@ -507,7 +507,7 @@ export default {
 </script>
 <style scoped>
 .videoStyle {
-  height: 35%;
+  height: 40%;
   padding-bottom: 30px;
   overflow: hidden;
 }
