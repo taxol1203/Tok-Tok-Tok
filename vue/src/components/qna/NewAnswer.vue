@@ -59,28 +59,28 @@
   ></el-button>
 </template>
 <script>
-import { useStore } from "vuex";
-import { computed, ref } from "vue";
+import { useStore } from 'vuex';
+import { computed, ref, watch } from 'vue';
 export default {
   setup() {
     const store = useStore();
     const qnaList = computed(() => store.state.moduleQna.qnaList);
     const new_answer = computed(() => store.state.moduleQna.new_answer);
-    const selectedKey = computed(() => store.getters["moduleQna/getKey"]);
-    const selectValue = ref([]);
+    const selectedKey = computed(() => store.getters['moduleQna/getKey']);
+    const selectValue = computed(() => store.getters['moduleQna/nansSelectGetter']);
     let show = ref(true);
+
     const changeShow = () => {
       show.value = !show.value;
     };
     const add = () => {
-      store.commit("moduleQna/addNewAnswer", selectedKey.value);
+      store.commit('moduleQna/addNewAnswer', selectedKey.value);
     };
     const setNextIdx = (index) => {
       new_answer.value[index].fk_next_idx = selectValue.value[index];
     };
     const removeAnswer = (idx) => {
-      store.commit("moduleQna/removeNewAns", idx);
-      selectValue.value.splice(idx, 1);
+      store.commit('moduleQna/removeNewAns', idx);
     };
     return {
       store,

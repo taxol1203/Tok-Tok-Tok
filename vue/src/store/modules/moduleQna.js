@@ -1,5 +1,6 @@
 import axios from '@/axios';
 import { ElMessage } from 'element-plus';
+import store from '..';
 export const moduleQna = {
   namespaced: true,
   state: {
@@ -8,6 +9,7 @@ export const moduleQna = {
     old_answer: [],
     new_answer: [],
     next_scene: [],
+    nans_select: [],
   },
   getters: {
     allQnaCount: state => {
@@ -15,6 +17,9 @@ export const moduleQna = {
     },
     getKey: state => {
       return state.select.pk_idx;
+    },
+    nansSelectGetter: state => {
+      return state.nans_select;
     }
   },
   mutations: {
@@ -66,6 +71,7 @@ export const moduleQna = {
       state.old_answer = tmp;
       state.next_scene = tmp_scene;
       state.new_answer = [];
+      state.nans_select = [];
 
     },
     //title, content 수정하기(등록 버튼으로)
@@ -97,14 +103,18 @@ export const moduleQna = {
     },
     removeNewAns: (state, index) => {
       state.new_answer.splice(index, 1);
-    }
+      state.selectValue.splice(index, 1);
+
+    },
   },
   actions: {
-    addQna: ({ commit }, payload) => {
-      axios.post('api/qna/question', payload)
-        .then(() => {
-          commit('addQna', payload);
-        });
+    async addQna({ commit }, payload) {
+      try {
+        const res = await axios.post('api/qna/question', payload)
+        if(res.status == 200) commit('addQna', payload)
+      } catch (err) {
+        console.log(err)
+      }
     },
     loadQna: ({ commit }) => {
       axios.get('api/qna/question')
@@ -127,13 +137,17 @@ export const moduleQna = {
           commit('loadAnswer', payload);
         });
     },
-    editContent: ({ commit }, payload) => {
-      axios.put(`api/qna/question/${payload.pk_idx}`, payload)
-        .then(() => {
+    async editContent({ commit }, payload) {
+      try {
+        const res = await axios.put(`api/qna/question/${payload.pk_idx}`, payload)
+        if (res.status == 200) {
           commit('editContent', payload);
-        });
+        };
+      } catch (e) {
+        console.log(e)
+      }
     },
-    updateAnswer: ({ state }) => {
+    updateAnswer: ({ commit, state }) => {
       var flag = true;
       state.old_answer.forEach(item => {
         axios.put(`api/qna/answer/${item.pk_idx}`, item)
@@ -144,6 +158,7 @@ export const moduleQna = {
           });
       });
       if (flag) {
+        commit('updateAnswer');
         ElMessage({
           showClose: true,
           message: '시나리오의 답변이 수정되었습니다.',
@@ -175,6 +190,7 @@ export const moduleQna = {
             commit('addAnswer');
           });
       });
+      
     },
     removeOldAns: ({ state, commit }, idx) => {
       var key = state.old_answer[idx].pk_idx;
