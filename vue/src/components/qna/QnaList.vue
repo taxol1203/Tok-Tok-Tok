@@ -1,6 +1,6 @@
 <template lang="">
   <div style="position: relative">
-    <el-scrollbar id="qcards">
+    <el-scrollbar ref="scrollbar" id="qcards">
       <div v-for="q in cards" :key="q.pk_idx" class="text item">
         <el-card class="box-card" @click="showDetail(q.pk_idx)">
           <span style="color: #606266">{{ q.title }}</span>
@@ -14,7 +14,7 @@
   </div>
 </template>
 <script>
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { useStore } from 'vuex';
 export default {
   setup() {
@@ -24,19 +24,15 @@ export default {
     const cards = computed(() => store.state.moduleQna.qnaList);
     const select = computed(() => store.state.moduleQna.select);
     const count = computed(() => store.getters['moduleQna/allQnaCount']);
+    const scrollbar = ref('');
     const showDetail = (key) => {
       store.dispatch('moduleQna/pickQna', key);
       store.dispatch('moduleQna/loadAnswer', key);
       store.commit('moduleQna/resetNewAns');
     };
-    const addScene = () => {
-      let tmp = {
-        pk_idx: count.value,
-        content: '',
-        answers: [],
-      };
-      console.log(tmp);
-      store.dispatch('moduleQna/addQna', tmp);
+    const addScene = async () => {
+      await store.dispatch('moduleQna/addQna');
+      scrollbar.value.setScrollTop(Number.MAX_SAFE_INTEGER);
     };
     return {
       store,
@@ -44,6 +40,7 @@ export default {
       cards,
       select,
       count,
+      scrollbar,
       showDetail,
       addScene,
     };

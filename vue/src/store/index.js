@@ -95,7 +95,7 @@ export default createStore({
         const res = await axios.get(`api/api/chat/admin/init/${state.auth.user.pk_idx}`);
         for (var p in res.data) {
           const client = await axios.get(`api/auth/user/${res.data[p].session.fk_client_idx}`);
-          const tmp = client.data.pk_idx % 11;
+          const tmp = client.data.pk_idx % 10;
           client.data.imgidx = tmp;
           res.data[p].client = client.data;
         }

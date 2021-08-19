@@ -201,9 +201,11 @@ public class QnAController {
     @PostMapping("/answer")
     public ResponseEntity<?> writeAnswer(@RequestBody Answer content) {
         logger.debug("writeAnswer - 호출");
+        System.out.println(content);
         try {
           return answerService.writeAnswer(content);
         }catch (Exception e) {
+            e.printStackTrace();
           return new ResponseEntity<String>("Exception: " + e.getMessage(),
               HttpStatus.INTERNAL_SERVER_ERROR);
         }

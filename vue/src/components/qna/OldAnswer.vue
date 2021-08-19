@@ -58,7 +58,7 @@ export default {
     const store = useStore();
     const select = computed(() => store.state.moduleQna.select);
     const qnaList = computed(() => store.state.moduleQna.qnaList);
-    const old_answer = computed(() => store.state.moduleQna.old_answer);
+    const old_answer = computed(() => store.getters['moduleQna/oldAnswerGetter']);
     const next_scene = computed(() => store.state.moduleQna.next_scene);
     const selectValue = ref(next_scene);
     let show = ref(true);
