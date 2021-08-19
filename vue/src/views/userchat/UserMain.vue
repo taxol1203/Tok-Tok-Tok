@@ -63,11 +63,10 @@
         <div id="chat-box" v-if="isHidden">
           <div style="width: 100%; text-align: right">
             <i @click="DialogVisible = true" class="el-icon-error" id="close-btn"></i>
-            <!-- <i @click="DialogVisible = true" class="el-icon-close" id="close-btn"></i> -->
           </div>
           <div>
             <el-card class="videoContainer" v-if="videoStatus != 'CLOSE'">
-              <VideoChatDetail />
+              <VideoChatDetailUser />
             </el-card>
             <el-card id="chat-card">
               <UserQna :close="isHidden" />
@@ -86,7 +85,7 @@ import { useStore } from "vuex";
 import UserChatDetail from "./UserChatDetail.vue";
 import UserQna from "./UserQna.vue";
 import ChatDetail from "../../components/chat/ChatDetail.vue";
-import VideoChatDetail from "@/components/VideoChat/VideoChatDetail.vue";
+import VideoChatDetailUser from "@/components/VideoChat/VideoChatDetailUser.vue";
 import { computed, ref, watch } from "vue";
 import router from "@/router";
 import UserLogin from "./UserLogin";
@@ -95,7 +94,7 @@ export default {
     UserQna,
     UserChatDetail,
     ChatDetail,
-    VideoChatDetail,
+    VideoChatDetailUser,
     UserLogin,
   },
   setup() {
@@ -200,7 +199,6 @@ export default {
   bottom: 50px;
   right: 50px;
   z-index: 999;
-  cursor: pointer;
 }
 #chat-box {
   height: 52.5rem;

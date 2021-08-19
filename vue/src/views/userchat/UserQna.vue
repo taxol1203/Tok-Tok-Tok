@@ -20,6 +20,9 @@
           </el-col>
         </el-row>
       </div>
+      <div v-if="isOpen == 'OPEN'">
+        <div v-loading="loading">상담 연결 중입니다. 잠시만 기다려주세요.</div>
+      </div>
       <user-chat-detail v-if="sessionId" />
       <p v-if="realChat == 'END'">상담이 종료되었습니다.</p>
     </el-scrollbar>
@@ -47,77 +50,81 @@
   </div>
 </template>
 <script>
-import Stomp from 'webstomp-client';
-import SockJS from 'sockjs-client';
-import { useStore } from 'vuex';
-import { ref, computed, watch, onMounted } from 'vue';
-import UserChatDetail from './UserChatDetail.vue';
+import Stomp from "webstomp-client";
+import SockJS from "sockjs-client";
+import { useStore } from "vuex";
+import { ref, computed, watch, onMounted, onUpdated } from "vue";
+import UserChatDetail from "./UserChatDetail.vue";
 
 export default {
-  name: 'Chat',
+  name: "Chat",
   components: { UserChatDetail },
   setup() {
     const store = useStore();
-    const userMsg = ref('');
-    const scrollbar = ref('');
-    const closeMsg = computed(() => store.getters['closeMsgGetter']);
-    const log = computed(() => store.getters['userQna/logGetter']);
-    store.commit('userQna/CHANGE_SELECT', 1);
-    store.commit('userQna/SET_CURRENT');
-    let history = '';
+    const userMsg = ref("");
+    const scrollbar = ref("");
+    const closeMsg = computed(() => store.getters["closeMsgGetter"]);
+    const log = computed(() => store.getters["userQna/logGetter"]);
+    store.commit("userQna/CHANGE_SELECT", 1);
+    store.commit("userQna/SET_CURRENT");
+    let history = "";
+    const isOpen = computed(() => store.getters["get_user_room_status"]);
+    const loading = true;
 
     const chooseAnswer = (next_idx, value) => {
-      if (history == '') history += value;
-      else history += '|' + value;
-      store.commit('userQna/CHANGE_SELECT', next_idx);
-      store.commit('userQna/ADD_LOG');
+      if (history == "") history += value;
+      else history += "|" + value;
+      store.commit("userQna/CHANGE_SELECT", next_idx);
+      store.commit("userQna/ADD_LOG");
       setTimeout(() => {
         scrollbar.value.setScrollTop(Number.MAX_SAFE_INTEGER);
       }, 100);
     };
 
+    onUpdated(() => scrollbar.value.setScrollTop(Number.MAX_SAFE_INTEGER));
+
     onMounted(() => {
       scrollbar.value.setScrollTop(Number.MAX_SAFE_INTEGER);
     });
     const user_pk_idx = computed(() => store.state.auth.user.pk_idx);
-    const realChat = computed(() => store.getters['get_user_room_status']);
-    const sessionId = computed(() => store.getters['get_selected_idx']);
-    const isHidden = computed(() => store.getters['userQna/showUserChat']);
-    let stompClient = computed(() => store.getters['stompGetter']);
+    const realChat = computed(() => store.getters["get_user_room_status"]);
+    const sessionId = computed(() => store.getters["get_selected_idx"]);
+    const isHidden = computed(() => store.getters["userQna/showUserChat"]);
+    let stompClient = computed(() => store.getters["stompGetter"]);
     let connected = ref(false);
 
     const createChatRoom = () => {
-      send('JOIN');
-      store.dispatch('createChatRooms', history);
+      send("JOIN");
+      store.dispatch("createChatRooms", history);
     };
     watch(sessionId, () => {
       connect();
     });
     watch(connected, () => {
-      send('JOIN');
+      send("JOIN");
     });
 
     const connect = () => {
-      const serverURL = 'https://i5d204.p.ssafy.io/api/chat';
+      const serverURL = "https://i5d204.p.ssafy.io/api/chat";
       let socket = new SockJS(serverURL);
-      store.commit('stompSetter', Stomp.over(socket));
+      store.commit("stompSetter", Stomp.over(socket));
       stompClient.value.connect(
         {},
         (frame) => {
           connected.value = true;
-          stompClient.value.subscribe('/send/' + sessionId.value, async (res) => {
+          stompClient.value.subscribe("/send/" + sessionId.value, async (res) => {
             switch (JSON.parse(res.body).type) {
-              case 'MSG':
-                await store.commit('USER_MSG_PUSH', JSON.parse(res.body));
+              case "MSG":
+                await store.commit("USER_MSG_PUSH", JSON.parse(res.body));
                 scrollbar.value.setScrollTop(Number.MAX_SAFE_INTEGER);
                 break;
-              case 'JOIN':
+              case "JOIN":
                 break;
-              case 'END':
-                store.commit('changeSessionkeyStatus', 'END');
+              case "END":
+                store.commit("changeSessionkeyStatus", "END");
                 break;
-              case 'VID':
-                await store.commit('USER_MSG_PUSH', JSON.parse(res.body));
+              case "VID":
+                await store.commit("USER_MSG_PUSH", JSON.parse(res.body));
                 scrollbar.value.setScrollTop(Number.MAX_SAFE_INTEGER);
                 break;
               default:
@@ -126,7 +133,7 @@ export default {
           });
         },
         (error) => {
-          console.log('error: ', error);
+          console.log("error: ", error);
           connected.value = false;
         }
       );
@@ -134,9 +141,9 @@ export default {
 
     const sendMessage = () => {
       if (user_pk_idx.value && userMsg.value) {
-        send('MSG');
+        send("MSG");
       }
-      userMsg.value = '';
+      userMsg.value = "";
     };
 
     const send = (type) => {
@@ -144,12 +151,12 @@ export default {
         const msg = {
           message: userMsg.value,
           fk_author_idx: user_pk_idx.value,
-          created: '',
+          created: "",
           deleted: false,
           fk_session_id: sessionId.value,
           type: type,
         };
-        stompClient.value.send('/receive/' + sessionId.value, JSON.stringify(msg), {});
+        stompClient.value.send("/receive/" + sessionId.value, JSON.stringify(msg), {});
       }
     };
     return {
@@ -164,6 +171,8 @@ export default {
       closeMsg,
       isHidden,
       scrollbar,
+      isOpen,
+      loading,
       connect,
       createChatRoom,
       chooseAnswer,
@@ -196,6 +205,7 @@ export default {
   margin: 5px 10px 5px 5px;
   max-width: 300px;
   text-align: right;
+  cursor: pointer;
 }
 .message-other {
   border-radius: 10px 10px 10px 0px;
