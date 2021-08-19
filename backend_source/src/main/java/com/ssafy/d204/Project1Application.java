@@ -1,6 +1,8 @@
 package com.ssafy.d204;
 
 import com.ssafy.d204.general.JwtInterceptor;
+import java.util.TimeZone;
+import javax.annotation.PostConstruct;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -38,8 +40,12 @@ public class Project1Application implements WebMvcConfigurer {
             .exposedHeaders("auth-token");
     }
 
+    @PostConstruct
+    void started() {
+        TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
+    }
+
     public static void main(String[] args) {
         SpringApplication.run(Project1Application.class, args);
     }
-
 }
