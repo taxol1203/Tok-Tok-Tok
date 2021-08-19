@@ -6,19 +6,17 @@
   >
     <div style="width: 70%; display: inline-block">
       <div class="answerBox">
-        <div>
-          <el-input
-            class="ans"
-            type="textarea"
-            placeholder="내용을 입력해주세요."
-            v-if="show"
-            v-model="oa.content"
-            clearable
-            autosize
-          >
-          </el-input>
-          <!-- 예상답변 -->
-        </div>
+        <el-input
+          class="ans"
+          type="textarea"
+          placeholder="내용을 입력해주세요."
+          v-if="show"
+          v-model="oa.content"
+          clearable
+          autosize
+        >
+        </el-input>
+        <!-- 예상답변 -->
       </div>
     </div>
     <div style="float: right">
@@ -95,15 +93,16 @@ export default {
   border: none;
   background: transparent;
   color: #fff;
+  width: 100%;
 }
 
 .answerBox {
   border: 1px solid #eee;
   border-radius: 10px 10px 0px 10px;
-  text-align: right;
   padding: 10px;
   float: right;
-  width: 30%;
+  max-width: 35%;
+  min-width: 25%;
   background: #006f3e;
 }
 </style>

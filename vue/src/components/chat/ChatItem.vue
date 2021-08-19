@@ -21,7 +21,7 @@ export default {
     },
   },
   setup(props) {
-    let timeMsg = "";
+    let timeMsg = '';
     const calcTime = (time) => {
       var now = new Date();
       var writeDay = new Date(time);
@@ -41,7 +41,7 @@ export default {
         //같은 달일 경우 일을 계산
         minus = now.getDate() - writeDay.getDate();
         if (minus == 1) {
-          timeMsg = "어제";
+          timeMsg = '어제';
         } else {
           timeMsg = time.slice(0, 11);
         }
@@ -59,18 +59,18 @@ export default {
           let min = parseInt(sec / 60);
           sec = parseInt(sec - min * 60);
           if (hour > 0) {
-            timeMsg = hour + "시간 전";
+            timeMsg = hour + '시간 전';
           } else if (min > 0) {
-            timeMsg = min + "분 전";
+            timeMsg = min + '분 전';
           } else if (sec > 0) {
-            timeMsg = sec + "초 전";
+            timeMsg = sec + '초 전';
           }
         }
       }
     };
     calcTime(props.room.session.created_at.slice(0, 19));
     return {
-      id: props.room.session.session_id.split("-")[0],
+      id: props.room.session.session_id.split('-')[0],
       time: props.room.session.created_at.slice(0, 19),
       client: props.room.client,
       lastmsg: props.room.messages,
@@ -89,6 +89,11 @@ sub {
 }
 .lastmsg {
   color: #2c3e50;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 60%;
+  text-align: right;
 }
 .imgBox {
   width: 50px;
