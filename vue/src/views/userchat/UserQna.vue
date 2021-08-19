@@ -117,7 +117,8 @@ export default {
                 store.commit("changeSessionkeyStatus", "END");
                 break;
               case "VID":
-                store.commit("USER_MSG_PUSH", JSON.parse(res.body));
+                await store.commit("USER_MSG_PUSH", JSON.parse(res.body));
+                scrollbar.value.setScrollTop(Number.MAX_SAFE_INTEGER);
                 break;
               default:
                 break;
