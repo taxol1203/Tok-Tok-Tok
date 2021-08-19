@@ -33,7 +33,8 @@ public class QuestionServiceImpl implements QuestionService {
     public ResponseEntity<?> writeQuestion(Question content) {
         boolean result = questionDao.writeQuestion(content);
         if (result) {
-            return new ResponseEntity<Void>(HttpStatus.OK);
+            Question ret = questionDao.getQuestionByContentAndTime(content);
+            return new ResponseEntity<Question>(ret, HttpStatus.OK);
         }
         return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
     }
