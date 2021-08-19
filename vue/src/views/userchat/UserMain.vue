@@ -213,11 +213,9 @@ export default {
   bottom: 50px;
   right: 50px;
   z-index: 999;
-  cursor: pointer;
 }
 #chat-box {
-  /* width: 25rem; 1rem = 16px */
-  height: 52.5rem; /* 45rem 720px 52rem;*/
+  height: 52.5rem;
   width: auto;
   padding: 10px;
   position: sticky;
