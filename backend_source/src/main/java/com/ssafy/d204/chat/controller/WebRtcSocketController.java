@@ -56,7 +56,7 @@ public class WebRtcSocketController {
         }
         webSocketMap.get(userId).add(session);
 //        webSocketMap.put(userId, session);
-        System.out.println(userId + "-Connection established successfully...");
+//        System.out.println(userId + "-Connection established successfully...");
     }
 
     @OnMessage
@@ -72,8 +72,8 @@ public class WebRtcSocketController {
 //                break;
             } catch (IOException e) {
                 // message 전송 실패시 어떤 행위를 해야할 것인가
-                System.err
-                    .println("Retrying " + (5 - retry) + " times establish connection. " + userId);
+//                System.err
+//                    .println("Retrying " + (5 - retry) + " times establish connection. " + userId);
             }
             if (isSuccess) {
                 break;
@@ -98,7 +98,7 @@ public class WebRtcSocketController {
 
     @OnError
     public void onError(Throwable error, @PathParam("userId") String userId) {
-        System.out.println("Connection has a problem. id : " + userId);
+//        System.out.println("Connection has a problem. id : " + userId);
         if (webSocketMap.containsKey(userId)) {
             for (Session session : webSocketMap.get(userId)) {
                 closeSession(session, new CloseReason(
@@ -114,7 +114,7 @@ public class WebRtcSocketController {
 
     @OnClose
     public void onClose(@PathParam("userId") String userId) {
-        System.out.println("Connection closed. id : " + userId);
+//        System.out.println("Connection closed. id : " + userId);
         if (webSocketMap.containsKey(userId)) {
             for (Session session : webSocketMap.get(userId)) {
                 closeSession(session, new CloseReason(
@@ -169,14 +169,14 @@ public class WebRtcSocketController {
         for (Session session : sessions) {
             if (requestSession.getId().equals(session.getId())) {
 
-                System.out.println("MY" + requestSession.getId());
+//                System.out.println("MY" + requestSession.getId());
                 continue;
             }
             if (session.isOpen()) {
-                System.out.println("Send a message to: " + userId + " ,message: " + message);
+//                System.out.println("Send a message to: " + userId + " ,message: " + message);
                 session.getBasicRemote().sendText(message);
             } else {
-                System.err.println(userId + ": not open");
+//                System.err.println(userId + ": not open");
                 closeSession(session, new CloseReason(
                         CloseReason.CloseCodes.NORMAL_CLOSURE,
                         "CONNECTION ESTABLISHED"

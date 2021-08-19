@@ -11,11 +11,7 @@
       <el-row>
         <el-col :span="2">
           <el-menu-item index="1">
-            <img
-              src="@/assets/mslogo.png"
-              alt=""
-              style="margin-bottom: 0.35rem"
-            />
+            <img src="@/assets/mslogo.png" alt="" style="margin-bottom: 0.35rem" />
           </el-menu-item>
         </el-col>
         <el-col :span="2">
@@ -35,16 +31,10 @@
           </el-submenu>
         </el-col>
         <el-col :span="3" :offset="15">
-          <el-menu-item
-            v-if="user_pk_idx"
-            index="10"
-            id="loginbtn"
-            @click="logout"
+          <el-menu-item v-if="user_pk_idx" index="10" id="loginbtn" @click="logout"
             >로그아웃</el-menu-item
           >
-          <el-menu-item v-else index="10" id="loginbtn" @click="popUpLogin"
-            >로그인</el-menu-item
-          >
+          <el-menu-item v-else index="10" id="loginbtn" @click="popUpLogin">로그인</el-menu-item>
         </el-col>
       </el-row>
     </el-menu>
@@ -57,40 +47,26 @@
         type="primary"
         icon="el-icon-plus"
         @click="changeCondition"
-        v-if="!isHidden"
+        v-if="!isHidden && isLogin"
         circle
       ></el-button>
       <el-dialog title="" v-model="DialogVisible" width="30%" center>
-        <div style="font-size: 18px; text-align: center">
-          상담을 종료하시겠습니까?
-        </div>
+        <div style="font-size: 18px; text-align: center">상담을 종료하시겠습니까?</div>
         <template #footer>
           <span class="dialog-footer">
-            <el-button
-              @click="sendEnd"
-              class="green-color-btn"
-              style="width: 80px"
-              >네</el-button
-            >
-            <el-button @click="DialogVisible = false" style="width: 80px"
-              >아니오</el-button
-            >
+            <el-button @click="sendEnd" class="green-color-btn" style="width: 80px">네</el-button>
+            <el-button @click="DialogVisible = false" style="width: 80px">아니오</el-button>
           </span>
         </template>
       </el-dialog>
       <transition class="same-pos" name="fade" mode="out-in">
         <div id="chat-box" v-if="isHidden">
           <div style="width: 100%; text-align: right">
-            <i
-              @click="DialogVisible = true"
-              class="el-icon-error"
-              id="close-btn"
-            ></i>
-            <!-- <i @click="DialogVisible = true" class="el-icon-close" id="close-btn"></i> -->
+            <i @click="DialogVisible = true" class="el-icon-error" id="close-btn"></i>
           </div>
           <div>
             <el-card class="videoContainer" v-if="videoStatus != 'CLOSE'">
-              <VideoChatDetail />
+              <VideoChatDetailUser />
             </el-card>
             <el-card id="chat-card">
               <UserQna :close="isHidden" />
@@ -105,37 +81,44 @@
   </el-dialog>
 </template>
 <script>
-import { useStore } from 'vuex';
-import UserChatDetail from './UserChatDetail.vue';
-import UserQna from './UserQna.vue';
-import ChatDetail from '../../components/chat/ChatDetail.vue';
-import VideoChatDetail from '@/components/VideoChat/VideoChatDetail.vue';
-import { computed, ref, watch } from 'vue';
-import router from '@/router';
-import UserLogin from './UserLogin';
+import { useStore } from "vuex";
+import UserChatDetail from "./UserChatDetail.vue";
+import UserQna from "./UserQna.vue";
+import ChatDetail from "../../components/chat/ChatDetail.vue";
+import VideoChatDetailUser from "@/components/VideoChat/VideoChatDetailUser.vue";
+import { computed, ref, watch } from "vue";
+import router from "@/router";
+import UserLogin from "./UserLogin";
 export default {
   components: {
     UserQna,
     UserChatDetail,
     ChatDetail,
-    VideoChatDetail,
+    VideoChatDetailUser,
     UserLogin,
   },
   setup() {
     const store = useStore();
     let DialogVisible = ref(false);
-    const isHidden = computed(() => store.getters['userQna/showUserChat']);
+    const isHidden = computed(() => store.getters["userQna/showUserChat"]);
+    const isLogin = ref(false);
     const user_pk_idx = computed(() => store.state.auth.user.pk_idx);
-    const sessionId = computed(() => store.getters['get_selected_idx']);
-    let stompClient = computed(() => store.getters['stompGetter']);
+    const sessionId = computed(() => store.getters["get_selected_idx"]);
+    let stompClient = computed(() => store.getters["stompGetter"]);
     const showModal = ref(false);
     const videoStatus = computed(() => store.state.video_status);
-    const temp = ref(localStorage.getItem('jwt'));
+
+    // 로그인 되어 있는 상태에서 새로고침할 때 대비
+    if (user_pk_idx.value) {
+      showModal.value = false;
+      isLogin.value = true;
+    }
 
     // modal창 자동으로 꺼지게 하는 부분
     watch(user_pk_idx, () => {
-      if (user_pk_idx) {
+      if (user_pk_idx.value) {
         showModal.value = false;
+        isLogin.value = true;
       }
     });
 
@@ -144,18 +127,21 @@ export default {
     };
     const logout = () => {
       localStorage.clear();
-      store.commit('auth/logout');
+      store.commit("auth/logout");
+      isLogin.value = false;
+      console.log(isLogin);
+      console.log(isLogin.value);
     };
     const sendEnd = () => {
-      send('END');
-      store.commit('userQna/CHANGE_STATE');
+      send("END");
+      store.commit("userQna/CHANGE_STATE");
       DialogVisible.value = false;
     };
 
     let changeCondition = () => {
-      store.commit('userChatInit');
-      store.dispatch('userQna/init');
-      store.commit('userQna/CHANGE_STATE');
+      store.commit("userChatInit");
+      store.dispatch("userQna/init");
+      store.commit("userQna/CHANGE_STATE");
       DialogVisible.value = false;
     };
     let connected = false;
@@ -168,26 +154,27 @@ export default {
         user_pk_idx.value > 0
       ) {
         const msg = {
-          message: '',
+          message: "",
           fk_author_idx: user_pk_idx.value,
           fk_session_id: sessionId.value,
           type: type,
         };
-        stompClient.value.send('/receive/' + sessionId.value, JSON.stringify(msg), {});
+        stompClient.value.send("/receive/" + sessionId.value, JSON.stringify(msg), {});
       }
     };
 
     const goSignUp = () => {
-      router.push('/usersignup');
+      router.push("/usersignup");
     };
     const goLogin = () => {
-      router.push('/userlogin');
+      router.push("/userlogin");
     };
     return {
       DialogVisible,
       sessionId,
       user_pk_idx,
       isHidden,
+      isLogin,
       connected,
       stompClient,
       videoStatus,
@@ -199,7 +186,6 @@ export default {
       goLogin,
       popUpLogin,
       logout,
-      temp,
     };
   },
 };
@@ -213,7 +199,6 @@ export default {
   bottom: 50px;
   right: 50px;
   z-index: 999;
-  cursor: pointer;
 }
 #chat-box {
   height: 52.5rem;

@@ -7,12 +7,7 @@
       <el-container style="width: 75%; height: 87vh">
         <div
           v-if="sessionId"
-          style="
-            width: 66%;
-            margin-top: 10px;
-            margin-left: 20px;
-            display: relative;
-          "
+          style="width: 66%; margin-top: 10px; margin-left: 20px; display: relative"
         >
           <ChatDetail />
         </div>
@@ -27,20 +22,18 @@
     <div v-else>
       <el-row>
         <el-col :span="12">
-          <div style="height: 100%; float: left">
+          <div style="height: 100vh; float: left; padding: 10px">
             <VideoChatDetail />
           </div>
         </el-col>
-        <el-col :span="12">
+        <el-col :span="11">
           <div style="height: 100%">
-            <div
-              v-if="sessionId"
-              style="margin-top: 10px; margin-left: 20px; display: relative"
-            >
+            <div v-if="sessionId" style="margin-top: 10px; margin-left: 20px; display: relative">
               <ChatDetail />
             </div>
           </div>
         </el-col>
+        <el-col :span="1"></el-col>
       </el-row>
     </div>
   </div>

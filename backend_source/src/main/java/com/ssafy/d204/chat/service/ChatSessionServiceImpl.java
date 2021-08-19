@@ -26,12 +26,12 @@ public class ChatSessionServiceImpl implements ChatSessionService {
     public ResponseEntity<?> findAllSessions() {
         List<ChatSession> ret = null;
         try {
-            System.out.println("oh2");
+//            System.out.println("oh2");
             ret = chatDao.findAllSession();
-            for (ChatSession cs : ret) {
-                System.out.println("oh");
-                System.out.println(cs);
-            }
+//            for (ChatSession cs : ret) {
+//                System.out.println("oh");
+//                System.out.println(cs);
+//            }
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -121,14 +121,14 @@ public class ChatSessionServiceImpl implements ChatSessionService {
     // 채팅방 정보 아이디에서 받아옴
     public ResponseEntity<?> getSessionInfo(String sessionId) {
         ChatSession ret = null;
-        System.out.println(sessionId);
+//        System.out.println(sessionId);
         try {
             ret = chatDao.findSessionBySessionId(sessionId);
-            if (ret == null) {
-                System.out.println("no room");
-            } else {
-                System.out.println(ret);
-            }
+//            if (ret == null) {
+//                System.out.println("no room");
+//            } else {
+//                System.out.println(ret);
+//            }
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);

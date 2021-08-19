@@ -20,6 +20,9 @@
           </el-col>
         </el-row>
       </div>
+      <div v-if="isOpen == 'OPEN'">
+        <div v-loading="loading">상담 연결 중입니다. 잠시만 기다려주세요.</div>
+      </div>
       <user-chat-detail v-if="sessionId" />
       <p v-if="realChat == 'END'">상담이 종료되었습니다.</p>
     </el-scrollbar>
@@ -50,7 +53,7 @@
 import Stomp from "webstomp-client";
 import SockJS from "sockjs-client";
 import { useStore } from "vuex";
-import { ref, computed, watch, onMounted } from "vue";
+import { ref, computed, watch, onMounted, onUpdated } from "vue";
 import UserChatDetail from "./UserChatDetail.vue";
 
 export default {
@@ -65,6 +68,8 @@ export default {
     store.commit("userQna/CHANGE_SELECT", 1);
     store.commit("userQna/SET_CURRENT");
     let history = "";
+    const isOpen = computed(() => store.getters["get_user_room_status"]);
+    const loading = true;
 
     const chooseAnswer = (next_idx, value) => {
       if (history == "") history += value;
@@ -75,6 +80,8 @@ export default {
         scrollbar.value.setScrollTop(Number.MAX_SAFE_INTEGER);
       }, 100);
     };
+
+    onUpdated(() => scrollbar.value.setScrollTop(Number.MAX_SAFE_INTEGER));
 
     onMounted(() => {
       scrollbar.value.setScrollTop(Number.MAX_SAFE_INTEGER);
@@ -117,7 +124,8 @@ export default {
                 store.commit("changeSessionkeyStatus", "END");
                 break;
               case "VID":
-                store.commit("USER_MSG_PUSH", JSON.parse(res.body));
+                await store.commit("USER_MSG_PUSH", JSON.parse(res.body));
+                scrollbar.value.setScrollTop(Number.MAX_SAFE_INTEGER);
                 break;
               default:
                 break;
@@ -163,6 +171,8 @@ export default {
       closeMsg,
       isHidden,
       scrollbar,
+      isOpen,
+      loading,
       connect,
       createChatRoom,
       chooseAnswer,
@@ -195,6 +205,7 @@ export default {
   margin: 5px 10px 5px 5px;
   max-width: 300px;
   text-align: right;
+  cursor: pointer;
 }
 .message-other {
   border-radius: 10px 10px 10px 0px;
