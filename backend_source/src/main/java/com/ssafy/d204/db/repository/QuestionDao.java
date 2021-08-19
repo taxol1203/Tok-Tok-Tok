@@ -19,4 +19,6 @@ public interface QuestionDao {
     boolean deleteQuestion(int pk_idx);
 
     boolean updateNextAnswer(Answer content);
+
+    Question getQuestionByContentAndTime(Question content);
 }

@@ -1,6 +1,5 @@
 import axios from '@/axios';
 import { ElMessage } from 'element-plus';
-import store from '..';
 export const moduleQna = {
   namespaced: true,
   state: {
@@ -20,6 +19,9 @@ export const moduleQna = {
     },
     nansSelectGetter: state => {
       return state.nans_select;
+    },
+    oldAnswerGetter: state => {
+      return state.old_answer
     }
   },
   mutations: {
@@ -158,7 +160,7 @@ export const moduleQna = {
           });
       });
       if (flag) {
-        commit('updateAnswer');
+        // commit('updateAnswer');
         ElMessage({
           showClose: true,
           message: '시나리오의 답변이 수정되었습니다.',
