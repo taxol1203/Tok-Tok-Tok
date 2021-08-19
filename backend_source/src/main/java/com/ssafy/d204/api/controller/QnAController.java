@@ -205,6 +205,7 @@ public class QnAController {
         try {
           return answerService.writeAnswer(content);
         }catch (Exception e) {
+            e.printStackTrace();
           return new ResponseEntity<String>("Exception: " + e.getMessage(),
               HttpStatus.INTERNAL_SERVER_ERROR);
         }
