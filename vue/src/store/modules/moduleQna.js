@@ -27,6 +27,7 @@ export const moduleQna = {
   mutations: {
     //시나리오 생성
     addQna: (state, payload) => {
+      payload.answers = [];
       let tmp = state.qnaList;
       tmp.push(payload);
       state.qnaList = tmp;
@@ -76,18 +77,6 @@ export const moduleQna = {
       state.nans_select = [];
 
     },
-    //title, content 수정하기(등록 버튼으로)
-    editContent: (state, payload) => {
-      state.qnaList.forEach(item => {
-        if (item.pk_idx == payload.pk_idx) item = payload;
-      });
-      state.select = payload;
-      ElMessage({
-        showClose: true,
-        message: '시나리오의 질문이 수정되었습니다.',
-        type: 'success',
-      });
-    },
     //선택한 시나리오 삭제하기(연결, 종료는 삭제되지 않음)
     removeQna: (state, payload) => {
       let i = 0;
@@ -110,10 +99,16 @@ export const moduleQna = {
     },
   },
   actions: {
-    async addQna({ commit }, payload) {
+    async addQna({ commit, state }) {
       try {
-        const res = await axios.post('api/qna/question', payload)
-        if(res.status == 200) commit('addQna', payload)
+        let tmp = {
+          content: '',
+          title: '시나리오의 제목을 입력해주세요.'
+        }
+        const res = await axios.post('api/qna/question', tmp)
+        if (res.status == 200) {
+          commit('addQna', res.data)
+        }
       } catch (err) {
         console.log(err)
       }
@@ -139,11 +134,11 @@ export const moduleQna = {
           commit('loadAnswer', payload);
         });
     },
-    async editContent({ commit }, payload) {
+    async editContent({ commit, state }) {
       try {
-        const res = await axios.put(`api/qna/question/${payload.pk_idx}`, payload)
+        const res = await axios.put(`api/qna/question/${state.select.pk_idx}`, state.select)
         if (res.status == 200) {
-          commit('editContent', payload);
+          console.log(res)
         };
       } catch (e) {
         console.log(e)

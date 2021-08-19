@@ -62,7 +62,7 @@ export default {
   setup() {
     const store = useStore();
     const user = store.state.auth.user;
-    let temp = user.pk_idx % 11;
+    let temp = user.pk_idx % 10;
     const imgUrl = ref(require('@/assets/Profile/profile' + temp + '.jpg'));
     const count = computed(() => store.getters['countGetter']);
     const logout = () => {

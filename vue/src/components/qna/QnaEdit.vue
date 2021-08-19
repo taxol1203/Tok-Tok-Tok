@@ -47,7 +47,7 @@ export default {
 
     const selectKey = computed(() => store.getters['moduleQna/getKey']);
     const savaAnsData = () => {
-      store.dispatch('moduleQna/editContent', select.value);
+      store.dispatch('moduleQna/editContent');
       store.dispatch('moduleQna/updateAnswer');
       if (new_answer.value.length > 0) store.dispatch('moduleQna/addAnswer');
     };
