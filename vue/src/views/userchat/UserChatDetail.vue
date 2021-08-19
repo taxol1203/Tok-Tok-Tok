@@ -1,7 +1,4 @@
 <template>
-  <div v-if="isOpen == 'OPEN'">
-    <div v-loading="loading">상담 연결 중입니다. 잠시만 기다려주세요.</div>
-  </div>
   <div v-if="isOpen == 'LIVE'">상담이 시작되었습니다.</div>
   <div v-for="(msg, index) in messages" :key="index">
     <el-row>
@@ -37,9 +34,9 @@ export default {
     const messages = computed(() => store.getters['get_user_messages']);
     const isOpen = computed(() => store.getters['get_user_room_status']);
     const closeMsg = computed(() => store.getters['clostMsgGetter']);
-    const loading = true;
     const openVideo = () => {
       store.commit('OPEN_VIDEO');
+
     };
 
     return {
@@ -48,7 +45,6 @@ export default {
       userPkidx,
       messages,
       isOpen,
-      loading,
       closeMsg,
       openVideo,
     };
@@ -74,7 +70,6 @@ export default {
   overflow-x: hidden;
 }
 .message-me {
-  /* border: 0.1px solid #004226; */
   border-radius: 10px 10px 0px 10px;
   color: white;
   background: #006f3e;
