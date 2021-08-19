@@ -19,8 +19,7 @@
         <div>
           <img class="clear-img" src="@/assets/HiphopLogo.png" alt="logo" />
           <p id="connectingMsg">
-            상대방과의 연결 중입니다. <br />
-            잠시만 기다려주세요.
+            상담시작을 누르면 상담이 시작됩니다.
           </p>
         </div>
       </div>

@@ -11,9 +11,9 @@ services:
         - net
       environment:
         - TZ=Asia/Seoul
-        - POSTGRES_DB=postgres
-        - POSTGRES_USERNAME=postgres
-        - POSTGRES_PASSWORD=root
+        - POSTGRES_DB=SSAFY_PJT1
+        - POSTGRES_USERNAME=padmin
+        - POSTGRES_PASSWORD=padmin
       volumes:
         - postgres:/var/lib/postgresql/data
         - ./postgres/init/:/docker-entrypoint-initdb.d/

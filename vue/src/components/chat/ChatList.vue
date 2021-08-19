@@ -45,7 +45,6 @@ export default {
     let connected = false;
 
     const listMenuSelect = (key) => {
-      console.log(key);
       store.commit('STATUS_CHANGE', key);
     };
     onMounted(() => {
@@ -59,7 +58,6 @@ export default {
     };
 
     const connect = () => {
-      // console.log(sessionId.value);
       const serverURL = 'https://i5d204.p.ssafy.io/api/chat'; // 서버 채팅 주소
       let socket = new SockJS(serverURL);
       store.commit('stompSetter', Stomp.over(socket));
@@ -70,7 +68,6 @@ export default {
           connected = true;
           // 구독 == 채팅방 입장.
           stompClient.value.subscribe('/send/admin', (res) => {
-            // console.log('receive from server:', JSON.parse(res.body).type);
             const msg = JSON.parse(res.body);
             switch (msg.type) {
               case 'MSG':
@@ -88,25 +85,21 @@ export default {
                 store.dispatch('chatClose', msg.fk_session_id);
                 break;
               case 'VID':
+                // vid 시작시 -> 화상채팅 시작하기 메세지
                 store.commit('MESSAGE_PUSH', msg);
-                // vid 시작시 -> 화상채팅 시작하기 버튼만 딸랑 띄우기
                 break;
               default:
-                // 알수없는 오류...
                 break;
             }
           });
         },
         (error) => {
           // 소켓 연결 실패
-          // console.log('status : failed, STOMP CLIENT 연결 실패', error);
           connected = false;
         }
       );
     };
     const handleClick = (tab, event) => {
-      console.log(tab, event);
-      console.log(tab.props.name);
       listMenuSelect(tab.props.name);
     };
     return {
@@ -128,9 +121,6 @@ export default {
 };
 </script>
 <style>
-/* .el-tabs{
-  width: 400px;
-} */
 .noborder {
   border: 0px solid;
 }
@@ -139,25 +129,18 @@ export default {
   background-color: #fff;
   padding: 20px;
   text-align: left;
-  /* background-color: #f7f4f0; */
-  /* border: 1px solid #eee; */
 }
 .list-item:hover {
-  /* background-color: #f7f4f0; */
   filter: brightness(95%);
 }
 .selected {
   background-color: '#006f3e';
   filter: brightness(95%);
-  /* background-color: #fff; */
   border-right: 0px;
 }
 .list-menu {
-  /* background-color: #eee; */
   height: 50px;
   background-color: rgb(254, 254, 254);
-  /* border-bottom: 1px solid rgb(230, 236, 231); */
-  /* border: 2px solid red; */
   display: flex;
   text-align: center;
   align-content: center;
@@ -165,9 +148,7 @@ export default {
   box-sizing: border-box;
 }
 .list-menu-item:hover {
-  /* filter: brightness(150%); */
   background-color: #fff;
-  /* border: 1px solid #000; */
   border-radius: 15px 15px 0px 0px;
 }
 .list-menu-item {
@@ -181,7 +162,6 @@ export default {
   border-radius: 15px 15px 0px 0px;
 }
 .activeMenu {
-  /* border: 1px solid #000; */
   border-bottom: 0px solid;
   background-color: #fff;
 }

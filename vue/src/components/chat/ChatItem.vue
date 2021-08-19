@@ -1,5 +1,4 @@
 <template>
-  <!-- <i class="el-icon-user-solid"></i> -->
   <el-row>
     <el-col :span="4" class="imgBox">
       <img :src="require('@/assets/Profile/profile' + client.imgidx + '.jpg')" class="profileImg" />

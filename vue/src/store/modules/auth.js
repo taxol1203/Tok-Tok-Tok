@@ -37,7 +37,6 @@ export const auth = {
         });
       } catch (err) {
         console.log(err);
-        console.log("login error");
         ElMessage({
           showClose: true,
           message: "로그인에 문제가 발생했습니다.",

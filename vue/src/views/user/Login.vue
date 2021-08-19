@@ -45,12 +45,8 @@
                   :disabled="!isValid"
                   >로그인</el-button
                 >
-                <el-button @click="resetForm('formLabelAlign')"
-                  >다시쓰기</el-button
-                >
-                <el-button class="green-color-btn" @click="goSignUp()"
-                  >회원가입</el-button
-                >
+                <el-button @click="resetForm('formLabelAlign')">다시쓰기</el-button>
+                <el-button class="green-color-btn" @click="goSignUp()">회원가입</el-button>
               </el-form-item>
             </el-form>
             <div v-else>
@@ -198,7 +194,7 @@ export default {
 
 #LeftPosition {
   position: absolute;
-  top: 30%;
+  top: 20%;
   left: 10%;
 }
 
@@ -207,6 +203,10 @@ export default {
   height: 30%;
   display: block;
   position: static;
+}
+
+#footer {
+  margin-top: 15px;
 }
 
 el-form {

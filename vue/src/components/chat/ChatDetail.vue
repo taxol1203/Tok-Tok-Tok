@@ -5,7 +5,6 @@
     @click="closeRoom"
     style="color: #006f3e"
   ></i>
-  <!-- 상대방  height: 750px; -->
   <el-scrollbar ref="scrollbar" id="topMessages">
     <div v-for="(msg, index) in messages" :key="index">
       <el-row>
@@ -94,9 +93,7 @@ export default {
     };
 
     const send = (type) => {
-      // console.log('Send message:' + message.value);
       if (stompClient.value && stompClient.value.connected) {
-        console.log("IN SOCKET");
         let msg;
         if (type === "VID") {
           msg = {
@@ -143,17 +140,11 @@ export default {
 <style scoped>
 #topMessages {
   top: 0px;
-  /* width: 45vw; */
-  /* width: 40%; */
   height: 82vh;
-  /* position: absolute; */
   margin-bottom: 20px;
 }
 #bottomInput {
-  /* position: absolute; */
   bottom: 10px;
-  /* width: 45vw; */
-  /* width: 40%; */
   margin-left: 20px;
 }
 .el-scroll {
@@ -172,7 +163,6 @@ export default {
   border: 1px solid #006f3e;
   border-radius: 10px 10px 10px 0px;
   color: #fff;
-  /* background: #27251f; */
   background: #006f3e;
   float: left;
   padding: 10px;
@@ -180,12 +170,10 @@ export default {
   max-width: 300px;
 }
 #inputBox {
-  /* width: 90%; */
   height: 100%;
   background-color: transparent;
   border: 0px solid #eee;
 }
-/* hover로 버튼 색 변하게 하기: 추가기능 */
 .el-icon-error {
   float: right;
   font-size: 1.5rem;
