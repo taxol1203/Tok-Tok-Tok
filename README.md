@@ -15,7 +15,9 @@
 <img src="https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=Django&logoColor=white">
 </div>
 
-<img src="main_image.jpg" width="70%" style="text-align: center"/>
+<div align="center" style="text-align: center">
+<img align="center" src="main_image.jpg" width="70%" style="text-align: center"/>
+</div>
 
 ## 개요
 - 기술의 발전으로 기존 전화 기반의 고객 응대가 메신저나 챗봇 등을 이용한 텍스트 기반 플랫폼으로 옮겨왔지만, 
