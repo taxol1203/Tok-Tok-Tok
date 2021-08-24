@@ -64,7 +64,7 @@
 | 한주연 | [taxol1203](https://github.com/taxol1203) | Backend | Leader|
 | 문일민 | [smileostrich](https://github.com/smileostrich) | Backend | - |
 | 김대연 | [daebalprime](https://github.com/daebalprime) | Backend | - |
-| 김도형 | [teemolt](https://github.com/teemollt) | Frontend | - |
+| 김도형 | [teemollt](https://github.com/teemollt) | Frontend | - |
 | 김소빈 | [starempty](https://github.com/starempty) | Frontend | - |
 | 최민수 | [neverte](https://github.com/neverte) | Frontend | - |
 
