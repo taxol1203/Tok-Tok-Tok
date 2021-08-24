@@ -17,10 +17,11 @@
 
 <div align="center" style="text-align: center">
 <img align="center" src="main_image.jpg" width="70%" style="text-align: center"/>
+<img align="center" src="main_image2.gif" width="70%" style="text-align: center"/>
 </div>
 
 ## 개요
-- 기술의 발전으로 기존 전화 기반의 고객 응대가 메신저나 챗봇 등을 이용한 텍스트 기반 플랫폼으로 옮겨왔지만, 
+- 기술의 발전으로 기존 전화 기반의 고객 응대가 메신저나 챗봇 등을 이용한 텍스트 기반 플랫폼으로 옮겨왔지만,
 고객의 제품에 대한 지식, 복잡한 상황, 언어적 한계 등으로 인하여 복잡한 상황을 기존 솔루션 등이 해결하기 까다롭다고 판단
 기존의 채팅봇 서비스에 WebRTC를 접목하여 고객의 문제를 실시간 화상채팅으로 좀 더 심도있게 들여다보고 해결해 줄 수 있는 솔루션을 구현하였습니다.
 - 유튜브 데모 동영상 - https://youtu.be/856b8lwlSAg
