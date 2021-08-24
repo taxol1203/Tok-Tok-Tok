@@ -1,6 +1,6 @@
 # 톡톡톡(Tok! Tok! Tok!)
 > **채팅 / 화면공유 / 화상통화 기능을 제공하는 화상 상담 플랫폼**
-<div style="text-align: center">
+<div align="center" style="text-align: center">
 <img src="https://img.shields.io/badge/java 1.8-007396?style=for-the-badge&logo=java&logoColor=white">
 <img src="https://img.shields.io/badge/SpringBoot 2.5.2-6DB33F?style=for-the-badge&logo=SpringBoot&logoColor=white">
 <img src="https://img.shields.io/badge/maven 4.0.0-C71A36?style=for-the-badge&logo=Apache Maven&logoColor=white">
