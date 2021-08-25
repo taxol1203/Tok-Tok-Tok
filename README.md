@@ -63,8 +63,8 @@
 2. vue 디렉토리에 들어가 `yarn run serve`을 합니다.
 3. 이후 아래의 로컬 환경에서 테스트가 가능합니다.
 
-For user :  http://localhost:8080/userchat
-For admin : http://localhost:8080/
+For user :  http://localhost:8080/userchat  
+For admin : http://localhost:8080/  
 
 4. 포팅 메뉴얼을 참고하시면 도움이 됩니다.
 
