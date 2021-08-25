@@ -69,8 +69,7 @@
 | 최민수 | [neverte](https://github.com/neverte) | Frontend | - |
 
 ## Licences
-```
-WebRTC Devices Selection Code
+``` Licences   
 BSD 3
 Copyright (c) 2014, The WebRTC project authors. 
 
