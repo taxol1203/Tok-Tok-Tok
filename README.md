@@ -58,6 +58,16 @@
 |  |-- 포팅_메뉴얼.pdf
 ```
 
+## How to install
+1. root 디렉토리에서 `docker-compose up`을 합니다.
+2. vue 디렉토리에 들어가 `yarn run serve`을 합니다.
+3. 이후 아래의 로컬 환경에서 테스트가 가능합니다.
+
+For user :  http://localhost:8080/userchat
+For admin : http://localhost:8080/
+
+4. 포팅 메뉴얼을 참고하시면 도움이 됩니다.
+
 ## Team
 | 이름 | github | 역할 | 비고 |
 |--|--|--|--|
