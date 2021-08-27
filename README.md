@@ -25,35 +25,36 @@
 
 ## Preview
 
-### Chatting Bot - user
+### Chatting Bot
+<div align="center" style="text-align: center">
+<img align="center" src="images/user_bot.gif" width="70%" style="text-align: center"/>
+</div>
+
+### Setting a chatting Bot
+<div align="center" style="text-align: center">
+<img align="center" src="images/admin_bot.gif" width="70%" style="text-align: center"/>
+</div>
+
+### Chatting with counselor
 <div align="center" style="text-align: center">
 <img align="center" src="images/user_chat.gif" width="70%" style="text-align: center"/>
 </div>
 
-### Chatting Bot - admin
+### Chatting with customer
 <div align="center" style="text-align: center">
-<img align="center" src="images/user_chat.gif" width="70%" style="text-align: center"/>
+<img align="center" src="images/admin_chat.gif" width="70%" style="text-align: center"/>
 </div>
 
-### Chatting Bot - user
+### Video counseling with counselor
 <div align="center" style="text-align: center">
-<img align="center" src="images/user_chat.gif" width="70%" style="text-align: center"/>
+<img align="center" src="images/user_webRtc.gif" width="70%" style="text-align: center"/>
 </div>
 
-### Chatting Bot - user
+### Screen sharing
 <div align="center" style="text-align: center">
-<img align="center" src="images/user_chat.gif" width="70%" style="text-align: center"/>
+<img align="center" src="images/user_screen_share.gif" width="70%" style="text-align: center"/>
 </div>
 
-### Chatting Bot - user
-<div align="center" style="text-align: center">
-<img align="center" src="images/user_chat.gif" width="70%" style="text-align: center"/>
-</div>
-
-### Chatting Bot - user
-<div align="center" style="text-align: center">
-<img align="center" src="images/user_chat.gif" width="70%" style="text-align: center"/>
-</div>
 ## Folder
 ```
 .\
