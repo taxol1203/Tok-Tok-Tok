@@ -16,7 +16,7 @@
 </div>
 
 <div align="center" style="text-align: center">
-<img align="center" src="main_image.jpg" width="70%" style="text-align: center"/>
+<img align="center" src="images/main_image.jpg" width="70%" style="text-align: center"/>
 </div>
 
 ## 개요
@@ -24,10 +24,36 @@
 - 유튜브 데모 동영상 - https://youtu.be/856b8lwlSAg
 
 ## Preview
+
+### Chatting Bot - user
 <div align="center" style="text-align: center">
-<img align="center" src="main_image2.gif" width="70%" style="text-align: center"/>
+<img align="center" src="images/user_chat.gif" width="70%" style="text-align: center"/>
 </div>
 
+### Chatting Bot - admin
+<div align="center" style="text-align: center">
+<img align="center" src="images/user_chat.gif" width="70%" style="text-align: center"/>
+</div>
+
+### Chatting Bot - user
+<div align="center" style="text-align: center">
+<img align="center" src="images/user_chat.gif" width="70%" style="text-align: center"/>
+</div>
+
+### Chatting Bot - user
+<div align="center" style="text-align: center">
+<img align="center" src="images/user_chat.gif" width="70%" style="text-align: center"/>
+</div>
+
+### Chatting Bot - user
+<div align="center" style="text-align: center">
+<img align="center" src="images/user_chat.gif" width="70%" style="text-align: center"/>
+</div>
+
+### Chatting Bot - user
+<div align="center" style="text-align: center">
+<img align="center" src="images/user_chat.gif" width="70%" style="text-align: center"/>
+</div>
 ## Folder
 ```
 .\
